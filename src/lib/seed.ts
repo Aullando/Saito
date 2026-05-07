@@ -36,9 +36,21 @@ export const ORGANIZATIONS: Organization[] = [
 ].map((o, i) => ({ ...o, id: `org-${i + 1}`, status: "Active" as const }));
 
 export const FACILITIES: Facility[] = [
-  { id: "f-1", name: "Instalación Deportiva Valencia", location: "Valencia", sportSections: [], status: "Active" },
-  { id: "f-2", name: "Complejo Deportivo Barcelona", location: "Barcelona", sportSections: [], status: "Active" },
-  { id: "f-3", name: "Centro Olímpico Madrid", location: "Madrid", sportSections: [], status: "Active" },
+  { id: "f-1", name: "Instalación Deportiva Valencia", location: "Valencia", sportSections: ["sec-prueba", "sec-multi"], status: "Active",
+    photoUrl: "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?w=800&q=70",
+    address: "Av. del Puerto 312, 46023 Valencia", capacity: 1200, sports: ["Atletismo", "Boxeo", "Esgrima"], nextActivity: "Hoy 18:00 · Grupo A" },
+  { id: "f-2", name: "Complejo Deportivo Barcelona", location: "Barcelona", sportSections: ["sec-shared", "sec-boxeo"], status: "Active",
+    photoUrl: "https://images.unsplash.com/photo-1554290712-e640351074bd?w=800&q=70",
+    address: "C/ Marina 17, 08005 Barcelona", capacity: 850, sports: ["Natación", "Gimnasia"], nextActivity: "Mañana 07:00 · Grupo B" },
+  { id: "f-3", name: "Centro Olímpico Madrid", location: "Madrid", sportSections: ["sec-atletismo", "sec-natacion"], status: "Active",
+    photoUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=70",
+    address: "Av. de Arcentales 28, 28022 Madrid", capacity: 2400, sports: ["Atletismo", "Natación", "Esgrima"], nextActivity: "Hoy 09:00 · AAA" },
+  { id: "f-4", name: "Piscina Principal", location: "Valencia", sportSections: ["sec-natacion"], status: "Active",
+    photoUrl: "https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&q=70",
+    address: "C/ Pintor Maella 36, 46023 Valencia", capacity: 320, sports: ["Natación"], nextActivity: "Hoy 11:00 · Senior" },
+  { id: "f-5", name: "Sala Fitness", location: "Barcelona", sportSections: ["sec-prueba"], status: "Active",
+    photoUrl: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=70",
+    address: "Pg. de Gràcia 88, 08008 Barcelona", capacity: 80, sports: ["Acondicionamiento físico"], nextActivity: "Hoy 19:30 · Open" },
 ];
 
 export const SECTIONS: SportSection[] = [

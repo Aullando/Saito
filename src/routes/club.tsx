@@ -48,6 +48,7 @@ function ClubPage() {
   const [userOpen, setUserOpen] = useState(false);
   const [secOpen, setSecOpen] = useState(false);
   const [facOpen, setFacOpen] = useState(false);
+  const [activeFacility, setActiveFacility] = useState<string | null>(null);
   const [newU, setNewU] = useState({ name: "", email: "", role: "technical" as Role });
   const [newSec, setNewSec] = useState("");
   const [newFac, setNewFac] = useState({ name: "", location: "" });
@@ -123,24 +124,47 @@ function ClubPage() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {facilities.map((f) => (
-            <div key={f.id} className="flex items-start justify-between rounded-2xl border border-border bg-card p-4">
-              <div>
-                <div className="flex items-center gap-2 font-medium">
+            <button
+              key={f.id}
+              onClick={() => setActiveFacility(f.id)}
+              className="group overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-primary hover:shadow-sm"
+            >
+              {f.photoUrl && (
+                <div className="relative h-28 w-full overflow-hidden bg-muted">
+                  <img src={f.photoUrl} alt={f.name} className="h-full w-full object-cover transition group-hover:scale-[1.03]" loading="lazy" />
+                </div>
+              )}
+              <div className="p-4">
+                <div className="flex items-center gap-2 text-sm font-semibold">
                   <Building2 className="h-4 w-4 text-primary" />{f.name}
                 </div>
                 <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                  <MapPin className="h-3 w-3" />{f.location}
+                  <MapPin className="h-3 w-3" />{f.address ?? f.location}
                 </div>
+                {f.sports && f.sports.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {f.sports.slice(0, 3).map((s) => (
+                      <span key={s} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{s}</span>
+                    ))}
+                  </div>
+                )}
+                {f.nextActivity && (
+                  <div className="mt-3 text-[11px] text-muted-foreground">
+                    <span className="font-medium text-foreground">{lang === "es" ? "Próx." : "Next"}:</span> {f.nextActivity}
+                  </div>
+                )}
+                {f.capacity && (
+                  <div className="mt-1 text-[11px] text-muted-foreground">{lang === "es" ? "Aforo" : "Capacity"}: {f.capacity}</div>
+                )}
               </div>
-              <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/15" aria-label="Add">
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
+            </button>
           ))}
         </div>
       </Card>
+
+      <FacilityDrawer id={activeFacility} onClose={() => setActiveFacility(null)} />
 
       {/* Organization chart / Sections */}
       <Card>
@@ -194,5 +218,47 @@ function RoleCard({ icon: Icon, label, value }: { icon: any; label: string; valu
       <div className="mt-3 text-2xl font-bold">{value}</div>
       <div className="text-xs text-muted-foreground">{label}</div>
     </div>
+  );
+}
+
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+
+function FacilityDrawer({ id, onClose }: { id: string | null; onClose: () => void }) {
+  const facilities = useData((s) => s.facilities);
+  const events = useData((s) => s.events);
+  const sections = useData((s) => s.sections);
+  const f = facilities.find((x) => x.id === id) ?? null;
+  // Filter events by sections linked to facility
+  const linked = f?.sportSections ?? [];
+  const upcoming = events.filter((e) => e.sectionId && linked.includes(e.sectionId)).slice(0, 8);
+  return (
+    <Sheet open={!!f} onOpenChange={(o) => !o && onClose()}>
+      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
+        {f && (
+          <>
+            <SheetHeader><SheetTitle>{f.name}</SheetTitle></SheetHeader>
+            {f.photoUrl && <img src={f.photoUrl} alt={f.name} className="mt-4 h-44 w-full rounded-2xl object-cover" />}
+            <dl className="mt-4 space-y-2 text-sm">
+              <div className="flex justify-between"><dt className="text-muted-foreground">Dirección</dt><dd className="text-right">{f.address}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Aforo</dt><dd>{f.capacity}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Deportes</dt><dd className="text-right">{f.sports?.join(", ")}</dd></div>
+            </dl>
+            <h3 className="mt-6 mb-2 text-sm font-semibold">Próximas actividades</h3>
+            <ul className="space-y-1.5 text-xs">
+              {upcoming.length === 0 && <li className="text-muted-foreground">Sin actividades próximas.</li>}
+              {upcoming.map((e) => {
+                const sec = sections.find((s) => s.id === e.sectionId);
+                return (
+                  <li key={e.id} className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
+                    <span className="font-medium">{e.startTime} · {e.title}</span>
+                    <span className="text-muted-foreground">{sec?.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 }
