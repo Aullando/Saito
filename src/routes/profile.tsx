@@ -48,6 +48,7 @@ function ProfilePage() {
             <SettingRow label={t("notifications")} control={<Switch defaultChecked />} />
             <SettingRow label={t("language")} control={<span className="text-muted-foreground">{u.language === "es" ? "Español" : "English"}</span>} />
             <SettingRow label={t("change_password")} control={<Button size="sm" variant="outline" className="rounded-full">{t("change_password")}</Button>} />
+            <SettingRow label={u.language === "es" ? "Datos de demo" : "Demo data"} control={<Button size="sm" variant="outline" className="rounded-full" onClick={() => { if (confirm(u.language === "es" ? "¿Reiniciar datos de demo?" : "Reset demo data?")) reset(); }}>{u.language === "es" ? "Reset" : "Reset"}</Button>} />
           </div>
         </Card>
       </div>
