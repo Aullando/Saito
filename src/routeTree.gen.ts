@@ -20,6 +20,7 @@ import { Route as ClubRouteImport } from './routes/club'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AthletesRouteImport } from './routes/athletes'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SettingsTeamRouteImport } from './routes/settings.team'
 import { Route as MedicalCalendarRouteImport } from './routes/medical.calendar'
 import { Route as EconomicPaymentsRouteImport } from './routes/economic.payments'
 import { Route as EconomicFeesRouteImport } from './routes/economic.fees'
@@ -79,6 +80,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsTeamRoute = SettingsTeamRouteImport.update({
+  id: '/settings/team',
+  path: '/settings/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MedicalCalendarRoute = MedicalCalendarRouteImport.update({
   id: '/medical/calendar',
   path: '/medical/calendar',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
+  '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
+  '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
+  '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
+    | '/settings/team'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
+    | '/settings/team'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
+    | '/settings/team'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   EconomicFeesRoute: typeof EconomicFeesRoute
   EconomicPaymentsRoute: typeof EconomicPaymentsRoute
   MedicalCalendarRoute: typeof MedicalCalendarRoute
+  SettingsTeamRoute: typeof SettingsTeamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings/team': {
+      id: '/settings/team'
+      path: '/settings/team'
+      fullPath: '/settings/team'
+      preLoaderRoute: typeof SettingsTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/medical/calendar': {
       id: '/medical/calendar'
       path: '/medical/calendar'
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   EconomicFeesRoute: EconomicFeesRoute,
   EconomicPaymentsRoute: EconomicPaymentsRoute,
   MedicalCalendarRoute: MedicalCalendarRoute,
+  SettingsTeamRoute: SettingsTeamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -18,13 +18,15 @@ function buildItems(role: Role, t: (k: any) => string): Item[] {
     case "admin":
     case "manager":
       return [
-        { to: "/club", label: t("club_organization"), icon: LayoutGrid },
+        { to: "/dashboard", label: t("dashboard") || "Dashboard", icon: LayoutGrid },
+        { to: "/club", label: t("club_organization"), icon: Building2 },
         { to: "/calendar", label: t("calendar"), icon: CalendarDays },
         { to: "/athletes", label: t("athletes"), icon: Users },
         { to: "/economic/fees", label: t("economic_management"), icon: Wallet },
         { to: "/economic/fees", label: t("fees_rates"), icon: Receipt, indent: true },
         { to: "/economic/payments", label: t("payment_status"), icon: Receipt, indent: true },
         { to: "/communication", label: t("communication"), icon: MessageSquare },
+        ...(role === "admin" ? [{ to: "/settings/team", label: t("users_permissions"), icon: Users }] : []),
       ];
     case "technical":
       return [
