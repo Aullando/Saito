@@ -211,24 +211,57 @@ function AthletesPage() {
       )}
 
       <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
-        <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
+        <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
           {detail && (
             <>
-              <SheetHeader><SheetTitle>{detail.firstName} {detail.lastName}</SheetTitle></SheetHeader>
-              <div className="mt-6 space-y-5 text-sm">
-                <div className="flex flex-wrap gap-2">
-                  <Pill tone="info">{sections.find((s) => s.id === detail.sectionId)?.name}</Pill>
-                  <Pill>{categories.find((c) => c.id === detail.categoryId)?.name}</Pill>
-                  <Pill tone={detail.status === "Active" ? "success" : "default"}>{detail.status}</Pill>
-                  <Pill tone={detail.medicalStatus === "Fit" ? "success" : detail.medicalStatus === "Injured" ? "danger" : "warning"}>{detail.medicalStatus}</Pill>
+              <SheetHeader>
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-base font-bold text-primary">
+                    {detail.firstName[0]}{detail.lastName[0]}
+                  </div>
+                  <div>
+                    <SheetTitle className="text-xl">{detail.firstName} {detail.lastName.toUpperCase()}</SheetTitle>
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      <Pill tone="info">{sections.find((s) => s.id === detail.sectionId)?.name}</Pill>
+                      <Pill>{categories.find((c) => c.id === detail.categoryId)?.name}</Pill>
+                      <Pill tone={detail.medicalStatus === "Fit" ? "success" : detail.medicalStatus === "Injured" ? "danger" : "warning"}>{detail.medicalStatus}</Pill>
+                    </div>
+                  </div>
                 </div>
+              </SheetHeader>
+
+              <div className="mt-6 grid grid-cols-3 gap-2 text-center text-xs">
+                <div className="rounded-xl bg-muted/50 p-3">
+                  <div className="text-lg font-bold text-foreground">{detailPayments.length}</div>
+                  <div className="text-muted-foreground">Pagos</div>
+                </div>
+                <div className="rounded-xl bg-muted/50 p-3">
+                  <div className="text-lg font-bold text-foreground">{detailEvents.length}</div>
+                  <div className="text-muted-foreground">Eventos</div>
+                </div>
+                <div className="rounded-xl bg-muted/50 p-3">
+                  <div className="text-lg font-bold text-foreground">{detailAppts.length}</div>
+                  <div className="text-muted-foreground">Citas</div>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-5 text-sm">
+                <section className="rounded-2xl border border-border p-4">
+                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Contacto</h3>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div><span className="text-muted-foreground">Email:</span> {detail.firstName.toLowerCase()}.{detail.lastName.toLowerCase()}@saito.app</div>
+                    <div><span className="text-muted-foreground">Tutor:</span> +34 600 ··· ···</div>
+                    <div><span className="text-muted-foreground">Rendimiento:</span> {detail.performanceStatus}</div>
+                    <div><span className="text-muted-foreground">Grupos:</span> {detail.groupIds.map((id) => groups.find((g) => g.id === id)?.name).join(", ") || "—"}</div>
+                  </div>
+                </section>
 
                 {!isMedical && (
                   <section>
                     <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("payment_status")}</h3>
                     <ul className="space-y-1.5">
                       {detailPayments.length === 0 && <li className="text-muted-foreground">—</li>}
-                      {detailPayments.map((p) => (
+                      {detailPayments.slice(0, 5).map((p) => (
                         <li key={p.id} className="flex justify-between rounded-lg border border-border bg-card px-3 py-2">
                           <span>{p.subscription} · {p.date}</span>
                           <Pill tone={p.status === "Paid" ? "success" : p.status === "Failed" ? "danger" : "warning"}>{p.status}</Pill>
