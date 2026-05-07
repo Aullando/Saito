@@ -220,3 +220,45 @@ function RoleCard({ icon: Icon, label, value }: { icon: any; label: string; valu
     </div>
   );
 }
+
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+
+function FacilityDrawer({ id, onClose }: { id: string | null; onClose: () => void }) {
+  const facilities = useData((s) => s.facilities);
+  const events = useData((s) => s.events);
+  const sections = useData((s) => s.sections);
+  const f = facilities.find((x) => x.id === id) ?? null;
+  // Filter events by sections linked to facility
+  const linked = f?.sportSections ?? [];
+  const upcoming = events.filter((e) => e.sectionId && linked.includes(e.sectionId)).slice(0, 8);
+  return (
+    <Sheet open={!!f} onOpenChange={(o) => !o && onClose()}>
+      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
+        {f && (
+          <>
+            <SheetHeader><SheetTitle>{f.name}</SheetTitle></SheetHeader>
+            {f.photoUrl && <img src={f.photoUrl} alt={f.name} className="mt-4 h-44 w-full rounded-2xl object-cover" />}
+            <dl className="mt-4 space-y-2 text-sm">
+              <div className="flex justify-between"><dt className="text-muted-foreground">Dirección</dt><dd className="text-right">{f.address}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Aforo</dt><dd>{f.capacity}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Deportes</dt><dd className="text-right">{f.sports?.join(", ")}</dd></div>
+            </dl>
+            <h3 className="mt-6 mb-2 text-sm font-semibold">Próximas actividades</h3>
+            <ul className="space-y-1.5 text-xs">
+              {upcoming.length === 0 && <li className="text-muted-foreground">Sin actividades próximas.</li>}
+              {upcoming.map((e) => {
+                const sec = sections.find((s) => s.id === e.sectionId);
+                return (
+                  <li key={e.id} className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
+                    <span className="font-medium">{e.startTime} · {e.title}</span>
+                    <span className="text-muted-foreground">{sec?.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+}
