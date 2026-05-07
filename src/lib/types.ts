@@ -84,7 +84,7 @@ export interface Fee {
   id: string;
   name: string;
   amount: number;
-  frequency: "Monthly" | "Quarterly" | "Annual" | "One-time";
+  frequency: "Daily" | "Monthly" | "Quarterly" | "Annual" | "One-time";
   periodStart?: string;
   periodEnd?: string;
   appliesToGroupIds: string[];
