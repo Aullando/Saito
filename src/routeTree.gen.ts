@@ -14,6 +14,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OrganizationsRouteImport } from './routes/organizations'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CommunicationRouteImport } from './routes/communication'
 import { Route as ClubRouteImport } from './routes/club'
 import { Route as CalendarRouteImport } from './routes/calendar'
@@ -46,6 +47,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunicationRoute = CommunicationRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/club': typeof ClubRoute
   '/communication': typeof CommunicationRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/organizations': typeof OrganizationsRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/club': typeof ClubRoute
   '/communication': typeof CommunicationRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/organizations': typeof OrganizationsRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/club': typeof ClubRoute
   '/communication': typeof CommunicationRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/organizations': typeof OrganizationsRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/club'
     | '/communication'
+    | '/dashboard'
     | '/login'
     | '/onboarding'
     | '/organizations'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/club'
     | '/communication'
+    | '/dashboard'
     | '/login'
     | '/onboarding'
     | '/organizations'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/club'
     | '/communication'
+    | '/dashboard'
     | '/login'
     | '/onboarding'
     | '/organizations'
@@ -189,6 +201,7 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   ClubRoute: typeof ClubRoute
   CommunicationRoute: typeof CommunicationRoute
+  DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   OrganizationsRoute: typeof OrganizationsRoute
@@ -234,6 +247,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/communication': {
@@ -301,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   ClubRoute: ClubRoute,
   CommunicationRoute: CommunicationRoute,
+  DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   OrganizationsRoute: OrganizationsRoute,
