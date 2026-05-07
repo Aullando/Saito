@@ -4,7 +4,7 @@ import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { useCurrentUser, useAuth } from "@/lib/store";
+import { useCurrentUser, useAuth, useData } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { useNavigate } from "@tanstack/react-router";
 
