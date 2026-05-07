@@ -12,9 +12,11 @@ import {
 interface AuthState {
   currentUserId: string | null;
   avatars: Record<string, string>;
+  mobileNavOpen: boolean;
   setUser: (id: string | null) => void;
   setAvatar: (id: string, dataUrl: string) => void;
   removeAvatar: (id: string) => void;
+  setMobileNavOpen: (open: boolean) => void;
 }
 
 export const useAuth = create<AuthState>()(
@@ -22,14 +24,16 @@ export const useAuth = create<AuthState>()(
     (set) => ({
       currentUserId: null,
       avatars: {},
-      setUser: (id) => set({ currentUserId: id }),
+      mobileNavOpen: false,
+      setUser: (id) => set({ currentUserId: id, mobileNavOpen: false }),
       setAvatar: (id, dataUrl) => set((s) => ({ avatars: { ...s.avatars, [id]: dataUrl } })),
       removeAvatar: (id) => set((s) => {
         const { [id]: _, ...rest } = s.avatars;
         return { avatars: rest };
       }),
+      setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
     }),
-    { name: "saito-auth" },
+    { name: "saito-auth", partialize: (s) => ({ currentUserId: s.currentUserId, avatars: s.avatars }) },
   ),
 );
 
