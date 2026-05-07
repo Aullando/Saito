@@ -33,6 +33,9 @@ function CommunicationPage() {
   const u = useCurrentUser()!;
   const conversations = useData((s) => s.conversations);
   const users = useData((s) => s.users);
+  const sections = useData((s) => s.sections);
+  const categories = useData((s) => s.categories);
+  const groups = useData((s) => s.groups);
   const sendMessage = useData((s) => s.sendMessage);
   const markRead = useData((s) => s.markConversationRead);
   const addConversation = useData((s) => s.addConversation);
@@ -41,7 +44,11 @@ function CommunicationPage() {
   const active = conversations.find((c) => c.id === activeId) ?? null;
   const [draft, setDraft] = useState("");
   const [open, setOpen] = useState(false);
-  const [newC, setNewC] = useState({ title: "", target: "Whole club", body: "" });
+  const [newC, setNewC] = useState({
+    title: "", body: "",
+    scope: "club" as "club" | "section" | "category" | "group",
+    sectionId: "", categoryId: "", groupId: "",
+  });
   const totalUnread = conversations.reduce((s, c) => s + c.unreadCount, 0);
 
   const select = (id: string) => {
@@ -55,6 +62,17 @@ function CommunicationPage() {
     setDraft("");
   };
 
+  const buildTarget = () => {
+    if (newC.scope === "club") return "Todo el club (3 destinatarios)";
+    const sec = sections.find((s) => s.id === newC.sectionId);
+    const cat = categories.find((c) => c.id === newC.categoryId);
+    const grp = groups.find((g) => g.id === newC.groupId);
+    if (newC.scope === "section" && sec) return `Sección ${sec.name} (${sec.athleteCount} destinatarios)`;
+    if (newC.scope === "category" && sec && cat) return `Sección ${sec.name} > ${cat.name} (${sec.athleteCount} destinatarios)`;
+    if (newC.scope === "group" && sec && cat && grp) return `Sección ${sec.name} > ${cat.name} > Grupo ${grp.name} (10 destinatarios)`;
+    return "Destinatario";
+  };
+
   return (
     <>
       <PageHeader
@@ -64,31 +82,63 @@ function CommunicationPage() {
             <DialogTrigger asChild>
               <Button className="rounded-full"><Plus className="mr-1 h-4 w-4" />{t("new_circular")}</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-lg">
               <DialogHeader><DialogTitle>{t("new_circular")}</DialogTitle></DialogHeader>
               <div className="space-y-3">
-                <div><Label>{t("name")}</Label><Input value={newC.title} onChange={(e) => setNewC({ ...newC, title: e.target.value })} /></div>
+                <div><Label>Título</Label><Input value={newC.title} onChange={(e) => setNewC({ ...newC, title: e.target.value })} placeholder="Asunto de la circular" /></div>
                 <div>
-                  <Label>Destinatario</Label>
-                  <Select value={newC.target} onValueChange={(v) => setNewC({ ...newC, target: v })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {["Whole club", "Section", "Category", "Group", "Athlete"].map((x) => (<SelectItem key={x} value={x}>{x}</SelectItem>))}
-                    </SelectContent>
-                  </Select>
+                  <Label>Ámbito</Label>
+                  <div className="mt-1 grid grid-cols-4 gap-1.5">
+                    {(["club", "section", "category", "group"] as const).map((s) => (
+                      <button key={s} type="button" onClick={() => setNewC({ ...newC, scope: s })} className={`rounded-full px-3 py-1.5 text-xs font-medium ${newC.scope === s ? "bg-primary text-primary-foreground" : "border border-border bg-card hover:bg-muted"}`}>
+                        {s === "club" ? "Todo el club" : s === "section" ? "Sección" : s === "category" ? "Categoría" : "Grupo"}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div><Label>Mensaje</Label><Input value={newC.body} onChange={(e) => setNewC({ ...newC, body: e.target.value })} /></div>
+                {newC.scope !== "club" && (
+                  <div>
+                    <Label>Sección</Label>
+                    <Select value={newC.sectionId} onValueChange={(v) => setNewC({ ...newC, sectionId: v, categoryId: "", groupId: "" })}>
+                      <SelectTrigger><SelectValue placeholder="Selecciona sección" /></SelectTrigger>
+                      <SelectContent>{sections.map((s) => (<SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>))}</SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {(newC.scope === "category" || newC.scope === "group") && newC.sectionId && (
+                  <div>
+                    <Label>Categoría</Label>
+                    <Select value={newC.categoryId} onValueChange={(v) => setNewC({ ...newC, categoryId: v, groupId: "" })}>
+                      <SelectTrigger><SelectValue placeholder="Selecciona categoría" /></SelectTrigger>
+                      <SelectContent>{categories.filter((c) => c.sectionId === newC.sectionId).map((c) => (<SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>))}</SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {newC.scope === "group" && newC.categoryId && (
+                  <div>
+                    <Label>Grupo</Label>
+                    <Select value={newC.groupId} onValueChange={(v) => setNewC({ ...newC, groupId: v })}>
+                      <SelectTrigger><SelectValue placeholder="Selecciona grupo" /></SelectTrigger>
+                      <SelectContent>{groups.filter((g) => g.categoryId === newC.categoryId).map((g) => (<SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>))}</SelectContent>
+                    </Select>
+                  </div>
+                )}
+                <div className="rounded-lg bg-muted/60 px-3 py-2 text-xs text-muted-foreground">
+                  → {buildTarget()}
+                </div>
+                <div><Label>Mensaje</Label><Input value={newC.body} onChange={(e) => setNewC({ ...newC, body: e.target.value })} placeholder="Contenido de la circular" /></div>
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setOpen(false)}>{t("cancel")}</Button>
                 <Button onClick={() => {
                   if (!newC.title || !newC.body) return;
+                  const target = buildTarget();
                   const id = addConversation({
                     title: newC.title, type: "circular", participants: [u.id], unreadCount: 0,
-                    messages: [{ id: "m-" + Date.now(), authorId: u.id, authorRole: u.role, targetLabel: newC.target, content: newC.body, createdAt: new Date().toISOString() }],
+                    messages: [{ id: "m-" + Date.now(), authorId: u.id, authorRole: u.role, targetLabel: target, content: newC.body, createdAt: new Date().toISOString() }],
                   });
                   setActiveId(id);
-                  setNewC({ title: "", target: "Whole club", body: "" });
+                  setNewC({ title: "", body: "", scope: "club", sectionId: "", categoryId: "", groupId: "" });
                   setOpen(false);
                 }}>{t("send")}</Button>
               </DialogFooter>
