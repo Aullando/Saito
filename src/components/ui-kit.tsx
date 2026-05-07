@@ -96,7 +96,7 @@ interface Column<T> {
 export function DataTable<T extends { id?: string }>(
   { columns, data, pageSize = 10, empty }: { columns: Column<T>[]; data: T[]; pageSize?: number; empty?: ReactNode }
 ) {
-  const [page, setPage] = (typeof window !== "undefined" ? require("react").useState(1) : [1, () => {}]) as [number, (n: number) => void];
+  const [page, setPage] = useState(1);
   const total = data.length;
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const cur = Math.min(page, pages);
