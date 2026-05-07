@@ -83,6 +83,8 @@ export interface CalendarEvent {
   staffId?: string;
   roleInGroup?: string;
   type: "training" | "match" | "medical" | "meeting";
+  recurrence?: { freq: "weekly"; until: string };
+  exceptions?: string[];
 }
 
 export interface Fee {
