@@ -147,10 +147,10 @@ export function AIChat() {
     <>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-background shadow-lg transition hover:scale-105"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-white/10 shadow-lg ring-1 ring-white/10 backdrop-blur-xl backdrop-saturate-150 transition hover:scale-105 hover:bg-white/20"
         aria-label="Saito AI"
       >
-        <img src={saitoAiLogo} alt="Saito AI" className="h-12 w-12" />
+        <img src={saitoAiLogo} alt="Saito AI" className="h-10 w-10 rounded-full object-cover" />
       </button>
       {open && (
         <div className="fixed inset-x-3 bottom-20 md:inset-x-auto md:bottom-24 md:right-6 z-40 flex h-[70vh] md:h-[520px] md:w-[380px] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
