@@ -34,6 +34,8 @@ export interface SportSection {
   id: string;
   name: string;
   athleteCount: number;
+  staffCount?: number;
+  managerCount?: number;
 }
 
 export interface Category {
@@ -74,7 +76,7 @@ export interface CalendarEvent {
   groupId?: string;
   athleteId?: string;
   staffId?: string;
-  roleInGroup?: "Titular" | "Reserva";
+  roleInGroup?: string;
   type: "training" | "match" | "medical" | "meeting";
 }
 
