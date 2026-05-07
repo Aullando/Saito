@@ -48,6 +48,7 @@ function ClubPage() {
   const [userOpen, setUserOpen] = useState(false);
   const [secOpen, setSecOpen] = useState(false);
   const [facOpen, setFacOpen] = useState(false);
+  const [activeFacility, setActiveFacility] = useState<string | null>(null);
   const [newU, setNewU] = useState({ name: "", email: "", role: "technical" as Role });
   const [newSec, setNewSec] = useState("");
   const [newFac, setNewFac] = useState({ name: "", location: "" });
