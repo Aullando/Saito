@@ -15,6 +15,8 @@ import {
 import { useCurrentUser, useData } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { Plus, Send } from "lucide-react";
+import { formatDateTime } from "@/lib/format";
+import { roleLabel } from "@/lib/labels";
 
 export const Route = createFileRoute("/communication")({
   component: () => (
@@ -104,19 +106,24 @@ function CommunicationPage() {
           <ul className="flex-1 overflow-y-auto">
             {conversations.map((c) => {
               const isActive = c.id === activeId;
-              const initials = (users.find((u) => u.id === c.participants[0])?.initials) ?? "?";
+              const lastAuthor = users.find((x) => x.id === c.messages[c.messages.length - 1]?.authorId);
+              const initials = lastAuthor?.initials ?? "?";
               const last = c.messages[c.messages.length - 1];
               return (
                 <li key={c.id}>
                   <button onClick={() => select(c.id)} className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left ${isActive ? "bg-primary/5" : "hover:bg-muted/40"}`}>
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{initials}</div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between gap-2">
                         <span className="truncate text-sm font-medium">{c.title}</span>
                         {c.unreadCount > 0 && <Pill tone="info">{c.unreadCount}</Pill>}
                       </div>
-                      <div className="truncate text-xs text-muted-foreground">{last?.content}</div>
-                      <div className="mt-0.5 text-[11px] text-muted-foreground">{last && new Date(last.createdAt).toLocaleString()}</div>
+                      <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                        {lastAuthor && <Pill>{roleLabel(lastAuthor.role, u.language)}</Pill>}
+                        <span>· {c.participants.length} {t("participants")}</span>
+                      </div>
+                      <div className="mt-1 truncate text-xs text-muted-foreground">{last?.content}</div>
+                      <div className="mt-0.5 text-[11px] text-muted-foreground tabular-nums">{last && formatDateTime(last.createdAt)}</div>
                     </div>
                   </button>
                 </li>
@@ -130,20 +137,20 @@ function CommunicationPage() {
             <>
               <div className="border-b border-border px-5 py-4">
                 <div className="text-base font-semibold">{active.title}</div>
-                <div className="text-xs text-muted-foreground">{active.type} · {active.participants.length} participantes</div>
+                <div className="text-xs text-muted-foreground">{active.type} · {active.participants.length} {t("participants")}</div>
               </div>
               <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
                 {active.messages.map((m) => {
-                  const author = users.find((u) => u.id === m.authorId);
+                  const author = users.find((x) => x.id === m.authorId);
                   return (
                     <div key={m.id} className="flex gap-3">
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{author?.initials ?? "?"}</div>
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 text-xs">
+                        <div className="flex flex-wrap items-center gap-2 text-xs">
                           <span className="font-medium text-foreground">{author?.name ?? m.authorId}</span>
-                          <Pill>{m.authorRole}</Pill>
+                          <Pill>{roleLabel(m.authorRole, u.language)}</Pill>
                           <span className="text-muted-foreground">→ {m.targetLabel}</span>
-                          <span className="text-muted-foreground">· {new Date(m.createdAt).toLocaleString()}</span>
+                          <span className="text-muted-foreground tabular-nums">· {formatDateTime(m.createdAt)}</span>
                         </div>
                         <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{m.content}</div>
                       </div>
