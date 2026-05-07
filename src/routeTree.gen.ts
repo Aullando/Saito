@@ -9,38 +9,221 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as OrganizationsRouteImport } from './routes/organizations'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CommunicationRouteImport } from './routes/communication'
+import { Route as ClubRouteImport } from './routes/club'
+import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as AthletesRouteImport } from './routes/athletes'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MedicalCalendarRouteImport } from './routes/medical.calendar'
+import { Route as EconomicPaymentsRouteImport } from './routes/economic.payments'
+import { Route as EconomicFeesRouteImport } from './routes/economic.fees'
 
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrganizationsRoute = OrganizationsRouteImport.update({
+  id: '/organizations',
+  path: '/organizations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunicationRoute = CommunicationRouteImport.update({
+  id: '/communication',
+  path: '/communication',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClubRoute = ClubRouteImport.update({
+  id: '/club',
+  path: '/club',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AthletesRoute = AthletesRouteImport.update({
+  id: '/athletes',
+  path: '/athletes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MedicalCalendarRoute = MedicalCalendarRouteImport.update({
+  id: '/medical/calendar',
+  path: '/medical/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EconomicPaymentsRoute = EconomicPaymentsRouteImport.update({
+  id: '/economic/payments',
+  path: '/economic/payments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EconomicFeesRoute = EconomicFeesRouteImport.update({
+  id: '/economic/fees',
+  path: '/economic/fees',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/athletes': typeof AthletesRoute
+  '/calendar': typeof CalendarRoute
+  '/club': typeof ClubRoute
+  '/communication': typeof CommunicationRoute
+  '/login': typeof LoginRoute
+  '/organizations': typeof OrganizationsRoute
+  '/profile': typeof ProfileRoute
+  '/economic/fees': typeof EconomicFeesRoute
+  '/economic/payments': typeof EconomicPaymentsRoute
+  '/medical/calendar': typeof MedicalCalendarRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/athletes': typeof AthletesRoute
+  '/calendar': typeof CalendarRoute
+  '/club': typeof ClubRoute
+  '/communication': typeof CommunicationRoute
+  '/login': typeof LoginRoute
+  '/organizations': typeof OrganizationsRoute
+  '/profile': typeof ProfileRoute
+  '/economic/fees': typeof EconomicFeesRoute
+  '/economic/payments': typeof EconomicPaymentsRoute
+  '/medical/calendar': typeof MedicalCalendarRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/athletes': typeof AthletesRoute
+  '/calendar': typeof CalendarRoute
+  '/club': typeof ClubRoute
+  '/communication': typeof CommunicationRoute
+  '/login': typeof LoginRoute
+  '/organizations': typeof OrganizationsRoute
+  '/profile': typeof ProfileRoute
+  '/economic/fees': typeof EconomicFeesRoute
+  '/economic/payments': typeof EconomicPaymentsRoute
+  '/medical/calendar': typeof MedicalCalendarRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/athletes'
+    | '/calendar'
+    | '/club'
+    | '/communication'
+    | '/login'
+    | '/organizations'
+    | '/profile'
+    | '/economic/fees'
+    | '/economic/payments'
+    | '/medical/calendar'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/athletes'
+    | '/calendar'
+    | '/club'
+    | '/communication'
+    | '/login'
+    | '/organizations'
+    | '/profile'
+    | '/economic/fees'
+    | '/economic/payments'
+    | '/medical/calendar'
+  id:
+    | '__root__'
+    | '/'
+    | '/athletes'
+    | '/calendar'
+    | '/club'
+    | '/communication'
+    | '/login'
+    | '/organizations'
+    | '/profile'
+    | '/economic/fees'
+    | '/economic/payments'
+    | '/medical/calendar'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AthletesRoute: typeof AthletesRoute
+  CalendarRoute: typeof CalendarRoute
+  ClubRoute: typeof ClubRoute
+  CommunicationRoute: typeof CommunicationRoute
+  LoginRoute: typeof LoginRoute
+  OrganizationsRoute: typeof OrganizationsRoute
+  ProfileRoute: typeof ProfileRoute
+  EconomicFeesRoute: typeof EconomicFeesRoute
+  EconomicPaymentsRoute: typeof EconomicPaymentsRoute
+  MedicalCalendarRoute: typeof MedicalCalendarRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organizations': {
+      id: '/organizations'
+      path: '/organizations'
+      fullPath: '/organizations'
+      preLoaderRoute: typeof OrganizationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/communication': {
+      id: '/communication'
+      path: '/communication'
+      fullPath: '/communication'
+      preLoaderRoute: typeof CommunicationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/club': {
+      id: '/club'
+      path: '/club'
+      fullPath: '/club'
+      preLoaderRoute: typeof ClubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/athletes': {
+      id: '/athletes'
+      path: '/athletes'
+      fullPath: '/athletes'
+      preLoaderRoute: typeof AthletesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +231,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/medical/calendar': {
+      id: '/medical/calendar'
+      path: '/medical/calendar'
+      fullPath: '/medical/calendar'
+      preLoaderRoute: typeof MedicalCalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/economic/payments': {
+      id: '/economic/payments'
+      path: '/economic/payments'
+      fullPath: '/economic/payments'
+      preLoaderRoute: typeof EconomicPaymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/economic/fees': {
+      id: '/economic/fees'
+      path: '/economic/fees'
+      fullPath: '/economic/fees'
+      preLoaderRoute: typeof EconomicFeesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AthletesRoute: AthletesRoute,
+  CalendarRoute: CalendarRoute,
+  ClubRoute: ClubRoute,
+  CommunicationRoute: CommunicationRoute,
+  LoginRoute: LoginRoute,
+  OrganizationsRoute: OrganizationsRoute,
+  ProfileRoute: ProfileRoute,
+  EconomicFeesRoute: EconomicFeesRoute,
+  EconomicPaymentsRoute: EconomicPaymentsRoute,
+  MedicalCalendarRoute: MedicalCalendarRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
