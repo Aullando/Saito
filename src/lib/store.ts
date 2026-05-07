@@ -11,18 +11,30 @@ import {
 
 interface AuthState {
   currentUserId: string | null;
+  avatars: Record<string, string>;
   setUser: (id: string | null) => void;
+  setAvatar: (id: string, dataUrl: string) => void;
+  removeAvatar: (id: string) => void;
 }
 
 export const useAuth = create<AuthState>()(
   persist(
     (set) => ({
       currentUserId: null,
+      avatars: {},
       setUser: (id) => set({ currentUserId: id }),
+      setAvatar: (id, dataUrl) => set((s) => ({ avatars: { ...s.avatars, [id]: dataUrl } })),
+      removeAvatar: (id) => set((s) => {
+        const { [id]: _, ...rest } = s.avatars;
+        return { avatars: rest };
+      }),
     }),
     { name: "saito-auth" },
   ),
 );
+
+export const useUserAvatar = (id?: string | null) =>
+  useAuth((s) => (id ? s.avatars[id] : undefined));
 
 export const useCurrentUser = (): User | null => {
   const id = useAuth((s) => s.currentUserId);
