@@ -13,7 +13,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <Sidebar />
       <div className="md:pl-[224px]">
         <Topbar />
-        <main className="px-6 py-6 md:px-10 md:py-8">{children}</main>
+        <main className="px-6 py-6 pt-[88px] md:px-10 md:py-8 md:pt-[96px]">{children}</main>
       </div>
       <AIChat />
     </div>
