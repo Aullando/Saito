@@ -123,24 +123,47 @@ function ClubPage() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {facilities.map((f) => (
-            <div key={f.id} className="flex items-start justify-between rounded-2xl border border-border bg-card p-4">
-              <div>
-                <div className="flex items-center gap-2 font-medium">
+            <button
+              key={f.id}
+              onClick={() => setActiveFacility(f.id)}
+              className="group overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-primary hover:shadow-sm"
+            >
+              {f.photoUrl && (
+                <div className="relative h-28 w-full overflow-hidden bg-muted">
+                  <img src={f.photoUrl} alt={f.name} className="h-full w-full object-cover transition group-hover:scale-[1.03]" loading="lazy" />
+                </div>
+              )}
+              <div className="p-4">
+                <div className="flex items-center gap-2 text-sm font-semibold">
                   <Building2 className="h-4 w-4 text-primary" />{f.name}
                 </div>
                 <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                  <MapPin className="h-3 w-3" />{f.location}
+                  <MapPin className="h-3 w-3" />{f.address ?? f.location}
                 </div>
+                {f.sports && f.sports.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {f.sports.slice(0, 3).map((s) => (
+                      <span key={s} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{s}</span>
+                    ))}
+                  </div>
+                )}
+                {f.nextActivity && (
+                  <div className="mt-3 text-[11px] text-muted-foreground">
+                    <span className="font-medium text-foreground">{lang === "es" ? "Próx." : "Next"}:</span> {f.nextActivity}
+                  </div>
+                )}
+                {f.capacity && (
+                  <div className="mt-1 text-[11px] text-muted-foreground">{lang === "es" ? "Aforo" : "Capacity"}: {f.capacity}</div>
+                )}
               </div>
-              <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/15" aria-label="Add">
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
+            </button>
           ))}
         </div>
       </Card>
+
+      <FacilityDrawer id={activeFacility} onClose={() => setActiveFacility(null)} />
 
       {/* Organization chart / Sections */}
       <Card>
