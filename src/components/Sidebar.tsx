@@ -115,6 +115,7 @@ export function Sidebar() {
               <li key={idx}>
                 <Link
                   to={it.to}
+                  onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
                     active
@@ -153,7 +154,8 @@ export function Sidebar() {
           {!collapsed && <span>{t("logout")}</span>}
         </button>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }
 
