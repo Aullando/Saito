@@ -33,14 +33,15 @@ function DashboardPage() {
     queryKey: ["dashboard", orgId],
     enabled: !!orgId,
     queryFn: async () => {
+      const oid = orgId!;
       const [ath, sec, evToday, payPending, payMonth, apptUpcoming, msgs] = await Promise.all([
-        supabase.from("athletes").select("id, status, medical_status", { count: "exact" }).eq("organization_id", orgId),
-        supabase.from("sport_sections").select("id", { count: "exact", head: true }).eq("organization_id", orgId),
-        supabase.from("calendar_events").select("id, title, start_time, end_time, type").eq("organization_id", orgId).eq("event_date", today()).order("start_time"),
-        supabase.from("payments").select("id, amount", { count: "exact" }).eq("organization_id", orgId).eq("status", "Pending"),
-        supabase.from("payments").select("amount, status").eq("organization_id", orgId).gte("payment_date", monthStart()),
-        supabase.from("medical_appointments").select("id, appointment_date, appointment_time, reason, athlete_id").eq("organization_id", orgId).gte("appointment_date", today()).order("appointment_date").limit(5),
-        supabase.from("conversations").select("id", { count: "exact", head: true }).eq("organization_id", orgId),
+        supabase.from("athletes").select("id, status, medical_status", { count: "exact" }).eq("organization_id", oid),
+        supabase.from("sport_sections").select("id", { count: "exact", head: true }).eq("organization_id", oid),
+        supabase.from("calendar_events").select("id, title, start_time, end_time, type").eq("organization_id", oid).eq("event_date", today()).order("start_time"),
+        supabase.from("payments").select("id, amount", { count: "exact" }).eq("organization_id", oid).eq("status", "Pending"),
+        supabase.from("payments").select("amount, status").eq("organization_id", oid).gte("payment_date", monthStart()),
+        supabase.from("medical_appointments").select("id, appointment_date, appointment_time, reason, athlete_id").eq("organization_id", oid).gte("appointment_date", today()).order("appointment_date").limit(5),
+        supabase.from("conversations").select("id", { count: "exact", head: true }).eq("organization_id", oid),
       ]);
 
       const athletes = ath.data ?? [];
