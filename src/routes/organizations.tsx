@@ -16,7 +16,8 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useData } from "@/lib/store";
 import type { Organization } from "@/lib/types";
-import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus } from "lucide-react";
+import { formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/organizations")({
   component: () => (
@@ -105,14 +106,12 @@ function OrganizationsPage() {
             {paged.map((o) => (
               <tr key={o.id} className="border-t border-border hover:bg-muted/30">
                 <td className="px-5 py-3 font-medium">{o.name}</td>
-                <td className="px-5 py-3 text-muted-foreground">{o.createdAt}</td>
-                <td className="px-5 py-3 text-muted-foreground">{o.updatedAt}</td>
+                <td className="px-5 py-3 text-muted-foreground">{formatDateTime(o.createdAt)}</td>
+                <td className="px-5 py-3 text-muted-foreground">{formatDateTime(o.updatedAt)}</td>
                 <td className="px-5 py-3">
                   <Pill tone={o.status === "Active" ? "success" : "default"}>{o.status}</Pill>
                 </td>
-                <td className="px-5 py-3">
-                  <Switch checked={o.aiEnabled} onCheckedChange={() => toggleOrgAi(o.id)} />
-                </td>
+                <td className="px-5 py-3 text-sm font-medium">{o.aiEnabled ? "Yes" : "No"}</td>
                 <td className="px-5 py-3 text-right">
                   <Button size="sm" variant="ghost" onClick={() => setDetail(o)}>Details</Button>
                 </td>
@@ -122,14 +121,12 @@ function OrganizationsPage() {
         </table>
       </div>
 
-      <div className="mt-4 flex items-center justify-end gap-2 text-sm">
-        <Button variant="ghost" size="sm" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
-          <ChevronLeft className="h-4 w-4" /> Previous Page
-        </Button>
-        <span className="px-2">{page} / {totalPages}</span>
-        <Button variant="ghost" size="sm" disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}>
-          Next Page <ChevronRight className="h-4 w-4" />
-        </Button>
+      <div className="mt-4 flex items-center justify-end gap-3 text-sm">
+        <button className="text-muted-foreground hover:text-foreground disabled:opacity-40" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>Previous Page</button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+          <button key={n} onClick={() => setPage(n)} className={`flex h-7 w-7 items-center justify-center rounded-full ${n === page ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}>{n}</button>
+        ))}
+        <button className="text-muted-foreground hover:text-foreground disabled:opacity-40" disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}>Next Page</button>
       </div>
 
       <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>

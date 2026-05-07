@@ -169,11 +169,14 @@ function ClubPage() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {sections.map((s) => (
             <Link key={s.id} to="/athletes" className="rounded-2xl border border-border bg-card p-4 transition hover:border-primary hover:shadow-sm">
-              <div className="text-sm font-semibold">{s.name}</div>
-              <div className="mt-2 flex items-center justify-between">
-                <Pill tone="info">{s.athleteCount} {t("athletes").toLowerCase()}</Pill>
-                <span className="text-xs text-muted-foreground">→</span>
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-sm font-semibold">{s.name}</div>
+                <div className="flex shrink-0 gap-1">
+                  {s.managerCount != null && <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-primary/10 px-1.5 text-[11px] font-semibold text-primary">{s.managerCount}</span>}
+                  {s.staffCount != null && <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-success/15 px-1.5 text-[11px] font-semibold text-success">{s.staffCount}</span>}
+                </div>
               </div>
+              <div className="mt-3 text-xs text-muted-foreground">{s.athleteCount} {lang === "es" ? "deportistas" : "athletes"}</div>
             </Link>
           ))}
         </div>
