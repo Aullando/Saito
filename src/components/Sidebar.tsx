@@ -57,11 +57,10 @@ export function Sidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 z-30 flex h-screen flex-col border-r border-sidebar-border bg-sidebar transition-[width] duration-200"
+      className="fixed left-0 top-16 z-20 flex h-[calc(100vh-4rem)] flex-col border-r border-sidebar-border bg-sidebar transition-[width] duration-200"
       style={{ width }}
     >
-      <div className="flex h-16 items-center justify-between px-4">
-        {!collapsed ? <Logo /> : <Logo withText={false} size={28} />}
+      <div className="flex h-12 items-center justify-end px-3">
         <button
           onClick={() => setCollapsed((c) => !c)}
           className="hidden h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:flex"
