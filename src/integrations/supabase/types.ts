@@ -834,6 +834,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_organization: {
+        Args: { _name: string; _slug: string }
+        Returns: string
+      }
       current_org_id: { Args: never; Returns: string }
       has_any_role: {
         Args: {
