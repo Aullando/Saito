@@ -39,3 +39,23 @@ export function EmptyState({ children }: { children: ReactNode }) {
     </div>
   );
 }
+
+export function Skeleton({ className }: { className?: string }) {
+  return <div className={cn("animate-pulse rounded-md bg-muted", className)} />;
+}
+
+export function TableSkeleton({ rows = 6, cols = 5 }: { rows?: number; cols?: number }) {
+  return (
+    <div className="saito-card overflow-hidden p-0">
+      <div className="space-y-0">
+        {Array.from({ length: rows }).map((_, r) => (
+          <div key={r} className="grid gap-3 border-b border-border px-5 py-3 last:border-b-0" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+            {Array.from({ length: cols }).map((_, c) => (
+              <Skeleton key={c} className="h-4 w-3/4" />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

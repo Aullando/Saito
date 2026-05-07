@@ -136,7 +136,7 @@ export const EVENTS: CalendarEvent[] = (() => {
     const date = new Date(today.getFullYear(), today.getMonth(), day);
     const dow = date.getDay(); // 0 sun
     // weekend lighter
-    const count = dow === 0 || dow === 6 ? 1 : 6 + (day % 4) * 4; // 6..18
+    const count = dow === 0 || dow === 6 ? 2 : 8 + (day % 5) * 3; // up to ~20
     for (let i = 0; i < count; i++) {
       const hour = 6 + (i % 12);
       const g = groupCycle[i % groupCycle.length];
