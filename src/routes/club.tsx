@@ -35,8 +35,11 @@ function ClubPage() {
   const facilities = useData((s) => s.facilities);
   const users = useData((s) => s.users);
   const addUser = useData((s) => s.addUser);
+  const deleteUser = useData((s) => s.deleteUser);
   const addSection = useData((s) => s.addSection);
+  const deleteSection = useData((s) => s.deleteSection);
   const addFacility = useData((s) => s.addFacility);
+  const deleteFacility = useData((s) => s.deleteFacility);
 
   const counts = {
     managers: users.filter((u) => u.role === "manager").length,
