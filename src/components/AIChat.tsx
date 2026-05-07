@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, Send, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
+import saitoAiLogo from "@/assets/saito-ai.png";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
