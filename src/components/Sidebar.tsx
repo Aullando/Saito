@@ -1,10 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Building2, CalendarDays, Users, Wallet, Receipt, MessageSquare,
-  Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut,
+  Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X,
 } from "lucide-react";
 import { useState } from "react";
-import { Logo } from "./Logo";
 import { useCurrentUser, useAuth } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import type { Role } from "@/lib/types";
@@ -46,6 +45,8 @@ export function Sidebar() {
   const user = useCurrentUser();
   const t = useT();
   const setUser = useAuth((s) => s.setUser);
+  const mobileOpen = useAuth((s) => s.mobileNavOpen);
+  const setMobileOpen = useAuth((s) => s.setMobileNavOpen);
   const [collapsed, setCollapsed] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
   if (!user) return null;
@@ -56,14 +57,32 @@ export function Sidebar() {
   const isActive = (to: string) => path === to || path.startsWith(to + "/");
 
   return (
-    <aside
-      className="fixed left-0 top-16 z-20 flex h-[calc(100vh-4rem)] flex-col border-r border-sidebar-border bg-sidebar transition-[width] duration-200"
-      style={{ width }}
-    >
-      <div className="flex h-12 items-center justify-end px-3">
+    <>
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+      <aside
+        className={cn(
+          "fixed left-0 top-14 md:top-16 z-40 flex h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-200",
+          "md:translate-x-0",
+          mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+        )}
+        style={{ width }}
+      >
+      <div className="flex h-12 items-center justify-between px-3">
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:hidden"
+          aria-label="Close"
+        >
+          <X className="h-4 w-4" />
+        </button>
         <button
           onClick={() => setCollapsed((c) => !c)}
-          className="hidden h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:flex"
+          className="ml-auto hidden h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:flex"
           aria-label="Collapse"
         >
           <ChevronLeft className={cn("h-4 w-4 transition-transform", collapsed && "rotate-180")} />
@@ -96,6 +115,7 @@ export function Sidebar() {
               <li key={idx}>
                 <Link
                   to={it.to}
+                  onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
                     active
@@ -134,7 +154,8 @@ export function Sidebar() {
           {!collapsed && <span>{t("logout")}</span>}
         </button>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }
 
