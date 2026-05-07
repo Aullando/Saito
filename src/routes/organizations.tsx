@@ -36,6 +36,7 @@ function OrganizationsPage() {
   const addOrganization = useData((s) => s.addOrganization);
   const toggleOrgAi = useData((s) => s.toggleOrgAi);
   const setOrgStatus = useData((s) => s.setOrgStatus);
+  const deleteOrganization = useData((s) => s.deleteOrganization);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
@@ -112,8 +113,9 @@ function OrganizationsPage() {
                   <Pill tone={o.status === "Active" ? "success" : "default"}>{o.status}</Pill>
                 </td>
                 <td className="px-5 py-3 text-sm font-medium">{o.aiEnabled ? "Yes" : "No"}</td>
-                <td className="px-5 py-3 text-right">
+                <td className="px-5 py-3 text-right whitespace-nowrap">
                   <Button size="sm" variant="ghost" onClick={() => setDetail(o)}>Details</Button>
+                  <Button size="sm" variant="ghost" className="text-destructive" onClick={() => { if (confirm("Delete this organization?")) deleteOrganization(o.id); }}>Delete</Button>
                 </td>
               </tr>
             ))}

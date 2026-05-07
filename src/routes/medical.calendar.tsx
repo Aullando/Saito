@@ -34,6 +34,7 @@ function MedicalCalendarPage() {
   const athletes = useData((s) => s.athletes);
   const appointments = useData((s) => s.appointments);
   const addAppointment = useData((s) => s.addAppointment);
+  const deleteAppointment = useData((s) => s.deleteAppointment);
 
   const [cursor, setCursor] = useState(() => new Date());
   const [athF, setAthF] = useState("all");
@@ -140,6 +141,13 @@ function MedicalCalendarPage() {
                 <div><span className="text-muted-foreground">Motivo:</span> {detail.reason}</div>
                 <div className="flex items-center gap-2"><span className="text-muted-foreground">Estado:</span> <Pill tone="info">{detail.status}</Pill></div>
                 {detail.notes && <div><span className="text-muted-foreground">Notas:</span><div className="mt-1 whitespace-pre-wrap rounded-lg bg-muted p-3 text-xs">{detail.notes}</div></div>}
+                <div className="pt-4">
+                  <Button variant="destructive" size="sm" onClick={() => {
+                    if (!confirm(t("delete_confirm"))) return;
+                    deleteAppointment(detail.id);
+                    setDetail(null);
+                  }}>{t("delete")}</Button>
+                </div>
               </div>
             </>
           )}
