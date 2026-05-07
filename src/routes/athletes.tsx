@@ -175,7 +175,7 @@ function AthletesPage() {
                 <th className="px-5 py-3 font-semibold">{t("name")}</th>
                 <th className="px-5 py-3 font-semibold">{t("section")}</th>
                 <th className="px-5 py-3 font-semibold">{t("category")}</th>
-                <th className="px-5 py-3 font-semibold">{t("groups")}</th>
+                {!isMedical && <th className="px-5 py-3 font-semibold">{t("groups")}</th>}
                 {isTechnical && <th className="px-5 py-3 font-semibold">{t("performance")}</th>}
                 <th className="px-5 py-3 font-semibold">{isMedical || isTechnical ? t("medical_status") : t("status")}</th>
                 <th className="px-5 py-3" />
@@ -187,16 +187,16 @@ function AthletesPage() {
                 const cat = categories.find((c) => c.id === a.categoryId);
                 return (
                   <tr key={a.id} className="border-t border-border hover:bg-muted/30">
-                    <td className="px-5 py-3 font-medium">{a.firstName} {a.lastName}</td>
+                    <td className="px-5 py-3 font-medium">{a.firstName} {a.lastName.toUpperCase()}</td>
                     <td className="px-5 py-3 text-muted-foreground">{sec?.name}</td>
                     <td className="px-5 py-3 text-muted-foreground">{cat?.name}</td>
-                    <td className="px-5 py-3 text-muted-foreground">{a.groupIds.map((id) => groups.find((g) => g.id === id)?.name).join(", ")}</td>
+                    {!isMedical && <td className="px-5 py-3 text-muted-foreground">{a.groupIds.map((id) => groups.find((g) => g.id === id)?.name).join(", ")}</td>}
                     {isTechnical && <td className="px-5 py-3"><Pill tone={a.performanceStatus === "High" ? "success" : a.performanceStatus === "Low" ? "warning" : "info"}>{a.performanceStatus}</Pill></td>}
                     <td className="px-5 py-3">
                       {(isMedical || isTechnical) ? (
-                        <Pill tone={a.medicalStatus === "Fit" ? "success" : a.medicalStatus === "Injured" ? "danger" : a.medicalStatus === "Under review" ? "warning" : "default"}>{a.medicalStatus}</Pill>
+                        <Pill tone={a.medicalStatus === "Fit" ? "success" : a.medicalStatus === "Injured" ? "danger" : a.medicalStatus === "Under review" ? "warning" : "default"}>{a.medicalStatus === "Fit" ? "Apto" : a.medicalStatus === "Injured" ? "Lesionado" : a.medicalStatus === "Under review" ? "En revisión" : "Desconocido"}</Pill>
                       ) : (
-                        <Pill tone={a.status === "Active" ? "success" : a.status === "Pending" ? "warning" : "default"}>{a.status}</Pill>
+                        <Pill tone={a.status === "Active" ? "success" : a.status === "Pending" ? "warning" : "default"}>{a.status === "Active" ? "Activo" : a.status === "Pending" ? "Pendiente" : "Inactivo"}</Pill>
                       )}
                     </td>
                     <td className="px-5 py-3 text-right">
