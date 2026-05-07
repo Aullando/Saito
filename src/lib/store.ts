@@ -40,9 +40,23 @@ export const useAuth = create<AuthState>()(
 export const useUserAvatar = (id?: string | null) =>
   useAuth((s) => (id ? s.avatars[id] : undefined));
 
+import { useAuth as useRealAuth } from "./auth";
+
 export const useCurrentUser = (): User | null => {
-  const id = useAuth((s) => s.currentUserId);
-  return DEMO_USERS.find((u) => u.id === id) ?? null;
+  const { user, profile, roles } = useRealAuth();
+  if (!user) return null;
+  const role = (roles[0] ?? "admin") as User["role"];
+  const name = profile?.full_name || user.email?.split("@")[0] || "User";
+  const parts = name.split(" ");
+  const initials = (parts[0]?.[0] ?? "?") + (parts[1]?.[0] ?? "");
+  return {
+    id: user.id,
+    name,
+    email: user.email ?? "",
+    role,
+    language: (profile?.language as User["language"]) ?? "es",
+    initials: initials.toUpperCase(),
+  };
 };
 
 interface DataState {
