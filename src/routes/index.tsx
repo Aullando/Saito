@@ -14,7 +14,7 @@ function IndexRedirect() {
   }
 
   if (roles.includes("sysadmin")) return <Navigate to="/organizations" />;
-  if (roles.includes("admin") || roles.includes("manager")) return <Navigate to="/club" />;
+  if (roles.includes("admin") || roles.includes("manager")) return <Navigate to="/dashboard" />;
   if (roles.includes("technical")) return <Navigate to="/calendar" />;
   if (roles.includes("medical")) return <Navigate to="/medical/calendar" />;
   return <Navigate to="/club" />;
