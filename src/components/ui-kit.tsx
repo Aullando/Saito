@@ -58,6 +58,7 @@ export function TableSkeleton({ rows = 6, cols = 5 }: { rows?: number; cols?: nu
       </div>
     </div>
   );
+}
 
 export type Status = "Paid" | "Active" | "Failed" | "Pending" | "Fit" | "Injured" | "Under review" | "Unknown" | string;
 
