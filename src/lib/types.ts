@@ -28,6 +28,11 @@ export interface Facility {
   location: string;
   sportSections: string[];
   status: "Active" | "Inactive";
+  photoUrl?: string;
+  address?: string;
+  capacity?: number;
+  sports?: string[];
+  nextActivity?: string;
 }
 
 export interface SportSection {
