@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, Send, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
+import saitoAiLogo from "@/assets/saito-ai.png";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
@@ -146,16 +147,16 @@ export function AIChat() {
     <>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition hover:scale-105"
-        aria-label="AI"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-background shadow-lg transition hover:scale-105"
+        aria-label="Saito AI"
       >
-        <Sparkles className="h-5 w-5" />
+        <img src={saitoAiLogo} alt="Saito AI" className="h-12 w-12" />
       </button>
       {open && (
         <div className="fixed inset-x-3 bottom-20 md:inset-x-auto md:bottom-24 md:right-6 z-40 flex h-[70vh] md:h-[520px] md:w-[380px] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <div className="flex items-center gap-2 text-sm font-semibold">
-              <Sparkles className="h-4 w-4 text-primary" />{TITLES[role]}
+              <img src={saitoAiLogo} alt="" className="h-5 w-5" />{TITLES[role]}
             </div>
             <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground"><X className="h-4 w-4" /></button>
           </div>
