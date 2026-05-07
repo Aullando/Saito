@@ -8,7 +8,7 @@ export function Topbar() {
   const { theme, toggle } = useTheme();
   if (!user) return null;
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-end gap-3 border-b border-border bg-background/80 px-6 backdrop-blur">
+    <header className="fixed top-0 right-0 left-0 md:left-[224px] z-30 flex h-16 items-center justify-end gap-3 border-b border-border bg-background/80 px-6 backdrop-blur">
       <button
         onClick={toggle}
         className="flex h-10 w-10 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm hover:text-foreground"
