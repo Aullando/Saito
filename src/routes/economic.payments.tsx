@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { useData } from "@/lib/store";
+import { useData, useCurrentUser } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import type { PaymentStatus } from "@/lib/types";
-import { Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { Download } from "lucide-react";
+import { formatMoneyEs, formatDate, formatName } from "@/lib/format";
+import { paymentLabel } from "@/lib/labels";
 
 export const Route = createFileRoute("/economic/payments")({
   component: () => (
@@ -26,6 +28,7 @@ const PAGE_SIZE = 8;
 
 function PaymentsPage() {
   const t = useT();
+  const lang = useCurrentUser()?.language ?? "es";
   const payments = useData((s) => s.payments);
   const athletes = useData((s) => s.athletes);
   const sections = useData((s) => s.sections);
@@ -130,15 +133,15 @@ function PaymentsPage() {
                 const a = athletes.find((a) => a.id === p.athleteId);
                 return (
                   <tr key={p.id} className="border-t border-border hover:bg-muted/30">
-                    <td className="px-5 py-3 font-medium">{a ? `${a.firstName} ${a.lastName}` : "—"}</td>
+                    <td className="px-5 py-3 font-medium">{a ? formatName(a.firstName, a.lastName) : "—"}</td>
                     <td className="px-5 py-3">{p.subscription}</td>
                     <td className="px-5 py-3 text-muted-foreground">{sections.find((s) => s.id === p.sectionId)?.name}</td>
                     <td className="px-5 py-3 text-muted-foreground">{categories.find((c) => c.id === p.categoryId)?.name}</td>
-                    <td className="px-5 py-3">€{p.amount}</td>
-                    <td className="px-5 py-3"><Pill tone={p.status === "Paid" ? "success" : p.status === "Failed" ? "danger" : p.status === "Pending" ? "warning" : "info"}>{p.status}</Pill></td>
-                    <td className="px-5 py-3 text-muted-foreground">{p.date}</td>
-                    <td className="px-5 py-3 text-right">
-                      <Button size="sm" variant="ghost" onClick={() => openInvoice(p.id)}>{t("view_invoice")}</Button>
+                    <td className="px-5 py-3 tabular-nums">{formatMoneyEs(p.amount)}</td>
+                    <td className="px-5 py-3"><Pill tone={p.status === "Paid" ? "success" : p.status === "Failed" ? "danger" : p.status === "Pending" ? "warning" : "info"}>{paymentLabel(p.status, lang)}</Pill></td>
+                    <td className="px-5 py-3 text-muted-foreground tabular-nums">{formatDate(p.date)}</td>
+                    <td className="px-5 py-3 text-right whitespace-nowrap">
+                      <Button size="sm" variant="ghost" onClick={() => openInvoice(p.id)}>{t("view_invoice_pdf")}</Button>
                       {p.status !== "Paid" && (
                         <Button size="sm" variant="ghost" className="text-success" onClick={() => setPaymentStatus(p.id, "Paid")}>{t("mark_paid")}</Button>
                       )}
@@ -151,10 +154,17 @@ function PaymentsPage() {
         </div>
       )}
 
-      <div className="mt-4 flex items-center justify-end gap-2 text-sm">
-        <Button variant="ghost" size="sm" disabled={page === 1} onClick={() => setPage((p) => p - 1)}><ChevronLeft className="h-4 w-4" /></Button>
-        <span className="px-2">{page} / {totalPages}</span>
-        <Button variant="ghost" size="sm" disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}><ChevronRight className="h-4 w-4" /></Button>
+      <div className="mt-4 flex items-center justify-between gap-2 text-sm">
+        <span className="text-muted-foreground">
+          {t("showing_records")} {filtered.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1} {t("to_word")} {Math.min(page * PAGE_SIZE, filtered.length)} {t("of_word")} {filtered.length} {t("records")}
+        </span>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="rounded-full" disabled={page === 1} onClick={() => setPage(1)}>{t("first_page")}</Button>
+          <Button variant="outline" size="sm" className="rounded-full" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>{t("prev_page")}</Button>
+          <span className="px-2 tabular-nums">{page} / {totalPages}</span>
+          <Button variant="outline" size="sm" className="rounded-full" disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}>{t("next_page")}</Button>
+          <Button variant="outline" size="sm" className="rounded-full" disabled={page === totalPages} onClick={() => setPage(totalPages)}>{t("last_page")}</Button>
+        </div>
       </div>
     </>
   );
