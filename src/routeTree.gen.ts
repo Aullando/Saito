@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OrganizationsRouteImport } from './routes/organizations'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CommunicationRouteImport } from './routes/communication'
 import { Route as ClubRouteImport } from './routes/club'
@@ -35,6 +36,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const OrganizationsRoute = OrganizationsRouteImport.update({
   id: '/organizations',
   path: '/organizations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/club': typeof ClubRoute
   '/communication': typeof CommunicationRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/club': typeof ClubRoute
   '/communication': typeof CommunicationRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/club': typeof ClubRoute
   '/communication': typeof CommunicationRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/club'
     | '/communication'
     | '/login'
+    | '/onboarding'
     | '/organizations'
     | '/profile'
     | '/signup'
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/club'
     | '/communication'
     | '/login'
+    | '/onboarding'
     | '/organizations'
     | '/profile'
     | '/signup'
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/club'
     | '/communication'
     | '/login'
+    | '/onboarding'
     | '/organizations'
     | '/profile'
     | '/signup'
@@ -178,6 +190,7 @@ export interface RootRouteChildren {
   ClubRoute: typeof ClubRoute
   CommunicationRoute: typeof CommunicationRoute
   LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
   OrganizationsRoute: typeof OrganizationsRoute
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/organizations'
       fullPath: '/organizations'
       preLoaderRoute: typeof OrganizationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -282,6 +302,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClubRoute: ClubRoute,
   CommunicationRoute: CommunicationRoute,
   LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
   OrganizationsRoute: OrganizationsRoute,
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
@@ -292,3 +313,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

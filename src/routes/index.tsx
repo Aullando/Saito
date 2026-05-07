@@ -6,9 +6,12 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexRedirect() {
-  const { session, loading, roles } = useAuth();
+  const { session, loading, profile, roles } = useAuth();
   if (loading) return null;
   if (!session) return <Navigate to="/login" />;
+  if (!profile?.organization_id && !roles.includes("sysadmin")) {
+    return <Navigate to="/onboarding" />;
+  }
 
   if (roles.includes("sysadmin")) return <Navigate to="/organizations" />;
   if (roles.includes("admin") || roles.includes("manager")) return <Navigate to="/club" />;
