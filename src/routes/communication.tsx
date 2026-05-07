@@ -39,6 +39,7 @@ function CommunicationPage() {
   const sendMessage = useData((s) => s.sendMessage);
   const markRead = useData((s) => s.markConversationRead);
   const addConversation = useData((s) => s.addConversation);
+  const deleteConversation = useData((s) => s.deleteConversation);
 
   const [activeId, setActiveId] = useState<string | null>(conversations[0]?.id ?? null);
   const active = conversations.find((c) => c.id === activeId) ?? null;
@@ -185,9 +186,17 @@ function CommunicationPage() {
         <div className="saito-card flex h-[600px] flex-col p-0">
           {active ? (
             <>
-              <div className="border-b border-border px-5 py-4">
-                <div className="text-base font-semibold">{active.title}</div>
-                <div className="text-xs text-muted-foreground">{active.type} · {active.participants.length} {t("participants")}</div>
+              <div className="flex items-start justify-between gap-2 border-b border-border px-5 py-4">
+                <div>
+                  <div className="text-base font-semibold">{active.title}</div>
+                  <div className="text-xs text-muted-foreground">{active.type} · {active.participants.length} {t("participants")}</div>
+                </div>
+                <Button size="sm" variant="ghost" className="text-destructive" onClick={() => {
+                  if (!confirm(t("delete_confirm"))) return;
+                  const id = active.id;
+                  deleteConversation(id);
+                  setActiveId(null);
+                }}>{t("delete")}</Button>
               </div>
               <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
                 {active.messages.map((m) => {

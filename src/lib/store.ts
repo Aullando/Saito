@@ -60,18 +60,28 @@ interface DataState {
   setOrgStatus: (id: string, status: Organization["status"]) => void;
 
   addUser: (u: Omit<User, "id" | "initials">) => void;
+  deleteUser: (id: string) => void;
   addFacility: (f: Omit<Facility, "id">) => void;
+  deleteFacility: (id: string) => void;
   addSection: (name: string) => void;
+  deleteSection: (id: string) => void;
   addAthlete: (a: Omit<Athlete, "id">) => void;
+  deleteAthlete: (id: string) => void;
   addEvent: (e: Omit<CalendarEvent, "id">) => void;
+  deleteEvent: (id: string) => void;
+  addEventException: (id: string, date: string) => void;
   addFee: (f: Omit<Fee, "id">) => void;
+  deleteFee: (id: string) => void;
   setPaymentStatus: (id: string, status: Payment["status"]) => void;
   addAppointment: (a: Omit<MedicalAppointment, "id">) => void;
+  deleteAppointment: (id: string) => void;
   addAppointmentNote: (id: string, note: string) => void;
+  deleteOrganization: (id: string) => void;
 
   sendMessage: (conversationId: string, msg: Omit<Message, "id" | "createdAt">) => void;
   markConversationRead: (id: string) => void;
   addConversation: (c: Omit<Conversation, "id">) => string;
+  deleteConversation: (id: string) => void;
 
   reset: () => void;
 }
@@ -118,8 +128,16 @@ export const useData = create<DataState>()(
         set((s) => ({
           users: [...s.users, { ...u, id: uid("u"), initials: u.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase() }],
         })),
+      deleteUser: (id) => set((s) => ({ users: s.users.filter((u) => u.id !== id) })),
       addFacility: (f) => set((s) => ({ facilities: [...s.facilities, { ...f, id: uid("f") }] })),
+      deleteFacility: (id) => set((s) => ({ facilities: s.facilities.filter((f) => f.id !== id) })),
       addSection: (name) => set((s) => ({ sections: [...s.sections, { id: uid("sec"), name, athleteCount: 0 }] })),
+      deleteSection: (id) => set((s) => ({
+        sections: s.sections.filter((x) => x.id !== id),
+        categories: s.categories.filter((c) => c.sectionId !== id),
+        groups: s.groups.filter((g) => g.sectionId !== id),
+        athletes: s.athletes.filter((a) => a.sectionId !== id),
+      })),
       addAthlete: (a) => set((s) => {
         const newA = { ...a, id: uid("ath") };
         return {
@@ -127,13 +145,29 @@ export const useData = create<DataState>()(
           sections: s.sections.map((sec) => sec.id === a.sectionId ? { ...sec, athleteCount: sec.athleteCount + 1 } : sec),
         };
       }),
+      deleteAthlete: (id) => set((s) => {
+        const a = s.athletes.find((x) => x.id === id);
+        return {
+          athletes: s.athletes.filter((x) => x.id !== id),
+          sections: a ? s.sections.map((sec) => sec.id === a.sectionId ? { ...sec, athleteCount: Math.max(0, sec.athleteCount - 1) } : sec) : s.sections,
+          payments: s.payments.filter((p) => p.athleteId !== id),
+          appointments: s.appointments.filter((p) => p.athleteId !== id),
+        };
+      }),
       addEvent: (e) => set((s) => ({ events: [...s.events, { ...e, id: uid("ev") }] })),
+      deleteEvent: (id) => set((s) => ({ events: s.events.filter((e) => e.id !== id) })),
+      addEventException: (id, date) => set((s) => ({
+        events: s.events.map((e) => e.id === id ? { ...e, exceptions: [...(e.exceptions ?? []), date] } : e),
+      })),
       addFee: (f) => set((s) => ({ fees: [...s.fees, { ...f, id: uid(f.kind) }] })),
+      deleteFee: (id) => set((s) => ({ fees: s.fees.filter((f) => f.id !== id) })),
       setPaymentStatus: (id, status) =>
         set((s) => ({ payments: s.payments.map((p) => (p.id === id ? { ...p, status } : p)) })),
       addAppointment: (a) => set((s) => ({ appointments: [...s.appointments, { ...a, id: uid("apt") }] })),
+      deleteAppointment: (id) => set((s) => ({ appointments: s.appointments.filter((a) => a.id !== id) })),
       addAppointmentNote: (id, note) =>
         set((s) => ({ appointments: s.appointments.map((a) => a.id === id ? { ...a, notes: (a.notes ? a.notes + "\n" : "") + note } : a) })),
+      deleteOrganization: (id) => set((s) => ({ organizations: s.organizations.filter((o) => o.id !== id) })),
 
       sendMessage: (conversationId, msg) =>
         set((s) => ({
@@ -150,9 +184,10 @@ export const useData = create<DataState>()(
         set((s) => ({ conversations: [{ ...c, id }, ...s.conversations] }));
         return id;
       },
+      deleteConversation: (id) => set((s) => ({ conversations: s.conversations.filter((c) => c.id !== id) })),
 
       reset: () => set(initial()),
     }),
-    { name: "saito-data", version: 7 },
+    { name: "saito-data", version: 8 },
   ),
 );

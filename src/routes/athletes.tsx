@@ -41,6 +41,7 @@ function AthletesPage() {
   const events = useData((s) => s.events);
   const appointments = useData((s) => s.appointments);
   const addAthlete = useData((s) => s.addAthlete);
+  const deleteAthlete = useData((s) => s.deleteAthlete);
   const addAppointmentNote = useData((s) => s.addAppointmentNote);
 
   const [statusF, setStatusF] = useState("all");
@@ -199,8 +200,11 @@ function AthletesPage() {
                         <Pill tone={a.status === "Active" ? "success" : a.status === "Pending" ? "warning" : "default"}>{a.status === "Active" ? "Activo" : a.status === "Pending" ? "Pendiente" : "Inactivo"}</Pill>
                       )}
                     </td>
-                    <td className="px-5 py-3 text-right">
+                    <td className="px-5 py-3 text-right whitespace-nowrap">
                       <Button size="sm" variant="ghost" onClick={() => setDetail(a)}>{t("view_profile")}</Button>
+                      {!isMedical && !isTechnical && (
+                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => { if (confirm(t("delete_confirm"))) deleteAthlete(a.id); }}>{t("delete")}</Button>
+                      )}
                     </td>
                   </tr>
                 );

@@ -15,7 +15,7 @@ import {
 import { useCurrentUser, useData } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import type { Role } from "@/lib/types";
-import { Plus, Building2, Users, Stethoscope, Wrench, UserSquare2, MapPin } from "lucide-react";
+import { Plus, Building2, Users, Stethoscope, Wrench, UserSquare2, MapPin, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/club")({
   component: () => (
@@ -35,8 +35,11 @@ function ClubPage() {
   const facilities = useData((s) => s.facilities);
   const users = useData((s) => s.users);
   const addUser = useData((s) => s.addUser);
+  const deleteUser = useData((s) => s.deleteUser);
   const addSection = useData((s) => s.addSection);
+  const deleteSection = useData((s) => s.deleteSection);
   const addFacility = useData((s) => s.addFacility);
+  const deleteFacility = useData((s) => s.deleteFacility);
 
   const counts = {
     managers: users.filter((u) => u.role === "manager").length,
@@ -126,40 +129,43 @@ function ClubPage() {
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {facilities.map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setActiveFacility(f.id)}
-              className="group overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-primary hover:shadow-sm"
-            >
-              {f.photoUrl && (
-                <div className="relative h-28 w-full overflow-hidden bg-muted">
-                  <img src={f.photoUrl} alt={f.name} className="h-full w-full object-cover transition group-hover:scale-[1.03]" loading="lazy" />
-                </div>
-              )}
-              <div className="p-4">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Building2 className="h-4 w-4 text-primary" />{f.name}
-                </div>
-                <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                  <MapPin className="h-3 w-3" />{f.address ?? f.location}
-                </div>
-                {f.sports && f.sports.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {f.sports.slice(0, 3).map((s) => (
-                      <span key={s} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{s}</span>
-                    ))}
+            <div key={f.id} className="group relative overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-primary hover:shadow-sm">
+              <button onClick={() => setActiveFacility(f.id)} className="block w-full text-left">
+                {f.photoUrl && (
+                  <div className="relative h-28 w-full overflow-hidden bg-muted">
+                    <img src={f.photoUrl} alt={f.name} className="h-full w-full object-cover transition group-hover:scale-[1.03]" loading="lazy" />
                   </div>
                 )}
-                {f.nextActivity && (
-                  <div className="mt-3 text-[11px] text-muted-foreground">
-                    <span className="font-medium text-foreground">{lang === "es" ? "Próx." : "Next"}:</span> {f.nextActivity}
+                <div className="p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold">
+                    <Building2 className="h-4 w-4 text-primary" />{f.name}
                   </div>
-                )}
-                {f.capacity && (
-                  <div className="mt-1 text-[11px] text-muted-foreground">{lang === "es" ? "Aforo" : "Capacity"}: {f.capacity}</div>
-                )}
-              </div>
-            </button>
+                  <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3" />{f.address ?? f.location}
+                  </div>
+                  {f.sports && f.sports.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {f.sports.slice(0, 3).map((s) => (
+                        <span key={s} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{s}</span>
+                      ))}
+                    </div>
+                  )}
+                  {f.nextActivity && (
+                    <div className="mt-3 text-[11px] text-muted-foreground">
+                      <span className="font-medium text-foreground">{lang === "es" ? "Próx." : "Next"}:</span> {f.nextActivity}
+                    </div>
+                  )}
+                  {f.capacity && (
+                    <div className="mt-1 text-[11px] text-muted-foreground">{lang === "es" ? "Aforo" : "Capacity"}: {f.capacity}</div>
+                  )}
+                </div>
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); if (confirm(t("delete_confirm"))) deleteFacility(f.id); }}
+                className="absolute right-2 top-2 rounded-full bg-card/80 p-1.5 text-destructive opacity-0 backdrop-blur transition hover:bg-destructive hover:text-destructive-foreground group-hover:opacity-100"
+                aria-label={t("delete")}
+              ><Trash2 className="h-3.5 w-3.5" /></button>
+            </div>
           ))}
         </div>
       </Card>
@@ -192,16 +198,23 @@ function ClubPage() {
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {sections.map((s) => (
-            <Link key={s.id} to="/athletes" className="rounded-2xl border border-border bg-card p-4 transition hover:border-primary hover:shadow-sm">
-              <div className="flex items-start justify-between gap-2">
-                <div className="text-sm font-semibold">{s.name}</div>
-                <div className="flex shrink-0 gap-1">
-                  {s.managerCount != null && <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-primary/10 px-1.5 text-[11px] font-semibold text-primary">{s.managerCount}</span>}
-                  {s.staffCount != null && <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-success/15 px-1.5 text-[11px] font-semibold text-success">{s.staffCount}</span>}
+            <div key={s.id} className="group relative rounded-2xl border border-border bg-card p-4 transition hover:border-primary hover:shadow-sm">
+              <Link to="/athletes" className="block">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="text-sm font-semibold">{s.name}</div>
+                  <div className="flex shrink-0 gap-1">
+                    {s.managerCount != null && <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-primary/10 px-1.5 text-[11px] font-semibold text-primary">{s.managerCount}</span>}
+                    {s.staffCount != null && <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-success/15 px-1.5 text-[11px] font-semibold text-success">{s.staffCount}</span>}
+                  </div>
                 </div>
-              </div>
-              <div className="mt-3 text-xs text-muted-foreground">{s.athleteCount} {lang === "es" ? "deportistas" : "athletes"}</div>
-            </Link>
+                <div className="mt-3 text-xs text-muted-foreground">{s.athleteCount} {lang === "es" ? "deportistas" : "athletes"}</div>
+              </Link>
+              <button
+                onClick={(e) => { e.stopPropagation(); if (confirm(t("delete_confirm"))) deleteSection(s.id); }}
+                className="absolute right-2 top-2 rounded-full p-1.5 text-destructive opacity-0 transition hover:bg-destructive hover:text-destructive-foreground group-hover:opacity-100"
+                aria-label={t("delete")}
+              ><Trash2 className="h-3.5 w-3.5" /></button>
+            </div>
           ))}
         </div>
       </Card>

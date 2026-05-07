@@ -33,6 +33,7 @@ function FeesPage() {
   const groups = useData((s) => s.groups);
   const fees = useData((s) => s.fees);
   const addFee = useData((s) => s.addFee);
+  const deleteFee = useData((s) => s.deleteFee);
 
   const [activeSec, setActiveSec] = useState(sections[0]?.id ?? "");
   const [form, setForm] = useState<Omit<Fee, "id">>({
@@ -67,7 +68,7 @@ function FeesPage() {
             <h2 className="text-lg font-semibold">{t("fees")}</h2>
             <span className="text-xs text-muted-foreground">{sectionFees.filter((f) => f.kind === "fee").length} {t("records")}</span>
           </div>
-          <FeeTable rows={sectionFees.filter((f) => f.kind === "fee")} kind="fee" t={t} groups={groups} lang={lang} />
+          <FeeTable rows={sectionFees.filter((f) => f.kind === "fee")} kind="fee" t={t} groups={groups} lang={lang} onDelete={deleteFee} />
         </Card>
 
         <Card>
@@ -75,7 +76,7 @@ function FeesPage() {
             <h2 className="text-lg font-semibold">{t("other_rates")}</h2>
             <span className="text-xs text-muted-foreground">{sectionFees.filter((f) => f.kind === "rate").length} {t("records")}</span>
           </div>
-          <FeeTable rows={sectionFees.filter((f) => f.kind === "rate")} kind="rate" t={t} groups={groups} lang={lang} />
+          <FeeTable rows={sectionFees.filter((f) => f.kind === "rate")} kind="rate" t={t} groups={groups} lang={lang} onDelete={deleteFee} />
         </Card>
 
         <Card>
@@ -118,7 +119,7 @@ function FeesPage() {
   );
 }
 
-function FeeTable({ rows, kind, t, groups, lang }: { rows: Fee[]; kind: "fee" | "rate"; t: any; groups: any[]; lang: any }) {
+function FeeTable({ rows, kind, t, groups, lang, onDelete }: { rows: Fee[]; kind: "fee" | "rate"; t: any; groups: any[]; lang: any; onDelete: (id: string) => void }) {
   if (rows.length === 0) return <EmptyState>—</EmptyState>;
   return (
     <div className="overflow-x-auto">
@@ -132,6 +133,7 @@ function FeeTable({ rows, kind, t, groups, lang }: { rows: Fee[]; kind: "fee" | 
               : <th className="px-2 py-2 font-semibold">{t("payment_date")}</th>}
             {kind === "fee" && <th className="px-2 py-2 font-semibold">{t("period")}</th>}
             <th className="px-2 py-2 font-semibold">{t("applies_to")}</th>
+            <th className="px-2 py-2" />
           </tr>
         </thead>
         <tbody>
@@ -144,6 +146,9 @@ function FeeTable({ rows, kind, t, groups, lang }: { rows: Fee[]; kind: "fee" | 
                 : <td className="px-2 py-2.5">{f.paymentDate ? formatDate(f.paymentDate) : "—"}</td>}
               {kind === "fee" && <td className="px-2 py-2.5 text-muted-foreground">{f.periodStart ? formatDate(f.periodStart) : "—"} → {f.periodEnd ? formatDate(f.periodEnd) : "—"}</td>}
               <td className="px-2 py-2.5 text-muted-foreground">{f.appliesToGroupIds.length === 0 ? "Todos" : f.appliesToGroupIds.map((id) => groups.find((g) => g.id === id)?.name).join(", ")}</td>
+              <td className="px-2 py-2.5 text-right">
+                <Button size="sm" variant="ghost" className="text-destructive" onClick={() => { if (confirm(t("delete_confirm"))) onDelete(f.id); }}>{t("delete")}</Button>
+              </td>
             </tr>
           ))}
         </tbody>

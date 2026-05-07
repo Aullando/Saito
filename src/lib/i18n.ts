@@ -140,6 +140,12 @@ export const STR: Dict = {
   recipient_role_technical: { en: "Technical Staff", es: "Staff técnico" },
   recipient_role_medical: { en: "Medical Staff", es: "Staff médico" },
   recipient_role_athlete: { en: "Athlete", es: "Deportista" },
+  delete: { en: "Delete", es: "Eliminar" },
+  delete_confirm: { en: "Are you sure you want to delete this?", es: "¿Seguro que quieres eliminar esto?" },
+  recurring: { en: "Recurring weekly", es: "Repetir semanalmente" },
+  recur_until: { en: "Repeat until", es: "Repetir hasta" },
+  delete_only_this: { en: "Delete only this day", es: "Eliminar solo este día" },
+  delete_series: { en: "Delete entire series", es: "Eliminar toda la serie" },
 };
 
 export const useT = () => {
