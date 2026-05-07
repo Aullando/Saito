@@ -89,10 +89,10 @@ function ClubPage() {
     enabled: !!orgId,
     queryFn: async () => {
       const { data: profiles, error: e1 } = await supabase
-        .from("profiles").select("id,full_name,email").eq("organization_id", orgId);
+        .from("profiles").select("id,full_name,email").eq("organization_id", orgId!);
       if (e1) throw e1;
       const { data: rolesRows, error: e2 } = await supabase
-        .from("user_roles").select("user_id,role").eq("organization_id", orgId);
+        .from("user_roles").select("user_id,role").eq("organization_id", orgId!);
       if (e2) throw e2;
       const byUser = new Map<string, string[]>();
       (rolesRows ?? []).forEach((r) => {
