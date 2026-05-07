@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Sparkles, Send, X } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
 import { cn } from "@/lib/utils";
-import { formatMoneyEs } from "@/lib/format";
 
 const TITLES: Record<string, string> = {
   sysadmin: "SysAdmin AI",
@@ -20,63 +20,31 @@ const SUGGESTIONS: Record<string, string[]> = {
   medical: ["¿Qué citas tengo hoy?", "¿Atletas con tratamiento activo?", "¿Deportistas en revisión?"],
 };
 
-type Msg = { role: "user" | "ai"; text: string };
+type Msg = { role: "user" | "assistant"; content: string };
 
-function answer(role: string, q: string, data: ReturnType<typeof useData.getState>): string {
-  const lq = q.toLowerCase();
-  // Permission gates
-  if (role !== "sysadmin" && (lq.includes("organiza") || lq.includes("organization"))) {
-    if (role === "sysadmin") {} else return "Esta consulta queda fuera de los permisos de tu rol.";
+function buildContext(role: string, data: ReturnType<typeof useData.getState>) {
+  const base = {
+    today: new Date().toISOString().slice(0, 10),
+    sections: data.sections,
+    categories: data.categories,
+    groups: data.groups,
+    facilities: data.facilities,
+    athletes: data.athletes,
+    events: data.events,
+  };
+  if (role === "sysadmin") {
+    return { ...base, organizations: data.organizations, users: data.users };
   }
-  if ((role === "technical" || role === "medical") && (lq.includes("pago") || lq.includes("cuota") || lq.includes("ingreso"))) {
-    return "Esta consulta económica queda fuera de los permisos de tu rol.";
+  if (role === "admin" || role === "manager") {
+    return { ...base, fees: data.fees, payments: data.payments, appointments: role === "admin" ? data.appointments : undefined };
   }
-
-  if (lq.includes("ia activ") || lq.includes("ai enabled")) {
-    const list = data.organizations.filter((o) => o.aiEnabled).map((o) => `- ${o.name}`).join("\n");
-    return `Organizaciones con IA activada (${data.organizations.filter((o) => o.aiEnabled).length}):\n${list}`;
+  if (role === "technical") {
+    return base;
   }
-  if (lq.includes("activas") || lq.includes("active organi")) {
-    return `Hay ${data.organizations.filter((o) => o.status === "Active").length} organizaciones activas de ${data.organizations.length}.`;
+  if (role === "medical") {
+    return { ...base, appointments: data.appointments };
   }
-  if (lq.includes("fall")) {
-    const failed = data.payments.filter((p) => p.status === "Failed");
-    return `Hay ${failed.length} pagos fallidos. Atletas afectados: ${[...new Set(failed.map((p) => {
-      const a = data.athletes.find((x) => x.id === p.athleteId);
-      return a ? `${a.firstName} ${a.lastName}` : p.athleteId;
-    }))].slice(0, 5).join(", ")}.`;
-  }
-  if (lq.includes("granados") && (lq.includes("cuota") || lq.includes("fee"))) {
-    const granados = data.athletes.find((a) => a.lastName.toLowerCase().includes("granados"));
-    if (!granados) return "No encuentro a Granados en el sistema.";
-    const fees = data.fees.filter((f) => f.kind === "fee" && f.appliesToGroupIds.some((g) => granados.groupIds.includes(g)));
-    return `Cuotas aplicables a Juan Granados:\n${fees.map((f) => `- ${f.name} · ${formatMoneyEs(f.amount)} · ${f.frequency}`).join("\n") || "(ninguna)"}`;
-  }
-  if (lq.includes("desconocid") || lq.includes("unknown")) {
-    const list = data.athletes.filter((a) => a.medicalStatus === "Unknown");
-    return `Hay ${list.length} deportistas con estado médico desconocido: ${list.slice(0, 6).map((a) => `${a.firstName} ${a.lastName}`).join(", ")}.`;
-  }
-  if (lq.includes("revisi")) {
-    const list = data.athletes.filter((a) => a.medicalStatus === "Under review");
-    return `${list.length} deportistas en revisión: ${list.map((a) => `${a.firstName} ${a.lastName}`).join(", ") || "(ninguno)"}.`;
-  }
-  if (lq.includes("cita") && lq.includes("hoy")) {
-    const today = new Date().toISOString().slice(0, 10);
-    const list = data.appointments.filter((a) => a.date === today);
-    return `Citas hoy: ${list.length}. ${list.map((a) => {
-      const at = data.athletes.find((x) => x.id === a.athleteId);
-      return `${a.time} ${at ? at.firstName + " " + at.lastName : ""}`;
-    }).join(" · ") || "(sin citas)"}`;
-  }
-  if (lq.includes("entrenam") || lq.includes("entrenamientos")) {
-    const today = new Date().toISOString().slice(0, 10);
-    const list = data.events.filter((e) => e.date === today);
-    return `Hoy hay ${list.length} entrenamientos programados.`;
-  }
-  if (lq.includes("valencia") && lq.includes("hoy")) {
-    return "Hoy entrenan en Valencia: Grupo A (18:00) y Senior (11:00).";
-  }
-  return "No tengo datos suficientes para responder eso de forma precisa. Prueba con una de las sugerencias.";
+  return base;
 }
 
 export function AIChat() {
@@ -84,14 +52,94 @@ export function AIChat() {
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [msgs, loading]);
+
   if (!u) return null;
   const role = u.role;
-  const data = useData.getState();
 
-  const ask = (q: string) => {
-    if (!q.trim()) return;
-    setMsgs((m) => [...m, { role: "user", text: q }, { role: "ai", text: answer(role, q, data) }]);
+  const ask = async (q: string) => {
+    if (!q.trim() || loading) return;
+    const userMsg: Msg = { role: "user", content: q };
+    const next = [...msgs, userMsg];
+    setMsgs(next);
     setInput("");
+    setLoading(true);
+
+    try {
+      const data = useData.getState();
+      const context = buildContext(role, data);
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: next, role, context }),
+      });
+
+      if (!resp.ok || !resp.body) {
+        const errTxt = await resp.text().catch(() => "");
+        let errMsg = "Error al contactar la IA.";
+        try {
+          const j = JSON.parse(errTxt);
+          if (j.error) errMsg = j.error;
+        } catch {}
+        if (resp.status === 429) errMsg = "Demasiadas peticiones. Espera un momento.";
+        if (resp.status === 402) errMsg = "Sin créditos de IA disponibles.";
+        setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);
+        setLoading(false);
+        return;
+      }
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+      let acc = "";
+      let started = false;
+      let done = false;
+
+      while (!done) {
+        const { done: d, value } = await reader.read();
+        if (d) break;
+        buf += decoder.decode(value, { stream: true });
+        let nl: number;
+        while ((nl = buf.indexOf("\n")) !== -1) {
+          let line = buf.slice(0, nl);
+          buf = buf.slice(nl + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (!line.startsWith("data: ")) continue;
+          const json = line.slice(6).trim();
+          if (json === "[DONE]") { done = true; break; }
+          try {
+            const parsed = JSON.parse(json);
+            const delta = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (delta) {
+              acc += delta;
+              if (!started) {
+                started = true;
+                setMsgs((m) => [...m, { role: "assistant", content: acc }]);
+              } else {
+                setMsgs((m) => m.map((x, i) => (i === m.length - 1 ? { ...x, content: acc } : x)));
+              }
+            }
+          } catch {
+            buf = line + "\n" + buf;
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      setMsgs((m) => [...m, { role: "assistant", content: "Error de conexión con la IA." }]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -104,22 +152,31 @@ export function AIChat() {
         <Sparkles className="h-5 w-5" />
       </button>
       {open && (
-        <div className="fixed inset-x-3 bottom-20 md:inset-x-auto md:bottom-24 md:right-6 z-40 flex h-[70vh] md:h-[520px] md:w-[360px] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
+        <div className="fixed inset-x-3 bottom-20 md:inset-x-auto md:bottom-24 md:right-6 z-40 flex h-[70vh] md:h-[520px] md:w-[380px] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <div className="flex items-center gap-2 text-sm font-semibold">
               <Sparkles className="h-4 w-4 text-primary" />{TITLES[role]}
             </div>
             <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground"><X className="h-4 w-4" /></button>
           </div>
-          <div className="flex-1 space-y-3 overflow-y-auto p-4 text-sm">
+          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4 text-sm">
             {msgs.length === 0 && (
-              <div className="text-xs text-muted-foreground">Asistente contextual basado en tus datos. Prueba:</div>
+              <div className="text-xs text-muted-foreground">Asistente IA contextual con acceso a los datos del club. Pregunta lo que quieras:</div>
             )}
             {msgs.map((m, i) => (
-              <div key={i} className={cn("max-w-[85%] whitespace-pre-wrap rounded-2xl px-3 py-2", m.role === "user" ? "ml-auto bg-primary text-primary-foreground" : "bg-muted")}>
-                {m.text}
+              <div key={i} className={cn("max-w-[88%] whitespace-pre-wrap rounded-2xl px-3 py-2", m.role === "user" ? "ml-auto bg-primary text-primary-foreground" : "bg-muted")}>
+                {m.role === "assistant" ? (
+                  <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1">
+                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  m.content
+                )}
               </div>
             ))}
+            {loading && msgs[msgs.length - 1]?.role === "user" && (
+              <div className="max-w-[88%] rounded-2xl bg-muted px-3 py-2 text-muted-foreground">Pensando…</div>
+            )}
             {msgs.length === 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {SUGGESTIONS[role].map((s) => (
@@ -129,8 +186,8 @@ export function AIChat() {
             )}
           </div>
           <form onSubmit={(e) => { e.preventDefault(); ask(input); }} className="flex items-center gap-2 border-t border-border p-3">
-            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Pregunta algo…" className="flex-1 rounded-full border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary" />
-            <button type="submit" className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"><Send className="h-4 w-4" /></button>
+            <input value={input} onChange={(e) => setInput(e.target.value)} disabled={loading} placeholder="Pregunta algo…" className="flex-1 rounded-full border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary disabled:opacity-50" />
+            <button type="submit" disabled={loading} className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground disabled:opacity-50"><Send className="h-4 w-4" /></button>
           </form>
         </div>
       )}
