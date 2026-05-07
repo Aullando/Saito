@@ -48,10 +48,10 @@
 }
 
 :root {
-  --radius: 1rem;
-  /* SAITO palette mapped to oklch */
-  --background: oklch(0.975 0.005 250);            /* #F4F7FB */
-  --foreground: oklch(0.27 0.04 260);              /* #1F2A44 */
+  --radius: 0.625rem; /* inputs 10px */
+  /* SAITO exact palette */
+  --background: oklch(0.978 0.006 250);            /* rgb(247,249,252) */
+  --foreground: oklch(0.255 0.035 262);            /* rgb(26,32,44) */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.27 0.04 260);
   --popover: oklch(1 0 0);
