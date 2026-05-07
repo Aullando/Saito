@@ -51,6 +51,7 @@ export function Sidebar() {
   if (!user) return null;
   const items = buildItems(user.role, t);
   const width = collapsed ? 72 : 224;
+  const notifCount = user.role === "sysadmin" ? 25 : user.role === "medical" ? 13 : 0;
 
   const isActive = (to: string) => path === to || path.startsWith(to + "/");
 
@@ -70,10 +71,27 @@ export function Sidebar() {
         </button>
       </div>
 
+      {!collapsed && (
+        <div className="mx-3 mb-2 flex items-center gap-2 rounded-2xl bg-sidebar-accent px-3 py-2 text-xs">
+          {notifCount > 0 && (
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground">
+              {notifCount}
+            </span>
+          )}
+          <span className="truncate font-semibold text-sidebar-foreground">{user.name}</span>
+        </div>
+      )}
+
       <nav className="flex-1 overflow-y-auto px-3 py-2">
         <ul className="space-y-1">
           {items.map((it, idx) => {
-            const active = isActive(it.to);
+            // For Economic Management header link, mark active when on any economic route
+            const economicHeader = it.label === t("economic_management");
+            const active = economicHeader
+              ? path.startsWith("/economic")
+              : it.indent
+                ? path === it.to
+                : isActive(it.to);
             const Icon = it.icon;
             return (
               <li key={idx}>
