@@ -1,69 +1,96 @@
-# SAITO BO — Actualización V2 alta fidelidad
+# Ajustes de precisión SAITO BO
 
-Voy a actualizar el proyecto existente (no rehacer) para acercarlo al spec V2. El stack se mantiene (TanStack Start + shadcn + Zustand + localStorage). Los cambios se enfocan en tokens visuales, componentes reutilizables, datos conectados y un chat IA contextual.
+Aplicar los design tokens exactos extraídos del backoffice real y refinar pantallas clave para que coincidan visualmente con las capturas.
 
-## 1. Tokens y estilos globales (`src/styles.css`)
-- Reemplazar paleta por los tokens exactos del spec (oklch equivalents):
-  `--app-bg #f7f9fc`, `--sidebar-bg #eef3fa`, `--surface #fff`, `--primary #0072ce`, `--medical #f5a524`, success/danger/warning/unknown bg+text, `--shadow-card`, `--radius-card 25px`, `--radius-input 10px`, `--radius-pill 999px`.
-- Cargar Inter desde Google Fonts en `__root.tsx` head.
-- Tipografía base 14/400, headings 24-28/700.
-- Mantener modo dark existente.
+## 1. Tokens exactos (`src/styles.css`)
 
-## 2. Componentes reutilizables nuevos (`src/components/ui-kit.tsx` ampliado)
-- `DataCard` (card blanca radius 25 sombra suave)
-- `StatusPill` (variantes paid/active/failed/pending/medical/unknown)
-- `FilterSelect` (select 40px)
-- `DataTable` (header 46px, filas 57px, paginación + page-size + "Mostrando X a Y de Z")
-- `Modal` wrapper (radius 22-25, overlay)
-- `EventChip` (azul training, naranja medical)
-- Reuso desde routes existentes.
+Reemplazar los tokens actuales por los valores RGB exactos:
 
-## 3. Datos y store (`src/lib/seed.ts`, `src/lib/store.ts`, `src/lib/types.ts`)
-- Bump version a 7 → reseed.
-- Añadir a `Facility`: `photoUrl` (Unsplash), `address`, `capacity`, `sports[]`, `nextActivity`.
-- Añadir a `Athlete`: `licenseNumber`, `insuranceNumber`, `height`, `weight`, `incidents[]`, `sessionNotes[]`, `medicalPlans[]`.
-- 5 sedes con foto + actividades.
-- Eventos calendario conectados a `facilityId`.
-- Pagos (~113), cuotas, conversaciones (incluye 21 inbox médico) ya existen — mantener y conectar `feeId`/`athleteId`.
-- Acción `resetDemo()` en store.
+- `--background`: `rgb(247, 249, 252)` → oklch equivalente
+- `--foreground`: `rgb(26, 32, 44)` (texto principal)
+- `--muted-foreground`: `rgb(113, 125, 150)` (links sidebar)
+- `--input`: bg `rgb(255,255,255)`, color `rgb(45,54,72)`, **radius 10px**, **height 40px**
+- `--card`: bg blanco, **radius 25px** (no 1.25rem actual)
+- Tabla: header 46px, fila 57px
+- Sidebar item activo: `203x42`, fondo sutil
+- Tipografía: Inter 14/400 base, headings 700
 
-## 4. Pantallas — ajustes funcionales
-- **Login** (`src/routes/login.tsx`): card centrada radius 25, logo, campos email/password, "Forgot your password?", botón "Continue", selector demo (5 roles) ya existente — pulir copy.
-- **Organizations** (sysadmin): añadir 4 federaciones extra al seed, paginación textual ya está, modal "New organization" con toggle AI.
-- **Club & Organization**: añadir bloque Facilities con `FacilityCard` (foto, dirección, capacidad, deportes, próxima actividad). Drawer al click (filtra calendario).
-- **Athletes / Ficha**: el sheet ya es rico — añadir campos Nº licencia, seguro, altura/peso editables, incidencias, planes médicos por rol médico, notas de sesión por rol técnico.
-- **Calendar**: añadir filtro por sede; modal "Añadir evento" con campos completos (sede/sección/categoría/grupo/tipo). Eventos `EventChip` color por tipo.
-- **Medical calendar**: chips naranjas (`--medical`), modal "Añadir cita" 2 pasos.
-- **Fees / Payments**: ya están — refinar para usar `DataTable` y `StatusPill`.
-- **Communication**: modal "Nueva circular" ya jerárquico — añadir "Atleta concreto" como nivel.
-- **Profile**: añadir botón "Reset demo data".
+Añadir utilidades:
+- `.saito-card` → `border-radius: 25px`
+- `.saito-input` → `height: 40px; border-radius: 10px`
+- `.saito-table-row` → `height: 57px`
+- `.saito-table-head` → `height: 46px`
 
-## 5. Chat IA contextual (`src/components/AIChat.tsx`)
-- Botón flotante bottom-right "AI".
-- Panel lateral (Sheet shadcn).
-- Título por rol.
-- Chips de sugerencias por rol.
-- Respuestas mock que consultan el store: e.g. "qué organizaciones con IA" → filtra `orgs.aiEnabled`; "pagos fallidos" → filtra `payments.status==='Fallida'`; "citas hoy" → filtra appointments hoy.
-- Si pregunta fuera de rol → mensaje "fuera de permisos".
-- Render markdown básico.
-- Montado en `AppLayout`.
+Cargar Inter desde Google Fonts en `__root.tsx`.
 
-## 6. Sidebar / Topbar / Layout
-- Sidebar ya 224px, items pill — solo afinar tokens.
-- Topbar: notificaciones + avatar + nombre — ya existe.
-- Asegurar fondo `--app-bg` en main, `--sidebar-bg` en sidebar.
+## 2. Sidebar (`src/components/Sidebar.tsx`)
+
+- Items 175x45, color inactivo `rgb(113,125,150)` weight 500
+- Item activo: 203x42, fondo `bg-primary/10`, color `rgb(26,32,44)`, radius pill
+- Fondo sidebar más claro (casi blanco)
+- Logo SAITO arriba, sin texto extra
+
+## 3. Tabla genérica
+
+Crear `DataTable` reutilizable en `ui-kit.tsx`:
+- Header 46px, texto sm semibold
+- Filas 57px, hover sutil
+- Paginación textual: "Mostrando X a Y de Z" + números de página
+- Page-size selector
+
+Aplicar a: organizations, athletes, fees, payments.
+
+## 4. Inputs y selects
+
+Todos los `<Input>` y `<Select>` del proyecto → 40px alto, radius 10px, bg blanco, borde sutil. Override en `src/components/ui/input.tsx` y `select.tsx` para alinear con el spec.
+
+## 5. Cards (Club & Organización)
+
+- Card 745x156 (instalaciones), radius 25px
+- Sección "Usuarios y permisos" con 3 sub-cards (Staff médico / técnico / Deportistas) + "Nueva alta"
+- Sección "Organigrama" con cards de secciones deportivas mostrando "X deportistas" y dos contadores pequeños (staff/managers)
+
+## 6. Calendario
+
+- Header: "Hoy" + "Mayo 2026" + flechas + filtros (secciones, categorías, grupos) + "Limpiar filtros" + "Añadir"
+- Grid 7 columnas, día number arriba-izq
+- Eventos: "HH:mm - Nombre" en chip pequeño azul; "+N más" cuando hay overflow
+- Calendario médico: chips naranjas, filtro "Seleccionar atleta"
+
+## 7. Ficha atleta (drawer/route)
+
+Layout exacto:
+- Header: "Nombre APELLIDO" + botón "Añadir a staff técnico"
+- Bloque info: Sección / Categoría / Grupos / Nº Licencia / Nº Seguro médico / Altura / Peso / Estado Médico
+- Bloque "Cuotas Aplicables al Atleta" con tabla y botón "Suscribir"
+- Vista médica: añadir "Historial de incidencias", "Registrar Incidencia", "Planes de tratamiento activos/finalizados"
+- Vista técnica: añadir "Notas de Sesión" con calendario mensual
+
+## 8. Pagos y Cuotas
+
+- Cuotas: tabs por sección, dos tablas (Cuotas / Otras tasas), formulario inline "Añadir cuota"
+- Pagos: filtros (sección/categoría/estado/cuota), tabla con StatusPill (Pagada=success, Activa=primary, Fallida=danger, Pendiente=warning), formato `0,00 €` y `DD/MM/YYYY`
+
+## 9. Comunicación
+
+- Layout 2 columnas: lista conversaciones (izq) + detalle (der)
+- Conversación: avatar circular con iniciales, título, "X participantes", hora, badge unread
+- Mensaje: avatar + nombre + rol pequeño + título + "(X destinatarios)" + cuerpo + hora
+- Inbox médico: 21 sin leer, conversaciones "Solicitud de cita médica"
+
+## 10. Perfil
+
+- Card avatar grande con iniciales en círculo de color
+- Nombre, email, (médico) Nº colegiado / especialidad / área
+- Card Ajustes: Notificaciones (switch), Idioma (texto), Cambiar contraseña (link/btn), Reset demo
+
+## 11. Login
+
+- Card centrada radius 25, logo SAITO, título "Log In", inputs email/password (40px), "Forgot your password?", botón "Continue", selector demo de 5 roles abajo
 
 ## Detalles técnicos
-- Convertir hex tokens del spec a oklch para CSS variables (Tailwind v4 + `hsl()`/oklch).
-- `EventChip` usa `bg-primary/10 text-primary` o `bg-[--medical]/15 text-[--medical]`.
-- `StatusPill` mapea: Pagada→success, Activa→primary soft, Fallida→danger, Pendiente→warning, Apto→success, Lesionado→danger, En revisión→warning, Desconocido→unknown.
-- Foto de instalaciones: usar URLs Unsplash estables.
-- Chat IA: lógica simple keyword-matching contra store; sin LLM real.
-- Persistencia: bump `saito-data` v7.
 
-## Fuera de alcance (esta iteración)
-- Editor real de altura/peso persistente (mock visual).
-- Export CSV real (botón mock que descarga CSV generado client-side — sí lo hago).
-- Drawer de facility con calendario embebido completo (drawer simple con info + lista próximos eventos).
-
-¿Procedo?
+- Convertir RGB exactos a oklch con `culori` mental o aproximación
+- No tocar lógica de store/seed salvo que falte data para reflejar pantallas
+- Mantener i18n existente
+- AIChat sigue presente en AppLayout

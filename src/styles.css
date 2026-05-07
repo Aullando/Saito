@@ -48,10 +48,10 @@
 }
 
 :root {
-  --radius: 1rem;
-  /* SAITO palette mapped to oklch */
-  --background: oklch(0.975 0.005 250);            /* #F4F7FB */
-  --foreground: oklch(0.27 0.04 260);              /* #1F2A44 */
+  --radius: 0.625rem; /* inputs 10px */
+  /* SAITO exact palette */
+  --background: oklch(0.978 0.006 250);            /* rgb(247,249,252) */
+  --foreground: oklch(0.255 0.035 262);            /* rgb(26,32,44) */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.27 0.04 260);
   --popover: oklch(1 0 0);
@@ -127,15 +127,39 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-size: 14px;
+    line-height: 1.45;
     -webkit-font-smoothing: antialiased;
   }
+  h1, h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
 }
 
 @layer utilities {
   .saito-card {
     background-color: var(--color-card);
     border: 1px solid var(--color-border);
-    border-radius: 1.25rem;
-    box-shadow: 0 1px 2px 0 oklch(0.27 0.04 260 / 0.04), 0 4px 16px -4px oklch(0.27 0.04 260 / 0.06);
+    border-radius: 25px;
+    box-shadow: 0 1px 2px 0 rgb(26 32 44 / 0.04), 0 4px 16px -4px rgb(26 32 44 / 0.06);
   }
+  .saito-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .saito-table thead th {
+    height: 46px;
+    font-weight: 600;
+    font-size: 13px;
+    color: rgb(113,125,150);
+    text-align: left;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--color-border);
+    background: transparent;
+  }
+  .saito-table tbody td {
+    height: 57px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px;
+    color: rgb(26,32,44);
+  }
+  .saito-table tbody tr:last-child td { border-bottom: 0; }
+  .saito-table tbody tr:hover { background-color: oklch(0.97 0.01 250); }
 }
+
