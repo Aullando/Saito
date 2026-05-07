@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OrganizationsRouteImport } from './routes/organizations'
 import { Route as LoginRouteImport } from './routes/login'
@@ -21,6 +22,11 @@ import { Route as MedicalCalendarRouteImport } from './routes/medical.calendar'
 import { Route as EconomicPaymentsRouteImport } from './routes/economic.payments'
 import { Route as EconomicFeesRouteImport } from './routes/economic.fees'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/organizations'
     | '/profile'
+    | '/signup'
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/organizations'
     | '/profile'
+    | '/signup'
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/organizations'
     | '/profile'
+    | '/signup'
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OrganizationsRoute: typeof OrganizationsRoute
   ProfileRoute: typeof ProfileRoute
+  SignupRoute: typeof SignupRoute
   EconomicFeesRoute: typeof EconomicFeesRoute
   EconomicPaymentsRoute: typeof EconomicPaymentsRoute
   MedicalCalendarRoute: typeof MedicalCalendarRoute
@@ -175,6 +188,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OrganizationsRoute: OrganizationsRoute,
   ProfileRoute: ProfileRoute,
+  SignupRoute: SignupRoute,
   EconomicFeesRoute: EconomicFeesRoute,
   EconomicPaymentsRoute: EconomicPaymentsRoute,
   MedicalCalendarRoute: MedicalCalendarRoute,

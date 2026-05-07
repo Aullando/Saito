@@ -9,14 +9,15 @@ import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Log In — SAITO" }] }),
-  component: LoginPage,
+export const Route = createFileRoute("/signup")({
+  head: () => ({ meta: [{ title: "Sign Up — SAITO" }] }),
+  component: SignupPage,
 });
 
-function LoginPage() {
+function SignupPage() {
   const { session } = useAuth();
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -28,13 +29,21 @@ function LoginPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/`,
+        data: { full_name: name },
+      },
+    });
     setBusy(false);
     if (error) {
       toast.error(error.message);
       return;
     }
-    navigate({ to: "/" });
+    toast.success("Check your email to confirm your account.");
+    navigate({ to: "/login" });
   };
 
   const google = async () => {
@@ -57,7 +66,7 @@ function LoginPage() {
           <Logo size={44} />
         </div>
         <div className="saito-card p-8">
-          <h1 className="text-center text-2xl font-bold">Log in</h1>
+          <h1 className="text-center text-2xl font-bold">Create your account</h1>
 
           <button
             type="button"
@@ -75,22 +84,26 @@ function LoginPage() {
 
           <form onSubmit={submit} className="space-y-4">
             <div className="space-y-1.5">
+              <Label htmlFor="name">Full name</Label>
+              <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@club.com" />
+              <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+              <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
             <Button type="submit" disabled={busy} className="w-full rounded-full">
-              {busy ? "..." : "Log in"}
+              {busy ? "..." : "Create account"}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/signup" className="font-medium text-primary hover:underline">
-              Sign up
+            Already have an account?{" "}
+            <Link to="/login" className="font-medium text-primary hover:underline">
+              Log in
             </Link>
           </p>
         </div>

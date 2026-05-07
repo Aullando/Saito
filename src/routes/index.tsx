@@ -1,22 +1,18 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useCurrentUser } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   component: IndexRedirect,
 });
 
 function IndexRedirect() {
-  const user = useCurrentUser();
-  if (!user) return <Navigate to="/login" />;
-  switch (user.role) {
-    case "sysadmin":
-      return <Navigate to="/organizations" />;
-    case "admin":
-    case "manager":
-      return <Navigate to="/club" />;
-    case "technical":
-      return <Navigate to="/calendar" />;
-    case "medical":
-      return <Navigate to="/medical/calendar" />;
-  }
+  const { session, loading, roles } = useAuth();
+  if (loading) return null;
+  if (!session) return <Navigate to="/login" />;
+
+  if (roles.includes("sysadmin")) return <Navigate to="/organizations" />;
+  if (roles.includes("admin") || roles.includes("manager")) return <Navigate to="/club" />;
+  if (roles.includes("technical")) return <Navigate to="/calendar" />;
+  if (roles.includes("medical")) return <Navigate to="/medical/calendar" />;
+  return <Navigate to="/club" />;
 }
