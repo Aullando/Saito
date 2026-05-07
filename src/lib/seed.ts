@@ -4,178 +4,284 @@ import type {
 } from "./types";
 
 export const DEMO_USERS: User[] = [
-  { id: "u-sys", name: "Alex Sysadmin", email: "alex.sys@saito.demo", role: "sysadmin", language: "en", initials: "AS" },
-  { id: "u-adm", name: "Helen Carter", email: "helen.admin@saito.demo", role: "admin", language: "en", initials: "HC" },
-  { id: "u-mgr", name: "Carlos Ruiz", email: "carlos.gerente@saito.demo", role: "manager", language: "es", initials: "CR" },
-  { id: "u-tec", name: "María López", email: "maria.tecnico@saito.demo", role: "technical", language: "es", initials: "ML" },
-  { id: "u-med", name: "Dr. Pablo Vega", email: "pablo.medico@saito.demo", role: "medical", language: "es", initials: "PV", specialty: "Traumatología", licenseNumber: "COL-48291", area: "Medicina deportiva" },
+  { id: "u-sys", name: "SysAdmin SAITO", email: "sysadmin@saito.app", role: "sysadmin", language: "en", initials: "SS" },
+  { id: "u-adm", name: "Carlos GARCÍA", email: "clubadmin0@saito.app", role: "admin", language: "en", initials: "CG" },
+  { id: "u-mgr", name: "Carla LUIS", email: "professional0@saito.app", role: "manager", language: "es", initials: "CL" },
+  { id: "u-tec", name: "Pol GUILLEN", email: "professional20@saito.app", role: "technical", language: "es", initials: "PG", specialty: "Gestor" },
+  { id: "u-med", name: "Pol ECHEVARRÍA", email: "professional60@saito.app", role: "medical", language: "es", initials: "PE", specialty: "Fisioterapeuta", licenseNumber: "LIC-PROF-2808XW", area: "Gestor Deportivo" },
+  // Extra cast for messages
+  { id: "u-ath-nadia", name: "Nadia ABAD", email: "athlete1@saito.app", role: "technical", language: "es", initials: "NA" },
 ];
 
 const today = new Date();
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
 
+const dt = (day: number, hour: number, minute: number) => {
+  const d = new Date(2026, 3, day, hour, minute); // April 2026
+  return d.toISOString();
+};
+
 export const ORGANIZATIONS: Organization[] = [
-  "European Commission",
-  "Sport Innovation Hub SL",
-  "Saito Club",
-  "Athletic Club Bilbao",
-  "FC Barcelona",
-  "Real Madrid CF",
-  "Federación de Voleibol",
-  "Federación de Baloncesto",
-  "Federación de Atletismo",
-  "Federación de Natación",
-].map((name, i) => ({
-  id: `org-${i + 1}`,
-  name,
-  createdAt: iso(new Date(2024, i % 12, (i * 3) % 27 + 1)),
-  updatedAt: iso(new Date(2025, (i + 2) % 12, (i * 5) % 27 + 1)),
-  status: i % 5 === 0 ? "Inactive" : "Active",
-  aiEnabled: i % 2 === 0,
-}));
+  { name: "European Commission", createdAt: dt(29, 12, 42), updatedAt: dt(29, 12, 42), aiEnabled: true },
+  { name: "Sport Innovation Hub SL", createdAt: dt(29, 12, 32), updatedAt: dt(29, 12, 32), aiEnabled: true },
+  { name: "Saito Club", createdAt: new Date(2026, 2, 27, 14, 36).toISOString(), updatedAt: new Date(2026, 2, 27, 14, 36).toISOString(), aiEnabled: true },
+  { name: "Athletic Club Bilbao", createdAt: new Date(2026, 2, 24, 12, 25).toISOString(), updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(), aiEnabled: true },
+  { name: "FC Barcelona", createdAt: new Date(2026, 2, 24, 12, 25).toISOString(), updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(), aiEnabled: true },
+  { name: "Real Madrid CF", createdAt: new Date(2026, 2, 24, 12, 25).toISOString(), updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(), aiEnabled: true },
+  { name: "Federación de Voleibol", createdAt: new Date(2026, 2, 24, 12, 25).toISOString(), updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(), aiEnabled: false },
+  { name: "Federación de Baloncesto", createdAt: new Date(2026, 2, 24, 12, 25).toISOString(), updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(), aiEnabled: false },
+  { name: "Federación de Atletismo", createdAt: new Date(2026, 2, 24, 12, 25).toISOString(), updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(), aiEnabled: false },
+  { name: "Federación de Natación", createdAt: new Date(2026, 2, 24, 12, 25).toISOString(), updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(), aiEnabled: false },
+].map((o, i) => ({ ...o, id: `org-${i + 1}`, status: "Active" as const }));
 
 export const FACILITIES: Facility[] = [
-  { id: "f-1", name: "Instalación Deportiva Valencia", location: "Valencia", sportSections: ["sec-1", "sec-3"], status: "Active" },
-  { id: "f-2", name: "Complejo Deportivo Barcelona", location: "Barcelona", sportSections: ["sec-2", "sec-5"], status: "Active" },
-  { id: "f-3", name: "Centro Olímpico Madrid", location: "Madrid", sportSections: ["sec-4", "sec-6"], status: "Active" },
-  { id: "f-4", name: "Main Stadium", location: "Madrid", sportSections: ["sec-1"], status: "Active" },
-  { id: "f-5", name: "Medical Room", location: "Madrid", sportSections: [], status: "Active" },
-  { id: "f-6", name: "Pool Complex", location: "Valencia", sportSections: ["sec-7"], status: "Active" },
+  { id: "f-1", name: "Instalación Deportiva Valencia", location: "Valencia", sportSections: [], status: "Active" },
+  { id: "f-2", name: "Complejo Deportivo Barcelona", location: "Barcelona", sportSections: [], status: "Active" },
+  { id: "f-3", name: "Centro Olímpico Madrid", location: "Madrid", sportSections: [], status: "Active" },
 ];
 
 export const SECTIONS: SportSection[] = [
-  { id: "sec-1", name: "Boxeo", athleteCount: 0 },
-  { id: "sec-2", name: "Esgrima", athleteCount: 0 },
-  { id: "sec-3", name: "Gimnasia", athleteCount: 0 },
-  { id: "sec-4", name: "Natación", athleteCount: 0 },
-  { id: "sec-5", name: "Atletismo", athleteCount: 0 },
-  { id: "sec-6", name: "Deporte prueba", athleteCount: 0 },
-  { id: "sec-7", name: "Test Section - Multi Role", athleteCount: 0 },
+  { id: "sec-prueba", name: "Deporte prueba", athleteCount: 6, managerCount: 3, staffCount: 2 },
+  { id: "sec-shared", name: "Test Section - Shared Staff", athleteCount: 3, managerCount: 7, staffCount: 9 },
+  { id: "sec-multi", name: "Test Section - Multi Role", athleteCount: 5, managerCount: 6, staffCount: 8 },
+  { id: "sec-boxeo", name: "Boxeo (Test)", athleteCount: 8, managerCount: 9, staffCount: 8 },
+  { id: "sec-esgrima", name: "Esgrima", athleteCount: 0, managerCount: 8, staffCount: 8 },
+  { id: "sec-gimnasia", name: "Gimnasia", athleteCount: 0, managerCount: 9, staffCount: 8 },
+  { id: "sec-natacion", name: "Natación", athleteCount: 0, managerCount: 9, staffCount: 9 },
+  { id: "sec-atletismo", name: "Atletismo", athleteCount: 0, managerCount: 11, staffCount: 9 },
 ];
 
-export const CATEGORIES: Category[] = SECTIONS.flatMap((s) => [
-  { id: `${s.id}-cat-1`, name: "Senior", sectionId: s.id },
-  { id: `${s.id}-cat-2`, name: "Junior", sectionId: s.id },
-]);
-
-export const GROUPS: Group[] = CATEGORIES.flatMap((c) => [
-  { id: `${c.id}-g-A`, name: `${c.name} Grupo A`, sectionId: c.sectionId, categoryId: c.id },
-  { id: `${c.id}-g-B`, name: `${c.name} Grupo B`, sectionId: c.sectionId, categoryId: c.id },
-]);
-
-const FIRST = ["Miguel", "Lucía", "Pablo", "Sofía", "Diego", "Carmen", "Iván", "Elena", "Hugo", "Marta", "Alex", "Noa", "Bruno", "Olivia", "Sergio", "Ana", "Marco", "Julia", "David", "Paula", "Adrián", "Laura", "Iker", "Vega", "Nicolás", "Inés", "Pol", "Daniela", "Joel", "Aitana"];
-const LAST = ["Ochoa", "García", "Martín", "Sánchez", "Rodríguez", "Pérez", "Gómez", "Fernández", "Torres", "Ramos", "Vidal", "Navarro", "Castro", "Romero", "Molina"];
-
-export const ATHLETES: Athlete[] = Array.from({ length: 30 }, (_, i) => {
-  const sec = SECTIONS[i % SECTIONS.length];
-  const cats = CATEGORIES.filter((c) => c.sectionId === sec.id);
-  const cat = cats[i % cats.length];
-  const grps = GROUPS.filter((g) => g.categoryId === cat.id);
-  const status: Athlete["status"] = i % 7 === 0 ? "Pending" : i % 11 === 0 ? "Inactive" : "Active";
-  const med: Athlete["medicalStatus"] = ["Fit", "Injured", "Under review", "Unknown"][i % 4] as Athlete["medicalStatus"];
-  const perf: Athlete["performanceStatus"] = ["High", "Medium", "Low"][i % 3] as Athlete["performanceStatus"];
-  return {
-    id: `ath-${i + 1}`,
-    firstName: FIRST[i % FIRST.length],
-    lastName: LAST[i % LAST.length],
-    sectionId: sec.id,
-    categoryId: cat.id,
-    groupIds: [grps[i % grps.length].id],
-    status,
-    medicalStatus: med,
-    performanceStatus: perf,
-  };
-});
-
-// Recompute athleteCount
-SECTIONS.forEach((s) => {
-  s.athleteCount = ATHLETES.filter((a) => a.sectionId === s.id).length;
-});
-
-export const EVENTS: CalendarEvent[] = Array.from({ length: 24 }, (_, i) => {
-  const day = new Date(monthStart);
-  day.setDate(1 + ((i * 2) % 27));
-  const grp = GROUPS[i % GROUPS.length];
-  return {
-    id: `ev-${i + 1}`,
-    date: iso(day),
-    startTime: `${String(8 + (i % 10)).padStart(2, "0")}:00`,
-    title: `Entrenamiento ${grp.name}`,
-    sectionId: grp.sectionId,
-    categoryId: grp.categoryId,
-    groupId: grp.id,
-    roleInGroup: i % 2 === 0 ? "Titular" : "Reserva",
-    type: i % 6 === 0 ? "match" : "training",
-  };
-});
-
-export const FEES: Fee[] = [
-  { id: "fee-1", name: "Cuota mensual Senior", amount: 65, frequency: "Monthly", periodStart: "2025-01-01", periodEnd: "2025-12-31", appliesToGroupIds: [GROUPS[0].id, GROUPS[1].id], sectionId: SECTIONS[0].id, kind: "fee" },
-  { id: "fee-2", name: "Cuota mensual Junior", amount: 45, frequency: "Monthly", periodStart: "2025-01-01", periodEnd: "2025-12-31", appliesToGroupIds: [GROUPS[2].id], sectionId: SECTIONS[0].id, kind: "fee" },
-  { id: "fee-3", name: "Matrícula anual", amount: 120, frequency: "Annual", periodStart: "2025-01-01", periodEnd: "2025-12-31", appliesToGroupIds: [], sectionId: SECTIONS[1].id, kind: "fee" },
-  { id: "rate-1", name: "Equipación oficial", amount: 80, frequency: "One-time", appliesToGroupIds: [], sectionId: SECTIONS[0].id, kind: "rate", paymentDate: "2025-09-01" },
-  { id: "rate-2", name: "Viaje competición", amount: 150, frequency: "One-time", appliesToGroupIds: [], sectionId: SECTIONS[2].id, kind: "rate", paymentDate: "2025-11-15" },
+export const CATEGORIES: Category[] = [
+  { id: "cat-prueba-inf", name: "Infantil", sectionId: "sec-prueba" },
+  { id: "cat-shared", name: "Test Shared Staff", sectionId: "sec-shared" },
+  { id: "cat-shared-inf", name: "Deporte prueba Test Shared Staff Infantil", sectionId: "sec-shared" },
+  { id: "cat-multi", name: "Test Multi-Role", sectionId: "sec-multi" },
+  { id: "cat-boxeo", name: "Deporte prueba 70lbs (Test) Infantil", sectionId: "sec-boxeo" },
+  { id: "cat-esgrima", name: "Senior", sectionId: "sec-esgrima" },
+  { id: "cat-gimnasia", name: "Senior", sectionId: "sec-gimnasia" },
+  { id: "cat-natacion", name: "Senior", sectionId: "sec-natacion" },
+  { id: "cat-atletismo", name: "Senior", sectionId: "sec-atletismo" },
 ];
 
-export const PAYMENTS: Payment[] = ATHLETES.slice(0, 20).map((a, i) => ({
-  id: `pay-${i + 1}`,
-  athleteId: a.id,
-  subscription: i % 2 === 0 ? "Cuota mensual Senior" : "Cuota mensual Junior",
-  sectionId: a.sectionId,
-  categoryId: a.categoryId,
-  amount: i % 2 === 0 ? 65 : 45,
-  status: (["Paid", "Active", "Failed", "Pending"] as const)[i % 4],
-  date: iso(new Date(today.getFullYear(), today.getMonth(), (i % 27) + 1)),
+export const GROUPS: Group[] = [
+  { id: "g-prueba-1", name: "Grupo 1", sectionId: "sec-prueba", categoryId: "cat-prueba-inf" },
+  { id: "g-prueba-A", name: "Grupo A - Titular", sectionId: "sec-prueba", categoryId: "cat-prueba-inf" },
+  { id: "g-prueba-B", name: "Grupo B - Reserva", sectionId: "sec-prueba", categoryId: "cat-prueba-inf" },
+  { id: "g-prueba-aaa", name: "AAA", sectionId: "sec-prueba", categoryId: "cat-prueba-inf" },
+  { id: "g-shared-A", name: "Grupo A", sectionId: "sec-shared", categoryId: "cat-shared" },
+  { id: "g-shared-B", name: "Grupo B", sectionId: "sec-shared", categoryId: "cat-shared" },
+  { id: "g-multi-A", name: "Grupo A", sectionId: "sec-multi", categoryId: "cat-multi" },
+  { id: "g-multi-At", name: "Grupo A - Titular", sectionId: "sec-multi", categoryId: "cat-multi" },
+  { id: "g-multi-Br", name: "Grupo B - Reserva", sectionId: "sec-multi", categoryId: "cat-multi" },
+  { id: "g-boxeo-1", name: "Grupo 1", sectionId: "sec-boxeo", categoryId: "cat-boxeo" },
+  { id: "g-boxeo-At", name: "Grupo A - Titular", sectionId: "sec-boxeo", categoryId: "cat-boxeo" },
+  { id: "g-boxeo-Br", name: "Grupo B - Reserva", sectionId: "sec-boxeo", categoryId: "cat-boxeo" },
+  { id: "g-boxeo-senior", name: "Grupo Senior", sectionId: "sec-boxeo", categoryId: "cat-boxeo" },
+];
+
+type AthleteSeed = { firstName: string; lastName: string; sectionId: string; categoryId: string; groupIds: string[]; medicalStatus: Athlete["medicalStatus"]; performanceStatus: Athlete["performanceStatus"] };
+
+const ATHLETE_SEEDS: AthleteSeed[] = [
+  { firstName: "raul4", lastName: "GARC", sectionId: "sec-prueba", categoryId: "cat-prueba-inf", groupIds: ["g-prueba-1"], medicalStatus: "Unknown", performanceStatus: "Medium" },
+  { firstName: "Athlete2", lastName: "MULTIROLTEST", sectionId: "sec-multi", categoryId: "cat-multi", groupIds: ["g-multi-A"], medicalStatus: "Unknown", performanceStatus: "Medium" },
+  { firstName: "Athlete1", lastName: "MULTIROLTEST", sectionId: "sec-multi", categoryId: "cat-multi", groupIds: ["g-multi-A"], medicalStatus: "Unknown", performanceStatus: "Medium" },
+  { firstName: "Héctor", lastName: "Cabello", sectionId: "sec-shared", categoryId: "cat-shared-inf", groupIds: ["g-prueba-A", "g-prueba-1"], medicalStatus: "Fit", performanceStatus: "High" },
+  { firstName: "Miguel", lastName: "Ochoa", sectionId: "sec-multi", categoryId: "cat-multi", groupIds: ["g-multi-Br"], medicalStatus: "Fit", performanceStatus: "Medium" },
+  { firstName: "Eric", lastName: "Navarro", sectionId: "sec-multi", categoryId: "cat-multi", groupIds: ["g-multi-At"], medicalStatus: "Fit", performanceStatus: "High" },
+  { firstName: "Jordi", lastName: "Guardado", sectionId: "sec-boxeo", categoryId: "cat-boxeo", groupIds: ["g-boxeo-Br", "g-boxeo-1"], medicalStatus: "Fit", performanceStatus: "Medium" },
+  { firstName: "Juan", lastName: "Granados", sectionId: "sec-boxeo", categoryId: "cat-boxeo", groupIds: ["g-boxeo-At", "g-boxeo-1"], medicalStatus: "Fit", performanceStatus: "High" },
+  { firstName: "Lorena", lastName: "Tamayo", sectionId: "sec-shared", categoryId: "cat-shared", groupIds: ["g-shared-B"], medicalStatus: "Under review", performanceStatus: "Medium" },
+  { firstName: "Erik", lastName: "Llorente", sectionId: "sec-shared", categoryId: "cat-shared", groupIds: ["g-shared-A"], medicalStatus: "Fit", performanceStatus: "Medium" },
+  { firstName: "María Dolores", lastName: "Garza", sectionId: "sec-boxeo", categoryId: "cat-boxeo", groupIds: ["g-boxeo-senior", "g-boxeo-1"], medicalStatus: "Unknown", performanceStatus: "Low" },
+  { firstName: "Nadia", lastName: "Abad", sectionId: "sec-boxeo", categoryId: "cat-boxeo", groupIds: ["g-prueba-aaa", "g-boxeo-1"], medicalStatus: "Unknown", performanceStatus: "Medium" },
+  { firstName: "Marc", lastName: "Vidal", sectionId: "sec-prueba", categoryId: "cat-prueba-inf", groupIds: ["g-prueba-A"], medicalStatus: "Injured", performanceStatus: "Low" },
+  { firstName: "Sofía", lastName: "Ramos", sectionId: "sec-prueba", categoryId: "cat-prueba-inf", groupIds: ["g-prueba-B"], medicalStatus: "Fit", performanceStatus: "Medium" },
+  { firstName: "Iván", lastName: "Castro", sectionId: "sec-shared", categoryId: "cat-shared", groupIds: ["g-shared-A"], medicalStatus: "Under review", performanceStatus: "Medium" },
+  { firstName: "Elena", lastName: "Romero", sectionId: "sec-multi", categoryId: "cat-multi", groupIds: ["g-multi-A"], medicalStatus: "Fit", performanceStatus: "High" },
+  { firstName: "Hugo", lastName: "Molina", sectionId: "sec-boxeo", categoryId: "cat-boxeo", groupIds: ["g-boxeo-1"], medicalStatus: "Fit", performanceStatus: "Medium" },
+  { firstName: "Marta", lastName: "Sánchez", sectionId: "sec-prueba", categoryId: "cat-prueba-inf", groupIds: ["g-prueba-1"], medicalStatus: "Fit", performanceStatus: "Medium" },
+  { firstName: "Adrián", lastName: "Pérez", sectionId: "sec-multi", categoryId: "cat-multi", groupIds: ["g-multi-At"], medicalStatus: "Injured", performanceStatus: "Low" },
+  { firstName: "Laura", lastName: "Torres", sectionId: "sec-shared", categoryId: "cat-shared", groupIds: ["g-shared-B"], medicalStatus: "Fit", performanceStatus: "High" },
+  { firstName: "Iker", lastName: "Gómez", sectionId: "sec-boxeo", categoryId: "cat-boxeo", groupIds: ["g-boxeo-At"], medicalStatus: "Fit", performanceStatus: "High" },
+  { firstName: "Vega", lastName: "Fernández", sectionId: "sec-prueba", categoryId: "cat-prueba-inf", groupIds: ["g-prueba-aaa"], medicalStatus: "Unknown", performanceStatus: "Medium" },
+];
+
+export const ATHLETES: Athlete[] = ATHLETE_SEEDS.map((a, i) => ({
+  id: `ath-${i + 1}`,
+  ...a,
+  status: i % 11 === 0 ? "Pending" : i === 7 ? "Inactive" : "Active",
 }));
 
+// Recompute athleteCount from real data
+SECTIONS.forEach((s) => {
+  s.athleteCount = ATHLETES.filter((a) => a.sectionId === s.id).length || s.athleteCount;
+});
+
+// Generate dense calendar events for current month: per weekday a few events
+export const EVENTS: CalendarEvent[] = (() => {
+  const evs: CalendarEvent[] = [];
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  let id = 1;
+  const groupCycle = [
+    { gid: "g-prueba-aaa", title: "AAA", role: "" },
+    { gid: "g-prueba-B", title: "Grupo B", role: "" },
+    { gid: "g-prueba-A", title: "Grupo A - Titular", role: "Titular" },
+    { gid: "g-multi-At", title: "Grupo A - Titular", role: "Titular" },
+    { gid: "g-multi-Br", title: "Grupo B - Reserva", role: "Reserva" },
+    { gid: "g-boxeo-At", title: "Grupo A - Titular", role: "Titular" },
+    { gid: "g-shared-A", title: "Grupo A", role: "" },
+  ];
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(today.getFullYear(), today.getMonth(), day);
+    const dow = date.getDay(); // 0 sun
+    // weekend lighter
+    const count = dow === 0 || dow === 6 ? 1 : 6 + (day % 4) * 4; // 6..18
+    for (let i = 0; i < count; i++) {
+      const hour = 6 + (i % 12);
+      const g = groupCycle[i % groupCycle.length];
+      const grp = GROUPS.find((x) => x.id === g.gid)!;
+      evs.push({
+        id: `ev-${id++}`,
+        date: iso(date),
+        startTime: `${String(hour).padStart(2, "0")}:00`,
+        title: g.title,
+        sectionId: grp.sectionId,
+        categoryId: grp.categoryId,
+        groupId: grp.id,
+        roleInGroup: g.role || undefined,
+        type: "training",
+      });
+    }
+  }
+  return evs;
+})();
+
+export const FEES: Fee[] = [
+  { id: "fee-1", name: "huhuhuhuhu", amount: 234, frequency: "Daily" as any, appliesToGroupIds: ["g-prueba-1"], sectionId: "sec-prueba", kind: "fee" },
+  { id: "fee-2", name: "nueva cuota", amount: 234, frequency: "Monthly", periodStart: "2026-04-24", periodEnd: "2026-04-24", appliesToGroupIds: ["g-prueba-1"], sectionId: "sec-prueba", kind: "fee" },
+  { id: "fee-3", name: "para Granados", amount: 1, frequency: "Monthly", appliesToGroupIds: ["g-prueba-1"], sectionId: "sec-prueba", kind: "fee" },
+  { id: "fee-4", name: "cuota 2", amount: 190, frequency: "Monthly", appliesToGroupIds: [], sectionId: "sec-prueba", kind: "fee" },
+  { id: "fee-5", name: "Grupo 1", amount: 120, frequency: "Daily" as any, appliesToGroupIds: ["g-prueba-1"], sectionId: "sec-prueba", kind: "fee" },
+  { id: "rate-1", name: "uuuu", amount: 345, frequency: "One-time", paymentDate: "2026-04-24", appliesToGroupIds: ["g-prueba-1"], sectionId: "sec-prueba", kind: "rate" },
+  { id: "rate-2", name: "Granados", amount: 10, frequency: "One-time", paymentDate: "2026-04-23", appliesToGroupIds: ["g-prueba-1"], sectionId: "sec-prueba", kind: "rate" },
+  { id: "rate-3", name: "tasa 2", amount: 148, frequency: "One-time", paymentDate: "2026-04-23", appliesToGroupIds: [], sectionId: "sec-prueba", kind: "rate" },
+  { id: "rate-4", name: "Tasa 1", amount: 110, frequency: "One-time", appliesToGroupIds: ["g-prueba-1"], sectionId: "sec-prueba", kind: "rate" },
+];
+
+// 113 payments alternating between Juan GRANADOS (3 entries/day) and raul4 GARC (1 entry/day), 28 days
+export const PAYMENTS: Payment[] = (() => {
+  const result: Payment[] = [];
+  const granados = ATHLETES.find((a) => a.firstName === "Juan" && a.lastName === "Granados")!;
+  const raul = ATHLETES.find((a) => a.firstName === "raul4")!;
+  const month = today.getMonth();
+  const year = today.getFullYear();
+  let id = 1;
+  for (let day = 7; day >= 1 && result.length < 113; day--) {
+    const date = iso(new Date(year, month, day));
+    const isToday = day === 7;
+    // raul Fallida 0€
+    result.push({
+      id: `pay-${id++}`, athleteId: raul.id, subscription: "Grupo 1", sectionId: "sec-prueba", categoryId: "cat-prueba-inf",
+      amount: 0, status: "Failed", date,
+    });
+    // granados huhuhuhuhu 234
+    result.push({
+      id: `pay-${id++}`, athleteId: granados.id, subscription: "huhuhuhuhu", sectionId: "sec-prueba", categoryId: "cat-prueba-inf",
+      amount: 234, status: isToday ? "Paid" : "Active", date,
+    });
+    // granados Grupo 1 120
+    result.push({
+      id: `pay-${id++}`, athleteId: granados.id, subscription: "Grupo 1", sectionId: "sec-prueba", categoryId: "cat-prueba-inf",
+      amount: 120, status: isToday ? "Paid" : "Active", date,
+    });
+  }
+  // Fill remainder up to 113 with older entries
+  let extraDay = 8;
+  while (result.length < 113) {
+    const date = iso(new Date(year, month - (extraDay > 28 ? 1 : 0), ((extraDay - 1) % 28) + 1));
+    result.push({
+      id: `pay-${id++}`, athleteId: granados.id, subscription: "huhuhuhuhu", sectionId: "sec-prueba", categoryId: "cat-prueba-inf",
+      amount: 234, status: ["Active", "Pending", "Failed"][result.length % 3] as any, date,
+    });
+    extraDay++;
+  }
+  return result;
+})();
+
+const carlos = "u-adm";
+const carla = "u-mgr";
+const pol = "u-tec";
+const nadia = "u-ath-nadia";
+
 export const CONVERSATIONS: Conversation[] = [
+  // Whole-club circular (45 participants)
   {
-    id: "conv-1",
-    title: "Bienvenida temporada 2025/26",
+    id: "conv-circ-1",
+    title: "Circulares",
     type: "circular",
-    participants: ["u-adm", "u-mgr", "u-tec", "u-med"],
-    unreadCount: 2,
-    messages: [
-      { id: "m-1", authorId: "u-adm", authorRole: "admin", targetLabel: "Whole club", content: "Bienvenidos a la nueva temporada. Recordad revisar el calendario semanal.", createdAt: new Date(today.getTime() - 86400000 * 2).toISOString() },
-      { id: "m-2", authorId: "u-mgr", authorRole: "manager", targetLabel: "Whole club", content: "Recordatorio: reunión de coordinación el viernes.", createdAt: new Date(today.getTime() - 86400000).toISOString() },
-    ],
-  },
-  {
-    id: "conv-2",
-    title: "Solicitud de cita médica - Miguel Ochoa",
-    type: "direct",
-    participants: ["u-tec", "u-med"],
-    unreadCount: 1,
-    messages: [
-      { id: "m-3", authorId: "u-tec", authorRole: "technical", targetLabel: "Medical Staff", content: "¿Podemos agendar valoración para Miguel? Molestias en el tobillo.", createdAt: new Date(today.getTime() - 3600000 * 5).toISOString() },
-    ],
-  },
-  {
-    id: "conv-3",
-    title: "Grupo Senior A - Cambio horario",
-    type: "group",
-    participants: ["u-adm", "u-tec"],
+    participants: Array.from({ length: 45 }, (_, i) => `p-${i}`),
     unreadCount: 0,
     messages: [
-      { id: "m-4", authorId: "u-adm", authorRole: "admin", targetLabel: "Senior Grupo A", content: "El entrenamiento del jueves se mueve a las 19:00.", createdAt: new Date(today.getTime() - 86400000 * 3).toISOString() },
+      { id: "m-1", authorId: carlos, authorRole: "admin", targetLabel: "Todo el club (3 destinatarios)", content: "Bienvenida a la temporada — Les damos la bienvenida a la nueva temporada. Encontraréis en el tablón de anuncios toda la información relevante.", createdAt: new Date(2026, 4, 7, 12, 34).toISOString() },
+      { id: "m-2", authorId: carlos, authorRole: "admin", targetLabel: "Sección Atletismo (2 destinatarios)", content: "Reunión de padres - Sección Atletismo: el próximo viernes 20 a las 18:00 en el salón de actos del club.", createdAt: new Date(2026, 4, 7, 12, 34).toISOString() },
+      { id: "m-3", authorId: pol, authorRole: "technical", targetLabel: "Sección Atletismo (2 destinatarios)", content: "Convocatoria especial de entrenamiento — recordamos a todos que mañana hay entrenamiento especial a las 09:00. Confirmar asistencia.", createdAt: new Date(2026, 4, 7, 12, 34).toISOString() },
+      { id: "m-4", authorId: carla, authorRole: "manager", targetLabel: "Sección Deporte prueba > Infantil > Grupo Grupo 1 (11 destinatarios)", content: "Recordatorio: control de asistencia esta semana.", createdAt: new Date(2026, 4, 7, 11, 49).toISOString() },
+    ],
+  },
+  // Solo participante
+  {
+    id: "conv-circ-solo",
+    title: "Circulares",
+    type: "circular",
+    participants: [carlos],
+    unreadCount: 0,
+    messages: [
+      { id: "m-solo-1", authorId: carlos, authorRole: "admin", targetLabel: "Todo el club (1 recipients)", content: "Mensaje interno de prueba.", createdAt: new Date(2026, 4, 7, 9, 29).toISOString() },
+    ],
+  },
+  // Group 1 Infantil chat
+  {
+    id: "conv-g1",
+    title: "Grupo 1 Infantil",
+    type: "group",
+    participants: Array.from({ length: 10 }, (_, i) => `g-p-${i}`),
+    unreadCount: 0,
+    messages: [
+      { id: "g-m1", authorId: pol, authorRole: "technical", targetLabel: "Sección Deporte prueba > Infantil > Grupo Grupo 1 (10 destinatarios)", content: "Buenos días equipo, recordatorio del entrenamiento de mañana.", createdAt: new Date(2026, 4, 6, 21, 53).toISOString() },
+      { id: "g-m2", authorId: pol, authorRole: "technical", targetLabel: "Sección Deporte prueba > Infantil > Grupo Grupo 1 (10 destinatarios)", content: "Llevad equipación completa.", createdAt: new Date(2026, 4, 7, 9, 28).toISOString() },
+      { id: "g-m3", authorId: nadia, authorRole: "technical", targetLabel: "Sección Deporte prueba > Infantil > Grupo Grupo 1 (10 destinatarios)", content: "Buenas, confirmo asistencia.", createdAt: new Date(2026, 4, 7, 7, 56).toISOString() },
     ],
   },
 ];
 
-export const MEDICAL_APPOINTMENTS: MedicalAppointment[] = ATHLETES.slice(0, 8).map((a, i) => {
-  const day = new Date(monthStart);
-  day.setDate(1 + (i * 3) % 27);
-  return {
-    id: `apt-${i + 1}`,
-    athleteId: a.id,
+// Medical inbox: 21 medical-request convos
+const medicalConvos: Conversation[] = Array.from({ length: 21 }, (_, i) => ({
+  id: `conv-med-${i + 1}`,
+  title: "Solicitud de cita médica",
+  type: "direct",
+  participants: ["u-tec", "u-med", `parent-${i}`, `athlete-${i}`],
+  unreadCount: i === 0 ? 3 : 1,
+  messages: [
+    { id: `med-m-${i}`, authorId: pol, authorRole: "technical", targetLabel: "Staff médico (4 destinatarios)", content: "Solicitamos cita para evaluación. Detalles en el grupo.", createdAt: new Date(2026, 4, 7, 10, 38 - i).toISOString() },
+  ],
+}));
+
+CONVERSATIONS.push(...medicalConvos);
+
+const apptDate = new Date(today.getFullYear(), today.getMonth(), 19);
+
+export const MEDICAL_APPOINTMENTS: MedicalAppointment[] = [
+  {
+    id: "apt-1",
+    athleteId: ATHLETES.find((a) => a.firstName === "Miguel" && a.lastName === "Ochoa")!.id,
     staffId: "u-med",
-    date: iso(day),
-    time: `${String(9 + i).padStart(2, "0")}:00`,
-    reason: ["Revisión rutinaria", "Lesión muscular", "Seguimiento", "Evaluación física"][i % 4],
-    status: i % 5 === 0 ? "Completed" : "Scheduled",
-    notes: "Sin observaciones.",
-  };
-});
+    date: iso(apptDate),
+    time: "09:00",
+    reason: "Revisión rutinaria",
+    status: "Scheduled",
+    notes: "",
+  },
+];
 
 export const ALL_USERS: User[] = DEMO_USERS;
