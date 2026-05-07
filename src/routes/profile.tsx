@@ -22,6 +22,7 @@ function ProfilePage() {
   const t = useT();
   const u = useCurrentUser()!;
   const setUser = useAuth((s) => s.setUser);
+  const reset = useData((s) => s.reset);
   const navigate = useNavigate();
 
   return (
