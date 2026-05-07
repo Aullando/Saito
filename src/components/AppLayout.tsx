@@ -10,10 +10,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
   if (!user) return <Navigate to="/login" />;
   return (
     <div className="min-h-screen bg-background">
+      <Topbar />
       <Sidebar />
       <div className="md:pl-[224px]">
-        <Topbar />
-        <main className="px-6 py-6 pt-[88px] md:px-10 md:py-8 md:pt-[96px]">{children}</main>
+        <main className="px-4 py-5 pt-[72px] md:px-10 md:py-8 md:pt-[88px]">{children}</main>
       </div>
       <AIChat />
     </div>
