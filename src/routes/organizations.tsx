@@ -92,35 +92,37 @@ function OrganizationsPage() {
       />
 
       <div className="saito-card overflow-hidden p-0">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-              <th className="px-5 py-3 font-semibold">Name</th>
-              <th className="px-5 py-3 font-semibold">Created</th>
-              <th className="px-5 py-3 font-semibold">Updated</th>
-              <th className="px-5 py-3 font-semibold">Status</th>
-              <th className="px-5 py-3 font-semibold">AI</th>
-              <th className="px-5 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {paged.map((o) => (
-              <tr key={o.id} className="border-t border-border hover:bg-muted/30">
-                <td className="px-5 py-3 font-medium">{o.name}</td>
-                <td className="px-5 py-3 text-muted-foreground">{formatDateTime(o.createdAt)}</td>
-                <td className="px-5 py-3 text-muted-foreground">{formatDateTime(o.updatedAt)}</td>
-                <td className="px-5 py-3">
-                  <Pill tone={o.status === "Active" ? "success" : "default"}>{o.status}</Pill>
-                </td>
-                <td className="px-5 py-3 text-sm font-medium">{o.aiEnabled ? "Yes" : "No"}</td>
-                <td className="px-5 py-3 text-right whitespace-nowrap">
-                  <Button size="sm" variant="ghost" onClick={() => setDetail(o)}>Details</Button>
-                  <Button size="sm" variant="ghost" className="text-destructive" onClick={() => { if (confirm("Delete this organization?")) deleteOrganization(o.id); }}>Delete</Button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px] text-sm">
+            <thead>
+              <tr className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
+                <th className="px-5 py-3 font-semibold">Name</th>
+                <th className="px-5 py-3 font-semibold">Created</th>
+                <th className="px-5 py-3 font-semibold">Updated</th>
+                <th className="px-5 py-3 font-semibold">Status</th>
+                <th className="px-5 py-3 font-semibold">AI</th>
+                <th className="px-5 py-3" />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {paged.map((o) => (
+                <tr key={o.id} className="border-t border-border hover:bg-muted/30">
+                  <td className="px-5 py-3 font-medium">{o.name}</td>
+                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">{formatDateTime(o.createdAt)}</td>
+                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">{formatDateTime(o.updatedAt)}</td>
+                  <td className="px-5 py-3">
+                    <Pill tone={o.status === "Active" ? "success" : "default"}>{o.status}</Pill>
+                  </td>
+                  <td className="px-5 py-3 text-sm font-medium">{o.aiEnabled ? "Yes" : "No"}</td>
+                  <td className="px-5 py-3 text-right whitespace-nowrap">
+                    <Button size="sm" variant="ghost" onClick={() => setDetail(o)}>Details</Button>
+                    <Button size="sm" variant="ghost" className="text-destructive" onClick={() => { if (confirm("Delete this organization?")) deleteOrganization(o.id); }}>Delete</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="mt-4 flex items-center justify-end gap-3 text-sm">
