@@ -22,6 +22,7 @@ import { Route as AthletesRouteImport } from './routes/athletes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsTeamRouteImport } from './routes/settings.team'
 import { Route as RgccMiDiaRouteImport } from './routes/rgcc.mi-dia'
+import { Route as RgccEntrenamientoPersonalRouteImport } from './routes/rgcc.entrenamiento-personal'
 import { Route as RgccClasesRouteImport } from './routes/rgcc.clases'
 import { Route as RgccBibliotecaRouteImport } from './routes/rgcc.biblioteca'
 import { Route as RgccSlugRouteImport } from './routes/rgcc.$slug'
@@ -94,6 +95,12 @@ const RgccMiDiaRoute = RgccMiDiaRouteImport.update({
   path: '/rgcc/mi-dia',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RgccEntrenamientoPersonalRoute =
+  RgccEntrenamientoPersonalRouteImport.update({
+    id: '/rgcc/entrenamiento-personal',
+    path: '/rgcc/entrenamiento-personal',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const RgccClasesRoute = RgccClasesRouteImport.update({
   id: '/rgcc/clases',
   path: '/rgcc/clases',
@@ -143,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/rgcc/$slug': typeof RgccSlugRoute
   '/rgcc/biblioteca': typeof RgccBibliotecaRoute
   '/rgcc/clases': typeof RgccClasesRoute
+  '/rgcc/entrenamiento-personal': typeof RgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
 }
@@ -164,6 +172,7 @@ export interface FileRoutesByTo {
   '/rgcc/$slug': typeof RgccSlugRoute
   '/rgcc/biblioteca': typeof RgccBibliotecaRoute
   '/rgcc/clases': typeof RgccClasesRoute
+  '/rgcc/entrenamiento-personal': typeof RgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
 }
@@ -186,6 +195,7 @@ export interface FileRoutesById {
   '/rgcc/$slug': typeof RgccSlugRoute
   '/rgcc/biblioteca': typeof RgccBibliotecaRoute
   '/rgcc/clases': typeof RgccClasesRoute
+  '/rgcc/entrenamiento-personal': typeof RgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
 }
@@ -209,6 +219,7 @@ export interface FileRouteTypes {
     | '/rgcc/$slug'
     | '/rgcc/biblioteca'
     | '/rgcc/clases'
+    | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/team'
   fileRoutesByTo: FileRoutesByTo
@@ -230,6 +241,7 @@ export interface FileRouteTypes {
     | '/rgcc/$slug'
     | '/rgcc/biblioteca'
     | '/rgcc/clases'
+    | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/team'
   id:
@@ -251,6 +263,7 @@ export interface FileRouteTypes {
     | '/rgcc/$slug'
     | '/rgcc/biblioteca'
     | '/rgcc/clases'
+    | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/team'
   fileRoutesById: FileRoutesById
@@ -273,6 +286,7 @@ export interface RootRouteChildren {
   RgccSlugRoute: typeof RgccSlugRoute
   RgccBibliotecaRoute: typeof RgccBibliotecaRoute
   RgccClasesRoute: typeof RgccClasesRoute
+  RgccEntrenamientoPersonalRoute: typeof RgccEntrenamientoPersonalRoute
   RgccMiDiaRoute: typeof RgccMiDiaRoute
   SettingsTeamRoute: typeof SettingsTeamRoute
 }
@@ -370,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RgccMiDiaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rgcc/entrenamiento-personal': {
+      id: '/rgcc/entrenamiento-personal'
+      path: '/rgcc/entrenamiento-personal'
+      fullPath: '/rgcc/entrenamiento-personal'
+      preLoaderRoute: typeof RgccEntrenamientoPersonalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rgcc/clases': {
       id: '/rgcc/clases'
       path: '/rgcc/clases'
@@ -433,6 +454,7 @@ const rootRouteChildren: RootRouteChildren = {
   RgccSlugRoute: RgccSlugRoute,
   RgccBibliotecaRoute: RgccBibliotecaRoute,
   RgccClasesRoute: RgccClasesRoute,
+  RgccEntrenamientoPersonalRoute: RgccEntrenamientoPersonalRoute,
   RgccMiDiaRoute: RgccMiDiaRoute,
   SettingsTeamRoute: SettingsTeamRoute,
 }
