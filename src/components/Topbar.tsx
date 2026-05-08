@@ -65,6 +65,7 @@ export function Topbar() {
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
         <NotificationsBell />
+        <ClubSwitcher />
 
         <div ref={ref} className="relative">
           <button
