@@ -400,7 +400,7 @@ function KpiCard({
     default: "bg-muted text-foreground",
     info: "bg-primary/10 text-primary",
     success: "bg-success/15 text-success",
-    warning: "bg-warning/20 text-warning-foreground",
+    warning: "bg-warning/15 text-warning",
   };
   return (
     <Card>
