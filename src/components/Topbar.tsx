@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Moon, Sun, Search, Menu, ChevronDown } from "lucide-react";
+import { Moon, Sun, Search, Menu, ChevronDown, X } from "lucide-react";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
-import { Logo } from "./Logo";
+import { Logo, LogoMark } from "./Logo";
 import { NotificationsBell } from "./NotificationsBell";
 import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
@@ -26,6 +26,7 @@ export function Topbar() {
   const collapsed = useAuth((s) => s.sidebarCollapsed);
   const { club } = useClub();
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export function Topbar() {
 
   if (!user) return null;
   return (
-    <header className="fixed top-0 right-0 left-0 z-30 flex h-14 md:h-16 items-center gap-2 md:gap-4 border-b border-border bg-background/90 px-3 backdrop-blur md:px-6">
+    <header className="fixed top-0 right-0 left-0 z-30 flex h-14 md:h-16 items-center gap-1.5 sm:gap-2 md:gap-4 border-b border-border bg-background/90 px-2 backdrop-blur sm:px-3 md:px-6">
       <button
         onClick={() => setMobileNavOpen(true)}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted md:hidden"
@@ -52,20 +53,33 @@ export function Topbar() {
       >
         <Logo size={28} />
       </div>
-      <div className="flex md:hidden items-center">
-        <Logo size={26} />
+      <div className="flex md:hidden items-center shrink-0">
+        <LogoMark size={28} />
       </div>
-      <div className="flex flex-1 justify-center min-w-0">
+
+      {/* Desktop / tablet search */}
+      <div className="hidden sm:flex flex-1 justify-center min-w-0">
         <div className="relative w-full max-w-2xl">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
-            placeholder={user.language === "es" ? `Buscar en ${club.brand.name}` : `Search in ${club.brand.name}`}
+            placeholder={user.language === "es" ? `Buscar en ${club.brand.name}` : `Search ${club.brand.name}`}
             className="h-9 md:h-10 w-full rounded-full border border-border bg-card pl-10 pr-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </div>
-      <div className="flex items-center gap-1.5 md:gap-2">
+      {/* Mobile spacer pushes actions right */}
+      <div className="flex sm:hidden flex-1" />
+
+      <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 shrink-0">
+        {/* Mobile search toggle */}
+        <button
+          onClick={() => setSearchOpen((v) => !v)}
+          className="flex sm:hidden h-9 w-9 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm hover:text-foreground"
+          aria-label="Search"
+        >
+          <Search className="h-4 w-4" />
+        </button>
         <button
           onClick={toggle}
           className="hidden sm:flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm hover:text-foreground"
@@ -79,13 +93,13 @@ export function Topbar() {
         <div ref={ref} className="relative">
           <button
             onClick={() => setOpen((o) => !o)}
-            className="flex items-center gap-1.5 rounded-full bg-card pl-1 pr-2 py-1 shadow-sm hover:bg-muted"
+            className="flex items-center gap-1 sm:gap-1.5 rounded-full bg-card pl-1 pr-1.5 sm:pr-2 py-1 shadow-sm hover:bg-muted"
             aria-label="Switch role"
           >
             <span className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center overflow-hidden rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
               {avatar ? <img src={avatar} alt={user.name} className="h-full w-full object-cover" /> : user.initials}
             </span>
-            <span className="hidden sm:inline text-xs font-medium">{ROLE_LABEL[user.role] ?? user.role}</span>
+            <span className="hidden md:inline text-xs font-medium">{ROLE_LABEL[user.role] ?? user.role}</span>
             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
           {open && (
@@ -120,6 +134,26 @@ export function Topbar() {
           )}
         </div>
       </div>
+      {searchOpen && (
+        <div className="absolute inset-x-0 top-full sm:hidden border-b border-border bg-background/95 backdrop-blur px-3 py-2">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              autoFocus
+              type="search"
+              placeholder={user.language === "es" ? `Buscar en ${club.brand.name}` : `Search ${club.brand.name}`}
+              className="h-10 w-full rounded-full border border-border bg-card pl-10 pr-10 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+            <button
+              onClick={() => setSearchOpen(false)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-muted"
+              aria-label="Close search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
