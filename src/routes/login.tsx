@@ -1,38 +1,48 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAuth as useLocalAuth } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
-import { toast } from "sonner";
+import { DEMO_USERS } from "@/lib/seed";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Log In — SAITO" }] }),
+  head: () => ({ meta: [{ title: "Entrar — SAITO" }] }),
   component: LoginPage,
 });
+
+const ROLE_LABEL: Record<string, string> = {
+  sysadmin: "SysAdmin",
+  admin: "Admin",
+  manager: "Manager",
+  technical: "Technical",
+  medical: "Medical",
+};
+
+const ROLE_USERS = DEMO_USERS.filter((u) => ROLE_LABEL[u.role]);
 
 function LoginPage() {
   const { session } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
+  const setUser = useLocalAuth((s) => s.setUser);
+  const [selected, setSelected] = useState<string>(ROLE_USERS[0]?.id ?? "");
 
   useEffect(() => {
     if (session) navigate({ to: "/" });
   }, [session, navigate]);
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    setBusy(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setBusy(false);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
+    if (!selected) return;
+    setUser(selected);
     navigate({ to: "/" });
   };
 
@@ -43,28 +53,28 @@ function LoginPage() {
           <Logo size={44} />
         </div>
         <div className="saito-card p-8">
-          <h1 className="mb-6 text-center text-2xl font-bold">Log in</h1>
+          <h1 className="mb-6 text-center text-2xl font-bold">Entrar</h1>
 
           <form onSubmit={submit} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@club.com" />
+              <Label htmlFor="role">Selecciona un rol</Label>
+              <Select value={selected} onValueChange={setSelected}>
+                <SelectTrigger id="role">
+                  <SelectValue placeholder="Elige un rol" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ROLE_USERS.map((u) => (
+                    <SelectItem key={u.id} value={u.id}>
+                      {ROLE_LABEL[u.role]} — {u.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
-            </div>
-            <Button type="submit" disabled={busy} className="w-full rounded-full">
-              {busy ? "..." : "Log in"}
+            <Button type="submit" className="w-full rounded-full">
+              Entrar
             </Button>
           </form>
-
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/signup" className="font-medium text-primary hover:underline">
-              Sign up
-            </Link>
-          </p>
         </div>
       </div>
     </div>
