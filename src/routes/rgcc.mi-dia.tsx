@@ -187,7 +187,7 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
               <li key={e.id} className="flex items-center gap-2 text-sm">
                 <span className="font-bold tabular-nums w-12">{e.time}</span>
                 <span className="flex-1 truncate">{e.memberName}</span>
-                <Pill tone={e.status === "completed" ? "success" : "info"}>{e.status}</Pill>
+                <Pill tone={e.status === "done" ? "success" : "info"}>{e.status}</Pill>
               </li>
             ))}
           </ul>
