@@ -76,7 +76,10 @@ export function Sidebar() {
   const { club, isModuleEnabled } = useClub();
   if (!user) return null;
   const items: Item[] = club.navItems
-    ? club.navItems.filter((n) => isModuleEnabled(n.module)).map(navItemToItem)
+    ? club.navItems
+        .filter((n) => isModuleEnabled(n.module))
+        .filter((n) => !n.allowedRoles || n.allowedRoles.includes(user.role))
+        .map(navItemToItem)
     : buildItems(user.role, t).filter((i) => !i.module || isModuleEnabled(i.module));
   const width = collapsed ? 72 : 224;
   const notifCount = user.role === "sysadmin" ? 25 : user.role === "medical" ? 13 : 0;
