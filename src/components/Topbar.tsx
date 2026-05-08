@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, Moon, Sun, Search, Menu, ChevronDown } from "lucide-react";
+import { Moon, Sun, Search, Menu, ChevronDown } from "lucide-react";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo } from "./Logo";
+import { NotificationsBell } from "./NotificationsBell";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
@@ -62,12 +63,7 @@ export function Topbar() {
         >
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
-        <button
-          className="flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm hover:text-foreground"
-          aria-label="Notifications"
-        >
-          <Bell className="h-4 w-4" />
-        </button>
+        <NotificationsBell />
 
         <div ref={ref} className="relative">
           <button
