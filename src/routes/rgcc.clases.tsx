@@ -9,6 +9,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { useClub } from "@/clubs/ClubProvider";
+import { getRgccView } from "@/clubs/rgcc/permissions";
 import {
   RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES,
   RGCC_VENUES, RGCC_ROOMS, RGCC_MEMBERS,
@@ -30,12 +31,9 @@ function RgccClasesGate() {
   const { roles, profile } = useAuth();
   if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
 
-  const role = roles[0];
-  const isAdmin = roles.some((r) => r === "admin" || r === "manager" || r === "sysadmin");
-  const isCoach = roles.some((r) => r === "technical");
-
-  if (isAdmin) return <ClasesCockpit />;
-  if (isCoach) return <ClasesCoach coachName={profile?.full_name ?? ""} />;
+  const view = getRgccView(roles);
+  if (view === "cockpit") return <ClasesCockpit />;
+  if (view === "coach") return <ClasesCoach coachName={profile?.full_name ?? ""} />;
   return <ClasesSocio memberName={profile?.full_name ?? ""} />;
 }
 

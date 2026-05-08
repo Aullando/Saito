@@ -9,6 +9,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill, EmptyState } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { useClub } from "@/clubs/ClubProvider";
+import { getRgccView } from "@/clubs/rgcc/permissions";
 import {
   RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_ROUTINES, RGCC_EXERCISES,
   type RgccPtSession, type RgccWorkout,
@@ -29,11 +30,9 @@ function PtGate() {
   const { roles, profile } = useAuth();
   if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
 
-  const isAdmin = roles.some((r) => r === "admin" || r === "manager" || r === "sysadmin");
-  const isCoach = roles.some((r) => r === "technical");
-
-  if (isAdmin) return <PtCockpit />;
-  if (isCoach) return <PtCoach name={profile?.full_name ?? ""} />;
+  const view = getRgccView(roles);
+  if (view === "cockpit") return <PtCockpit />;
+  if (view === "coach") return <PtCoach name={profile?.full_name ?? ""} />;
   return <PtMember name={profile?.full_name ?? ""} />;
 }
 

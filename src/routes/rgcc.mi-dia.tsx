@@ -9,6 +9,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { useClub } from "@/clubs/ClubProvider";
+import { getRgccMiDiaView, isRgccAdmin } from "@/clubs/rgcc/permissions";
 import {
   RGCC_SESSIONS, RGCC_PT_SESSIONS, RGCC_VENUES, RGCC_MEMBERS,
 } from "@/clubs/rgcc/seed";
@@ -28,10 +29,9 @@ function MiDiaGate() {
   if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
 
   const me = profile?.full_name ?? "";
-  const isAdmin = roles.some((r) => r === "admin" || r === "manager" || r === "sysadmin");
-  const isCoach = roles.some((r) => r === "technical");
-
-  if (isCoach || isAdmin) return <MiDiaMonitor monitorName={me} isAdmin={isAdmin} />;
+  const isAdmin = isRgccAdmin(roles);
+  const view = getRgccMiDiaView(roles);
+  if (view === "monitor") return <MiDiaMonitor monitorName={me} isAdmin={isAdmin} />;
   return <MiDiaSocio memberName={me} />;
 }
 
