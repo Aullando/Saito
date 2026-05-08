@@ -54,7 +54,7 @@ export function Topbar() {
         <Logo size={28} />
       </div>
       <div className="flex md:hidden items-center shrink-0">
-        <LogoMark size={40} />
+        <LogoMark size={52} />
       </div>
 
       {/* Desktop / tablet search */}
