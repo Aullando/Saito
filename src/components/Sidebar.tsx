@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import * as Icons from "lucide-react";
 import {
   Building2, CalendarDays, Users, Wallet, Receipt, MessageSquare,
   Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X,
@@ -9,9 +10,16 @@ import { useT } from "@/lib/i18n";
 import type { Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useClub } from "@/clubs/ClubProvider";
-import type { ClubModuleId } from "@/clubs/types";
+import type { ClubModuleId, ClubNavItem } from "@/clubs/types";
 
-type Item = { to: string; label: string; icon: typeof Building2; indent?: boolean; module?: ClubModuleId };
+type Item = {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  indent?: boolean;
+  module?: ClubModuleId;
+  params?: Record<string, string>;
+};
 
 function buildItems(role: Role, t: (k: any) => string): Item[] {
   switch (role) {
