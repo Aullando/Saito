@@ -13,7 +13,7 @@ export type RgccExercise = {
   level: "Inicial" | "Intermedio" | "Avanzado";
   dose: string; cues?: string;
   /** Source: "library" = catálogo general, "evidence" = ejercicios EV. */
-  source: "library" | "evidence";
+  source?: "library" | "evidence";
 };
 
 export const RGCC_EXERCISES: RgccExercise[] = [
