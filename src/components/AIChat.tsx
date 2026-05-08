@@ -188,7 +188,7 @@ export function AIChat() {
             )}
             {msgs.length === 0 && (
               <div className="flex flex-wrap gap-1.5">
-                {SUGGESTIONS[role].map((s) => (
+                {(club.id === "rgcc" ? rgccSuggestions(role) : SUGGESTIONS[role] ?? []).map((s) => (
                   <button key={s} onClick={() => ask(s)} className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] hover:border-primary hover:text-primary">{s}</button>
                 ))}
               </div>
