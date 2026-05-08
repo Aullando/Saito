@@ -159,6 +159,16 @@ export function AIChat() {
       }
     } catch (e) {
       console.error(e);
+      if (isRgcc && rgccIdentity) {
+        try {
+          const ctx = buildRgccContextFromIdentity(rgccIdentity);
+          const local = rgccLocalFallback(role, ctx, q);
+          if (local) {
+            setMsgs((m) => [...m, { role: "assistant", content: local }]);
+            return;
+          }
+        } catch {}
+      }
       setMsgs((m) => [...m, { role: "assistant", content: "Error de conexión con la IA." }]);
     } finally {
       setLoading(false);
