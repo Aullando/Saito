@@ -105,7 +105,75 @@ function DashboardPage() {
     },
   });
 
-  const fmtMoney = (n: number) =>
+  const lang = (profile?.language ?? "es") as "es" | "en";
+  const monthNames = lang === "es" ? MONTHS_ES : MONTHS_EN;
+
+  const charts = useQuery({
+    queryKey: ["dashboard-charts", orgId],
+    enabled: !!orgId,
+    queryFn: async () => {
+      const oid = orgId!;
+      const [pays, evs, ath] = await Promise.all([
+        supabase.from("payments").select("amount, status, payment_date").eq("organization_id", oid).gte("payment_date", sixMonthsAgo()),
+        supabase.from("calendar_events").select("event_date, type").eq("organization_id", oid).gte("event_date", thirtyDaysAgo()),
+        supabase.from("athletes").select("medical_status, performance_status, status").eq("organization_id", oid),
+      ]);
+
+      // Revenue by month (last 6 months)
+      const now = new Date();
+      const buckets: { key: string; label: string; revenue: number; pending: number }[] = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        buckets.push({
+          key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+          label: monthNames[d.getMonth()],
+          revenue: 0,
+          pending: 0,
+        });
+      }
+      const bucketMap = new Map(buckets.map((b) => [b.key, b]));
+      (pays.data ?? []).forEach((p) => {
+        if (!p.payment_date) return;
+        const k = p.payment_date.slice(0, 7);
+        const b = bucketMap.get(k);
+        if (!b) return;
+        const amt = Number(p.amount ?? 0);
+        if (p.status === "Paid") b.revenue += amt;
+        else if (p.status === "Pending") b.pending += amt;
+      });
+
+      // Events per day (last 30)
+      const dayMap = new Map<string, number>();
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        dayMap.set(d.toISOString().slice(0, 10), 0);
+      }
+      (evs.data ?? []).forEach((e) => {
+        if (dayMap.has(e.event_date)) dayMap.set(e.event_date, (dayMap.get(e.event_date) ?? 0) + 1);
+      });
+      const eventsSeries = Array.from(dayMap.entries()).map(([date, count]) => ({
+        date: date.slice(5),
+        count,
+      }));
+
+      // Event types breakdown
+      const typeCount: Record<string, number> = {};
+      (evs.data ?? []).forEach((e) => {
+        typeCount[e.type] = (typeCount[e.type] ?? 0) + 1;
+      });
+      const typeData = Object.entries(typeCount).map(([name, value]) => ({ name, value }));
+
+      // Medical status breakdown
+      const medCount: Record<string, number> = {};
+      (ath.data ?? []).forEach((a) => {
+        medCount[a.medical_status] = (medCount[a.medical_status] ?? 0) + 1;
+      });
+      const medData = Object.entries(medCount).map(([name, value]) => ({ name, value }));
+
+      return { revenueSeries: buckets, eventsSeries, typeData, medData };
+    },
+  });
     new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(n);
 
   const s = stats.data;
