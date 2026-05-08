@@ -23,6 +23,7 @@ export function Topbar() {
   const avatar = useUserAvatar(user?.id ?? "");
   const setMobileNavOpen = useAuth((s) => s.setMobileNavOpen);
   const setUser = useAuth((s) => s.setUser);
+  const collapsed = useAuth((s) => s.sidebarCollapsed);
   const { club } = useClub();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -45,8 +46,14 @@ export function Topbar() {
       >
         <Menu className="h-5 w-5" />
       </button>
-      <div className="flex md:w-[208px] shrink-0 items-center">
+      <div
+        className="hidden md:flex shrink-0 items-center transition-[width] duration-200"
+        style={{ width: collapsed ? 56 : 208 }}
+      >
         <Logo size={28} />
+      </div>
+      <div className="flex md:hidden items-center">
+        <Logo size={26} />
       </div>
       <div className="flex flex-1 justify-center min-w-0">
         <div className="relative w-full max-w-2xl">
