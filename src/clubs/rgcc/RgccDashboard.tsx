@@ -34,7 +34,7 @@ export function RgccDashboard() {
   return (
     <>
       <PageHeader
-        title={`Dashboard · ${club.shortName}`}
+        title={`Dashboard · ${club.brand.shortName}`}
         subtitle="Resumen operativo del club"
       />
 
