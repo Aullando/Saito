@@ -53,6 +53,18 @@ function buildItems(role: Role, t: (k: any) => string): Item[] {
   }
 }
 
+function navItemToItem(n: ClubNavItem): Item {
+  const IconCmp = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[n.icon] ?? LayoutGrid;
+  return {
+    to: n.to,
+    label: n.label,
+    icon: IconCmp,
+    module: n.module,
+    indent: n.indent,
+    params: n.slug ? { slug: n.slug } : undefined,
+  };
+}
+
 export function Sidebar() {
   const user = useCurrentUser();
   const t = useT();
@@ -61,9 +73,11 @@ export function Sidebar() {
   const setMobileOpen = useAuth((s) => s.setMobileNavOpen);
   const [collapsed, setCollapsed] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const { club, isModuleEnabled } = useClub();
   if (!user) return null;
-  const { isModuleEnabled } = useClub();
-  const items = buildItems(user.role, t).filter((i) => !i.module || isModuleEnabled(i.module));
+  const items: Item[] = club.navItems
+    ? club.navItems.filter((n) => isModuleEnabled(n.module)).map(navItemToItem)
+    : buildItems(user.role, t).filter((i) => !i.module || isModuleEnabled(i.module));
   const width = collapsed ? 72 : 224;
   const notifCount = user.role === "sysadmin" ? 25 : user.role === "medical" ? 13 : 0;
 
