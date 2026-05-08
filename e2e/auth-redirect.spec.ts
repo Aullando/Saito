@@ -1,7 +1,6 @@
+// Smoke: anonymous navigation should redirect any protected RGCC route to /login.
 import { test, expect } from "@playwright/test";
 
-// Smoke: anonymous navigation should redirect any protected RGCC route to /login.
-// This validates the auth boundary without needing real credentials.
 const PROTECTED = [
   "/dashboard",
   "/rgcc/clases",
@@ -17,8 +16,9 @@ for (const path of PROTECTED) {
   });
 }
 
-test("login page renders core form", async ({ page }) => {
+test("login page renders demo role selector", async ({ page }) => {
   await page.goto("/login");
-  await expect(page.getByLabel(/email|correo/i)).toBeVisible();
-  await expect(page.getByLabel(/password|contraseña/i)).toBeVisible();
+  // El login demo expone un selector de rol, no email/password.
+  await expect(page.getByText(/Selecciona un rol/i)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Entrar/i })).toBeVisible();
 });
