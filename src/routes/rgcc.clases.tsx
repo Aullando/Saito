@@ -242,7 +242,7 @@ function ClasesSocio({ memberNumber, memberName }: { memberNumber: string; membe
   const myBookings = RGCC_SESSIONS.filter((s) => s.bookings.includes(memberNumber));
   return (
     <>
-      <PageHeader title="Mis reservas" subtitle={me ? `${me.firstName} ${me.lastName} · ${me.memberNumber}` : ""} />
+      <PageHeader title="Mis reservas" subtitle={memberNumber ? `${fullName} · ${memberNumber}` : ""} />
       {myBookings.length === 0 ? (
         <Card>
           <p className="text-sm text-muted-foreground">No tienes reservas próximas.</p>
