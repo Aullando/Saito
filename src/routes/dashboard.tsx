@@ -174,6 +174,8 @@ function DashboardPage() {
       return { revenueSeries: buckets, eventsSeries, typeData, medData };
     },
   });
+
+  const fmtMoney = (n: number) =>
     new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(n);
 
   const s = stats.data;
