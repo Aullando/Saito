@@ -198,7 +198,7 @@ function AlertasCard() {
 
 function AccionesRapidas() {
   const items: { icon: React.ReactNode; label: string; slug: string }[] = [
-    { icon: <Dumbbell className="h-4 w-4" />, label: "Entrenamiento Personal", slug: "pt" },
+    { icon: <Dumbbell className="h-4 w-4" />, label: "Entrenamiento Personal", slug: "entrenamiento-personal" },
     { icon: <Search className="h-4 w-4" />, label: "Biblioteca", slug: "biblioteca" },
     { icon: <Users className="h-4 w-4" />, label: "Monitores", slug: "monitores" },
     { icon: <FileDown className="h-4 w-4" />, label: "Centro Datos", slug: "centro-datos" },
