@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { Card, PageHeader, Pill, EmptyState } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { getRgccView } from "@/clubs/rgcc/permissions";
+import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_ROUTINES, RGCC_EXERCISES,
@@ -25,11 +26,12 @@ export const Route = createFileRoute("/rgcc/entrenamiento-personal")({
 });
 
 function PtGate() {
-  const { roles, profile } = useAuth();
+  const { roles, user } = useAuth();
   const view = getRgccView(roles);
+  const identity = resolveRgccIdentity(user, roles);
   if (view === "cockpit") return <PtCockpit />;
-  if (view === "coach") return <PtCoach name={profile?.full_name ?? ""} />;
-  return <PtMember name={profile?.full_name ?? ""} />;
+  if (view === "coach") return <PtCoach name={identity.coachName ?? ""} />;
+  return <PtMember memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
 }
 
 // ─── Admin / Manager ────────────────────────────────────────────────────────
