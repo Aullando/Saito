@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { getRgccView } from "@/clubs/rgcc/permissions";
+import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES,
@@ -25,11 +26,12 @@ export const Route = createFileRoute("/rgcc/clases")({
 });
 
 function RgccClasesGate() {
-  const { roles, profile } = useAuth();
+  const { roles, user } = useAuth();
   const view = getRgccView(roles);
+  const identity = resolveRgccIdentity(user, roles);
   if (view === "cockpit") return <ClasesCockpit />;
-  if (view === "coach") return <ClasesCoach coachName={profile?.full_name ?? ""} />;
-  return <ClasesSocio memberName={profile?.full_name ?? ""} />;
+  if (view === "coach") return <ClasesCoach coachName={identity.coachName ?? ""} />;
+  return <ClasesSocio memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
 }
 
 // ─── Cockpit (admin/manager) ────────────────────────────────────────────────
