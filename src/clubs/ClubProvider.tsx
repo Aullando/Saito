@@ -2,11 +2,14 @@ import { createContext, useContext, useEffect, useMemo, type ReactNode } from "r
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { getClubConfig, isModuleEnabled, DEFAULT_CLUB_ID } from "./registry";
+import { getClubConfig, isModuleEnabled, DEFAULT_CLUB_ID, CLUBS } from "./registry";
+import { useActiveClubStore } from "./activeClub";
 import type { ClubConfig, ClubModuleId } from "./types";
 
 type ClubCtx = {
   club: ClubConfig;
+  availableClubs: ClubConfig[];
+  switchClub: (id: string | null) => void;
   isModuleEnabled: (mod: ClubModuleId) => boolean;
 };
 
