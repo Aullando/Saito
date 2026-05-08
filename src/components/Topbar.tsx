@@ -6,6 +6,7 @@ import { Logo } from "./Logo";
 import { NotificationsBell } from "./NotificationsBell";
 import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
+import { useClub } from "@/clubs/ClubProvider";
 import { cn } from "@/lib/utils";
 
 const ROLE_LABEL: Record<string, string> = {
@@ -22,6 +23,7 @@ export function Topbar() {
   const avatar = useUserAvatar(user?.id ?? "");
   const setMobileNavOpen = useAuth((s) => s.setMobileNavOpen);
   const setUser = useAuth((s) => s.setUser);
+  const { club } = useClub();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -51,7 +53,7 @@ export function Topbar() {
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
-            placeholder={user.language === "es" ? "Buscar en SAITO" : "Search in SAITO"}
+            placeholder={user.language === "es" ? `Buscar en ${club.brand.name}` : `Search in ${club.brand.name}`}
             className="h-9 md:h-10 w-full rounded-full border border-border bg-card pl-10 pr-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
