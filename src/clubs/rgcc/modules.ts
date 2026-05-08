@@ -41,8 +41,8 @@ export const rgccNavItems: ClubNavItem[] = [
   { module: "rgcc-salas",         label: "Salas",                  icon: "DoorOpen",    to: "/rgcc/$slug", slug: "salas" },
   { module: "rgcc-vacaciones",    label: "Vacaciones",             icon: "Palmtree",    to: "/rgcc/$slug", slug: "vacaciones" },
   { module: "rgcc-centro-datos",  label: "Centro Datos",           icon: "Database",    to: "/rgcc/$slug", slug: "centro-datos" },
-  { module: "rgcc-pt",            label: "Entrenamiento Personal", icon: "Dumbbell",    to: "/rgcc/$slug", slug: "entrenamiento-personal" },
-  { module: "rgcc-biblioteca",    label: "Biblioteca",             icon: "BookOpen",    to: "/rgcc/$slug", slug: "biblioteca" },
+  { module: "rgcc-pt",            label: "Entrenamiento Personal", icon: "Dumbbell",    to: "/rgcc/entrenamiento-personal" },
+  { module: "rgcc-biblioteca",    label: "Biblioteca",             icon: "BookOpen",    to: "/rgcc/biblioteca" },
   { module: "rgcc-quiosco",       label: "Quiosco",                icon: "Newspaper",   to: "/rgcc/$slug", slug: "quiosco" },
   { module: "rgcc-copiloto",      label: "Copiloto",               icon: "Bot",         to: "/rgcc/$slug", slug: "copiloto" },
 ];
