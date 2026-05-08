@@ -26,6 +26,7 @@ export function Topbar() {
   const collapsed = useAuth((s) => s.sidebarCollapsed);
   const { club } = useClub();
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
