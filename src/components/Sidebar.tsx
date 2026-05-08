@@ -130,18 +130,21 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto px-3 py-2">
         <ul className="space-y-1">
           {items.map((it, idx) => {
-            // For Economic Management header link, mark active when on any economic route
+            const resolvedPath = it.params
+              ? Object.entries(it.params).reduce((acc, [k, v]) => acc.replace(`$${k}`, v), it.to)
+              : it.to;
             const economicHeader = it.label === t("economic_management");
             const active = economicHeader
               ? path.startsWith("/economic")
               : it.indent
-                ? path === it.to
-                : isActive(it.to);
+                ? path === resolvedPath
+                : path === resolvedPath || path.startsWith(resolvedPath + "/");
             const Icon = it.icon;
             return (
               <li key={idx}>
                 <Link
                   to={it.to}
+                  params={it.params as never}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
