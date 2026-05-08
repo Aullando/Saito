@@ -54,6 +54,7 @@ function buildContext(role: string, data: ReturnType<typeof useData.getState>) {
 
 export function AIChat() {
   const u = useCurrentUser();
+  const { user, roles } = useAuth();
   const { club } = useClub();
   const aiAvatar = club.brand.aiAvatar ?? saitoAiLogo;
   const aiName = `${club.brand.shortName} AI`;
@@ -69,6 +70,9 @@ export function AIChat() {
 
   if (!u) return null;
   const role = u.role;
+  const isRgcc = club.id === "rgcc";
+  const rgccIdentity = isRgcc ? resolveRgccIdentity(user, roles) : null;
+  const aiScope = rgccIdentity?.scope ?? null;
 
   const ask = async (q: string) => {
     if (!q.trim() || loading) return;
@@ -80,9 +84,8 @@ export function AIChat() {
 
     try {
       const data = useData.getState();
-      const isRgcc = club.id === "rgcc";
-      const context = isRgcc
-        ? buildRgccContext(role, u.name)
+      const context = isRgcc && rgccIdentity
+        ? buildRgccContextFromIdentity(rgccIdentity)
         : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
       const resp = await fetch(url, {
@@ -91,7 +94,7 @@ export function AIChat() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: next, role, context, club: club.id }),
+        body: JSON.stringify({ messages: next, role, context, club: club.id, aiScope }),
       });
 
       if (!resp.ok || !resp.body) {
@@ -103,6 +106,15 @@ export function AIChat() {
         } catch {}
         if (resp.status === 429) errMsg = "Demasiadas peticiones. Espera un momento.";
         if (resp.status === 402) errMsg = "Sin créditos de IA disponibles.";
+        // RGCC fallback local cuando la IA no responde.
+        if (isRgcc && rgccIdentity) {
+          const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q);
+          if (local) {
+            setMsgs((m) => [...m, { role: "assistant", content: local }]);
+            setLoading(false);
+            return;
+          }
+        }
         setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);
         setLoading(false);
         return;
