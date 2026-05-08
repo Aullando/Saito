@@ -236,10 +236,10 @@ function SessionRow({ session: c, coachName }: { session: RgccSession; coachName
 
 // ─── Member view ────────────────────────────────────────────────────────────
 
-function ClasesSocio({ memberName }: { memberName: string }) {
-  // Demo: match by name, fallback to first member.
-  const me = RGCC_MEMBERS.find((m) => `${m.firstName} ${m.lastName}` === memberName) ?? RGCC_MEMBERS[0];
-  const myBookings = RGCC_SESSIONS.filter((s) => s.bookings.includes(me?.memberNumber ?? ""));
+function ClasesSocio({ memberNumber, memberName }: { memberNumber: string; memberName: string }) {
+  const me = RGCC_MEMBERS.find((m) => m.memberNumber === memberNumber);
+  const fullName = me ? `${me.firstName} ${me.lastName}` : memberName;
+  const myBookings = RGCC_SESSIONS.filter((s) => s.bookings.includes(memberNumber));
   return (
     <>
       <PageHeader title="Mis reservas" subtitle={me ? `${me.firstName} ${me.lastName} · ${me.memberNumber}` : ""} />
