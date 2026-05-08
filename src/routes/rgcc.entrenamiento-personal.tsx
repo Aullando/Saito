@@ -9,6 +9,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill, EmptyState } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { useClub } from "@/clubs/ClubProvider";
+import { getRgccView } from "@/clubs/rgcc/permissions";
 import {
   RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_ROUTINES, RGCC_EXERCISES,
   type RgccPtSession, type RgccWorkout,
