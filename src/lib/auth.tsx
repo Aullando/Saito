@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import type { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { useAuth as useLocalAuth } from "@/lib/store";
+import { DEMO_USERS } from "@/lib/seed";
 
 type Role = "sysadmin" | "admin" | "manager" | "technical" | "medical";
 
@@ -13,9 +13,11 @@ type Profile = {
   language: string;
 };
 
+type SessionLike = { user: { id: string; email: string } } | null;
+
 type AuthCtx = {
-  session: Session | null;
-  user: User | null;
+  session: SessionLike;
+  user: { id: string; email: string } | null;
   profile: Profile | null;
   roles: Role[];
   loading: boolean;
@@ -26,53 +28,39 @@ type AuthCtx = {
 const Ctx = createContext<AuthCtx | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [roles, setRoles] = useState<Role[]>([]);
-  const [loading, setLoading] = useState(true);
+  const currentUserId = useLocalAuth((s) => s.currentUserId);
+  const setUser = useLocalAuth((s) => s.setUser);
 
-  const loadExtras = async (userId: string) => {
-    const [{ data: prof }, { data: r }] = await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-      supabase.from("user_roles").select("role").eq("user_id", userId),
-    ]);
-    setProfile((prof as Profile) ?? null);
-    setRoles((r ?? []).map((x: { role: Role }) => x.role));
-  };
-
-  useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s);
-      if (s?.user) {
-        setTimeout(() => loadExtras(s.user.id), 0);
-      } else {
-        setProfile(null);
-        setRoles([]);
-      }
-    });
-
-    supabase.auth.getSession().then(async ({ data }) => {
-      setSession(data.session);
-      if (data.session?.user) await loadExtras(data.session.user.id);
-      setLoading(false);
-    });
-
-    return () => sub.subscription.unsubscribe();
-  }, []);
-
-  const value: AuthCtx = {
-    session,
-    user: session?.user ?? null,
-    profile,
-    roles,
-    loading,
-    signOut: async () => {
-      await supabase.auth.signOut();
-    },
-    refresh: async () => {
-      if (session?.user) await loadExtras(session.user.id);
-    },
-  };
+  const value = useMemo<AuthCtx>(() => {
+    const demo = currentUserId ? DEMO_USERS.find((u) => u.id === currentUserId) ?? null : null;
+    if (!demo) {
+      return {
+        session: null,
+        user: null,
+        profile: null,
+        roles: [],
+        loading: false,
+        signOut: async () => setUser(null),
+        refresh: async () => {},
+      };
+    }
+    return {
+      session: { user: { id: demo.id, email: demo.email } },
+      user: { id: demo.id, email: demo.email },
+      profile: {
+        id: demo.id,
+        organization_id: "org-3",
+        email: demo.email,
+        full_name: demo.name,
+        avatar_url: null,
+        language: demo.language,
+      },
+      roles: [demo.role as Role],
+      loading: false,
+      signOut: async () => setUser(null),
+      refresh: async () => {},
+    };
+  }, [currentUserId, setUser]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
