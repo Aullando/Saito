@@ -6,7 +6,22 @@ import { PageHeader, Card, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, Calendar, CreditCard, Activity, MessageSquare, Stethoscope } from "lucide-react";
+import { Users, Calendar, CreditCard, Activity, MessageSquare, Stethoscope, TrendingUp, BarChart3 } from "lucide-react";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 export const Route = createFileRoute("/dashboard")({
   component: () => (
