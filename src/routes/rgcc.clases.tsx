@@ -30,12 +30,9 @@ function RgccClasesGate() {
   const { roles, profile } = useAuth();
   if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
 
-  const role = roles[0];
-  const isAdmin = roles.some((r) => r === "admin" || r === "manager" || r === "sysadmin");
-  const isCoach = roles.some((r) => r === "technical");
-
-  if (isAdmin) return <ClasesCockpit />;
-  if (isCoach) return <ClasesCoach coachName={profile?.full_name ?? ""} />;
+  const view = getRgccView(roles);
+  if (view === "cockpit") return <ClasesCockpit />;
+  if (view === "coach") return <ClasesCoach coachName={profile?.full_name ?? ""} />;
   return <ClasesSocio memberName={profile?.full_name ?? ""} />;
 }
 
