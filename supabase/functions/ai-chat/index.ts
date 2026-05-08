@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages, role, context } = await req.json();
+    const { messages, role, context, club } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY no configurado");
 
@@ -19,7 +19,12 @@ Deno.serve(async (req) => {
       medical: "Solo accedes a datos médicos: citas, estado médico de deportistas, tratamientos. NO accedes a información económica.",
     };
 
-    const systemPrompt = `Eres el asistente IA del club deportivo Saito para el rol "${role}". ${roleScope[role] ?? ""}
+    const isRgcc = club === "rgcc";
+    const clubIntro = isRgcc
+      ? `Eres el copiloto operativo del Real Grupo de Cultura Covadonga (RGCC) dentro de SAITO. El contexto incluye clases, monitores, sedes/salas, incidencias, ausencias/sustituciones, sesiones de entrenamiento personal, biblioteca de ejercicios y socios. Cuando proceda, responde con tablas o listas claras agrupadas por sede/horario.`
+      : `Eres el asistente IA del club deportivo Saito para el rol "${role}".`;
+
+    const systemPrompt = `${clubIntro} ${roleScope[role] ?? ""}
 
 Responde SIEMPRE en español, de forma concisa y profesional. Usa los datos del club que se te proporcionan a continuación para responder con precisión. Si la pregunta queda fuera de los permisos del rol, responde: "Esta consulta queda fuera de los permisos de tu rol."
 

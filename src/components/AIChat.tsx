@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
 import saitoAiLogo from "@/assets/saito-ai.png";
 import { useClub } from "@/clubs/ClubProvider";
+import { buildRgccContext, rgccSuggestions } from "@/clubs/rgcc/aiContext";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
@@ -77,7 +78,10 @@ export function AIChat() {
 
     try {
       const data = useData.getState();
-      const context = buildContext(role, data);
+      const isRgcc = club.id === "rgcc";
+      const context = isRgcc
+        ? buildRgccContext(role, u.name)
+        : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
       const resp = await fetch(url, {
         method: "POST",
@@ -85,7 +89,7 @@ export function AIChat() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: next, role, context }),
+        body: JSON.stringify({ messages: next, role, context, club: club.id }),
       });
 
       if (!resp.ok || !resp.body) {
@@ -184,7 +188,7 @@ export function AIChat() {
             )}
             {msgs.length === 0 && (
               <div className="flex flex-wrap gap-1.5">
-                {SUGGESTIONS[role].map((s) => (
+                {(club.id === "rgcc" ? rgccSuggestions(role) : SUGGESTIONS[role] ?? []).map((s) => (
                   <button key={s} onClick={() => ask(s)} className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] hover:border-primary hover:text-primary">{s}</button>
                 ))}
               </div>
