@@ -8,8 +8,10 @@ import { useCurrentUser, useAuth } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import type { Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useClub } from "@/clubs/ClubProvider";
+import type { ClubModuleId } from "@/clubs/types";
 
-type Item = { to: string; label: string; icon: typeof Building2; indent?: boolean };
+type Item = { to: string; label: string; icon: typeof Building2; indent?: boolean; module?: ClubModuleId };
 
 function buildItems(role: Role, t: (k: any) => string): Item[] {
   switch (role) {
@@ -18,27 +20,27 @@ function buildItems(role: Role, t: (k: any) => string): Item[] {
     case "admin":
     case "manager":
       return [
-        { to: "/dashboard", label: t("dashboard") || "Dashboard", icon: LayoutGrid },
-        { to: "/club", label: t("club_organization"), icon: Building2 },
-        { to: "/calendar", label: t("calendar"), icon: CalendarDays },
-        { to: "/athletes", label: t("athletes"), icon: Users },
-        { to: "/economic/fees", label: t("economic_management"), icon: Wallet },
-        { to: "/economic/fees", label: t("fees_rates"), icon: Receipt, indent: true },
-        { to: "/economic/payments", label: t("payment_status"), icon: Receipt, indent: true },
-        { to: "/communication", label: t("communication"), icon: MessageSquare },
-        ...(role === "admin" ? [{ to: "/settings/team", label: t("users_permissions"), icon: Users }] : []),
+        { to: "/dashboard", label: t("dashboard") || "Dashboard", icon: LayoutGrid, module: "dashboard" },
+        { to: "/club", label: t("club_organization"), icon: Building2, module: "club" },
+        { to: "/calendar", label: t("calendar"), icon: CalendarDays, module: "calendar" },
+        { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
+        { to: "/economic/fees", label: t("economic_management"), icon: Wallet, module: "economic" },
+        { to: "/economic/fees", label: t("fees_rates"), icon: Receipt, indent: true, module: "economic" },
+        { to: "/economic/payments", label: t("payment_status"), icon: Receipt, indent: true, module: "economic" },
+        { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
+        ...(role === "admin" ? [{ to: "/settings/team", label: t("users_permissions"), icon: Users, module: "settings" as ClubModuleId }] : []),
       ];
     case "technical":
       return [
-        { to: "/calendar", label: t("calendar"), icon: CalendarDays },
-        { to: "/athletes", label: t("athletes"), icon: Users },
-        { to: "/communication", label: t("communication"), icon: MessageSquare },
+        { to: "/calendar", label: t("calendar"), icon: CalendarDays, module: "calendar" },
+        { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
+        { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
       ];
     case "medical":
       return [
-        { to: "/medical/calendar", label: t("medical_calendar"), icon: Stethoscope },
-        { to: "/athletes", label: t("athletes"), icon: Users },
-        { to: "/communication", label: t("communication"), icon: MessageSquare },
+        { to: "/medical/calendar", label: t("medical_calendar"), icon: Stethoscope, module: "medical" },
+        { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
+        { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
       ];
   }
 }
@@ -52,7 +54,8 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
   if (!user) return null;
-  const items = buildItems(user.role, t);
+  const { isModuleEnabled } = useClub();
+  const items = buildItems(user.role, t).filter((i) => !i.module || isModuleEnabled(i.module));
   const width = collapsed ? 72 : 224;
   const notifCount = user.role === "sysadmin" ? 25 : user.role === "medical" ? 13 : 0;
 
