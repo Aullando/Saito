@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Building2, ChevronDown, Check } from "lucide-react";
 import { useClub } from "@/clubs/ClubProvider";
 import { cn } from "@/lib/utils";
+import saitoMark from "@/assets/saito-mark.png";
 
 export function ClubSwitcher() {
   const { club, availableClubs, switchClub } = useClub();
@@ -23,8 +24,8 @@ export function ClubSwitcher() {
         className="flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1.5 shadow-sm hover:bg-muted"
         aria-label="Switch club"
       >
-        {club.brand.logoMark ? (
-          <img src={club.brand.logoMark} alt="" className="h-5 w-5 rounded object-contain" />
+        {club.brand.logoMark || club.id === "saito" ? (
+          <img src={club.brand.logoMark ?? saitoMark} alt="" className="h-5 w-5 rounded object-contain" />
         ) : (
           <Building2 className="h-4 w-4 text-muted-foreground" />
         )}
@@ -48,13 +49,16 @@ export function ClubSwitcher() {
                       active && "bg-primary/10",
                     )}
                   >
-                    {c.brand.logoMark ? (
-                      <img src={c.brand.logoMark} alt="" className="h-7 w-7 rounded object-contain bg-muted/40" />
-                    ) : (
-                      <span className="flex h-7 w-7 items-center justify-center rounded bg-primary/15 text-[10px] font-bold text-primary">
-                        {c.brand.shortName.slice(0, 3)}
-                      </span>
-                    )}
+                    {(() => {
+                      const src = c.brand.logoMark ?? (c.id === "saito" ? saitoMark : undefined);
+                      return src ? (
+                        <img src={src} alt="" className="h-7 w-7 rounded object-contain bg-muted/40" />
+                      ) : (
+                        <span className="flex h-7 w-7 items-center justify-center rounded bg-primary/15 text-[10px] font-bold text-primary">
+                          {c.brand.shortName.slice(0, 3)}
+                        </span>
+                      );
+                    })()}
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-medium">{c.brand.name}</span>
                       <span className="block truncate text-[11px] text-muted-foreground">
