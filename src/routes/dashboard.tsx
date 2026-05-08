@@ -37,7 +37,7 @@ export const Route = createFileRoute("/dashboard")({
 
 function DashboardSwitch() {
   const { club } = useClub();
-  if (club.clubId === "rgcc") return <RgccDashboard />;
+  if (club.id === "rgcc") return <RgccDashboard />;
   return <DashboardPage />;
 }
 
