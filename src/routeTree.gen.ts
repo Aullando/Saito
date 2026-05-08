@@ -111,6 +111,16 @@ const RgccBibliotecaRoute = RgccBibliotecaRouteImport.update({
   path: '/rgcc/biblioteca',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RgccEntrenamientoPersonalRoute = RgccEntrenamientoPersonalRouteImport.update({
+  id: '/rgcc/entrenamiento-personal',
+  path: '/rgcc/entrenamiento-personal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RgccBibliotecaRoute = RgccBibliotecaRouteImport.update({
+  id: '/rgcc/biblioteca',
+  path: '/rgcc/biblioteca',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RgccSlugRoute = RgccSlugRouteImport.update({
   id: '/rgcc/$slug',
   path: '/rgcc/$slug',
