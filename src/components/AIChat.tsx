@@ -78,7 +78,10 @@ export function AIChat() {
 
     try {
       const data = useData.getState();
-      const context = buildContext(role, data);
+      const isRgcc = club.id === "rgcc";
+      const context = isRgcc
+        ? buildRgccContext(role, u.name)
+        : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
       const resp = await fetch(url, {
         method: "POST",
@@ -86,7 +89,7 @@ export function AIChat() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: next, role, context }),
+        body: JSON.stringify({ messages: next, role, context, club: club.id }),
       });
 
       if (!resp.ok || !resp.body) {
