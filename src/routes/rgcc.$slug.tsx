@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Construction } from "lucide-react";
 import { useClub } from "@/clubs/ClubProvider";
+import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import { rgccNavItems } from "@/clubs/rgcc/modules";
 import {
   RGCC_VENUES, RGCC_ROOMS, RGCC_SECTIONS, RGCC_COACHES, RGCC_MEMBERS,
@@ -9,7 +10,11 @@ import {
 } from "@/clubs/rgcc/seed";
 
 export const Route = createFileRoute("/rgcc/$slug")({
-  component: RgccModulePage,
+  component: () => (
+    <RgccGuard>
+      <RgccModulePage />
+    </RgccGuard>
+  ),
 });
 
 function RgccModulePage() {
