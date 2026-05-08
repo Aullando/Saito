@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, Moon, Sun, Search, Menu, ChevronDown } from "lucide-react";
+import { Moon, Sun, Search, Menu, ChevronDown } from "lucide-react";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo } from "./Logo";
+import { NotificationsBell } from "./NotificationsBell";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
