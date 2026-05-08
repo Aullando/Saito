@@ -1,5 +1,5 @@
 import type { ClubBrand } from "../types";
-import logoFull from "./assets/logo-rgcc.png";
+import logoFull from "./assets/logo-rgcc.svg";
 import logoMark from "./assets/logo-rgcc.svg";
 import aiAvatar from "./assets/rgcc-ai.png";
 
