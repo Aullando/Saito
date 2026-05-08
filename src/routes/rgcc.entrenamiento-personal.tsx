@@ -3,13 +3,12 @@
 //  - admin / manager → cockpit completo del día.
 //  - technical (coach) → solo sus sesiones.
 //  - athlete / socio → sus workouts asignados.
-import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill, EmptyState } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
-import { useClub } from "@/clubs/ClubProvider";
 import { getRgccView } from "@/clubs/rgcc/permissions";
+import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_ROUTINES, RGCC_EXERCISES,
   type RgccPtSession, type RgccWorkout,
@@ -19,17 +18,14 @@ import { Clock, Dumbbell, User, Sparkles, ListChecks } from "lucide-react";
 
 export const Route = createFileRoute("/rgcc/entrenamiento-personal")({
   component: () => (
-    <AppLayout>
+    <RgccGuard>
       <PtGate />
-    </AppLayout>
+    </RgccGuard>
   ),
 });
 
 function PtGate() {
-  const { club } = useClub();
   const { roles, profile } = useAuth();
-  if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
-
   const view = getRgccView(roles);
   if (view === "cockpit") return <PtCockpit />;
   if (view === "coach") return <PtCoach name={profile?.full_name ?? ""} />;

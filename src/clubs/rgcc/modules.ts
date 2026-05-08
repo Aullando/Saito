@@ -26,23 +26,31 @@ export const rgccModules: ClubModulesConfig = {
 
 /** Sidebar items for RGCC. Modules without a real route fall back to the
  *  `/rgcc/$slug` ComingSoon placeholder. */
+// Role visibility per nav item:
+//  · Operational/admin modules → admin + manager (+ sysadmin implícito).
+//  · "Mi Día"  → coaches y admins.
+//  · Socio/Biblioteca/Quiosco → todos los roles.
+//  · Medical no debe ver gestión de clases/monitores/sustituciones.
+const ADMIN: import("@/lib/types").Role[] = ["sysadmin", "admin", "manager"];
+const ADMIN_COACH: import("@/lib/types").Role[] = ["sysadmin", "admin", "manager", "technical"];
+
 export const rgccNavItems: ClubNavItem[] = [
   { module: "dashboard",          label: "Dashboard",              icon: "LayoutGrid",  to: "/dashboard" },
-  { module: "rgcc-direccion",     label: "Dirección",              icon: "Briefcase",   to: "/rgcc/$slug", slug: "direccion" },
+  { module: "rgcc-direccion",     label: "Dirección",              icon: "Briefcase",   to: "/rgcc/$slug", slug: "direccion",      allowedRoles: ADMIN },
   { module: "rgcc-clases",        label: "Clases",                 icon: "GraduationCap", to: "/rgcc/clases" },
-  { module: "rgcc-mi-dia",        label: "Mi Día",                 icon: "Sun",         to: "/rgcc/mi-dia" },
+  { module: "rgcc-mi-dia",        label: "Mi Día",                 icon: "Sun",         to: "/rgcc/mi-dia",                          allowedRoles: ADMIN_COACH },
   { module: "rgcc-socio",         label: "Socio",                  icon: "UserCircle",  to: "/rgcc/$slug", slug: "socio" },
   { module: "rgcc-sedes",         label: "Sedes",                  icon: "MapPin",      to: "/rgcc/$slug", slug: "sedes" },
   { module: "rgcc-secciones",     label: "Secciones",              icon: "Layers",      to: "/rgcc/$slug", slug: "secciones" },
-  { module: "rgcc-resumen",       label: "Resumen",                icon: "FileBarChart", to: "/rgcc/$slug", slug: "resumen" },
-  { module: "rgcc-monitores",     label: "Monitores",              icon: "Users",       to: "/rgcc/$slug", slug: "monitores" },
-  { module: "rgcc-sustituciones", label: "Sustituciones",          icon: "Repeat",      to: "/rgcc/$slug", slug: "sustituciones" },
-  { module: "rgcc-incidencias",   label: "Incidencias",            icon: "AlertTriangle", to: "/rgcc/$slug", slug: "incidencias" },
-  { module: "rgcc-salas",         label: "Salas",                  icon: "DoorOpen",    to: "/rgcc/$slug", slug: "salas" },
-  { module: "rgcc-vacaciones",    label: "Vacaciones",             icon: "Palmtree",    to: "/rgcc/$slug", slug: "vacaciones" },
-  { module: "rgcc-centro-datos",  label: "Centro Datos",           icon: "Database",    to: "/rgcc/$slug", slug: "centro-datos" },
+  { module: "rgcc-resumen",       label: "Resumen",                icon: "FileBarChart", to: "/rgcc/$slug", slug: "resumen",        allowedRoles: ADMIN },
+  { module: "rgcc-monitores",     label: "Monitores",              icon: "Users",       to: "/rgcc/$slug", slug: "monitores",      allowedRoles: ADMIN },
+  { module: "rgcc-sustituciones", label: "Sustituciones",          icon: "Repeat",      to: "/rgcc/$slug", slug: "sustituciones",  allowedRoles: ADMIN_COACH },
+  { module: "rgcc-incidencias",   label: "Incidencias",            icon: "AlertTriangle", to: "/rgcc/$slug", slug: "incidencias",  allowedRoles: ADMIN_COACH },
+  { module: "rgcc-salas",         label: "Salas",                  icon: "DoorOpen",    to: "/rgcc/$slug", slug: "salas",          allowedRoles: ADMIN },
+  { module: "rgcc-vacaciones",    label: "Vacaciones",             icon: "Palmtree",    to: "/rgcc/$slug", slug: "vacaciones",     allowedRoles: ADMIN_COACH },
+  { module: "rgcc-centro-datos",  label: "Centro Datos",           icon: "Database",    to: "/rgcc/$slug", slug: "centro-datos",   allowedRoles: ADMIN },
   { module: "rgcc-pt",            label: "Entrenamiento Personal", icon: "Dumbbell",    to: "/rgcc/entrenamiento-personal" },
   { module: "rgcc-biblioteca",    label: "Biblioteca",             icon: "BookOpen",    to: "/rgcc/biblioteca" },
   { module: "rgcc-quiosco",       label: "Quiosco",                icon: "Newspaper",   to: "/rgcc/$slug", slug: "quiosco" },
-  { module: "rgcc-copiloto",      label: "Copiloto",               icon: "Bot",         to: "/rgcc/$slug", slug: "copiloto" },
+  { module: "rgcc-copiloto",      label: "Copiloto",               icon: "Bot",         to: "/rgcc/$slug", slug: "copiloto",       allowedRoles: ADMIN_COACH },
 ];

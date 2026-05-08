@@ -5,32 +5,27 @@
 //  - resto → vista de socio (sus reservas).
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
-import { useClub } from "@/clubs/ClubProvider";
 import { getRgccView } from "@/clubs/rgcc/permissions";
+import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES,
   RGCC_VENUES, RGCC_ROOMS, RGCC_MEMBERS,
   type RgccSession,
 } from "@/clubs/rgcc/seed";
 import { AlertTriangle, Building2, Users, MapPin, Megaphone } from "lucide-react";
-import { Navigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/rgcc/clases")({
   component: () => (
-    <AppLayout>
+    <RgccGuard>
       <RgccClasesGate />
-    </AppLayout>
+    </RgccGuard>
   ),
 });
 
 function RgccClasesGate() {
-  const { club } = useClub();
   const { roles, profile } = useAuth();
-  if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
-
   const view = getRgccView(roles);
   if (view === "cockpit") return <ClasesCockpit />;
   if (view === "coach") return <ClasesCoach coachName={profile?.full_name ?? ""} />;

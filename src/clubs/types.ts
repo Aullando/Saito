@@ -55,6 +55,8 @@ export interface ClubNavItem {
   to: string;
   slug?: string;
   indent?: boolean;
+  /** If set, only these roles see this nav item. Omit = visible to all. */
+  allowedRoles?: import("@/lib/types").Role[];
 }
 
 export interface ClubSeed {

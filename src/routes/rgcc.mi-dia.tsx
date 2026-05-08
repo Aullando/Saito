@@ -2,14 +2,13 @@
 // Usa AppLayout y ui-kit de SAITO. Identifica al monitor por profile.full_name.
 // Si el usuario es admin/manager: muestra resumen del día y enlace al cockpit.
 // Si es socio (athlete): muestra su agenda personal.
-import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
-import { useClub } from "@/clubs/ClubProvider";
 import { getRgccMiDiaView, isRgccAdmin } from "@/clubs/rgcc/permissions";
+import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_SESSIONS, RGCC_PT_SESSIONS, RGCC_VENUES, RGCC_MEMBERS,
 } from "@/clubs/rgcc/seed";
@@ -17,17 +16,14 @@ import { Clock, PlayCircle, Users, MapPin, AlertTriangle, CalendarOff, Check } f
 
 export const Route = createFileRoute("/rgcc/mi-dia")({
   component: () => (
-    <AppLayout>
+    <RgccGuard>
       <MiDiaGate />
-    </AppLayout>
+    </RgccGuard>
   ),
 });
 
 function MiDiaGate() {
-  const { club } = useClub();
   const { profile, roles } = useAuth();
-  if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
-
   const me = profile?.full_name ?? "";
   const isAdmin = isRgccAdmin(roles);
   const view = getRgccMiDiaView(roles);
