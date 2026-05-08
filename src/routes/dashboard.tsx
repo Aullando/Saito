@@ -6,7 +6,22 @@ import { PageHeader, Card, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, Calendar, CreditCard, Activity, MessageSquare, Stethoscope } from "lucide-react";
+import { Users, Calendar, CreditCard, Activity, MessageSquare, Stethoscope, TrendingUp, BarChart3 } from "lucide-react";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 export const Route = createFileRoute("/dashboard")({
   component: () => (
@@ -23,6 +38,17 @@ const monthStart = () => {
   const d = new Date();
   return new Date(d.getFullYear(), d.getMonth(), 1).toISOString().slice(0, 10);
 };
+const sixMonthsAgo = () => {
+  const d = new Date();
+  return new Date(d.getFullYear(), d.getMonth() - 5, 1).toISOString().slice(0, 10);
+};
+const thirtyDaysAgo = () => {
+  const d = new Date();
+  d.setDate(d.getDate() - 29);
+  return d.toISOString().slice(0, 10);
+};
+const MONTHS_ES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function DashboardPage() {
   const t = useT();
@@ -76,6 +102,76 @@ function DashboardPage() {
       const map = new Map<string, string>();
       (data ?? []).forEach((a) => map.set(a.id, `${a.first_name} ${a.last_name}`));
       return map;
+    },
+  });
+
+  const lang = (profile?.language ?? "es") as "es" | "en";
+  const monthNames = lang === "es" ? MONTHS_ES : MONTHS_EN;
+
+  const charts = useQuery({
+    queryKey: ["dashboard-charts", orgId],
+    enabled: !!orgId,
+    queryFn: async () => {
+      const oid = orgId!;
+      const [pays, evs, ath] = await Promise.all([
+        supabase.from("payments").select("amount, status, payment_date").eq("organization_id", oid).gte("payment_date", sixMonthsAgo()),
+        supabase.from("calendar_events").select("event_date, type").eq("organization_id", oid).gte("event_date", thirtyDaysAgo()),
+        supabase.from("athletes").select("medical_status, performance_status, status").eq("organization_id", oid),
+      ]);
+
+      // Revenue by month (last 6 months)
+      const now = new Date();
+      const buckets: { key: string; label: string; revenue: number; pending: number }[] = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        buckets.push({
+          key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+          label: monthNames[d.getMonth()],
+          revenue: 0,
+          pending: 0,
+        });
+      }
+      const bucketMap = new Map(buckets.map((b) => [b.key, b]));
+      (pays.data ?? []).forEach((p) => {
+        if (!p.payment_date) return;
+        const k = p.payment_date.slice(0, 7);
+        const b = bucketMap.get(k);
+        if (!b) return;
+        const amt = Number(p.amount ?? 0);
+        if (p.status === "Paid") b.revenue += amt;
+        else if (p.status === "Pending") b.pending += amt;
+      });
+
+      // Events per day (last 30)
+      const dayMap = new Map<string, number>();
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        dayMap.set(d.toISOString().slice(0, 10), 0);
+      }
+      (evs.data ?? []).forEach((e) => {
+        if (dayMap.has(e.event_date)) dayMap.set(e.event_date, (dayMap.get(e.event_date) ?? 0) + 1);
+      });
+      const eventsSeries = Array.from(dayMap.entries()).map(([date, count]) => ({
+        date: date.slice(5),
+        count,
+      }));
+
+      // Event types breakdown
+      const typeCount: Record<string, number> = {};
+      (evs.data ?? []).forEach((e) => {
+        typeCount[e.type] = (typeCount[e.type] ?? 0) + 1;
+      });
+      const typeData = Object.entries(typeCount).map(([name, value]) => ({ name, value }));
+
+      // Medical status breakdown
+      const medCount: Record<string, number> = {};
+      (ath.data ?? []).forEach((a) => {
+        medCount[a.medical_status] = (medCount[a.medical_status] ?? 0) + 1;
+      });
+      const medData = Object.entries(medCount).map(([name, value]) => ({ name, value }));
+
+      return { revenueSeries: buckets, eventsSeries, typeData, medData };
     },
   });
 
@@ -172,6 +268,107 @@ function DashboardPage() {
               ))}
             </ul>
           )}
+        </Card>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Card>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <TrendingUp className="h-4 w-4" /> {lang === "es" ? "Ingresos (6 meses)" : "Revenue (6 months)"}
+            </h2>
+          </div>
+          <div className="h-64 w-full">
+            {charts.data && (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={charts.data.revenueSeries} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
+                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="label" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickFormatter={(v) => `${v}€`} />
+                  <Tooltip
+                    contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
+                    formatter={(v: number) => fmtMoney(v)}
+                  />
+                  <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fill="url(#revGrad)" strokeWidth={2} name={lang === "es" ? "Cobrado" : "Paid"} />
+                  <Area type="monotone" dataKey="pending" stroke="hsl(var(--warning))" fill="transparent" strokeWidth={2} strokeDasharray="4 4" name={lang === "es" ? "Pendiente" : "Pending"} />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <BarChart3 className="h-4 w-4" /> {lang === "es" ? "Eventos (30 días)" : "Events (30 days)"}
+            </h2>
+          </div>
+          <div className="h-64 w-full">
+            {charts.data && (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={charts.data.eventsSeries} margin={{ top: 8, right: 12, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} interval={4} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
+                  <Tooltip contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                  <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Card>
+          <h2 className="mb-3 text-lg font-semibold">{lang === "es" ? "Tipos de evento" : "Event types"}</h2>
+          <div className="h-56 w-full">
+            {charts.data && charts.data.typeData.length > 0 && (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={charts.data.typeData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
+                    {charts.data.typeData.map((_, i) => (
+                      <Cell key={i} fill={["hsl(var(--primary))", "hsl(var(--success))", "hsl(var(--warning))", "hsl(var(--destructive))"][i % 4]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <h2 className="mb-3 text-lg font-semibold">{lang === "es" ? "Estado médico" : "Medical status"}</h2>
+          <div className="h-56 w-full">
+            {charts.data && charts.data.medData.length > 0 && (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={charts.data.medData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
+                    {charts.data.medData.map((entry, i) => {
+                      const colorMap: Record<string, string> = {
+                        Fit: "hsl(var(--success))",
+                        Injured: "hsl(var(--destructive))",
+                        "Under review": "hsl(var(--warning))",
+                        Unknown: "hsl(var(--muted-foreground))",
+                      };
+                      return <Cell key={i} fill={colorMap[entry.name] ?? "hsl(var(--primary))"} />;
+                    })}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         </Card>
       </div>
 
