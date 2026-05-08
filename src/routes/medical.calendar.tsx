@@ -183,7 +183,7 @@ function MedicalCalendarPage() {
                   {dayAppts.slice(0, 3).map((a) => {
                     const ath = athletes.find((x) => x.id === a.athlete_id);
                     return (
-                      <button key={a.id} onClick={() => setDetail(a)} className="block w-full truncate rounded-md bg-info/15 px-1.5 py-1 text-left text-[11px] font-medium text-info-foreground hover:bg-info/20">
+                      <button key={a.id} onClick={() => setDetail(a)} className="block w-full truncate rounded-md bg-info/15 px-1.5 py-1 text-left text-[11px] font-medium text-info hover:bg-info/20">
                         <span className="text-primary">{fmtTime(a.appointment_time)}</span> · {ath?.first_name} {ath?.last_name}
                       </button>
                     );
