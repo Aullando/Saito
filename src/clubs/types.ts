@@ -17,8 +17,12 @@ export interface ClubBrand {
   name: string;
   /** Short tag (e.g. "RGCC") */
   shortName: string;
-  /** Optional logo URL or imported asset path. If omitted → SAITO default logo */
-  logoUrl?: string;
+  /** Full horizontal logo (used in header) */
+  logoFull?: string;
+  /** Square mark logo (used when collapsed / favicons) */
+  logoMark?: string;
+  /** Optional avatar for the AI assistant */
+  aiAvatar?: string;
   /** Primary brand color in oklch (overrides --primary token at runtime) */
   primary?: string;
   /** Optional accent color in oklch */

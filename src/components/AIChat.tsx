@@ -3,6 +3,7 @@ import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
 import saitoAiLogo from "@/assets/saito-ai.png";
+import { useClub } from "@/clubs/ClubProvider";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
@@ -50,6 +51,9 @@ function buildContext(role: string, data: ReturnType<typeof useData.getState>) {
 
 export function AIChat() {
   const u = useCurrentUser();
+  const { club } = useClub();
+  const aiAvatar = club.brand.aiAvatar ?? saitoAiLogo;
+  const aiName = `${club.brand.shortName} AI`;
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -148,15 +152,15 @@ export function AIChat() {
       <button
         onClick={() => setOpen((o) => !o)}
         className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-white/10 shadow-lg ring-1 ring-white/10 backdrop-blur-xl backdrop-saturate-150 transition hover:scale-105 hover:bg-white/20"
-        aria-label="Saito AI"
+        aria-label={aiName}
       >
-        <img src={saitoAiLogo} alt="Saito AI" className="h-10 w-10 rounded-full object-cover" />
+        <img src={aiAvatar} alt={aiName} className="h-10 w-10 rounded-full object-cover" />
       </button>
       {open && (
         <div className="fixed inset-x-3 bottom-20 md:inset-x-auto md:bottom-24 md:right-6 z-40 flex h-[70vh] md:h-[520px] md:w-[380px] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <div className="flex items-center gap-2 text-sm font-semibold">
-              <img src={saitoAiLogo} alt="" className="h-5 w-5" />{TITLES[role]}
+              <img src={aiAvatar} alt="" className="h-5 w-5 rounded-full object-cover" />{TITLES[role]}
             </div>
             <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground"><X className="h-4 w-4" /></button>
           </div>

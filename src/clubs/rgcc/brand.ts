@@ -1,4 +1,7 @@
 import type { ClubBrand } from "../types";
+import logoFull from "./assets/logo-rgcc.png";
+import logoMark from "./assets/logo-rgcc.svg";
+import aiAvatar from "./assets/rgcc-ai.png";
 
 export const rgccBrand: ClubBrand = {
   name: "Real Grupo de Cultura Covadonga",
@@ -7,4 +10,7 @@ export const rgccBrand: ClubBrand = {
   primary: "oklch(0.42 0.15 255)",
   accent: "oklch(0.78 0.14 85)",
   defaultLanguage: "es",
+  logoFull,
+  logoMark,
+  aiAvatar,
 };
