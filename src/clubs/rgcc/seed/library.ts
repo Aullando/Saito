@@ -1,12 +1,19 @@
 // Library: exercises + routines + workout assignments + kit catalogue.
 // Maps from covadonga-hub: seed.ts (exercises/routines), workouts.ts, equipacion-kit.ts.
 
+export type RgccExerciseCategory =
+  | "Fuerza" | "Core" | "Metabólico" | "Cardio"
+  | "Pilates" | "TRX" | "Movilidad"
+  | "Prevención" | "Reeducación" | "Técnica deportiva";
+
 export type RgccExercise = {
   clubId: "rgcc"; id: string; name: string;
-  category: "Fuerza" | "Core" | "Metabólico" | "Cardio" | "Pilates" | "TRX" | "Movilidad";
+  category: RgccExerciseCategory;
   group: string; equipment: string;
   level: "Inicial" | "Intermedio" | "Avanzado";
   dose: string; cues?: string;
+  /** Source: "library" = catálogo general, "evidence" = ejercicios EV. */
+  source: "library" | "evidence";
 };
 
 export const RGCC_EXERCISES: RgccExercise[] = [
