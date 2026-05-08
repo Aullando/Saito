@@ -1,10 +1,10 @@
 // RGCC · Biblioteca — catálogo de ejercicios y rutinas del club.
 // Identidad SAITO + branding RGCC. Datos desde seed RGCC.
-import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill, EmptyState } from "@/components/ui-kit";
 import { useClub } from "@/clubs/ClubProvider";
+import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_EXERCISES, RGCC_ROUTINES,
   type RgccExercise,
@@ -14,17 +14,11 @@ import { BookOpen, Dumbbell, Search, Filter, ImageOff } from "lucide-react";
 
 export const Route = createFileRoute("/rgcc/biblioteca")({
   component: () => (
-    <AppLayout>
-      <BibliotecaGate />
-    </AppLayout>
+    <RgccGuard>
+      <Biblioteca />
+    </RgccGuard>
   ),
 });
-
-function BibliotecaGate() {
-  const { club } = useClub();
-  if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
-  return <Biblioteca />;
-}
 
 function Biblioteca() {
   const [tab, setTab] = useState<"ejercicios" | "rutinas">("ejercicios");
