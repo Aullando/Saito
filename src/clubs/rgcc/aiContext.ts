@@ -1,10 +1,12 @@
 // RGCC AI context — feeds the SAITO assistant when the active club is RGCC.
-// Adapted from covadonga-hub's copilot/roleContext.ts but mapped to SAITO seeds.
+// La identidad la resuelve resolveRgccIdentity (ver identity.ts), no full_name.
 import {
   RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES,
   RGCC_COACHES, RGCC_MEMBERS, RGCC_VENUES, RGCC_ROOMS,
   RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_ROUTINES, RGCC_EXERCISES,
 } from "./seed";
+import { resolveRgccIdentity, type RgccIdentity, type RgccScope } from "./identity";
+import type { Role } from "@/lib/types";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -19,21 +21,29 @@ function compactSession(s: typeof RGCC_SESSIONS[number]) {
   };
 }
 
+type RgccUserLike = { id: string; email?: string | null } | null | undefined;
+
 /**
  * Builds the JSON context delivered to the AI for the RGCC club.
- * Filtered by SAITO role (admin/manager → club_admin, technical → coach, athlete → socio).
+ * El alcance se determina por la identidad RGCC (coordinacion / monitor / socio).
  */
-export function buildRgccContext(role: string, userName?: string) {
+export function buildRgccContext(role: Role | string, user: RgccUserLike, rolesArg?: Role[]) {
+  const roles = (rolesArg ?? [role as Role]).filter(Boolean) as Role[];
+  const identity = resolveRgccIdentity(user, roles);
+  return buildRgccContextFromIdentity(identity);
+}
+
+export function buildRgccContextFromIdentity(identity: RgccIdentity) {
   const fechaHoy = today();
   const sedes = RGCC_VENUES.map((v) => ({ id: v.id, nombre: v.name, zona: v.zone, estado: v.status }));
   const salas = RGCC_ROOMS.map((r) => ({ id: r.id, sedeId: r.venueId, nombre: r.name, capacidad: r.capacity }));
 
-  // Admin / Manager → cockpit completo
-  if (role === "admin" || role === "manager" || role === "sysadmin") {
+  // Coordinación → cockpit completo
+  if (identity.scope === "coordinacion") {
     const incidenciasAbiertas = RGCC_INCIDENTS.filter((i) => i.status !== "resolved");
     return {
       club: "Real Grupo de Cultura Covadonga",
-      rol: role,
+      alcance: "coordinacion" as const,
       fechaHoy,
       sedes, salas,
       clasesHoy: RGCC_SESSIONS.filter((s) => s.date === fechaHoy).map(compactSession),
@@ -53,49 +63,52 @@ export function buildRgccContext(role: string, userName?: string) {
     };
   }
 
-  // Coach (technical) → su día
-  if (role === "technical") {
-    const ref = userName ?? "";
+  // Monitor → su día
+  if (identity.scope === "monitor") {
+    const ref = identity.coachName ?? "";
     const mine = RGCC_SESSIONS.filter((s) => s.primaryCoach === ref || s.substituteCoach === ref);
     const horasSemana = mine
       .filter((c) => c.date >= fechaHoy)
       .reduce((acc, c) => acc + c.durationMin / 60, 0);
     return {
       club: "Real Grupo de Cultura Covadonga",
-      rol: role,
+      alcance: "monitor" as const,
       monitor: ref,
       fechaHoy,
+      sedes,
       misClasesHoy: mine.filter((s) => s.date === fechaHoy).map(compactSession),
       misClasesProximas: mine.filter((s) => s.date > fechaHoy).map(compactSession),
       misSesionesEp: RGCC_PT_SESSIONS.filter((e) => e.coachName === ref),
       misIncidencias: RGCC_INCIDENTS.filter((i) => i.reportedBy === ref),
       misAusencias: RGCC_ABSENCES.filter((a) => a.coachName === ref),
       horasSemanaEstimadas: Number(horasSemana.toFixed(1)),
-      sedes,
     };
   }
 
-  // Socio / athlete
-  const memberRef = userName ?? "";
-  const misReservas = RGCC_SESSIONS.filter((s) => s.bookings.includes(memberRef)).map(compactSession);
+  // Socio
+  const memberNumber = identity.memberNumber ?? "";
+  const misReservas = RGCC_SESSIONS.filter((s) => s.bookings.includes(memberNumber)).map(compactSession);
   const disponibles = RGCC_SESSIONS
-    .filter((s) => s.date >= fechaHoy && !s.bookings.includes(memberRef) && s.status !== "cancelled")
+    .filter((s) => s.date >= fechaHoy && !s.bookings.includes(memberNumber) && s.status !== "cancelled")
     .map(compactSession);
   return {
     club: "Real Grupo de Cultura Covadonga",
-    rol: role,
-    socio: memberRef,
+    alcance: "socio" as const,
+    socio: identity.memberName ?? "",
+    numeroSocio: memberNumber,
     fechaHoy,
     sedes,
     misReservas,
     clasesDisponibles: disponibles.slice(0, 30),
-    misWorkouts: RGCC_WORKOUTS.filter((w) => w.memberNumber === memberRef),
+    misWorkouts: RGCC_WORKOUTS.filter((w) => w.memberNumber === memberNumber),
   };
 }
 
-/** Sugerencias contextuales RGCC por rol. */
-export function rgccSuggestions(role: string): string[] {
-  if (role === "admin" || role === "manager" || role === "sysadmin") {
+/** Sugerencias contextuales RGCC por alcance. */
+export function rgccSuggestions(role: Role | string, user?: RgccUserLike, rolesArg?: Role[]): string[] {
+  const roles = (rolesArg ?? [role as Role]).filter(Boolean) as Role[];
+  const id = resolveRgccIdentity(user, roles);
+  if (id.scope === "coordinacion") {
     return [
       "¿Qué clases hay hoy y cuáles van llenas?",
       "¿Hay clases sin monitor asignado?",
@@ -103,7 +116,7 @@ export function rgccSuggestions(role: string): string[] {
       "¿Qué monitores están sobre su límite de horas?",
     ];
   }
-  if (role === "technical") {
+  if (id.scope === "monitor") {
     return [
       "¿Qué clases tengo hoy?",
       "¿Tengo sesiones de entrenamiento personal pendientes?",
@@ -118,7 +131,7 @@ export function rgccSuggestions(role: string): string[] {
 }
 
 /** Resolver determinista local — fallback rápido cuando la IA no responde. */
-export function rgccLocalFallback(role: string, ctx: ReturnType<typeof buildRgccContext>, q: string): string | null {
+export function rgccLocalFallback(_role: string, ctx: ReturnType<typeof buildRgccContextFromIdentity>, q: string): string | null {
   const text = q.toLowerCase();
   if (/clases?.*(hoy|del d[ií]a)/.test(text) && "clasesHoy" in ctx) {
     const list = (ctx as any).clasesHoy as ReturnType<typeof compactSession>[];
@@ -133,5 +146,11 @@ export function rgccLocalFallback(role: string, ctx: ReturnType<typeof buildRgcc
     const list = (ctx as any).incidencias as any[];
     return list?.length ? `Hay ${list.length} incidencia(s) abierta(s).` : "Sin incidencias abiertas.";
   }
+  if ("misReservas" in ctx && /reserv/.test(text)) {
+    const list = (ctx as any).misReservas as any[];
+    return list?.length ? `Tienes ${list.length} reserva(s).` : "No tienes reservas próximas.";
+  }
   return null;
 }
+
+export type { RgccScope };
