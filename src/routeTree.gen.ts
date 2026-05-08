@@ -21,6 +21,7 @@ import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AthletesRouteImport } from './routes/athletes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsTeamRouteImport } from './routes/settings.team'
+import { Route as RgccSlugRouteImport } from './routes/rgcc.$slug'
 import { Route as MedicalCalendarRouteImport } from './routes/medical.calendar'
 import { Route as EconomicPaymentsRouteImport } from './routes/economic.payments'
 import { Route as EconomicFeesRouteImport } from './routes/economic.fees'
@@ -85,6 +86,11 @@ const SettingsTeamRoute = SettingsTeamRouteImport.update({
   path: '/settings/team',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RgccSlugRoute = RgccSlugRouteImport.update({
+  id: '/rgcc/$slug',
+  path: '/rgcc/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MedicalCalendarRoute = MedicalCalendarRouteImport.update({
   id: '/medical/calendar',
   path: '/medical/calendar',
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
+  '/rgcc/$slug': typeof RgccSlugRoute
   '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRoutesByTo {
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
+  '/rgcc/$slug': typeof RgccSlugRoute
   '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRoutesById {
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
+  '/rgcc/$slug': typeof RgccSlugRoute
   '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRouteTypes {
@@ -170,6 +179,7 @@ export interface FileRouteTypes {
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
+    | '/rgcc/$slug'
     | '/settings/team'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -187,6 +197,7 @@ export interface FileRouteTypes {
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
+    | '/rgcc/$slug'
     | '/settings/team'
   id:
     | '__root__'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
+    | '/rgcc/$slug'
     | '/settings/team'
   fileRoutesById: FileRoutesById
 }
@@ -222,6 +234,7 @@ export interface RootRouteChildren {
   EconomicFeesRoute: typeof EconomicFeesRoute
   EconomicPaymentsRoute: typeof EconomicPaymentsRoute
   MedicalCalendarRoute: typeof MedicalCalendarRoute
+  RgccSlugRoute: typeof RgccSlugRoute
   SettingsTeamRoute: typeof SettingsTeamRoute
 }
 
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsTeamRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rgcc/$slug': {
+      id: '/rgcc/$slug'
+      path: '/rgcc/$slug'
+      fullPath: '/rgcc/$slug'
+      preLoaderRoute: typeof RgccSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/medical/calendar': {
       id: '/medical/calendar'
       path: '/medical/calendar'
@@ -350,8 +370,19 @@ const rootRouteChildren: RootRouteChildren = {
   EconomicFeesRoute: EconomicFeesRoute,
   EconomicPaymentsRoute: EconomicPaymentsRoute,
   MedicalCalendarRoute: MedicalCalendarRoute,
+  RgccSlugRoute: RgccSlugRoute,
   SettingsTeamRoute: SettingsTeamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
