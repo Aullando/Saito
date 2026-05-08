@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import { ClubProvider } from "@/clubs/ClubProvider";
 
 import appCss from "../styles.css?url";
 
@@ -125,9 +126,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <AuthGate>
-          <Outlet />
-        </AuthGate>
+        <ClubProvider>
+          <AuthGate>
+            <Outlet />
+          </AuthGate>
+        </ClubProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
