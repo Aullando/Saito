@@ -53,7 +53,7 @@ export function Topbar() {
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
-            placeholder={user.language === "es" ? `Buscar en ${club.name}` : `Search in ${club.name}`}
+            placeholder={user.language === "es" ? `Buscar en ${club.brand.name}` : `Search in ${club.brand.name}`}
             className="h-9 md:h-10 w-full rounded-full border border-border bg-card pl-10 pr-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
