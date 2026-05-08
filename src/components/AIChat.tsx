@@ -155,7 +155,7 @@ export function AIChat() {
     <>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-white/10 shadow-lg ring-1 ring-white/10 backdrop-blur-xl backdrop-saturate-150 transition hover:scale-105 hover:bg-white/20"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-border bg-primary shadow-lg ring-1 ring-primary/30 transition hover:scale-105 hover:opacity-95"
         aria-label={aiName}
       >
         <img src={aiAvatar} alt={aiName} className="h-10 w-10 rounded-full object-cover" />
