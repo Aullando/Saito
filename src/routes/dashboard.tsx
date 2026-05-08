@@ -6,6 +6,8 @@ import { PageHeader, Card, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
+import { useClub } from "@/clubs/ClubProvider";
+import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
 import { Users, Calendar, CreditCard, Activity, MessageSquare, Stethoscope, TrendingUp, BarChart3 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -27,11 +29,17 @@ export const Route = createFileRoute("/dashboard")({
   component: () => (
     <RoleGate roles={["sysadmin", "admin", "manager", "technical", "medical"]}>
       <AppLayout>
-        <DashboardPage />
+        <DashboardSwitch />
       </AppLayout>
     </RoleGate>
   ),
 });
+
+function DashboardSwitch() {
+  const { club } = useClub();
+  if (club.clubId === "rgcc") return <RgccDashboard />;
+  return <DashboardPage />;
+}
 
 const today = () => new Date().toISOString().slice(0, 10);
 const monthStart = () => {
