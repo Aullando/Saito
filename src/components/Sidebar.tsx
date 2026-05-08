@@ -4,7 +4,7 @@ import {
   Building2, CalendarDays, Users, Wallet, Receipt, MessageSquare,
   Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X,
 } from "lucide-react";
-import { useState } from "react";
+
 import { useCurrentUser, useAuth } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import type { Role } from "@/lib/types";
@@ -71,7 +71,8 @@ export function Sidebar() {
   const setUser = useAuth((s) => s.setUser);
   const mobileOpen = useAuth((s) => s.mobileNavOpen);
   const setMobileOpen = useAuth((s) => s.setMobileNavOpen);
-  const [collapsed, setCollapsed] = useState(false);
+  const collapsed = useAuth((s) => s.sidebarCollapsed);
+  const toggleCollapsed = useAuth((s) => s.toggleSidebarCollapsed);
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { club, isModuleEnabled } = useClub();
   if (!user) return null;
@@ -111,7 +112,7 @@ export function Sidebar() {
           <X className="h-4 w-4" />
         </button>
         <button
-          onClick={() => setCollapsed((c) => !c)}
+          onClick={toggleCollapsed}
           className="ml-auto hidden h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:flex"
           aria-label="Collapse"
         >
