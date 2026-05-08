@@ -4,6 +4,7 @@ import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo } from "./Logo";
 import { NotificationsBell } from "./NotificationsBell";
+import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
@@ -64,6 +65,7 @@ export function Topbar() {
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
         <NotificationsBell />
+        <ClubSwitcher />
 
         <div ref={ref} className="relative">
           <button
