@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import saitoAiLogo from "@/assets/saito-ai.png";
 import { useClub } from "@/clubs/ClubProvider";
-import { buildRgccContext, rgccSuggestions } from "@/clubs/rgcc/aiContext";
+import { buildRgccContextFromIdentity, rgccLocalFallback, rgccSuggestions } from "@/clubs/rgcc/aiContext";
+import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
