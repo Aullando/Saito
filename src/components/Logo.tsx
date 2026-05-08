@@ -1,12 +1,18 @@
-import logoFull from "@/assets/saito-logo.png";
-import logoMark from "@/assets/saito-mark.png";
+import { useClub } from "@/clubs/ClubProvider";
+import saitoFull from "@/assets/saito-logo.png";
+import saitoMark from "@/assets/saito-mark.png";
 
 export function Logo({ size = 32, withText = true }: { size?: number; withText?: boolean }) {
+  const { club } = useClub();
+  const fullSrc = club.brand.logoFull ?? saitoFull;
+  const markSrc = club.brand.logoMark ?? saitoMark;
+  const alt = club.brand.shortName;
+
   if (!withText) {
     return (
       <img
-        src={logoMark}
-        alt="SAITO"
+        src={markSrc}
+        alt={alt}
         style={{ width: size, height: size }}
         className="shrink-0 object-contain"
       />
@@ -14,8 +20,8 @@ export function Logo({ size = 32, withText = true }: { size?: number; withText?:
   }
   return (
     <img
-      src={logoFull}
-      alt="SAITO"
+      src={fullSrc}
+      alt={alt}
       style={{ height: size }}
       className="shrink-0 object-contain"
     />
@@ -23,10 +29,12 @@ export function Logo({ size = 32, withText = true }: { size?: number; withText?:
 }
 
 export function LogoMark({ size = 32 }: { size?: number }) {
+  const { club } = useClub();
+  const markSrc = club.brand.logoMark ?? saitoMark;
   return (
     <img
-      src={logoMark}
-      alt="SAITO"
+      src={markSrc}
+      alt={club.brand.shortName}
       style={{ width: size, height: size }}
       className="shrink-0 object-contain"
     />
