@@ -29,11 +29,9 @@ function PtGate() {
   const { roles, profile } = useAuth();
   if (club.id !== "rgcc") return <Navigate to="/dashboard" />;
 
-  const isAdmin = roles.some((r) => r === "admin" || r === "manager" || r === "sysadmin");
-  const isCoach = roles.some((r) => r === "technical");
-
-  if (isAdmin) return <PtCockpit />;
-  if (isCoach) return <PtCoach name={profile?.full_name ?? ""} />;
+  const view = getRgccView(roles);
+  if (view === "cockpit") return <PtCockpit />;
+  if (view === "coach") return <PtCoach name={profile?.full_name ?? ""} />;
   return <PtMember name={profile?.full_name ?? ""} />;
 }
 
