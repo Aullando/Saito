@@ -29,8 +29,8 @@ export const rgccModules: ClubModulesConfig = {
 export const rgccNavItems: ClubNavItem[] = [
   { module: "dashboard",          label: "Dashboard",              icon: "LayoutGrid",  to: "/dashboard" },
   { module: "rgcc-direccion",     label: "Dirección",              icon: "Briefcase",   to: "/rgcc/$slug", slug: "direccion" },
-  { module: "rgcc-clases",        label: "Clases",                 icon: "GraduationCap", to: "/rgcc/$slug", slug: "clases" },
-  { module: "rgcc-mi-dia",        label: "Mi Día",                 icon: "Sun",         to: "/rgcc/$slug", slug: "mi-dia" },
+  { module: "rgcc-clases",        label: "Clases",                 icon: "GraduationCap", to: "/rgcc/clases" },
+  { module: "rgcc-mi-dia",        label: "Mi Día",                 icon: "Sun",         to: "/rgcc/mi-dia" },
   { module: "rgcc-socio",         label: "Socio",                  icon: "UserCircle",  to: "/rgcc/$slug", slug: "socio" },
   { module: "rgcc-sedes",         label: "Sedes",                  icon: "MapPin",      to: "/rgcc/$slug", slug: "sedes" },
   { module: "rgcc-secciones",     label: "Secciones",              icon: "Layers",      to: "/rgcc/$slug", slug: "secciones" },
