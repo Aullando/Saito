@@ -33,6 +33,27 @@ export const RGCC_EXERCISES: RgccExercise[] = [
   { clubId: "rgcc", id: "ex-14", name: "Yoga saludo al sol", category: "Movilidad", group: "Global", equipment: "Esterilla", level: "Inicial", dose: "8 min" },
   { clubId: "rgcc", id: "ex-15", name: "Hip thrust", category: "Fuerza", group: "Glúteo", equipment: "Banco + barra", level: "Intermedio", dose: "4x10" },
   { clubId: "rgcc", id: "ex-16", name: "Farmer carry", category: "Fuerza", group: "Core/Agarre", equipment: "Kettlebells", level: "Inicial", dose: "6x30m" },
+
+  // ─── Evidence-based / EV catalogue ────────────────────────────────────────
+  { clubId: "rgcc", id: "ev-aterrizaje-bilateral", name: "Aterrizaje bilateral controlado", category: "Prevención", group: "Pierna", equipment: "Cajón bajo", level: "Inicial", dose: "3x6", cues: "Cae con tobillo, rodilla y cadera alineados.", source: "evidence" },
+  { clubId: "rgcc", id: "ev-blunder-check", name: "Blunder check escapular", category: "Prevención", group: "Hombro", equipment: "Banda elástica", level: "Inicial", dose: "3x10", source: "evidence" },
+  { clubId: "rgcc", id: "ev-circuito-adaptado", name: "Circuito adaptado", category: "Reeducación", group: "Full body", equipment: "Mixto", level: "Inicial", dose: "3 vueltas", source: "evidence" },
+  { clubId: "rgcc", id: "ev-copenhagen-plank", name: "Copenhagen plank", category: "Prevención", group: "Aductores", equipment: "Banco", level: "Avanzado", dose: "3x20s/lado", source: "evidence" },
+  { clubId: "rgcc", id: "ev-equilibrio-tobillo", name: "Equilibrio unipodal tobillo", category: "Prevención", group: "Tobillo", equipment: "Plataforma inestable", level: "Inicial", dose: "3x30s", source: "evidence" },
+  { clubId: "rgcc", id: "ev-frenada-reactiva", name: "Frenada reactiva", category: "Técnica deportiva", group: "Pierna", equipment: "Conos", level: "Avanzado", dose: "6x10m", source: "evidence" },
+  { clubId: "rgcc", id: "ev-hip-hinge", name: "Hip hinge con pica", category: "Técnica deportiva", group: "Cadera", equipment: "Pica", level: "Inicial", dose: "3x10", cues: "Mantén las 3 puntas de contacto en la pica.", source: "evidence" },
+  { clubId: "rgcc", id: "ev-isometria-cervical", name: "Isometría cervical multidirección", category: "Prevención", group: "Cuello", equipment: "Toalla", level: "Inicial", dose: "4x10s", source: "evidence" },
+  { clubId: "rgcc", id: "ev-lanzamiento-rotacional", name: "Lanzamiento rotacional con balón", category: "Técnica deportiva", group: "Core/Hombro", equipment: "Balón medicinal", level: "Avanzado", dose: "4x6/lado", source: "evidence" },
+  { clubId: "rgcc", id: "ev-nordic-hamstring", name: "Nordic hamstring curl", category: "Prevención", group: "Isquios", equipment: "Compañero", level: "Avanzado", dose: "3x6", source: "evidence" },
+  { clubId: "rgcc", id: "ev-pallof-press", name: "Pallof press", category: "Core", group: "Antirrotación", equipment: "Polea/Banda", level: "Intermedio", dose: "3x12/lado", source: "evidence" },
+  { clubId: "rgcc", id: "ev-pausa-cervical", name: "Pausa activa cervical", category: "Reeducación", group: "Cuello", equipment: "—", level: "Inicial", dose: "5 min", source: "evidence" },
+  { clubId: "rgcc", id: "ev-remo-banda", name: "Remo con banda elástica", category: "Fuerza", group: "Espalda", equipment: "Banda", level: "Inicial", dose: "3x12", source: "evidence" },
+  { clubId: "rgcc", id: "ev-respiracion-cd", name: "Respiración costo-diafragmática", category: "Reeducación", group: "Diafragma", equipment: "Colchoneta", level: "Inicial", dose: "5 min", source: "evidence" },
+  { clubId: "rgcc", id: "ev-rotadores-banda", name: "Rotadores externos con banda", category: "Prevención", group: "Hombro", equipment: "Banda", level: "Inicial", dose: "3x12", source: "evidence" },
+  { clubId: "rgcc", id: "ev-sentadilla-caja", name: "Sentadilla a caja", category: "Reeducación", group: "Pierna", equipment: "Cajón", level: "Inicial", dose: "3x8", source: "evidence" },
+  { clubId: "rgcc", id: "ev-skipping-tecnico", name: "Skipping técnico", category: "Técnica deportiva", group: "Carrera", equipment: "—", level: "Intermedio", dose: "4x20m", source: "evidence" },
+  { clubId: "rgcc", id: "ev-split-step", name: "Split step reactivo", category: "Técnica deportiva", group: "Pierna", equipment: "—", level: "Intermedio", dose: "4x20s", source: "evidence" },
+  { clubId: "rgcc", id: "ev-ukemi", name: "Caídas controladas (ukemi)", category: "Técnica deportiva", group: "Full body", equipment: "Tatami", level: "Intermedio", dose: "10 reps", source: "evidence" },
 ];
 
 export type RgccRoutine = {
