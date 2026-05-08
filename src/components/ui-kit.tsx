@@ -125,12 +125,31 @@ export function DataTable<T extends { id?: string }>(
         </table>
       </div>
       {total > pageSize && (
-        <div className="flex items-center justify-between border-t border-border px-4 py-3 text-xs text-muted-foreground">
-          <span>Mostrando {start + 1} a {Math.min(start + pageSize, total)} de {total}</span>
+        <div className="flex items-center justify-between border-t border-border px-4 py-3 text-xs text-muted-foreground gap-2">
+          <span className="hidden sm:inline">Mostrando {start + 1} a {Math.min(start + pageSize, total)} de {total}</span>
+          <span className="sm:hidden">{start + 1}–{Math.min(start + pageSize, total)} / {total}</span>
           <div className="flex items-center gap-1">
-            {Array.from({ length: pages }).map((_, i) => (
-              <button key={i} onClick={() => setPage(i + 1)} className={cn("h-7 w-7 rounded-md text-xs", cur === i + 1 ? "bg-primary text-primary-foreground" : "hover:bg-muted")}>{i + 1}</button>
-            ))}
+            <button
+              onClick={() => setPage(Math.max(1, cur - 1))}
+              disabled={cur === 1}
+              className="h-7 rounded-md px-2 text-xs hover:bg-muted disabled:opacity-40"
+              aria-label="Anterior"
+            >‹</button>
+            {(() => {
+              const win = 5;
+              let from = Math.max(1, cur - Math.floor(win / 2));
+              const to = Math.min(pages, from + win - 1);
+              from = Math.max(1, to - win + 1);
+              return Array.from({ length: to - from + 1 }, (_, i) => from + i).map((n) => (
+                <button key={n} onClick={() => setPage(n)} className={cn("h-7 w-7 rounded-md text-xs", cur === n ? "bg-primary text-primary-foreground" : "hover:bg-muted")}>{n}</button>
+              ));
+            })()}
+            <button
+              onClick={() => setPage(Math.min(pages, cur + 1))}
+              disabled={cur === pages}
+              className="h-7 rounded-md px-2 text-xs hover:bg-muted disabled:opacity-40"
+              aria-label="Siguiente"
+            >›</button>
           </div>
         </div>
       )}

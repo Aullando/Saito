@@ -13,10 +13,13 @@ interface AuthState {
   currentUserId: string | null;
   avatars: Record<string, string>;
   mobileNavOpen: boolean;
+  sidebarCollapsed: boolean;
   setUser: (id: string | null) => void;
   setAvatar: (id: string, dataUrl: string) => void;
   removeAvatar: (id: string) => void;
   setMobileNavOpen: (open: boolean) => void;
+  setSidebarCollapsed: (v: boolean) => void;
+  toggleSidebarCollapsed: () => void;
 }
 
 export const useAuth = create<AuthState>()(
@@ -25,6 +28,7 @@ export const useAuth = create<AuthState>()(
       currentUserId: null,
       avatars: {},
       mobileNavOpen: false,
+      sidebarCollapsed: false,
       setUser: (id) => set({ currentUserId: id, mobileNavOpen: false }),
       setAvatar: (id, dataUrl) => set((s) => ({ avatars: { ...s.avatars, [id]: dataUrl } })),
       removeAvatar: (id) => set((s) => {
@@ -32,8 +36,10 @@ export const useAuth = create<AuthState>()(
         return { avatars: rest };
       }),
       setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
+      setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
+      toggleSidebarCollapsed: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
     }),
-    { name: "saito-auth", partialize: (s) => ({ currentUserId: s.currentUserId, avatars: s.avatars }) },
+    { name: "saito-auth", partialize: (s) => ({ currentUserId: s.currentUserId, avatars: s.avatars, sidebarCollapsed: s.sidebarCollapsed }) },
   ),
 );
 
