@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { getRgccMiDiaView, isRgccAdmin } from "@/clubs/rgcc/permissions";
+import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_SESSIONS, RGCC_PT_SESSIONS, RGCC_VENUES, RGCC_MEMBERS,
@@ -23,12 +24,15 @@ export const Route = createFileRoute("/rgcc/mi-dia")({
 });
 
 function MiDiaGate() {
-  const { profile, roles } = useAuth();
-  const me = profile?.full_name ?? "";
+  const { user, roles } = useAuth();
+  const identity = resolveRgccIdentity(user, roles);
   const isAdmin = isRgccAdmin(roles);
   const view = getRgccMiDiaView(roles);
-  if (view === "monitor") return <MiDiaMonitor monitorName={me} isAdmin={isAdmin} />;
-  return <MiDiaSocio memberName={me} />;
+  if (view === "monitor") {
+    const monitorName = identity.coachName ?? identity.displayName ?? "";
+    return <MiDiaMonitor monitorName={monitorName} isAdmin={isAdmin} />;
+  }
+  return <MiDiaSocio memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
 }
 
 // ─── Monitor ────────────────────────────────────────────────────────────────
