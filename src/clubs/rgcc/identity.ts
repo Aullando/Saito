@@ -85,12 +85,13 @@ export function resolveRgccIdentity(user: RgccUserLike, roles: Role[]): RgccIden
   }
   if (base.kind === "member") {
     const m = RGCC_MEMBERS[0];
+    const fullName = m ? `${m.firstName} ${m.lastName}`.trim() : "Socio";
     return {
       kind: "member",
       scope: "socio",
       memberNumber: m?.memberNumber ?? "RGCC-00000",
-      memberName: m?.name ?? "Socio",
-      displayName: m?.name ?? "Socio",
+      memberName: fullName,
+      displayName: fullName,
     };
   }
   return {
