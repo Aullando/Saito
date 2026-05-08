@@ -40,7 +40,11 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   });
 
   const slug = orgQ.data?.slug ?? null;
-  const club = useMemo(() => getClubConfig(slug ?? DEFAULT_CLUB_ID), [slug]);
+  const overrideClubId = useActiveClubStore((s) => s.overrideClubId);
+  const switchClub = useActiveClubStore((s) => s.switchClub);
+
+  const activeId = overrideClubId ?? slug ?? DEFAULT_CLUB_ID;
+  const club = useMemo(() => getClubConfig(activeId), [activeId]);
 
   // Apply brand color overrides at runtime (non-destructive: only if defined).
   useEffect(() => {
@@ -62,9 +66,15 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   }, [club]);
 
   const value = useMemo<ClubCtx>(
-    () => ({ club, isModuleEnabled: (m) => isModuleEnabled(club, m) }),
-    [club],
+    () => ({
+      club,
+      availableClubs: Object.values(CLUBS),
+      switchClub,
+      isModuleEnabled: (m) => isModuleEnabled(club, m),
+    }),
+    [club, switchClub],
   );
+
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
