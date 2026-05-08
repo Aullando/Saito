@@ -3,6 +3,7 @@ import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
 import saitoAiLogo from "@/assets/saito-ai.png";
+import { useClub } from "@/clubs/ClubProvider";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
