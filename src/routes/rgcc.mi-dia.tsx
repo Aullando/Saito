@@ -9,6 +9,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { useClub } from "@/clubs/ClubProvider";
+import { getRgccMiDiaView, isRgccAdmin } from "@/clubs/rgcc/permissions";
 import {
   RGCC_SESSIONS, RGCC_PT_SESSIONS, RGCC_VENUES, RGCC_MEMBERS,
 } from "@/clubs/rgcc/seed";
