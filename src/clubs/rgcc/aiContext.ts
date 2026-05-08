@@ -89,7 +89,7 @@ export function buildRgccContext(role: string, userName?: string) {
     sedes,
     misReservas,
     clasesDisponibles: disponibles.slice(0, 30),
-    misWorkouts: RGCC_WORKOUTS.filter((w) => w.memberId === memberRef),
+    misWorkouts: RGCC_WORKOUTS.filter((w) => w.memberNumber === memberRef),
   };
 }
 
