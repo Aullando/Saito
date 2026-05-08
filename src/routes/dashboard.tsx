@@ -271,6 +271,107 @@ function DashboardPage() {
         </Card>
       </div>
 
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Card>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <TrendingUp className="h-4 w-4" /> {lang === "es" ? "Ingresos (6 meses)" : "Revenue (6 months)"}
+            </h2>
+          </div>
+          <div className="h-64 w-full">
+            {charts.data && (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={charts.data.revenueSeries} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
+                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="label" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickFormatter={(v) => `${v}€`} />
+                  <Tooltip
+                    contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
+                    formatter={(v: number) => fmtMoney(v)}
+                  />
+                  <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fill="url(#revGrad)" strokeWidth={2} name={lang === "es" ? "Cobrado" : "Paid"} />
+                  <Area type="monotone" dataKey="pending" stroke="hsl(var(--warning))" fill="transparent" strokeWidth={2} strokeDasharray="4 4" name={lang === "es" ? "Pendiente" : "Pending"} />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <BarChart3 className="h-4 w-4" /> {lang === "es" ? "Eventos (30 días)" : "Events (30 days)"}
+            </h2>
+          </div>
+          <div className="h-64 w-full">
+            {charts.data && (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={charts.data.eventsSeries} margin={{ top: 8, right: 12, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} interval={4} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
+                  <Tooltip contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                  <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Card>
+          <h2 className="mb-3 text-lg font-semibold">{lang === "es" ? "Tipos de evento" : "Event types"}</h2>
+          <div className="h-56 w-full">
+            {charts.data && charts.data.typeData.length > 0 && (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={charts.data.typeData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
+                    {charts.data.typeData.map((_, i) => (
+                      <Cell key={i} fill={["hsl(var(--primary))", "hsl(var(--success))", "hsl(var(--warning))", "hsl(var(--destructive))"][i % 4]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <h2 className="mb-3 text-lg font-semibold">{lang === "es" ? "Estado médico" : "Medical status"}</h2>
+          <div className="h-56 w-full">
+            {charts.data && charts.data.medData.length > 0 && (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={charts.data.medData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
+                    {charts.data.medData.map((entry, i) => {
+                      const colorMap: Record<string, string> = {
+                        Fit: "hsl(var(--success))",
+                        Injured: "hsl(var(--destructive))",
+                        "Under review": "hsl(var(--warning))",
+                        Unknown: "hsl(var(--muted-foreground))",
+                      };
+                      return <Cell key={i} fill={colorMap[entry.name] ?? "hsl(var(--primary))"} />;
+                    })}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+      </div>
+
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <QuickLink to="/athletes" icon={<Users className="h-4 w-4" />} label={t("athletes") || "Deportistas"} />
         <QuickLink to="/calendar" icon={<Calendar className="h-4 w-4" />} label={t("calendar") || "Calendario"} />
