@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import * as Icons from "lucide-react";
 import {
   Building2, CalendarDays, Users, Wallet, Receipt, MessageSquare,
   Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X,
@@ -9,9 +10,16 @@ import { useT } from "@/lib/i18n";
 import type { Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useClub } from "@/clubs/ClubProvider";
-import type { ClubModuleId } from "@/clubs/types";
+import type { ClubModuleId, ClubNavItem } from "@/clubs/types";
 
-type Item = { to: string; label: string; icon: typeof Building2; indent?: boolean; module?: ClubModuleId };
+type Item = {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  indent?: boolean;
+  module?: ClubModuleId;
+  params?: Record<string, string>;
+};
 
 function buildItems(role: Role, t: (k: any) => string): Item[] {
   switch (role) {
@@ -45,6 +53,18 @@ function buildItems(role: Role, t: (k: any) => string): Item[] {
   }
 }
 
+function navItemToItem(n: ClubNavItem): Item {
+  const IconCmp = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[n.icon] ?? LayoutGrid;
+  return {
+    to: n.to,
+    label: n.label,
+    icon: IconCmp,
+    module: n.module,
+    indent: n.indent,
+    params: n.slug ? { slug: n.slug } : undefined,
+  };
+}
+
 export function Sidebar() {
   const user = useCurrentUser();
   const t = useT();
@@ -53,9 +73,11 @@ export function Sidebar() {
   const setMobileOpen = useAuth((s) => s.setMobileNavOpen);
   const [collapsed, setCollapsed] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const { club, isModuleEnabled } = useClub();
   if (!user) return null;
-  const { isModuleEnabled } = useClub();
-  const items = buildItems(user.role, t).filter((i) => !i.module || isModuleEnabled(i.module));
+  const items: Item[] = club.navItems
+    ? club.navItems.filter((n) => isModuleEnabled(n.module)).map(navItemToItem)
+    : buildItems(user.role, t).filter((i) => !i.module || isModuleEnabled(i.module));
   const width = collapsed ? 72 : 224;
   const notifCount = user.role === "sysadmin" ? 25 : user.role === "medical" ? 13 : 0;
 
@@ -108,18 +130,21 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto px-3 py-2">
         <ul className="space-y-1">
           {items.map((it, idx) => {
-            // For Economic Management header link, mark active when on any economic route
+            const resolvedPath = it.params
+              ? Object.entries(it.params).reduce((acc, [k, v]) => acc.replace(`$${k}`, v), it.to)
+              : it.to;
             const economicHeader = it.label === t("economic_management");
             const active = economicHeader
               ? path.startsWith("/economic")
               : it.indent
-                ? path === it.to
-                : isActive(it.to);
+                ? path === resolvedPath
+                : path === resolvedPath || path.startsWith(resolvedPath + "/");
             const Icon = it.icon;
             return (
               <li key={idx}>
                 <Link
                   to={it.to}
+                  params={it.params as never}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",

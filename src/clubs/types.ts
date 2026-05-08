@@ -1,8 +1,7 @@
 // Tenant / Club configuration layer.
-// Each club is a tenant of the SAITO platform with its own branding,
-// visible modules and (optional) seed data.
 
 export type ClubModuleId =
+  // SAITO core modules
   | "dashboard"
   | "club"
   | "calendar"
@@ -10,43 +9,63 @@ export type ClubModuleId =
   | "economic"
   | "communication"
   | "medical"
-  | "settings";
+  | "settings"
+  // RGCC modules
+  | "rgcc-direccion"
+  | "rgcc-clases"
+  | "rgcc-mi-dia"
+  | "rgcc-socio"
+  | "rgcc-sedes"
+  | "rgcc-secciones"
+  | "rgcc-resumen"
+  | "rgcc-monitores"
+  | "rgcc-sustituciones"
+  | "rgcc-incidencias"
+  | "rgcc-salas"
+  | "rgcc-vacaciones"
+  | "rgcc-centro-datos"
+  | "rgcc-pt"
+  | "rgcc-biblioteca"
+  | "rgcc-quiosco"
+  | "rgcc-copiloto";
 
 export interface ClubBrand {
-  /** Display name shown in topbar / titles */
   name: string;
-  /** Short tag (e.g. "RGCC") */
   shortName: string;
-  /** Full horizontal logo (used in header) */
   logoFull?: string;
-  /** Square mark logo (used when collapsed / favicons) */
   logoMark?: string;
-  /** Optional avatar for the AI assistant */
   aiAvatar?: string;
-  /** Primary brand color in oklch (overrides --primary token at runtime) */
   primary?: string;
-  /** Optional accent color in oklch */
   accent?: string;
-  /** Default UI language */
   defaultLanguage: "es" | "en";
 }
 
 export interface ClubModulesConfig {
-  /** Module ids enabled for this club. Order is informational. */
   enabled: ClubModuleId[];
 }
 
+/** Per-club nav item. If a club provides `navItems`, the sidebar uses them
+ *  instead of the default SAITO role-based menu. */
+export interface ClubNavItem {
+  module: ClubModuleId;
+  label: string;
+  /** lucide-react icon name */
+  icon: string;
+  /** Route. Use "/rgcc/$slug" for placeholder modules (uses `slug`). */
+  to: string;
+  slug?: string;
+  indent?: boolean;
+}
+
 export interface ClubSeed {
-  /** Marks club as live (real data) vs demo (seed data only) */
   live: boolean;
-  /** Optional seed payload — clubs can ship their own demo data */
   data?: unknown;
 }
 
 export interface ClubConfig {
-  /** Stable id, used as URL slug & DB organization slug */
   id: string;
   brand: ClubBrand;
   modules: ClubModulesConfig;
+  navItems?: ClubNavItem[];
   seed: ClubSeed;
 }
