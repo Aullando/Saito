@@ -1,41 +1,59 @@
-// Authenticated RGCC flow. Requires E2E_EMAIL / E2E_PASSWORD env vars and a
-// user whose organization slug is "rgcc". Skipped if creds are missing so CI
-// stays green out-of-the-box.
+// Authenticated RGCC flow usando el login demo (Zustand persist en localStorage).
+// No requiere email/password ni Supabase.
 import { test, expect } from "@playwright/test";
 
-const EMAIL = process.env.E2E_EMAIL;
-const PASSWORD = process.env.E2E_PASSWORD;
-const hasCreds = Boolean(EMAIL && PASSWORD);
+// Inyecta currentUserId + override de club RGCC antes de cargar la app, para
+// que el ClubProvider y el AuthProvider se inicialicen ya autenticados como
+// el usuario demo correspondiente y con el club rgcc activo.
+async function loginAs(page: import("@playwright/test").Page, userId: string) {
+  await page.addInitScript(
+    ({ uid }) => {
+      try {
+        localStorage.setItem(
+          "saito-auth",
+          JSON.stringify({
+            state: { currentUserId: uid, avatars: {}, sidebarCollapsed: false },
+            version: 0,
+          }),
+        );
+        localStorage.setItem(
+          "saito-active-club",
+          JSON.stringify({ state: { overrideClubId: "rgcc" }, version: 0 }),
+        );
+      } catch {}
+    },
+    { uid: userId },
+  );
+}
 
-test.describe("RGCC navigation (authenticated)", () => {
-  test.skip(!hasCreds, "Set E2E_EMAIL / E2E_PASSWORD to run");
+test.describe("RGCC navigation (login demo)", () => {
+  test("u-tec ve Mis clases / Mi Día / Mis sesiones EP", async ({ page }) => {
+    await loginAs(page, "u-tec");
 
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/login");
-    await page.getByLabel(/email|correo/i).fill(EMAIL!);
-    await page.getByLabel(/password|contraseña/i).fill(PASSWORD!);
-    await page.getByRole("button", { name: /sign in|entrar|login|iniciar/i }).click();
-    await expect(page).not.toHaveURL(/\/login/);
-  });
-
-  test("club switcher exposes RGCC and switches active club", async ({ page }) => {
-    await page.getByLabel(/switch club/i).click();
-    await page.getByRole("button", { name: /covadonga|rgcc/i }).first().click();
-    await expect(page.getByText(/RGCC|Covadonga/i).first()).toBeVisible();
-  });
-
-  test("can navigate to Clases and Mi Día once on RGCC", async ({ page }) => {
-    await page.getByLabel(/switch club/i).click();
-    await page.getByRole("button", { name: /covadonga|rgcc/i }).first().click();
-
-    await page.getByRole("link", { name: /^Clases$/ }).click();
+    await page.goto("/rgcc/clases");
     await expect(page).toHaveURL(/\/rgcc\/clases/);
+    await expect(page.getByText(/Mis clases/i).first()).toBeVisible();
 
-    // Mi Día solo es visible para coach/admin: si está, navegamos.
-    const miDia = page.getByRole("link", { name: /Mi Día/ });
-    if (await miDia.count()) {
-      await miDia.first().click();
-      await expect(page).toHaveURL(/\/rgcc\/mi-dia/);
-    }
+    await page.goto("/rgcc/mi-dia");
+    await expect(page).toHaveURL(/\/rgcc\/mi-dia/);
+    await expect(page.getByText(/Mi Día/i).first()).toBeVisible();
+
+    await page.goto("/rgcc/entrenamiento-personal");
+    await expect(page).toHaveURL(/\/rgcc\/entrenamiento-personal/);
+    await expect(page.getByText(/Mis sesiones EP/i).first()).toBeVisible();
+  });
+
+  test("u-med ve Marta Fernández / RGCC-04212", async ({ page }) => {
+    await loginAs(page, "u-med");
+    await page.goto("/rgcc/mi-dia");
+    await expect(page.getByText(/Marta Fernández/).first()).toBeVisible();
+    await expect(page.getByText(/RGCC-04212/).first()).toBeVisible();
+  });
+
+  test("u-med ve “Fuerza glúteo” y NO ve “Cardio + core express”", async ({ page }) => {
+    await loginAs(page, "u-med");
+    await page.goto("/rgcc/entrenamiento-personal");
+    await expect(page.getByText(/Fuerza glúteo/).first()).toBeVisible();
+    await expect(page.getByText(/Cardio \+ core express/)).toHaveCount(0);
   });
 });
