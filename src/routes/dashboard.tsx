@@ -38,6 +38,17 @@ const monthStart = () => {
   const d = new Date();
   return new Date(d.getFullYear(), d.getMonth(), 1).toISOString().slice(0, 10);
 };
+const sixMonthsAgo = () => {
+  const d = new Date();
+  return new Date(d.getFullYear(), d.getMonth() - 5, 1).toISOString().slice(0, 10);
+};
+const thirtyDaysAgo = () => {
+  const d = new Date();
+  d.setDate(d.getDate() - 29);
+  return d.toISOString().slice(0, 10);
+};
+const MONTHS_ES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function DashboardPage() {
   const t = useT();
