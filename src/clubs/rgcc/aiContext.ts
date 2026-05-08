@@ -67,9 +67,9 @@ export function buildRgccContext(role: string, userName?: string) {
       fechaHoy,
       misClasesHoy: mine.filter((s) => s.date === fechaHoy).map(compactSession),
       misClasesProximas: mine.filter((s) => s.date > fechaHoy).map(compactSession),
-      misSesionesEp: RGCC_PT_SESSIONS.filter((e) => e.coach === ref),
+      misSesionesEp: RGCC_PT_SESSIONS.filter((e) => e.coachName === ref),
       misIncidencias: RGCC_INCIDENTS.filter((i) => i.reportedBy === ref),
-      misAusencias: RGCC_ABSENCES.filter((a) => a.coachRef === ref),
+      misAusencias: RGCC_ABSENCES.filter((a) => a.coachName === ref),
       horasSemanaEstimadas: Number(horasSemana.toFixed(1)),
       sedes,
     };
