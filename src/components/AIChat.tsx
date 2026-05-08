@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import saitoAiLogo from "@/assets/saito-ai.png";
 import { useClub } from "@/clubs/ClubProvider";
-import { buildRgccContext, rgccSuggestions } from "@/clubs/rgcc/aiContext";
+import { buildRgccContextFromIdentity, rgccLocalFallback, rgccSuggestions } from "@/clubs/rgcc/aiContext";
+import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
@@ -52,6 +54,7 @@ function buildContext(role: string, data: ReturnType<typeof useData.getState>) {
 
 export function AIChat() {
   const u = useCurrentUser();
+  const { user, roles } = useAuth();
   const { club } = useClub();
   const aiAvatar = club.brand.aiAvatar ?? saitoAiLogo;
   const aiName = `${club.brand.shortName} AI`;
@@ -67,6 +70,9 @@ export function AIChat() {
 
   if (!u) return null;
   const role = u.role;
+  const isRgcc = club.id === "rgcc";
+  const rgccIdentity = isRgcc ? resolveRgccIdentity(user, roles) : null;
+  const aiScope = rgccIdentity?.scope ?? null;
 
   const ask = async (q: string) => {
     if (!q.trim() || loading) return;
@@ -78,9 +84,8 @@ export function AIChat() {
 
     try {
       const data = useData.getState();
-      const isRgcc = club.id === "rgcc";
-      const context = isRgcc
-        ? buildRgccContext(role, u.name)
+      const context = isRgcc && rgccIdentity
+        ? buildRgccContextFromIdentity(rgccIdentity)
         : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
       const resp = await fetch(url, {
@@ -89,7 +94,7 @@ export function AIChat() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: next, role, context, club: club.id }),
+        body: JSON.stringify({ messages: next, role, context, club: club.id, aiScope }),
       });
 
       if (!resp.ok || !resp.body) {
@@ -101,6 +106,15 @@ export function AIChat() {
         } catch {}
         if (resp.status === 429) errMsg = "Demasiadas peticiones. Espera un momento.";
         if (resp.status === 402) errMsg = "Sin créditos de IA disponibles.";
+        // RGCC fallback local cuando la IA no responde.
+        if (isRgcc && rgccIdentity) {
+          const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q);
+          if (local) {
+            setMsgs((m) => [...m, { role: "assistant", content: local }]);
+            setLoading(false);
+            return;
+          }
+        }
         setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);
         setLoading(false);
         return;
@@ -145,6 +159,16 @@ export function AIChat() {
       }
     } catch (e) {
       console.error(e);
+      if (isRgcc && rgccIdentity) {
+        try {
+          const ctx = buildRgccContextFromIdentity(rgccIdentity);
+          const local = rgccLocalFallback(role, ctx, q);
+          if (local) {
+            setMsgs((m) => [...m, { role: "assistant", content: local }]);
+            return;
+          }
+        } catch {}
+      }
       setMsgs((m) => [...m, { role: "assistant", content: "Error de conexión con la IA." }]);
     } finally {
       setLoading(false);
@@ -188,7 +212,7 @@ export function AIChat() {
             )}
             {msgs.length === 0 && (
               <div className="flex flex-wrap gap-1.5">
-                {(club.id === "rgcc" ? rgccSuggestions(role) : SUGGESTIONS[role] ?? []).map((s) => (
+                {(isRgcc ? rgccSuggestions(role, user, roles) : SUGGESTIONS[role] ?? []).map((s) => (
                   <button key={s} onClick={() => ask(s)} className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] hover:border-primary hover:text-primary">{s}</button>
                 ))}
               </div>

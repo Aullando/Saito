@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { Card, PageHeader, Pill, EmptyState } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { getRgccView } from "@/clubs/rgcc/permissions";
+import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_ROUTINES, RGCC_EXERCISES,
@@ -25,11 +26,12 @@ export const Route = createFileRoute("/rgcc/entrenamiento-personal")({
 });
 
 function PtGate() {
-  const { roles, profile } = useAuth();
+  const { roles, user } = useAuth();
   const view = getRgccView(roles);
+  const identity = resolveRgccIdentity(user, roles);
   if (view === "cockpit") return <PtCockpit />;
-  if (view === "coach") return <PtCoach name={profile?.full_name ?? ""} />;
-  return <PtMember name={profile?.full_name ?? ""} />;
+  if (view === "coach") return <PtCoach name={identity.coachName ?? ""} />;
+  return <PtMember memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
 }
 
 // ─── Admin / Manager ────────────────────────────────────────────────────────
@@ -70,21 +72,20 @@ function PtCockpit() {
 // ─── Coach view ─────────────────────────────────────────────────────────────
 function PtCoach({ name }: { name: string }) {
   const mine = useMemo(
-    () => RGCC_PT_SESSIONS.filter((s) => name && s.coachName.toLowerCase().includes(name.split(" ")[0]?.toLowerCase() ?? "")),
+    () => RGCC_PT_SESSIONS.filter((s) => name && s.coachName === name),
     [name],
   );
-  const list = mine.length > 0 ? mine : RGCC_PT_SESSIONS;
   return (
     <>
       <PageHeader
         title="Mis sesiones EP"
         subtitle={`Hola ${name || "monitor"}, este es tu programa de entrenamiento personal.`}
       />
-      {list.length === 0 ? (
+      {mine.length === 0 ? (
         <EmptyState>No tienes sesiones EP programadas.</EmptyState>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
-          {list.map((s) => <PtSessionCard key={s.id} session={s} />)}
+          {mine.map((s) => <PtSessionCard key={s.id} session={s} />)}
         </div>
       )}
     </>
@@ -92,18 +93,23 @@ function PtCoach({ name }: { name: string }) {
 }
 
 // ─── Member view ────────────────────────────────────────────────────────────
-function PtMember({ name }: { name: string }) {
+function PtMember({ memberNumber, memberName }: { memberNumber: string; memberName: string }) {
+  // SEGURIDAD: solo workouts asignados al socio actual.
+  const mine = useMemo(
+    () => RGCC_WORKOUTS.filter((w) => memberNumber && w.memberNumber === memberNumber),
+    [memberNumber],
+  );
   return (
     <>
       <PageHeader
         title="Mi entrenamiento"
-        subtitle={`Hola ${name || "socio"}, aquí tienes tus rutinas asignadas.`}
+        subtitle={`Hola ${memberName || "socio"}, aquí tienes tus rutinas asignadas.`}
       />
-      {RGCC_WORKOUTS.length === 0 ? (
+      {mine.length === 0 ? (
         <EmptyState>No tienes entrenamientos asignados.</EmptyState>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
-          {RGCC_WORKOUTS.map((w) => <WorkoutCard key={w.id} workout={w} showAthleteView />)}
+          {mine.map((w) => <WorkoutCard key={w.id} workout={w} showAthleteView />)}
         </div>
       )}
     </>

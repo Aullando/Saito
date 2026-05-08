@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { getRgccView } from "@/clubs/rgcc/permissions";
+import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES,
@@ -25,11 +26,12 @@ export const Route = createFileRoute("/rgcc/clases")({
 });
 
 function RgccClasesGate() {
-  const { roles, profile } = useAuth();
+  const { roles, user } = useAuth();
   const view = getRgccView(roles);
+  const identity = resolveRgccIdentity(user, roles);
   if (view === "cockpit") return <ClasesCockpit />;
-  if (view === "coach") return <ClasesCoach coachName={profile?.full_name ?? ""} />;
-  return <ClasesSocio memberName={profile?.full_name ?? ""} />;
+  if (view === "coach") return <ClasesCoach coachName={identity.coachName ?? ""} />;
+  return <ClasesSocio memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
 }
 
 // ─── Cockpit (admin/manager) ────────────────────────────────────────────────
@@ -234,13 +236,13 @@ function SessionRow({ session: c, coachName }: { session: RgccSession; coachName
 
 // ─── Member view ────────────────────────────────────────────────────────────
 
-function ClasesSocio({ memberName }: { memberName: string }) {
-  // Demo: match by name, fallback to first member.
-  const me = RGCC_MEMBERS.find((m) => `${m.firstName} ${m.lastName}` === memberName) ?? RGCC_MEMBERS[0];
-  const myBookings = RGCC_SESSIONS.filter((s) => s.bookings.includes(me?.memberNumber ?? ""));
+function ClasesSocio({ memberNumber, memberName }: { memberNumber: string; memberName: string }) {
+  const me = RGCC_MEMBERS.find((m) => m.memberNumber === memberNumber);
+  const fullName = me ? `${me.firstName} ${me.lastName}` : memberName;
+  const myBookings = RGCC_SESSIONS.filter((s) => s.bookings.includes(memberNumber));
   return (
     <>
-      <PageHeader title="Mis reservas" subtitle={me ? `${me.firstName} ${me.lastName} · ${me.memberNumber}` : ""} />
+      <PageHeader title="Mis reservas" subtitle={memberNumber ? `${fullName} · ${memberNumber}` : ""} />
       {myBookings.length === 0 ? (
         <Card>
           <p className="text-sm text-muted-foreground">No tienes reservas próximas.</p>

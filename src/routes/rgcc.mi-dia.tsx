@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { getRgccMiDiaView, isRgccAdmin } from "@/clubs/rgcc/permissions";
+import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
   RGCC_SESSIONS, RGCC_PT_SESSIONS, RGCC_VENUES, RGCC_MEMBERS,
@@ -23,12 +24,15 @@ export const Route = createFileRoute("/rgcc/mi-dia")({
 });
 
 function MiDiaGate() {
-  const { profile, roles } = useAuth();
-  const me = profile?.full_name ?? "";
+  const { user, roles } = useAuth();
+  const identity = resolveRgccIdentity(user, roles);
   const isAdmin = isRgccAdmin(roles);
   const view = getRgccMiDiaView(roles);
-  if (view === "monitor") return <MiDiaMonitor monitorName={me} isAdmin={isAdmin} />;
-  return <MiDiaSocio memberName={me} />;
+  if (view === "monitor") {
+    const monitorName = identity.coachName ?? identity.displayName ?? "";
+    return <MiDiaMonitor monitorName={monitorName} isAdmin={isAdmin} />;
+  }
+  return <MiDiaSocio memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
 }
 
 // ─── Monitor ────────────────────────────────────────────────────────────────
@@ -195,16 +199,17 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
 
 // ─── Socio ──────────────────────────────────────────────────────────────────
 
-function MiDiaSocio({ memberName }: { memberName: string }) {
+function MiDiaSocio({ memberNumber, memberName }: { memberNumber: string; memberName: string }) {
   const today = new Date().toISOString().slice(0, 10);
-  const me = RGCC_MEMBERS.find((m) => `${m.firstName} ${m.lastName}` === memberName) ?? RGCC_MEMBERS[0];
+  const me = RGCC_MEMBERS.find((m) => m.memberNumber === memberNumber);
+  const fullName = me ? `${me.firstName} ${me.lastName}` : memberName;
   const mias = RGCC_SESSIONS.filter(
-    (c) => c.date >= today && c.bookings.includes(me?.memberNumber ?? ""),
+    (c) => c.date >= today && c.bookings.includes(memberNumber),
   ).sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
 
   return (
     <>
-      <PageHeader title="Mi Día" subtitle={me ? `${me.firstName} ${me.lastName} · ${me.memberNumber}` : ""} />
+      <PageHeader title="Mi Día" subtitle={memberNumber ? `${fullName} · ${memberNumber}` : ""} />
       <div className="space-y-2">
         {mias.length === 0 && (
           <Card>
