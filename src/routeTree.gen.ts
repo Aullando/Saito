@@ -21,6 +21,8 @@ import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AthletesRouteImport } from './routes/athletes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsTeamRouteImport } from './routes/settings.team'
+import { Route as RgccMiDiaRouteImport } from './routes/rgcc.mi-dia'
+import { Route as RgccClasesRouteImport } from './routes/rgcc.clases'
 import { Route as RgccSlugRouteImport } from './routes/rgcc.$slug'
 import { Route as MedicalCalendarRouteImport } from './routes/medical.calendar'
 import { Route as EconomicPaymentsRouteImport } from './routes/economic.payments'
@@ -86,6 +88,16 @@ const SettingsTeamRoute = SettingsTeamRouteImport.update({
   path: '/settings/team',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RgccMiDiaRoute = RgccMiDiaRouteImport.update({
+  id: '/rgcc/mi-dia',
+  path: '/rgcc/mi-dia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RgccClasesRoute = RgccClasesRouteImport.update({
+  id: '/rgcc/clases',
+  path: '/rgcc/clases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RgccSlugRoute = RgccSlugRouteImport.update({
   id: '/rgcc/$slug',
   path: '/rgcc/$slug',
@@ -123,6 +135,8 @@ export interface FileRoutesByFullPath {
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
   '/rgcc/$slug': typeof RgccSlugRoute
+  '/rgcc/clases': typeof RgccClasesRoute
+  '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRoutesByTo {
@@ -141,6 +155,8 @@ export interface FileRoutesByTo {
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
   '/rgcc/$slug': typeof RgccSlugRoute
+  '/rgcc/clases': typeof RgccClasesRoute
+  '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRoutesById {
@@ -160,6 +176,8 @@ export interface FileRoutesById {
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
   '/rgcc/$slug': typeof RgccSlugRoute
+  '/rgcc/clases': typeof RgccClasesRoute
+  '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
 }
 export interface FileRouteTypes {
@@ -180,6 +198,8 @@ export interface FileRouteTypes {
     | '/economic/payments'
     | '/medical/calendar'
     | '/rgcc/$slug'
+    | '/rgcc/clases'
+    | '/rgcc/mi-dia'
     | '/settings/team'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -198,6 +218,8 @@ export interface FileRouteTypes {
     | '/economic/payments'
     | '/medical/calendar'
     | '/rgcc/$slug'
+    | '/rgcc/clases'
+    | '/rgcc/mi-dia'
     | '/settings/team'
   id:
     | '__root__'
@@ -216,6 +238,8 @@ export interface FileRouteTypes {
     | '/economic/payments'
     | '/medical/calendar'
     | '/rgcc/$slug'
+    | '/rgcc/clases'
+    | '/rgcc/mi-dia'
     | '/settings/team'
   fileRoutesById: FileRoutesById
 }
@@ -235,6 +259,8 @@ export interface RootRouteChildren {
   EconomicPaymentsRoute: typeof EconomicPaymentsRoute
   MedicalCalendarRoute: typeof MedicalCalendarRoute
   RgccSlugRoute: typeof RgccSlugRoute
+  RgccClasesRoute: typeof RgccClasesRoute
+  RgccMiDiaRoute: typeof RgccMiDiaRoute
   SettingsTeamRoute: typeof SettingsTeamRoute
 }
 
@@ -324,6 +350,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsTeamRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rgcc/mi-dia': {
+      id: '/rgcc/mi-dia'
+      path: '/rgcc/mi-dia'
+      fullPath: '/rgcc/mi-dia'
+      preLoaderRoute: typeof RgccMiDiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rgcc/clases': {
+      id: '/rgcc/clases'
+      path: '/rgcc/clases'
+      fullPath: '/rgcc/clases'
+      preLoaderRoute: typeof RgccClasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rgcc/$slug': {
       id: '/rgcc/$slug'
       path: '/rgcc/$slug'
@@ -371,6 +411,8 @@ const rootRouteChildren: RootRouteChildren = {
   EconomicPaymentsRoute: EconomicPaymentsRoute,
   MedicalCalendarRoute: MedicalCalendarRoute,
   RgccSlugRoute: RgccSlugRoute,
+  RgccClasesRoute: RgccClasesRoute,
+  RgccMiDiaRoute: RgccMiDiaRoute,
   SettingsTeamRoute: SettingsTeamRoute,
 }
 export const routeTree = rootRouteImport
