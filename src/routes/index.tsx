@@ -7,6 +7,9 @@ export const Route = createFileRoute("/")({
 
 function IndexRedirect() {
   const { session, loading, profile, roles } = useAuth();
+  if (typeof window !== "undefined" && window.location.hostname === "saito.sportinnovationhub.com") {
+    return <Navigate to="/login" />;
+  }
   if (loading) return null;
   if (!session) return <Navigate to="/login" />;
   if (!profile?.organization_id && !roles.includes("sysadmin")) {
