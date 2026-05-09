@@ -215,26 +215,6 @@ export function HomePage({ locale }: Props) {
         </div>
       </section>
 
-      {/* ============= STATS WITH COUNT-UP ============= */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((s) => (
-              <motion.div
-                key={s.label}
-                variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
-                className="rounded-3xl border border-border bg-card p-6 text-center shadow-sm"
-              >
-                <div className="text-4xl font-extrabold tracking-tight text-saito-gradient sm:text-5xl">
-                  <CountUp to={s.value} suffix={s.suffix} prefix={s.prefix} />
-                </div>
-                <p className="mt-2 text-sm text-muted-foreground">{s.label}</p>
-              </motion.div>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-
       {/* ============= MODULES ============= */}
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
