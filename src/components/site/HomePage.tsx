@@ -106,7 +106,7 @@ export function HomePage({ locale }: Props) {
             >
               <span className="gemini-chip inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] shadow-sm">
                 <Sparkles className="size-3.5" />
-                {t("Powered by Gemini", "Powered by Gemini")}
+                {t("Powered by IA", "Powered by AI")}
               </span>
               <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] sm:text-5xl md:text-6xl">
                 {t("Gestiona tu club deportivo", "Run your sports club")}
@@ -188,7 +188,7 @@ export function HomePage({ locale }: Props) {
                 className="float-y absolute -right-3 top-1/3 hidden items-center gap-2 rounded-full border border-border bg-card/90 px-3 py-1.5 text-xs font-semibold shadow-lg backdrop-blur md:inline-flex"
               >
                 <Sparkles className="size-3.5 text-primary" />
-                {t("IA Gemini", "Gemini AI")}
+                {t("IA por rol", "AI by role")}
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
