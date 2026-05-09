@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PricingPage } from "@/components/site/PricingPage";
+import { hrefLangLinks } from "@/lib/seo";
 
 export const Route = createFileRoute("/_public/precios")({
   head: () => ({
@@ -9,6 +10,7 @@ export const Route = createFileRoute("/_public/precios")({
       { property: "og:title", content: "Precios — SAITO" },
       { property: "og:description", content: "Planes Club, Pro y Multi-club. Habla con ventas para una propuesta a medida." },
     ],
+    links: hrefLangLinks("/precios", "es"),
   }),
   component: () => <PricingPage locale="es" />,
 });

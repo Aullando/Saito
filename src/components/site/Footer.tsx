@@ -49,9 +49,15 @@ export function Footer() {
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} SAITO. {t("Todos los derechos reservados.", "All rights reserved.")}</p>
           <div className="flex items-center gap-4">
-            <span className="text-white/40">{t("Aviso legal", "Legal notice")}</span>
-            <span className="text-white/40">{t("Privacidad", "Privacy")}</span>
-            <span className="text-white/40">{t("Cookies", "Cookies")}</span>
+            <Link to={localizedPath("/aviso-legal", locale) as any} className="text-white/70 transition-colors hover:text-white">
+              {t("Aviso legal", "Legal notice")}
+            </Link>
+            <Link to={localizedPath("/privacidad", locale) as any} className="text-white/70 transition-colors hover:text-white">
+              {t("Privacidad", "Privacy")}
+            </Link>
+            <Link to={localizedPath("/cookies", locale) as any} className="text-white/70 transition-colors hover:text-white">
+              {t("Cookies", "Cookies")}
+            </Link>
           </div>
         </div>
       </div>

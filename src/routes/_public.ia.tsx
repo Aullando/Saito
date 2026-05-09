@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AIPage } from "@/components/site/AIPage";
+import { hrefLangLinks } from "@/lib/seo";
 
 export const Route = createFileRoute("/_public/ia")({
   head: () => ({
@@ -9,6 +10,7 @@ export const Route = createFileRoute("/_public/ia")({
       { property: "og:title", content: "IA por rol — SAITO" },
       { property: "og:description", content: "Respuestas accionables a cada rol del club." },
     ],
+    links: hrefLangLinks("/ia", "es"),
   }),
   component: () => <AIPage locale="es" />,
 });
