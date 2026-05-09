@@ -362,52 +362,64 @@ function ClubPage() {
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {facilities.map((f: { id: string; name: string; photo_url?: string | null; address?: string | null; capacity?: number | null; status?: string }) => (
-              <div
-                key={f.id}
-                className="group relative overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-primary hover:shadow-sm"
-              >
-                <button onClick={() => setActiveFacility(f.id)} className="block w-full text-left">
-                  {f.photo_url && (
-                    <div className="relative h-28 w-full overflow-hidden bg-muted">
-                      <img
-                        src={f.photo_url}
-                        alt={f.name}
-                        className="h-full w-full object-cover transition group-hover:scale-[1.03]"
-                        loading="lazy"
-                      />
-                    </div>
-                  )}
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold">
-                      <Building2 className="h-4 w-4 text-primary" />
-                      {f.name}
-                    </div>
-                    {(f.address || f.location) && (
-                      <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                        <MapPin className="h-3 w-3" />
-                        {f.address ?? f.location}
-                      </div>
-                    )}
-                    {f.capacity && (
-                      <div className="mt-2 text-[11px] text-muted-foreground">
-                        {lang === "es" ? "Aforo" : "Capacity"}: {f.capacity}
-                      </div>
-                    )}
-                  </div>
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (confirm(t("delete_confirm"))) delFacility.mutate(f.id);
-                  }}
-                  className="absolute right-2 top-2 rounded-full bg-card/80 p-1.5 text-destructive opacity-0 backdrop-blur transition hover:bg-destructive hover:text-destructive-foreground group-hover:opacity-100"
-                  aria-label={t("delete")}
+            {facilities.map(
+              (f: {
+                id: string;
+                name: string;
+                photo_url?: string | null;
+                address?: string | null;
+                capacity?: number | null;
+                status?: string;
+              }) => (
+                <div
+                  key={f.id}
+                  className="group relative overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-primary hover:shadow-sm"
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ))}
+                  <button
+                    onClick={() => setActiveFacility(f.id)}
+                    className="block w-full text-left"
+                  >
+                    {f.photo_url && (
+                      <div className="relative h-28 w-full overflow-hidden bg-muted">
+                        <img
+                          src={f.photo_url}
+                          alt={f.name}
+                          className="h-full w-full object-cover transition group-hover:scale-[1.03]"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 text-sm font-semibold">
+                        <Building2 className="h-4 w-4 text-primary" />
+                        {f.name}
+                      </div>
+                      {(f.address || f.location) && (
+                        <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                          <MapPin className="h-3 w-3" />
+                          {f.address ?? f.location}
+                        </div>
+                      )}
+                      {f.capacity && (
+                        <div className="mt-2 text-[11px] text-muted-foreground">
+                          {lang === "es" ? "Aforo" : "Capacity"}: {f.capacity}
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (confirm(t("delete_confirm"))) delFacility.mutate(f.id);
+                    }}
+                    className="absolute right-2 top-2 rounded-full bg-card/80 p-1.5 text-destructive opacity-0 backdrop-blur transition hover:bg-destructive hover:text-destructive-foreground group-hover:opacity-100"
+                    aria-label={t("delete")}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ),
+            )}
           </div>
         )}
       </Card>
@@ -701,7 +713,15 @@ function ClubPage() {
   );
 }
 
-function RoleCard({ icon: Icon, label, value }: { icon: React.ComponentType<{ className?: string }>; label: string; value: number }) {
+function RoleCard({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: number;
+}) {
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -719,7 +739,14 @@ function FacilityDrawer({
   onClose,
 }: {
   id: string | null;
-  facilities: Array<{ id: string; name: string; photo_url?: string | null; address?: string | null; capacity?: number | null; status?: string }>;
+  facilities: Array<{
+    id: string;
+    name: string;
+    photo_url?: string | null;
+    address?: string | null;
+    capacity?: number | null;
+    status?: string;
+  }>;
   onClose: () => void;
 }) {
   const f = facilities.find((x) => x.id === id) ?? null;

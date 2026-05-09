@@ -129,7 +129,9 @@ export function AIChat() {
         try {
           const j = JSON.parse(errTxt);
           if (j.error) errMsg = j.error;
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
         if (resp.status === 429) errMsg = "Demasiadas peticiones. Espera un momento.";
         if (resp.status === 402) errMsg = "Sin créditos de IA disponibles.";
         // RGCC fallback local cuando la IA no responde.
@@ -200,7 +202,9 @@ export function AIChat() {
             setMsgs((m) => [...m, { role: "assistant", content: local }]);
             return;
           }
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
       }
       setMsgs((m) => [...m, { role: "assistant", content: "Error de conexión con la IA." }]);
     } finally {
