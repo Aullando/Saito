@@ -166,3 +166,71 @@
   .saito-table tbody tr:hover { background-color: var(--color-muted); }
 }
 
+
+/* ============================================================
+   Public marketing site — scoped tokens (do not affect private app)
+   ============================================================ */
+@font-face {
+  font-family: "Google Sans Flex";
+  src: url("/fonts/GoogleSansFlex.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.public-site {
+  /* SAITO brand palette */
+  --saito-navy: oklch(0.31 0.06 254);
+  --saito-blue: oklch(0.55 0.19 255);
+  --saito-green: oklch(0.62 0.18 152);
+  --saito-red: oklch(0.62 0.23 20);
+  --saito-yellow: oklch(0.81 0.16 75);
+
+  --background: oklch(1 0 0);
+  --foreground: var(--saito-navy);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--saito-navy);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--saito-navy);
+  --primary: var(--saito-blue);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.97 0.01 250);
+  --secondary-foreground: var(--saito-navy);
+  --muted: oklch(0.97 0.01 250);
+  --muted-foreground: oklch(0.50 0.03 254);
+  --accent: oklch(0.96 0.02 255);
+  --accent-foreground: var(--saito-navy);
+  --destructive: var(--saito-red);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.92 0.01 255);
+  --input: oklch(0.92 0.01 255);
+  --ring: var(--saito-blue);
+
+  font-family: "Google Sans Flex", ui-sans-serif, system-ui, sans-serif;
+}
+.public-site h1, .public-site h2, .public-site h3, .public-site h4 {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+.public-site h1 { font-weight: 800; }
+
+@utility bg-saito-gradient {
+  background-image: linear-gradient(135deg, oklch(0.31 0.06 254) 0%, oklch(0.28 0.07 258) 45%, oklch(0.55 0.19 255) 100%);
+}
+@utility bg-saito-radial {
+  background-image: radial-gradient(circle at 30% 20%, color-mix(in oklab, oklch(0.55 0.19 255) 22%, transparent), transparent 60%);
+}
+@utility text-saito-gradient {
+  background-image: linear-gradient(90deg, oklch(0.55 0.19 255), oklch(0.65 0.18 220));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@theme inline {
+  --color-saito-navy: oklch(0.31 0.06 254);
+  --color-saito-blue: oklch(0.55 0.19 255);
+  --color-saito-green: oklch(0.62 0.18 152);
+  --color-saito-red: oklch(0.62 0.23 20);
+  --color-saito-yellow: oklch(0.81 0.16 75);
+}
