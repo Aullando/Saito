@@ -11,22 +11,24 @@ const navEs = [
   { to: "/producto", label: "Producto" },
   { to: "/ia", label: "IA" },
   { to: "/multi-club", label: "Multi-club" },
-  { to: "/precios", label: "Precios" },
   { to: "/clientes", label: "Clientes" },
+  { to: "/precios", label: "Precios" },
+  { to: "/contacto", label: "Contacto" },
 ];
 const navEn = [
   { to: "/producto", label: "Product" },
   { to: "/ia", label: "AI" },
   { to: "/multi-club", label: "Multi-club" },
-  { to: "/precios", label: "Pricing" },
   { to: "/clientes", label: "Customers" },
+  { to: "/precios", label: "Pricing" },
+  { to: "/contacto", label: "Contact" },
 ];
 
 export function Header() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const items = locale === "en" ? navEn : navEs;
-  const cta = locale === "en" ? "Book a demo" : "Pide una demo";
+  const cta = locale === "en" ? "Book a demo" : "Solicitar demo";
   const { session } = useAuth();
   const panelLabel = locale === "en" ? "Go to panel" : "Ir al panel";
   const loginLabel = locale === "en" ? "Log in" : "Entrar";
