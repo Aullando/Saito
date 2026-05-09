@@ -268,7 +268,7 @@ function ClubPage() {
   const sections = demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
   const categories = demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
   const groups = demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
-  const facilities = demoOrEmpty(facilitiesQ.data, DEMO_FACILITIES_ROWS);
+  const facilities = demoOrEmpty(facilitiesQ.data, DEMO_FACILITIES_ROWS as unknown as typeof facilitiesQ.data extends (infer U)[] | undefined ? U[] : never);
 
   return (
     <>
