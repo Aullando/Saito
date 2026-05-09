@@ -351,7 +351,7 @@ function DashboardPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={chartsData.typeData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
-                    {chartsData.typeData.map((_, i) => (
+                    {chartsData.typeData.map((_: unknown, i: number) => (
                       <Cell key={i} fill={["hsl(var(--primary))", "hsl(var(--success))", "hsl(var(--warning))", "hsl(var(--destructive))"][i % 4]} />
                     ))}
                   </Pie>
@@ -370,7 +370,7 @@ function DashboardPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={chartsData.medData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
-                    {chartsData.medData.map((entry, i) => {
+                    {chartsData.medData.map((entry: { name: string; value: number }, i: number) => {
                       const colorMap: Record<string, string> = {
                         Fit: "hsl(var(--success))",
                         Injured: "hsl(var(--destructive))",
