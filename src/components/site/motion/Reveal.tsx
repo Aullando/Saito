@@ -22,7 +22,7 @@ export function Reveal({ children, delay = 0, y = 20, className, stagger = false
         className={className}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, margin: "-80px" }}
+        viewport={{ once: true, margin: "-40px" }}
         variants={{
           hidden: {},
           show: { transition: { staggerChildren: 0.08, delayChildren: delay } },
