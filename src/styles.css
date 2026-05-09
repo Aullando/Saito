@@ -239,6 +239,17 @@
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
   }
+
+  /* Respect user reduced-motion preferences across the public site */
+  @media (prefers-reduced-motion: reduce) {
+    .float-y, .gemini-chip, .marquee__track { animation: none !important; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer utilities {
