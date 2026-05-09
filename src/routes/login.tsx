@@ -76,8 +76,11 @@ function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="mb-8 flex justify-center">
+        <div className="mb-8 flex flex-col items-center gap-1">
           <Logo size={44} />
+          <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            powered by Gemini
+          </span>
         </div>
         <div className="saito-card p-8">
           <h1 className="mb-2 text-center text-2xl font-bold">Entrar al panel</h1>
