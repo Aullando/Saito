@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth";
 import { ClubProvider } from "@/clubs/ClubProvider";
+import { PasswordGate } from "@/components/PasswordGate";
 
 import appCss from "../styles.css?url";
 
