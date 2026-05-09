@@ -49,6 +49,7 @@ export function Header() {
             <Link
               key={it.to}
               to={localizedPath(it.to, locale) as any}
+              activeOptions={it.to === "/" ? { exact: true } : undefined}
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               activeProps={{ className: "rounded-md px-3 py-2 text-sm font-semibold text-foreground bg-accent" }}
             >
