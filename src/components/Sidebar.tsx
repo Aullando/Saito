@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import * as Icons from "lucide-react";
 import {
   Building2, CalendarDays, Users, Wallet, Receipt, MessageSquare,
-  Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X,
+  Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X, ShieldCheck,
 } from "lucide-react";
 
 import { useCurrentUser, useAuth } from "@/lib/store";
@@ -36,7 +36,10 @@ function buildItems(role: Role, t: (k: any) => string): Item[] {
         { to: "/economic/fees", label: t("fees_rates"), icon: Receipt, indent: true, module: "economic" },
         { to: "/economic/payments", label: t("payment_status"), icon: Receipt, indent: true, module: "economic" },
         { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
-        ...(role === "admin" ? [{ to: "/settings/team", label: t("users_permissions"), icon: Users, module: "settings" as ClubModuleId }] : []),
+        ...(role === "admin" ? [
+          { to: "/settings/team", label: t("users_permissions"), icon: Users, module: "settings" as ClubModuleId },
+          { to: "/settings/privacy", label: t("privacy_security") || "Privacidad y seguridad", icon: ShieldCheck, module: "settings" as ClubModuleId },
+        ] : []),
       ];
     case "technical":
       return [
