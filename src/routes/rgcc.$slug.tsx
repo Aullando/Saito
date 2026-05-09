@@ -8,6 +8,7 @@ import {
   RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES, RGCC_PT_SESSIONS,
   RGCC_EXERCISES, RGCC_ROUTINES, RGCC_WORKOUTS,
 } from "@/clubs/rgcc/seed";
+import { RGCC_SECTION_ICONS } from "@/clubs/rgcc/sectionIcons";
 
 export const Route = createFileRoute("/rgcc/$slug")({
   component: () => (
