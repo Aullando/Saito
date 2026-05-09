@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth";
 import { ClubProvider } from "@/clubs/ClubProvider";
+import { PasswordGate } from "@/components/PasswordGate";
 
 import appCss from "../styles.css?url";
 
@@ -120,11 +121,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ClubProvider>
-          <Outlet />
-        </ClubProvider>
-      </AuthProvider>
+      <PasswordGate>
+        <AuthProvider>
+          <ClubProvider>
+            <Outlet />
+          </ClubProvider>
+        </AuthProvider>
+      </PasswordGate>
     </QueryClientProvider>
   );
 }
