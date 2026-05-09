@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { CheckCircle2, MinusCircle } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Button } from "@/components/ui/button";
-import multiclubVisual from "@/assets/site/saito-multiclub-network.png";
+import multiclubVisual from "@/assets/site/saito-multiclub-network-clean.png";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 export function MultiClubPage({ locale }: { locale: Locale }) {
