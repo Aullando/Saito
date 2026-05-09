@@ -14,8 +14,7 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
 }
 
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  const hasBg = !!className && /(^|\s)bg-/.test(className);
-  return <div className={cn("saito-card p-5", !hasBg && "bg-card", className)}>{children}</div>;
+  return <div className={cn("saito-card p-5", className)}>{children}</div>;
 }
 
 export function Pill({ tone = "default", children }: { tone?: "default" | "success" | "warning" | "danger" | "info"; children: ReactNode }) {
