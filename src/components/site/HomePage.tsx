@@ -226,20 +226,11 @@ export function HomePage({ locale }: Props) {
             title={t("Todo lo que tu club necesita, sin más herramientas", "Everything your club needs, without extra tools")}
             subtitle={t("Módulos integrados, datos compartidos y flujos pensados para el día a día deportivo.", "Integrated modules, shared data and workflows designed for daily club life.")}
           />
-          {/* Mobile: carousel */}
-          <div className="mt-10 sm:hidden">
-            <Carousel opts={{ align: "start" }}>
-              <CarouselContent className="-ml-3">
-                {modules.map((m, i) => (
-                  <CarouselItem key={m.title} className="basis-[78%] pl-3">
-                    <ModuleCard {...m} index={i} />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-            <p className="mt-3 text-center text-[11px] uppercase tracking-wider text-muted-foreground">
-              {t("Desliza para ver más", "Swipe to see more")}
-            </p>
+          {/* Mobile: stacked cards */}
+          <div className="mt-10 grid gap-4 sm:hidden">
+            {modules.map((m, i) => (
+              <ModuleCard key={m.title} {...m} index={i} />
+            ))}
           </div>
           {/* Tablet/Desktop: grid */}
           <div className="mt-12 hidden gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4">
