@@ -114,6 +114,46 @@ export function SecurityPage({ locale }: Props) {
     },
   ];
 
+  const STATUS_META = {
+    active: {
+      labelEs: "Activo",
+      labelEn: "Active",
+      icon: CheckCircle2,
+      cls: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+    },
+    pilot: {
+      labelEs: "En piloto",
+      labelEn: "In pilot",
+      icon: Activity,
+      cls: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
+    },
+    planned: {
+      labelEs: "Planificado",
+      labelEn: "Planned",
+      icon: Circle,
+      cls: "bg-muted text-muted-foreground",
+    },
+  } as const;
+
+  const implementationStatus: { title: string; status: keyof typeof STATUS_META; note?: string }[] = [
+    { title: t("Aislamiento de datos por organización (RLS)", "Per-organisation data isolation (RLS)"), status: "active", note: t("Políticas a nivel de base de datos por organization_id.", "Database-level policies scoped by organization_id.") },
+    { title: t("Cifrado en tránsito (TLS)", "Encryption in transit (TLS)"), status: "active" },
+    { title: t("Cifrado en reposo (base de datos y almacenamiento)", "Encryption at rest (database and storage)"), status: "active", note: t("Provisto por la infraestructura gestionada de Supabase.", "Provided by Supabase managed infrastructure.") },
+    { title: t("Permisos por rol en la aplicación", "Application-level role permissions"), status: "pilot", note: t("Roles definidos y aplicados en backend; UI por rol en validación durante el piloto.", "Roles defined and enforced in the backend; per-role UI under validation during the pilot.") },
+    { title: t("Autenticación con sesión persistente y MFA opcional", "Authenticated sessions with optional MFA"), status: "pilot", note: t("La autenticación productiva entra al inicio del piloto del primer club.", "Production authentication enters at the start of the first club pilot.") },
+    { title: t("Registro de accesos a datos sensibles", "Sensitive-data access logging"), status: "pilot", note: t("Activo en el módulo médico y de pagos durante el piloto.", "Active for the medical and payments modules during the pilot.") },
+    { title: t("Restricción del módulo médico", "Medical module restriction"), status: "pilot" },
+    { title: t("Marcado de menores y vinculación a tutores", "Minor flagging and guardian linkage"), status: "pilot" },
+    { title: t("IA con scoping por rol", "Role-scoped AI"), status: "active", note: t("La IA solo recibe el contexto autorizado para el rol en cada consulta.", "AI only receives the context authorised for the role on each query.") },
+    { title: t("Contrato de encargado del tratamiento (DPA)", "Data Processing Agreement (DPA)"), status: "pilot", note: t("Plantilla disponible; firma se incluye en el onboarding del piloto.", "Template available; signature is included in the pilot onboarding.") },
+    { title: t("Lista pública de subencargados", "Public sub-processor list"), status: "planned" },
+    { title: t("Procedimiento documentado de respuesta a brechas", "Documented breach-response procedure"), status: "pilot" },
+    { title: t("Atención de derechos RGPD (acceso, supresión, portabilidad)", "GDPR rights handling (access, erasure, portability)"), status: "pilot" },
+    { title: t("SSO empresarial", "Enterprise SSO"), status: "planned" },
+    { title: t("Política de retención configurable por club", "Per-club configurable retention policy"), status: "planned" },
+    { title: t("Alineación ISO 27001 / ENS", "ISO 27001 / ENS alignment"), status: "planned", note: t("Hoja de ruta publicada; sin certificación obtenida a la fecha.", "Roadmap published; no certification obtained to date.") },
+  ];
+
   return (
     <main>
       {/* Hero */}
