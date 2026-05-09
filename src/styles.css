@@ -211,6 +211,17 @@
     50% { background-position: 100% 50%; }
   }
 
+  /* Animated SAITO-colored underline (used under the hero claim) */
+  .saito-underline {
+    background: linear-gradient(90deg, #0067c9 0%, #00a74d 25%, #fdb113 50%, #f12f4a 75%, #0067c9 100%);
+    background-size: 300% 100%;
+    animation: saito-underline-shift 6s ease-in-out infinite;
+  }
+  @keyframes saito-underline-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
   /* Subtle grid pattern background */
   .bg-grid {
     background-image:
