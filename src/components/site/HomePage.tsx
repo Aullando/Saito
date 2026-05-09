@@ -20,7 +20,6 @@ import { DashboardMockup } from "@/components/site/DashboardMockup";
 import { ModuleCard } from "@/components/site/ModuleCard";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { RoleTabs, defaultRolesEs, defaultRolesEn } from "@/components/site/RoleTabs";
-import iso from "@/assets/brand/saito-iso.svg";
 import photoMatch from "@/assets/photos/match.jpg";
 import photoTeam from "@/assets/photos/team-huddle.jpg";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
