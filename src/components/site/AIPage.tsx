@@ -4,7 +4,7 @@ import { SectionHeading } from "./SectionHeading";
 import { RoleTabs, defaultRolesEs, defaultRolesEn } from "./RoleTabs";
 import { Button } from "@/components/ui/button";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
-import aiVisual from "@/assets/site/saito-ai-role-assistant.png";
+import aiVisual from "@/assets/site/saito-ai-role-assistant-clean.png";
 
 export function AIPage({ locale }: { locale: Locale }) {
   const t = (es: string, en: string) => (locale === "en" ? en : es);

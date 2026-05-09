@@ -14,13 +14,13 @@ import type { LucideIcon } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Button } from "@/components/ui/button";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
-import modulesGridVisual from "@/assets/site/saito-product-modules-grid.png";
-import membersVisual from "@/assets/site/saito-members-athletes.png";
-import calendarVisual from "@/assets/site/saito-calendar-staff.png";
-import paymentsVisual from "@/assets/site/saito-payments-comms.png";
-import healthVisual from "@/assets/site/saito-health-privacy.png";
-import facilitiesVisual from "@/assets/site/saito-facilities-bookings.png";
-import aiVisual from "@/assets/site/saito-ai-role-assistant.png";
+import modulesGridVisual from "@/assets/site/saito-product-modules-grid-clean.png";
+import membersVisual from "@/assets/site/saito-members-athletes-clean.png";
+import calendarVisual from "@/assets/site/saito-calendar-staff-clean.png";
+import paymentsVisual from "@/assets/site/saito-payments-comms-clean.png";
+import healthVisual from "@/assets/site/saito-health-privacy-clean.png";
+import facilitiesVisual from "@/assets/site/saito-facilities-bookings-clean.png";
+import aiVisual from "@/assets/site/saito-ai-role-assistant-clean.png";
 
 const MODULE_PHOTOS: Record<string, string> = {
   socios: membersVisual,
