@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Quote } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Button } from "@/components/ui/button";
+import customerVisual from "@/assets/site/saito-customer-operations.png";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 export function CustomersPage({ locale }: { locale: Locale }) {
