@@ -208,7 +208,7 @@
   .marquee { display: flex; overflow: hidden; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
   .marquee__track {
     display: flex; gap: 3rem; flex-shrink: 0;
-    animation: marquee-scroll 32s linear infinite;
+    animation: marquee-scroll 70s linear infinite;
     min-width: 100%;
   }
   .marquee:hover .marquee__track { animation-play-state: paused; }
