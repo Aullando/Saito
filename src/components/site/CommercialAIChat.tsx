@@ -138,13 +138,17 @@ export function CommercialAIChat() {
     <>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-primary shadow-xl ring-2 ring-primary/30 transition hover:scale-105"
+        className="fixed z-40 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-primary shadow-xl ring-2 ring-primary/30 transition hover:scale-105"
+        style={{
+          right: "max(1rem, env(safe-area-inset-right))",
+          bottom: "max(1rem, env(safe-area-inset-bottom))",
+        }}
         aria-label={t("Asistente comercial SAITO", "SAITO sales assistant")}
       >
         <img src={saitoAiLogo} alt="" className="h-10 w-10 rounded-full object-cover" />
       </button>
       {open && (
-        <div className="fixed inset-x-3 bottom-20 md:inset-x-auto md:bottom-24 md:right-6 z-40 flex h-[70vh] md:h-[540px] md:w-[400px] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
+        <div className="fixed inset-x-3 bottom-20 md:inset-x-auto md:bottom-24 md:right-6 z-40 flex h-[min(70vh,560px)] md:h-[540px] md:w-[400px] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
           <div className="flex items-center justify-between border-b border-border bg-saito-gradient px-4 py-3 text-white">
             <div className="flex items-center gap-2 text-sm font-semibold">
               <Sparkles className="h-4 w-4" />

@@ -47,7 +47,7 @@ export function AIPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Cómo funciona", "How it works")}

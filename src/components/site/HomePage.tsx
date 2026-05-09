@@ -116,7 +116,7 @@ export function HomePage({ locale }: Props) {
                   {t("en una sola plataforma", "from a single platform")}
                 </span>
               </h1>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.22em]">
                 SAITO · <span className="text-foreground">S</span>port{" "}
                 <span className="text-foreground">AI</span>{" "}
                 <span className="text-foreground">T</span>raining{" "}
@@ -128,13 +128,13 @@ export function HomePage({ locale }: Props) {
                   "SAITO unifies members, calendar, payments, communication and a smart copilot tailored to each role. Built for clubs that grow and multi-section organisations.",
                 )}
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg" className="shimmer-btn rounded-full px-6">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <Button asChild size="lg" className="shimmer-btn w-full rounded-full px-6 sm:w-auto">
                   <Link to={localizedPath("/contacto", locale) as unknown as never}>
                     {t("Pide una demo", "Book a demo")} <ArrowRight className="ml-1 size-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="rounded-full px-6">
+                <Button asChild variant="outline" size="lg" className="w-full rounded-full px-6 sm:w-auto">
                   <Link to={localizedPath("/producto", locale) as unknown as never}>
                     {t("Ver funcionalidades", "See features")}
                   </Link>
@@ -217,7 +217,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= MODULES ============= */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Producto", "Product")}
@@ -233,7 +233,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= HOW IT WORKS — TIMELINE ============= */}
-      <section className="border-t border-border bg-muted/40 py-24">
+      <section className="border-t border-border bg-muted/40 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Cómo funciona", "How it works")}
@@ -306,7 +306,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= AI ROLES ============= */}
-      <section className="relative overflow-hidden bg-saito-gradient py-24 text-white">
+      <section className="relative overflow-hidden bg-saito-gradient py-16 text-white sm:py-24">
         <div className="absolute inset-0 opacity-30"
           style={{ backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 50%)" }}
           aria-hidden />
@@ -324,7 +324,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= MULTI-CLUB ============= */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <Reveal>
@@ -366,7 +366,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= BENEFITS ============= */}
-      <section className="border-t border-border bg-muted/40 py-20">
+      <section className="border-t border-border bg-muted/40 py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Por qué SAITO", "Why SAITO")}
@@ -393,7 +393,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= FINAL CTA ============= */}
-      <section className="relative overflow-hidden bg-saito-gradient py-24 text-white">
+      <section className="relative overflow-hidden bg-saito-gradient py-16 text-white sm:py-24">
         <div className="absolute inset-0 bg-grid opacity-20" aria-hidden />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>

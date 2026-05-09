@@ -89,7 +89,7 @@ export function PricingPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-14 sm:py-20">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
           {plans.map((p) => (
             <div

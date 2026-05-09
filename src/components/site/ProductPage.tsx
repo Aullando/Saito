@@ -162,7 +162,7 @@ export function ProductPage({ locale }: { locale: Locale }) {
   return (
     <main>
       <section className="border-b border-border bg-muted/40">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:py-20 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t(
               "Producto · Sport AI Training Optimisation",
@@ -201,7 +201,7 @@ export function ProductPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="border-b border-border py-20">
+      <section className="border-b border-border py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Arquitectura SAITO", "SAITO architecture")}
@@ -297,7 +297,7 @@ export function ProductPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-5xl space-y-20 px-4 sm:px-6 lg:px-8">
           {items.map((it, i) => {
             const Icon = it.icon;

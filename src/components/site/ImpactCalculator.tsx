@@ -104,7 +104,7 @@ function SliderField({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-saito-green"
+        className="impact-range w-full accent-saito-green"
       />
     </div>
   );
@@ -129,10 +129,11 @@ function NumberField({
       <div className="flex items-center gap-1">
         <input
           type="number"
+          inputMode="numeric"
           min={min}
           value={value}
           onChange={(e) => onChange(Number(e.target.value) || 0)}
-          className="w-24 rounded-md border border-foreground/10 bg-transparent px-2 py-1 text-right font-mono text-xs"
+          className="h-10 w-28 rounded-md border border-foreground/10 bg-background px-2 py-1 text-right font-mono text-sm"
         />
         <span className="text-xs text-foreground/60">{suffix}</span>
       </div>
@@ -185,7 +186,7 @@ export function ImpactCalculator({ locale }: Props) {
     setInputs((prev) => ({ ...prev, [key]: value }));
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16 md:py-24">
       <div className="mb-10 max-w-2xl">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <p className="font-mono text-xs uppercase tracking-wider text-saito-green">
