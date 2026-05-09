@@ -11,6 +11,7 @@ export function Footer() {
     { to: "/ia", label: t("IA", "AI") },
     { to: "/multi-club", label: t("Multi-club", "Multi-club") },
     { to: "/clientes", label: t("Clientes", "Customers") },
+    { to: "/seguridad", label: t("Seguridad", "Security") },
     { to: "/precios", label: t("Precios", "Pricing") },
     { to: "/contacto", label: t("Contacto", "Contact") },
   ];
