@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   CheckCircle2,
   ArrowRight,
+  Circle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "./SectionHeading";
@@ -113,6 +114,46 @@ export function SecurityPage({ locale }: Props) {
     },
   ];
 
+  const STATUS_META = {
+    active: {
+      labelEs: "Activo",
+      labelEn: "Active",
+      icon: CheckCircle2,
+      cls: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+    },
+    pilot: {
+      labelEs: "En piloto",
+      labelEn: "In pilot",
+      icon: Activity,
+      cls: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
+    },
+    planned: {
+      labelEs: "Planificado",
+      labelEn: "Planned",
+      icon: Circle,
+      cls: "bg-muted text-muted-foreground",
+    },
+  } as const;
+
+  const implementationStatus: { title: string; status: keyof typeof STATUS_META; note?: string }[] = [
+    { title: t("Aislamiento de datos por organización (RLS)", "Per-organisation data isolation (RLS)"), status: "active", note: t("Políticas a nivel de base de datos por organization_id.", "Database-level policies scoped by organization_id.") },
+    { title: t("Cifrado en tránsito (TLS)", "Encryption in transit (TLS)"), status: "active" },
+    { title: t("Cifrado en reposo (base de datos y almacenamiento)", "Encryption at rest (database and storage)"), status: "active", note: t("Provisto por la infraestructura gestionada de Supabase.", "Provided by Supabase managed infrastructure.") },
+    { title: t("Permisos por rol en la aplicación", "Application-level role permissions"), status: "pilot", note: t("Roles definidos y aplicados en backend; UI por rol en validación durante el piloto.", "Roles defined and enforced in the backend; per-role UI under validation during the pilot.") },
+    { title: t("Autenticación con sesión persistente y MFA opcional", "Authenticated sessions with optional MFA"), status: "pilot", note: t("La autenticación productiva entra al inicio del piloto del primer club.", "Production authentication enters at the start of the first club pilot.") },
+    { title: t("Registro de accesos a datos sensibles", "Sensitive-data access logging"), status: "pilot", note: t("Activo en el módulo médico y de pagos durante el piloto.", "Active for the medical and payments modules during the pilot.") },
+    { title: t("Restricción del módulo médico", "Medical module restriction"), status: "pilot" },
+    { title: t("Marcado de menores y vinculación a tutores", "Minor flagging and guardian linkage"), status: "pilot" },
+    { title: t("IA con scoping por rol", "Role-scoped AI"), status: "active", note: t("La IA solo recibe el contexto autorizado para el rol en cada consulta.", "AI only receives the context authorised for the role on each query.") },
+    { title: t("Contrato de encargado del tratamiento (DPA)", "Data Processing Agreement (DPA)"), status: "pilot", note: t("Plantilla disponible; firma se incluye en el onboarding del piloto.", "Template available; signature is included in the pilot onboarding.") },
+    { title: t("Lista pública de subencargados", "Public sub-processor list"), status: "planned" },
+    { title: t("Procedimiento documentado de respuesta a brechas", "Documented breach-response procedure"), status: "pilot" },
+    { title: t("Atención de derechos RGPD (acceso, supresión, portabilidad)", "GDPR rights handling (access, erasure, portability)"), status: "pilot" },
+    { title: t("SSO empresarial", "Enterprise SSO"), status: "planned" },
+    { title: t("Política de retención configurable por club", "Per-club configurable retention policy"), status: "planned" },
+    { title: t("Alineación ISO 27001 / ENS", "ISO 27001 / ENS alignment"), status: "planned", note: t("Hoja de ruta publicada; sin certificación obtenida a la fecha.", "Roadmap published; no certification obtained to date.") },
+  ];
+
   return (
     <main>
       {/* Hero */}
@@ -128,7 +169,16 @@ export function SecurityPage({ locale }: Props) {
                 <ShieldCheck className="size-3.5 text-primary" />
                 {t("Seguridad y privacidad", "Security & privacy")}
               </span>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              <div className="mt-4 inline-flex items-start gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-left text-xs leading-relaxed text-amber-900 dark:text-amber-200">
+                <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                <span>
+                  {t(
+                    "Esta página describe el modelo de seguridad y privacidad sobre el que SAITO está siendo construido y validado en piloto. Los controles marcados como “Activo” están operativos hoy; los marcados como “En piloto” o “Planificado” se completan antes del despliegue general.",
+                    "This page describes the security and privacy model SAITO is being built and validated against during piloting. Controls marked “Active” are operational today; those marked “In pilot” or “Planned” are completed before general availability.",
+                  )}
+                </span>
+              </div>
+              <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
                 {t(
                   "Privacidad y seguridad diseñadas para clubes deportivos",
                   "Privacy and security built for sports clubs",
@@ -322,6 +372,60 @@ export function SecurityPage({ locale }: Props) {
               </details>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 7. Estado de implementación */}
+      <section className="border-t border-border py-20">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow={t("Transparencia", "Transparency")}
+            title={t("Estado real de implementación", "Real implementation status")}
+            subtitle={t(
+              "Publicamos en abierto qué controles están activos hoy y cuáles entran durante la fase de piloto. La validación se hace con el club, no a su espalda.",
+              "We publish openly which controls are active today and which enter during the pilot phase. Validation happens with the club, not behind their back.",
+            )}
+          />
+          <div className="mt-10 overflow-hidden rounded-2xl border border-border bg-card">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/40 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <tr>
+                  <th className="px-5 py-3 text-left">{t("Control", "Control")}</th>
+                  <th className="px-5 py-3 text-left">{t("Estado", "Status")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {implementationStatus.map((row) => {
+                  const meta = STATUS_META[row.status];
+                  const Icon = meta.icon;
+                  return (
+                    <tr key={row.title}>
+                      <td className="px-5 py-4 text-foreground">
+                        <p className="font-medium">{row.title}</p>
+                        {row.note && (
+                          <p className="mt-1 text-xs text-muted-foreground">{row.note}</p>
+                        )}
+                      </td>
+                      <td className="px-5 py-4 align-top">
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${meta.cls}`}
+                        >
+                          <Icon className="size-3.5" />
+                          {locale === "en" ? meta.labelEn : meta.labelEs}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
+            {t(
+              "Esta tabla se actualiza con cada hito de producto. Si necesitas un control concreto antes del despliegue general, podemos priorizarlo dentro del piloto.",
+              "This table is updated at every product milestone. If you need a specific control before general availability, we can prioritise it within the pilot.",
+            )}
+          </p>
         </div>
       </section>
 
