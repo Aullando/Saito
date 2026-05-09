@@ -87,8 +87,7 @@ export function HomePage({ locale }: Props) {
     <main>
       {/* ============= HERO ============= */}
       <section ref={heroRef} className="relative overflow-hidden border-b border-border bg-background">
-        {/* Subtle grid only — no gradient halos */}
-        <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
+        {/* Clean background — no grid, no gradient halos */}
         <motion.div
           className="pointer-events-none absolute -left-24 top-24 hidden h-[420px] w-[420px] rounded-full border border-primary/10 lg:block"
           style={{ opacity: heroFade }}
@@ -116,7 +115,7 @@ export function HomePage({ locale }: Props) {
                 <br />
                 <span className="relative inline-block text-primary">
                   {t("en una sola plataforma", "from a single platform")}
-                  <span className="absolute -bottom-1 left-0 h-[6px] w-full rounded-full bg-saito-yellow/60" aria-hidden />
+                  <span className="saito-underline absolute -bottom-1 left-0 h-[6px] w-full rounded-full" aria-hidden />
                 </span>
               </h1>
               <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.22em]">
@@ -152,20 +151,6 @@ export function HomePage({ locale }: Props) {
                   <span key={f} className="inline-flex items-center gap-1.5">
                     <CheckCircle2 className="size-3.5 text-saito-green" /> {f}
                   </span>
-                ))}
-              </div>
-
-              {/* KPI strip */}
-              <div className="mt-10 grid grid-cols-3 divide-x divide-border rounded-2xl border border-border bg-card/60 p-4 backdrop-blur">
-                {stats.slice(0, 3).map((s) => (
-                  <div key={s.label} className="px-3 text-center first:pl-0 last:pr-0">
-                    <p className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
-                      <CountUp to={s.value} prefix={s.prefix} suffix={s.suffix} />
-                    </p>
-                    <p className="mt-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground sm:text-[11px]">
-                      {s.label}
-                    </p>
-                  </div>
                 ))}
               </div>
             </motion.div>
