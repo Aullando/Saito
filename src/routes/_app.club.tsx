@@ -146,7 +146,7 @@ function ClubPage() {
     managers: orgUsers.filter((u) => u.roles.includes("manager")).length,
     medical: orgUsers.filter((u) => u.roles.includes("medical")).length,
     technical: orgUsers.filter((u) => u.roles.includes("technical")).length,
-    athletes: (athletesCountQ.data ?? (isDemoMode() ? DEMO_ATHLETES_ROWS.length : 0)),
+    athletes: athletesCountQ.data ?? (isDemoMode() ? DEMO_ATHLETES_ROWS.length : 0),
   };
 
   // Section CRUD

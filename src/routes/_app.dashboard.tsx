@@ -279,7 +279,9 @@ function DashboardPage() {
   const athleteNamesMap =
     athleteNames.data ??
     new Map<string, string>(
-      isDemoMode() ? DEMO_ATHLETES_MIN_ROWS.map((a) => [a.id, `${a.first_name} ${a.last_name}`]) : [],
+      isDemoMode()
+        ? DEMO_ATHLETES_MIN_ROWS.map((a) => [a.id, `${a.first_name} ${a.last_name}`])
+        : [],
     );
 
   return (

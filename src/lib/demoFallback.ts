@@ -14,11 +14,7 @@ import { isDemoMode } from "./appMode";
  *
  * Úsalo en pantallas reales para no mostrar mock como si fueran datos reales.
  */
-export function demoOr<T>(
-  data: T | undefined | null,
-  demoFallback: T,
-  productionEmpty: T,
-): T {
+export function demoOr<T>(data: T | undefined | null, demoFallback: T, productionEmpty: T): T {
   if (data !== undefined && data !== null) return data;
   return isDemoMode() ? demoFallback : productionEmpty;
 }

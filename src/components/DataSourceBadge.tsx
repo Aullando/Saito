@@ -1,9 +1,5 @@
 import { Database, Sparkles } from "lucide-react";
-import {
-  showDataSourceBadge,
-  isDemoMode,
-  getDataSourceLabel,
-} from "@/lib/appMode";
+import { showDataSourceBadge, isDemoMode, getDataSourceLabel } from "@/lib/appMode";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -33,10 +29,7 @@ export function DataSourceBadge({ className, variant = "inline", locale = "es" }
   if (variant === "fixed") {
     return (
       <div
-        className={cn(
-          "pointer-events-none fixed bottom-3 left-3 z-40 print:hidden",
-          className,
-        )}
+        className={cn("pointer-events-none fixed bottom-3 left-3 z-40 print:hidden", className)}
         aria-live="polite"
       >
         <span className={cn(base, tone, "shadow-sm backdrop-blur")}>
@@ -48,12 +41,7 @@ export function DataSourceBadge({ className, variant = "inline", locale = "es" }
   }
 
   return (
-    <span
-      className={cn(base, tone, className)}
-      role="status"
-      aria-label={label}
-      title={label}
-    >
+    <span className={cn(base, tone, className)} role="status" aria-label={label} title={label}>
       <Icon className="h-3 w-3" aria-hidden />
       <span className="hidden sm:inline">{label}</span>
       <span className="sm:hidden">{demo ? "Demo" : "Prod"}</span>
