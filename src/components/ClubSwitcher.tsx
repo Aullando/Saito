@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Building2, ChevronDown, Check } from "lucide-react";
+import { Building2, ChevronDown, Check, ExternalLink } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useClub } from "@/clubs/ClubProvider";
 import { cn } from "@/lib/utils";
 import saitoMark from "@/assets/brand/saito-iso.svg";
@@ -71,6 +72,21 @@ export function ClubSwitcher() {
               );
             })}
           </ul>
+          <div className="border-t border-border">
+            <Link
+              to="/"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm hover:bg-muted"
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded bg-muted text-muted-foreground">
+                <ExternalLink className="h-3.5 w-3.5" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-medium">Volver a la web</span>
+                <span className="block truncate text-[11px] text-muted-foreground">Sitio comercial de SAITO</span>
+              </span>
+            </Link>
+          </div>
         </div>
       )}
     </div>
