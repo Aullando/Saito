@@ -38,7 +38,7 @@ function buildItems(role: Role, t: (k: any) => string): Item[] {
         { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
         ...(role === "admin" ? [
           { to: "/settings/team", label: t("users_permissions"), icon: Users, module: "settings" as ClubModuleId },
-          { to: "/settings/privacy", label: lang === "en" ? "Privacy & security" : "Privacidad y seguridad", icon: ShieldCheck, module: "settings" as ClubModuleId },
+          { to: "/settings/privacy", label: t("privacy_security") || "Privacidad y seguridad", icon: ShieldCheck, module: "settings" as ClubModuleId },
         ] : []),
       ];
     case "technical":
