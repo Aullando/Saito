@@ -36,14 +36,14 @@ function LoginPage() {
   const [selected, setSelected] = useState<string>(ROLE_USERS[0]?.id ?? "");
 
   useEffect(() => {
-    if (session) navigate({ to: "/" });
+    if (session) navigate({ to: "/dashboard" });
   }, [session, navigate]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selected) return;
     setUser(selected);
-    navigate({ to: "/" });
+    navigate({ to: "/dashboard" });
   };
 
   return (

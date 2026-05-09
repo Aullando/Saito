@@ -19,7 +19,8 @@ import { Route as CommunicationRouteImport } from './routes/communication'
 import { Route as ClubRouteImport } from './routes/club'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AthletesRouteImport } from './routes/athletes'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as SettingsTeamRouteImport } from './routes/settings.team'
 import { Route as RgccMiDiaRouteImport } from './routes/rgcc.mi-dia'
 import { Route as RgccEntrenamientoPersonalRouteImport } from './routes/rgcc.entrenamiento-personal'
@@ -29,6 +30,19 @@ import { Route as RgccSlugRouteImport } from './routes/rgcc.$slug'
 import { Route as MedicalCalendarRouteImport } from './routes/medical.calendar'
 import { Route as EconomicPaymentsRouteImport } from './routes/economic.payments'
 import { Route as EconomicFeesRouteImport } from './routes/economic.fees'
+import { Route as PublicProductoRouteImport } from './routes/_public.producto'
+import { Route as PublicPreciosRouteImport } from './routes/_public.precios'
+import { Route as PublicMultiClubRouteImport } from './routes/_public.multi-club'
+import { Route as PublicIaRouteImport } from './routes/_public.ia'
+import { Route as PublicContactoRouteImport } from './routes/_public.contacto'
+import { Route as PublicClientesRouteImport } from './routes/_public.clientes'
+import { Route as PublicEnIndexRouteImport } from './routes/_public.en.index'
+import { Route as PublicEnProductoRouteImport } from './routes/_public.en.producto'
+import { Route as PublicEnPreciosRouteImport } from './routes/_public.en.precios'
+import { Route as PublicEnMultiClubRouteImport } from './routes/_public.en.multi-club'
+import { Route as PublicEnIaRouteImport } from './routes/_public.en.ia'
+import { Route as PublicEnContactoRouteImport } from './routes/_public.en.contacto'
+import { Route as PublicEnClientesRouteImport } from './routes/_public.en.clientes'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -80,10 +94,14 @@ const AthletesRoute = AthletesRouteImport.update({
   path: '/athletes',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
 const SettingsTeamRoute = SettingsTeamRouteImport.update({
   id: '/settings/team',
@@ -131,9 +149,74 @@ const EconomicFeesRoute = EconomicFeesRouteImport.update({
   path: '/economic/fees',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicProductoRoute = PublicProductoRouteImport.update({
+  id: '/producto',
+  path: '/producto',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPreciosRoute = PublicPreciosRouteImport.update({
+  id: '/precios',
+  path: '/precios',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicMultiClubRoute = PublicMultiClubRouteImport.update({
+  id: '/multi-club',
+  path: '/multi-club',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicIaRoute = PublicIaRouteImport.update({
+  id: '/ia',
+  path: '/ia',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicContactoRoute = PublicContactoRouteImport.update({
+  id: '/contacto',
+  path: '/contacto',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicClientesRoute = PublicClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnIndexRoute = PublicEnIndexRouteImport.update({
+  id: '/en/',
+  path: '/en/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnProductoRoute = PublicEnProductoRouteImport.update({
+  id: '/en/producto',
+  path: '/en/producto',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnPreciosRoute = PublicEnPreciosRouteImport.update({
+  id: '/en/precios',
+  path: '/en/precios',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnMultiClubRoute = PublicEnMultiClubRouteImport.update({
+  id: '/en/multi-club',
+  path: '/en/multi-club',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnIaRoute = PublicEnIaRouteImport.update({
+  id: '/en/ia',
+  path: '/en/ia',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnContactoRoute = PublicEnContactoRouteImport.update({
+  id: '/en/contacto',
+  path: '/en/contacto',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnClientesRoute = PublicEnClientesRouteImport.update({
+  id: '/en/clientes',
+  path: '/en/clientes',
+  getParentRoute: () => PublicRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
   '/athletes': typeof AthletesRoute
   '/calendar': typeof CalendarRoute
   '/club': typeof ClubRoute
@@ -144,6 +227,12 @@ export interface FileRoutesByFullPath {
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
+  '/clientes': typeof PublicClientesRoute
+  '/contacto': typeof PublicContactoRoute
+  '/ia': typeof PublicIaRoute
+  '/multi-club': typeof PublicMultiClubRoute
+  '/precios': typeof PublicPreciosRoute
+  '/producto': typeof PublicProductoRoute
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
@@ -153,9 +242,15 @@ export interface FileRoutesByFullPath {
   '/rgcc/entrenamiento-personal': typeof RgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
+  '/en/clientes': typeof PublicEnClientesRoute
+  '/en/contacto': typeof PublicEnContactoRoute
+  '/en/ia': typeof PublicEnIaRoute
+  '/en/multi-club': typeof PublicEnMultiClubRoute
+  '/en/precios': typeof PublicEnPreciosRoute
+  '/en/producto': typeof PublicEnProductoRoute
+  '/en/': typeof PublicEnIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/athletes': typeof AthletesRoute
   '/calendar': typeof CalendarRoute
   '/club': typeof ClubRoute
@@ -166,6 +261,12 @@ export interface FileRoutesByTo {
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
+  '/clientes': typeof PublicClientesRoute
+  '/contacto': typeof PublicContactoRoute
+  '/ia': typeof PublicIaRoute
+  '/multi-club': typeof PublicMultiClubRoute
+  '/precios': typeof PublicPreciosRoute
+  '/producto': typeof PublicProductoRoute
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
@@ -175,10 +276,18 @@ export interface FileRoutesByTo {
   '/rgcc/entrenamiento-personal': typeof RgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
+  '/': typeof PublicIndexRoute
+  '/en/clientes': typeof PublicEnClientesRoute
+  '/en/contacto': typeof PublicEnContactoRoute
+  '/en/ia': typeof PublicEnIaRoute
+  '/en/multi-club': typeof PublicEnMultiClubRoute
+  '/en/precios': typeof PublicEnPreciosRoute
+  '/en/producto': typeof PublicEnProductoRoute
+  '/en': typeof PublicEnIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_public': typeof PublicRouteWithChildren
   '/athletes': typeof AthletesRoute
   '/calendar': typeof CalendarRoute
   '/club': typeof ClubRoute
@@ -189,6 +298,12 @@ export interface FileRoutesById {
   '/organizations': typeof OrganizationsRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
+  '/_public/clientes': typeof PublicClientesRoute
+  '/_public/contacto': typeof PublicContactoRoute
+  '/_public/ia': typeof PublicIaRoute
+  '/_public/multi-club': typeof PublicMultiClubRoute
+  '/_public/precios': typeof PublicPreciosRoute
+  '/_public/producto': typeof PublicProductoRoute
   '/economic/fees': typeof EconomicFeesRoute
   '/economic/payments': typeof EconomicPaymentsRoute
   '/medical/calendar': typeof MedicalCalendarRoute
@@ -198,6 +313,14 @@ export interface FileRoutesById {
   '/rgcc/entrenamiento-personal': typeof RgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof RgccMiDiaRoute
   '/settings/team': typeof SettingsTeamRoute
+  '/_public/': typeof PublicIndexRoute
+  '/_public/en/clientes': typeof PublicEnClientesRoute
+  '/_public/en/contacto': typeof PublicEnContactoRoute
+  '/_public/en/ia': typeof PublicEnIaRoute
+  '/_public/en/multi-club': typeof PublicEnMultiClubRoute
+  '/_public/en/precios': typeof PublicEnPreciosRoute
+  '/_public/en/producto': typeof PublicEnProductoRoute
+  '/_public/en/': typeof PublicEnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -213,6 +336,12 @@ export interface FileRouteTypes {
     | '/organizations'
     | '/profile'
     | '/signup'
+    | '/clientes'
+    | '/contacto'
+    | '/ia'
+    | '/multi-club'
+    | '/precios'
+    | '/producto'
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
@@ -222,9 +351,15 @@ export interface FileRouteTypes {
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/team'
+    | '/en/clientes'
+    | '/en/contacto'
+    | '/en/ia'
+    | '/en/multi-club'
+    | '/en/precios'
+    | '/en/producto'
+    | '/en/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/athletes'
     | '/calendar'
     | '/club'
@@ -235,6 +370,12 @@ export interface FileRouteTypes {
     | '/organizations'
     | '/profile'
     | '/signup'
+    | '/clientes'
+    | '/contacto'
+    | '/ia'
+    | '/multi-club'
+    | '/precios'
+    | '/producto'
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
@@ -244,9 +385,17 @@ export interface FileRouteTypes {
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/team'
+    | '/'
+    | '/en/clientes'
+    | '/en/contacto'
+    | '/en/ia'
+    | '/en/multi-club'
+    | '/en/precios'
+    | '/en/producto'
+    | '/en'
   id:
     | '__root__'
-    | '/'
+    | '/_public'
     | '/athletes'
     | '/calendar'
     | '/club'
@@ -257,6 +406,12 @@ export interface FileRouteTypes {
     | '/organizations'
     | '/profile'
     | '/signup'
+    | '/_public/clientes'
+    | '/_public/contacto'
+    | '/_public/ia'
+    | '/_public/multi-club'
+    | '/_public/precios'
+    | '/_public/producto'
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
@@ -266,10 +421,18 @@ export interface FileRouteTypes {
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/team'
+    | '/_public/'
+    | '/_public/en/clientes'
+    | '/_public/en/contacto'
+    | '/_public/en/ia'
+    | '/_public/en/multi-club'
+    | '/_public/en/precios'
+    | '/_public/en/producto'
+    | '/_public/en/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  PublicRoute: typeof PublicRouteWithChildren
   AthletesRoute: typeof AthletesRoute
   CalendarRoute: typeof CalendarRoute
   ClubRoute: typeof ClubRoute
@@ -363,12 +526,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AthletesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/settings/team': {
       id: '/settings/team'
@@ -433,11 +603,139 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EconomicFeesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public/producto': {
+      id: '/_public/producto'
+      path: '/producto'
+      fullPath: '/producto'
+      preLoaderRoute: typeof PublicProductoRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/precios': {
+      id: '/_public/precios'
+      path: '/precios'
+      fullPath: '/precios'
+      preLoaderRoute: typeof PublicPreciosRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/multi-club': {
+      id: '/_public/multi-club'
+      path: '/multi-club'
+      fullPath: '/multi-club'
+      preLoaderRoute: typeof PublicMultiClubRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/ia': {
+      id: '/_public/ia'
+      path: '/ia'
+      fullPath: '/ia'
+      preLoaderRoute: typeof PublicIaRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/contacto': {
+      id: '/_public/contacto'
+      path: '/contacto'
+      fullPath: '/contacto'
+      preLoaderRoute: typeof PublicContactoRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/clientes': {
+      id: '/_public/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof PublicClientesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/': {
+      id: '/_public/en/'
+      path: '/en'
+      fullPath: '/en/'
+      preLoaderRoute: typeof PublicEnIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/producto': {
+      id: '/_public/en/producto'
+      path: '/en/producto'
+      fullPath: '/en/producto'
+      preLoaderRoute: typeof PublicEnProductoRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/precios': {
+      id: '/_public/en/precios'
+      path: '/en/precios'
+      fullPath: '/en/precios'
+      preLoaderRoute: typeof PublicEnPreciosRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/multi-club': {
+      id: '/_public/en/multi-club'
+      path: '/en/multi-club'
+      fullPath: '/en/multi-club'
+      preLoaderRoute: typeof PublicEnMultiClubRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/ia': {
+      id: '/_public/en/ia'
+      path: '/en/ia'
+      fullPath: '/en/ia'
+      preLoaderRoute: typeof PublicEnIaRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/contacto': {
+      id: '/_public/en/contacto'
+      path: '/en/contacto'
+      fullPath: '/en/contacto'
+      preLoaderRoute: typeof PublicEnContactoRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/clientes': {
+      id: '/_public/en/clientes'
+      path: '/en/clientes'
+      fullPath: '/en/clientes'
+      preLoaderRoute: typeof PublicEnClientesRouteImport
+      parentRoute: typeof PublicRoute
+    }
   }
 }
 
+interface PublicRouteChildren {
+  PublicClientesRoute: typeof PublicClientesRoute
+  PublicContactoRoute: typeof PublicContactoRoute
+  PublicIaRoute: typeof PublicIaRoute
+  PublicMultiClubRoute: typeof PublicMultiClubRoute
+  PublicPreciosRoute: typeof PublicPreciosRoute
+  PublicProductoRoute: typeof PublicProductoRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+  PublicEnClientesRoute: typeof PublicEnClientesRoute
+  PublicEnContactoRoute: typeof PublicEnContactoRoute
+  PublicEnIaRoute: typeof PublicEnIaRoute
+  PublicEnMultiClubRoute: typeof PublicEnMultiClubRoute
+  PublicEnPreciosRoute: typeof PublicEnPreciosRoute
+  PublicEnProductoRoute: typeof PublicEnProductoRoute
+  PublicEnIndexRoute: typeof PublicEnIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicClientesRoute: PublicClientesRoute,
+  PublicContactoRoute: PublicContactoRoute,
+  PublicIaRoute: PublicIaRoute,
+  PublicMultiClubRoute: PublicMultiClubRoute,
+  PublicPreciosRoute: PublicPreciosRoute,
+  PublicProductoRoute: PublicProductoRoute,
+  PublicIndexRoute: PublicIndexRoute,
+  PublicEnClientesRoute: PublicEnClientesRoute,
+  PublicEnContactoRoute: PublicEnContactoRoute,
+  PublicEnIaRoute: PublicEnIaRoute,
+  PublicEnMultiClubRoute: PublicEnMultiClubRoute,
+  PublicEnPreciosRoute: PublicEnPreciosRoute,
+  PublicEnProductoRoute: PublicEnProductoRoute,
+  PublicEnIndexRoute: PublicEnIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  PublicRoute: PublicRouteWithChildren,
   AthletesRoute: AthletesRoute,
   CalendarRoute: CalendarRoute,
   ClubRoute: ClubRoute,
