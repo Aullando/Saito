@@ -8,6 +8,7 @@ import { useLocale, localizedPath } from "@/lib/site-i18n";
 import { useAuth } from "@/lib/auth";
 
 const navEs = [
+  { to: "/", label: "Inicio" },
   { to: "/producto", label: "Producto" },
   { to: "/ia", label: "IA" },
   { to: "/multi-club", label: "Multi-club" },
@@ -17,6 +18,7 @@ const navEs = [
   { to: "/contacto", label: "Contacto" },
 ];
 const navEn = [
+  { to: "/", label: "Home" },
   { to: "/producto", label: "Product" },
   { to: "/ia", label: "AI" },
   { to: "/multi-club", label: "Multi-club" },
@@ -47,6 +49,7 @@ export function Header() {
             <Link
               key={it.to}
               to={localizedPath(it.to, locale) as any}
+              activeOptions={it.to === "/" ? { exact: true } : undefined}
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               activeProps={{ className: "rounded-md px-3 py-2 text-sm font-semibold text-foreground bg-accent" }}
             >
