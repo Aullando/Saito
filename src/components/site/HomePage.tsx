@@ -20,7 +20,7 @@ import {
   Rocket,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+
 import { ModuleCard } from "@/components/site/ModuleCard";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { RoleTabs, defaultRolesEs, defaultRolesEn } from "@/components/site/RoleTabs";
@@ -226,20 +226,11 @@ export function HomePage({ locale }: Props) {
             title={t("Todo lo que tu club necesita, sin más herramientas", "Everything your club needs, without extra tools")}
             subtitle={t("Módulos integrados, datos compartidos y flujos pensados para el día a día deportivo.", "Integrated modules, shared data and workflows designed for daily club life.")}
           />
-          {/* Mobile: carousel */}
-          <div className="mt-10 sm:hidden">
-            <Carousel opts={{ align: "start" }}>
-              <CarouselContent className="-ml-3">
-                {modules.map((m, i) => (
-                  <CarouselItem key={m.title} className="basis-[78%] pl-3">
-                    <ModuleCard {...m} index={i} />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-            <p className="mt-3 text-center text-[11px] uppercase tracking-wider text-muted-foreground">
-              {t("Desliza para ver más", "Swipe to see more")}
-            </p>
+          {/* Mobile: stacked cards */}
+          <div className="mt-10 grid gap-4 sm:hidden">
+            {modules.map((m, i) => (
+              <ModuleCard key={m.title} {...m} index={i} />
+            ))}
           </div>
           {/* Tablet/Desktop: grid */}
           <div className="mt-12 hidden gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4">
@@ -258,34 +249,23 @@ export function HomePage({ locale }: Props) {
             title={t("De la hoja de cálculo a la temporada lanzada", "From spreadsheet chaos to season ready")}
             subtitle={t("Cuatro pasos. Acompañamiento real en cada uno.", "Four steps. Real support at each one.")}
           />
-          {/* Mobile: carousel of step cards (more impactful than stacked) */}
-          <div className="mt-10 sm:hidden">
-            <Carousel opts={{ align: "start" }}>
-              <CarouselContent className="-ml-3">
-                {steps.map((s, i) => {
-                  const Icon = s.icon;
-                  return (
-                    <CarouselItem key={s.title} className="basis-[82%] pl-3">
-                      <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm">
-                        <div className="absolute right-3 top-3 text-5xl font-extrabold leading-none text-primary/10">
-                          0{i + 1}
-                        </div>
-                        <div className="relative z-10 mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                          <Icon className="size-6" />
-                        </div>
-                        <h3 className="relative text-base font-semibold">{s.title}</h3>
-                        <p className="relative mt-1 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
-                      </div>
-                    </CarouselItem>
-                  );
-                })}
-              </CarouselContent>
-            </Carousel>
-            <div className="mt-4 flex items-center justify-center gap-1.5">
-              {steps.map((_, i) => (
-                <span key={i} className="h-1.5 w-6 rounded-full bg-border first:bg-primary" />
-              ))}
-            </div>
+          {/* Mobile: stacked step cards */}
+          <div className="mt-10 grid gap-4 sm:hidden">
+            {steps.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div key={s.title} className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm">
+                  <div className="absolute right-3 top-3 text-5xl font-extrabold leading-none text-primary/10">
+                    0{i + 1}
+                  </div>
+                  <div className="relative z-10 mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icon className="size-6" />
+                  </div>
+                  <h3 className="relative text-base font-semibold">{s.title}</h3>
+                  <p className="relative mt-1 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+                </div>
+              );
+            })}
           </div>
 
           {/* Tablet/Desktop: timeline grid */}
