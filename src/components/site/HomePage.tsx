@@ -55,7 +55,7 @@ export function HomePage({ locale }: Props) {
     { icon: MessageSquare, title: t("Comunicación", "Communication"), description: t("Mensajes a equipos, familias y secciones desde un único hilo.", "Messaging to teams, families and sections from a single thread.") },
     { icon: HeartPulse, title: t("Salud y seguimiento", "Health & tracking"), description: t("Historial médico, lesiones y carga de entrenamiento.", "Medical history, injuries and training load.") },
     { icon: Building2, title: t("Instalaciones", "Facilities"), description: t("Pistas, vestuarios, salas y cobros por uso.", "Pitches, locker rooms, halls and pay-per-use.") },
-    { icon: Sparkles, title: t("IA por rol", "AI by role"), description: t("Cada perfil ve solo lo que le importa, con respuestas accionables.", "Every role sees only what matters, with actionable answers.") },
+    { icon: Sparkles, title: t("Copiloto Inteligente", "Smart Copilot"), description: t("Cada perfil ve solo lo que le importa, con respuestas accionables.", "Every role sees only what matters, with actionable answers.") },
   ];
 
   const benefits = [
@@ -313,7 +313,7 @@ export function HomePage({ locale }: Props) {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             invert
-            eyebrow={t("IA por rol", "Role-based AI")}
+            eyebrow={t("Copiloto Inteligente", "Smart Copilot")}
             title={t("Una IA que entiende cómo funciona un club", "An AI that understands how a club works")}
             subtitle={t("Cada perfil ve solo lo que le importa. SAITO aprende de los datos de tu club y propone acciones, no solo gráficos.", "Every role sees only what matters. SAITO learns from your club's data and proposes actions, not just charts.")}
           />

@@ -29,7 +29,7 @@ export function PricingPage({ locale }: { locale: Locale }) {
       ),
       features: [
         t("Socios ilimitados", "Unlimited members"),
-        t("IA por rol incluida", "Role-based AI included"),
+        t("Copiloto Inteligente incluido", "Smart Copilot included"),
         t("Pagos y facturación", "Payments & invoicing"),
         t("Soporte prioritario", "Priority support"),
       ],

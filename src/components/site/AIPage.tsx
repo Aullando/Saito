@@ -31,7 +31,7 @@ export function AIPage({ locale }: { locale: Locale }) {
             <div className="overflow-hidden rounded-3xl border border-white/15 bg-white/5 shadow-xl backdrop-blur">
               <img
                 src={aiVisual}
-                alt={t("Asistente IA por rol de SAITO", "SAITO role-based AI assistant")}
+                alt={t("Asistente Copiloto Inteligente de SAITO", "SAITO Smart Copilot assistant")}
                 width={1800}
                 height={1125}
                 className="h-full w-full object-cover"

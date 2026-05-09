@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_public/en/")({
       {
         name: "description",
         content:
-          "All-in-one platform for sports clubs: members, calendar, payments, communication and role-based AI. Privacy-by-design AI.",
+          "All-in-one platform for sports clubs: members, calendar, payments, communication and Smart Copilot. Privacy-by-design AI.",
       },
       { property: "og:title", content: "SAITO — Sports club platform" },
       {
