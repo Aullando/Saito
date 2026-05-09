@@ -111,8 +111,15 @@ export function HomePage({ locale }: Props) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
+              className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl"
             >
-              <DashboardMockup />
+              <img
+                src={heroVisual}
+                alt={t("Panel operativo de SAITO", "SAITO operations command center")}
+                width={1800}
+                height={1125}
+                className="h-full w-full object-cover"
+              />
             </motion.div>
           </div>
         </div>
