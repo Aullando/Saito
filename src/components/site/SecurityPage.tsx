@@ -375,6 +375,60 @@ export function SecurityPage({ locale }: Props) {
         </div>
       </section>
 
+      {/* 7. Estado de implementación */}
+      <section className="border-t border-border py-20">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow={t("Transparencia", "Transparency")}
+            title={t("Estado real de implementación", "Real implementation status")}
+            subtitle={t(
+              "Publicamos en abierto qué controles están activos hoy y cuáles entran durante la fase de piloto. La validación se hace con el club, no a su espalda.",
+              "We publish openly which controls are active today and which enter during the pilot phase. Validation happens with the club, not behind their back.",
+            )}
+          />
+          <div className="mt-10 overflow-hidden rounded-2xl border border-border bg-card">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/40 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <tr>
+                  <th className="px-5 py-3 text-left">{t("Control", "Control")}</th>
+                  <th className="px-5 py-3 text-left">{t("Estado", "Status")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {implementationStatus.map((row) => {
+                  const meta = STATUS_META[row.status];
+                  const Icon = meta.icon;
+                  return (
+                    <tr key={row.title}>
+                      <td className="px-5 py-4 text-foreground">
+                        <p className="font-medium">{row.title}</p>
+                        {row.note && (
+                          <p className="mt-1 text-xs text-muted-foreground">{row.note}</p>
+                        )}
+                      </td>
+                      <td className="px-5 py-4 align-top">
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${meta.cls}`}
+                        >
+                          <Icon className="size-3.5" />
+                          {locale === "en" ? meta.labelEn : meta.labelEs}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
+            {t(
+              "Esta tabla se actualiza con cada hito de producto. Si necesitas un control concreto antes del despliegue general, podemos priorizarlo dentro del piloto.",
+              "This table is updated at every product milestone. If you need a specific control before general availability, we can prioritise it within the pilot.",
+            )}
+          </p>
+        </div>
+      </section>
+
       {/* CTA final */}
       <section className="py-20">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
