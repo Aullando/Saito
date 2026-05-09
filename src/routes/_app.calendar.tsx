@@ -35,6 +35,7 @@ import {
 } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
+import { demoOrEmpty } from "@/lib/demoFallback";
 
 export const Route = createFileRoute("/_app/calendar")({
   component: () => (
@@ -124,10 +125,10 @@ function CalendarPage() {
     },
   });
 
-  const events = (eventsQ.data ?? DEMO_CALENDAR_EVENTS_ROWS) as DBEvent[];
-  const sections = sectionsQ.data ?? DEMO_SECTIONS_ROWS;
-  const categories = categoriesQ.data ?? DEMO_CATEGORIES_ROWS;
-  const groups = groupsQ.data ?? DEMO_GROUPS_ROWS;
+  const events = demoOrEmpty(eventsQ.data, DEMO_CALENDAR_EVENTS_ROWS) as DBEvent[];
+  const sections = demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
+  const categories = demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
+  const groups = demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
 
   const addEvent = useMutation({
     mutationFn: async (e: {

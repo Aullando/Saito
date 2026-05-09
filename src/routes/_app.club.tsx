@@ -28,6 +28,8 @@ import {
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
+import { isDemoMode } from "@/lib/appMode";
+import { demoOrEmpty } from "@/lib/demoFallback";
 import {
   Plus,
   Building2,
@@ -139,12 +141,12 @@ function ClubPage() {
     },
   });
 
-  const orgUsers = usersQ.data ?? DEMO_ORG_USERS_ROWS;
+  const orgUsers = demoOrEmpty(usersQ.data, DEMO_ORG_USERS_ROWS);
   const counts = {
     managers: orgUsers.filter((u) => u.roles.includes("manager")).length,
     medical: orgUsers.filter((u) => u.roles.includes("medical")).length,
     technical: orgUsers.filter((u) => u.roles.includes("technical")).length,
-    athletes: athletesCountQ.data ?? DEMO_ATHLETES_ROWS.length,
+    athletes: athletesCountQ.data ?? (isDemoMode() ? DEMO_ATHLETES_ROWS.length : 0),
   };
 
   // Section CRUD
@@ -263,10 +265,10 @@ function ClubPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const sections = sectionsQ.data ?? DEMO_SECTIONS_ROWS;
-  const categories = categoriesQ.data ?? DEMO_CATEGORIES_ROWS;
-  const groups = groupsQ.data ?? DEMO_GROUPS_ROWS;
-  const facilities = facilitiesQ.data ?? DEMO_FACILITIES_ROWS;
+  const sections = demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
+  const categories = demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
+  const groups = demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
+  const facilities = demoOrEmpty(facilitiesQ.data, DEMO_FACILITIES_ROWS as never);
 
   return (
     <>

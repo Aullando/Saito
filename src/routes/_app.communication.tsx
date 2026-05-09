@@ -26,6 +26,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Send } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
+import { demoOrEmpty } from "@/lib/demoFallback";
 
 export const Route = createFileRoute("/_app/communication")({
   component: () => (
@@ -79,7 +80,7 @@ function CommunicationPage() {
     },
   });
 
-  const conversations = (convsQ.data ?? DEMO_CONVERSATIONS_ROWS) as DBConv[];
+  const conversations = demoOrEmpty(convsQ.data, DEMO_CONVERSATIONS_ROWS) as DBConv[];
   const [activeId, setActiveId] = useState<string | null>(null);
   useEffect(() => {
     if (!activeId && conversations.length) setActiveId(conversations[0].id);
@@ -109,7 +110,7 @@ function CommunicationPage() {
     },
   });
 
-  const profiles = profilesQ.data ?? DEMO_PROFILES_MIN_ROWS;
+  const profiles = demoOrEmpty(profilesQ.data, DEMO_PROFILES_MIN_ROWS);
   const messages = (msgsQ.data ?? (activeId ? demoMessagesFor(activeId) : [])) as DBMsg[];
 
   const sendMsg = useMutation({

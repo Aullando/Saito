@@ -23,6 +23,8 @@ import {
   TrendingUp,
   BarChart3,
 } from "lucide-react";
+import { isDemoMode } from "@/lib/appMode";
+import { demoOr, EMPTY_DASHBOARD_STATS, EMPTY_DASHBOARD_CHARTS } from "@/lib/demoFallback";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -272,12 +274,14 @@ function DashboardPage() {
   const fmtMoney = (n: number) =>
     new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(n);
 
-  const s = stats.data ?? DEMO_DASHBOARD_STATS;
-  const chartsData = charts.data ?? DEMO_DASHBOARD_CHARTS;
+  const s = demoOr(stats.data, DEMO_DASHBOARD_STATS, EMPTY_DASHBOARD_STATS);
+  const chartsData = demoOr(charts.data, DEMO_DASHBOARD_CHARTS, EMPTY_DASHBOARD_CHARTS);
   const athleteNamesMap =
     athleteNames.data ??
     new Map<string, string>(
-      DEMO_ATHLETES_MIN_ROWS.map((a) => [a.id, `${a.first_name} ${a.last_name}`]),
+      isDemoMode()
+        ? DEMO_ATHLETES_MIN_ROWS.map((a) => [a.id, `${a.first_name} ${a.last_name}`])
+        : [],
     );
 
   return (

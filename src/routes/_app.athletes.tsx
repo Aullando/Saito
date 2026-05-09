@@ -35,6 +35,7 @@ import {
 } from "@/lib/demoFallbacks";
 import { Plus, Search } from "lucide-react";
 import { toast } from "sonner";
+import { demoOrEmpty } from "@/lib/demoFallback";
 
 export const Route = createFileRoute("/_app/athletes")({
   component: () => (
@@ -130,11 +131,14 @@ function AthletesPage() {
     },
   });
 
-  const athletes = (athletesQ.data ?? DEMO_ATHLETES_ROWS) as AthleteRow[];
-  const sections = (sectionsQ.data ?? DEMO_SECTIONS_ROWS) as SectionRow[];
-  const categories = (categoriesQ.data ?? DEMO_CATEGORIES_ROWS) as CategoryRow[];
-  const groups = (groupsQ.data ?? DEMO_GROUPS_ROWS) as GroupRow[];
-  const athleteGroups = (athleteGroupsQ.data ?? DEMO_ATHLETE_GROUPS_ROWS) as AthleteGroupRow[];
+  const athletes = demoOrEmpty(athletesQ.data, DEMO_ATHLETES_ROWS) as AthleteRow[];
+  const sections = demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS) as SectionRow[];
+  const categories = demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS) as CategoryRow[];
+  const groups = demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS) as GroupRow[];
+  const athleteGroups = demoOrEmpty(
+    athleteGroupsQ.data,
+    DEMO_ATHLETE_GROUPS_ROWS,
+  ) as AthleteGroupRow[];
   const groupsByAthlete = (athleteId: string) =>
     athleteGroups.filter((ag) => ag.athlete_id === athleteId).map((ag) => ag.group_id);
 
