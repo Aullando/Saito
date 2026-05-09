@@ -182,6 +182,88 @@ export function ProductPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      <section className="border-b border-border py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow={t("Arquitectura SAITO", "SAITO architecture")}
+            title={t("Cuatro pilares. Un único sistema.", "Four pillars. One single system.")}
+            subtitle={t(
+              "SAITO se organiza en cuatro áreas funcionales que cubren la operación completa del club.",
+              "SAITO is organised into four functional areas that cover the entire club operation.",
+            )}
+          />
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                name: "Administration",
+                desc: t("Gestión societaria, económica y operativa.", "Member, financial and operational management."),
+                bullets: [
+                  t("Socios y deportistas", "Members & athletes"),
+                  t("Staff y permisos", "Staff & permissions"),
+                  t("Pagos y tienda", "Payments & shop"),
+                  t("Categorías y grupos", "Categories & groups"),
+                  t("Contabilidad", "Accounting"),
+                  t("Eventos y agenda", "Event scheduling"),
+                  t("Comunicación", "Communication"),
+                ],
+              },
+              {
+                name: "Wellbeing",
+                desc: t("Salud, prevención y seguimiento clínico.", "Health, prevention and clinical follow-up."),
+                bullets: [
+                  t("Perfil de salud", "Health profiling"),
+                  t("Historial del deportista", "Player health records"),
+                  t("Reporte de lesiones", "Injuries reporting"),
+                  t("Gestión de riesgo", "Risk management"),
+                  t("Seguimiento de tratamiento", "Treatment monitoring"),
+                  t("Citas médicas", "Medical appointments"),
+                  t("Comunicación clínica", "Clinical communication"),
+                ],
+              },
+              {
+                name: "Coaching",
+                desc: t("Planificación deportiva y rendimiento.", "Sport planning and performance."),
+                bullets: [
+                  t("Optimización del entrenamiento", "Training optimisation"),
+                  t("Monitorización y reporting", "Monitoring & reporting"),
+                  t("Gestión de deportistas", "Athletes management"),
+                  t("Planificación de sesiones", "Session planning"),
+                  t("Planificación de competición", "Competition planning"),
+                  t("Calendario y convocatorias", "Scheduling"),
+                  t("Comunicación técnica", "Technical communication"),
+                ],
+              },
+              {
+                name: "Sport Life",
+                desc: t("Experiencia del deportista y la familia.", "Experience for athlete and family."),
+                bullets: [
+                  t("Auto-monitorización diaria", "Daily self-monitoring"),
+                  t("Feedback de sesión", "Session feedback"),
+                  t("Necesidades femeninas", "Female needs"),
+                  t("Reporte de lesiones", "Injuries reporting"),
+                  t("Visión de rendimiento", "Performance overview"),
+                  t("Agenda personal", "Personal agenda"),
+                  t("Comunicación con el club", "Communication with the club"),
+                ],
+              },
+            ].map((p) => (
+              <div key={p.name} className="rounded-3xl border border-border bg-card p-6">
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{p.name}</div>
+                <p className="mt-2 text-sm text-muted-foreground">{p.desc}</p>
+                <ul className="mt-4 space-y-1.5 text-sm">
+                  {p.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-saito-green" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="py-20">
         <div className="mx-auto max-w-5xl space-y-20 px-4 sm:px-6 lg:px-8">
           {items.map((it, i) => {
