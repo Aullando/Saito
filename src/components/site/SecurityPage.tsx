@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   CheckCircle2,
   ArrowRight,
+  Circle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "./SectionHeading";
