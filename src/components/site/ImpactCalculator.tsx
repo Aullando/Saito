@@ -187,9 +187,14 @@ export function ImpactCalculator({ locale }: Props) {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 md:py-24">
       <div className="mb-10 max-w-2xl">
-        <p className="mb-3 font-mono text-xs uppercase tracking-wider text-saito-green">
-          {t("Calculadora de impacto", "Impact calculator")}
-        </p>
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <p className="font-mono text-xs uppercase tracking-wider text-saito-green">
+            {t("Calculadora de impacto", "Impact calculator")}
+          </p>
+          <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            {t("Beta · en pruebas", "Beta · testing")}
+          </span>
+        </div>
         <h2 className="text-3xl font-semibold leading-tight md:text-4xl">
           {t("Cuánto vale SAITO en tu club", "What SAITO is worth in your club")}
         </h2>
