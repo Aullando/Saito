@@ -24,12 +24,12 @@ export function ContactPage({ locale }: { locale: Locale }) {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSent(true);
-      toast.success(t("Solicitud enviada. Te contactamos en breve.", "Request sent. We'll be in touch shortly."));
-    }, 700);
+    toast.info(
+      t(
+        "El envío de solicitudes está temporalmente desactivado. Escríbenos a hola@saito.app.",
+        "Request submissions are temporarily disabled. Please email us at hola@saito.app.",
+      ),
+    );
   }
 
   return (
