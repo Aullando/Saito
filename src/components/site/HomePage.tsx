@@ -152,6 +152,7 @@ export function HomePage({ locale }: Props) {
                     <CheckCircle2 className="size-3.5 text-saito-green" /> {f}
                   </span>
                 ))}
+              </div>
             </motion.div>
 
             {/* Mockup with parallax + tilt + floating badges */}
