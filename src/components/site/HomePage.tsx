@@ -273,7 +273,38 @@ export function HomePage({ locale }: Props) {
             title={t("De la hoja de cálculo a la temporada lanzada", "From spreadsheet chaos to season ready")}
             subtitle={t("Cuatro pasos. Acompañamiento real en cada uno.", "Four steps. Real support at each one.")}
           />
-          <Reveal stagger className="relative mt-14 grid gap-8 md:grid-cols-4">
+          {/* Mobile: carousel of step cards (more impactful than stacked) */}
+          <div className="mt-10 sm:hidden">
+            <Carousel opts={{ align: "start" }}>
+              <CarouselContent className="-ml-3">
+                {steps.map((s, i) => {
+                  const Icon = s.icon;
+                  return (
+                    <CarouselItem key={s.title} className="basis-[82%] pl-3">
+                      <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm">
+                        <div className="absolute right-3 top-3 text-5xl font-extrabold leading-none text-primary/10">
+                          0{i + 1}
+                        </div>
+                        <div className="relative z-10 mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <Icon className="size-6" />
+                        </div>
+                        <h3 className="relative text-base font-semibold">{s.title}</h3>
+                        <p className="relative mt-1 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+                      </div>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
+            <div className="mt-4 flex items-center justify-center gap-1.5">
+              {steps.map((_, i) => (
+                <span key={i} className="h-1.5 w-6 rounded-full bg-border first:bg-primary" />
+              ))}
+            </div>
+          </div>
+
+          {/* Tablet/Desktop: timeline grid */}
+          <Reveal stagger className="relative mt-14 hidden gap-8 sm:grid md:grid-cols-4">
             {/* Connecting line on md+ */}
             <div
               className="absolute left-0 right-0 top-7 hidden h-px md:block"
