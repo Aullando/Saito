@@ -20,7 +20,7 @@ async function loginAs(page: import("@playwright/test").Page, userId: string) {
           "saito-active-club",
           JSON.stringify({ state: { overrideClubId: "rgcc" }, version: 0 }),
         );
-      } catch {}
+      } catch { /* ignore */ }
     },
     { uid: userId },
   );

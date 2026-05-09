@@ -63,7 +63,7 @@ export function CommercialAIChat() {
         try {
           const j = JSON.parse(errTxt);
           if (j.error) errMsg = j.error;
-        } catch {}
+        } catch { /* ignore */ }
         if (resp.status === 429)
           errMsg = t(
             "Demasiadas peticiones. Espera un momento.",

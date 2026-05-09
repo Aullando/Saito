@@ -163,7 +163,7 @@ function ClubPage() {
       setNewSec("");
       setSecOpen(false);
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
   const delSection = useMutation({
     mutationFn: async (id: string) => {
@@ -171,7 +171,7 @@ function ClubPage() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sport_sections"] }),
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   // Category CRUD
@@ -190,7 +190,7 @@ function ClubPage() {
       setNewCat({ name: "", section_id: "" });
       setCatOpen(false);
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
   const delCategory = useMutation({
     mutationFn: async (id: string) => {
@@ -198,7 +198,7 @@ function ClubPage() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   // Group CRUD
@@ -220,7 +220,7 @@ function ClubPage() {
       setNewGrp({ name: "", section_id: "", category_id: "" });
       setGrpOpen(false);
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
   const delGroup = useMutation({
     mutationFn: async (id: string) => {
@@ -228,7 +228,7 @@ function ClubPage() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["groups"] }),
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   // Facility CRUD
@@ -252,7 +252,7 @@ function ClubPage() {
       setNewFac({ name: "", address: "", capacity: "" });
       setFacOpen(false);
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
   const delFacility = useMutation({
     mutationFn: async (id: string) => {
@@ -260,7 +260,7 @@ function ClubPage() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["facilities"] }),
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const sections = sectionsQ.data ?? DEMO_SECTIONS_ROWS;
@@ -362,7 +362,7 @@ function ClubPage() {
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {facilities.map((f: any) => (
+            {facilities.map((f: { id: string; name: string; photo_url?: string | null; address?: string | null; capacity?: number | null; status?: string }) => (
               <div
                 key={f.id}
                 className="group relative overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-primary hover:shadow-sm"
@@ -701,7 +701,7 @@ function ClubPage() {
   );
 }
 
-function RoleCard({ icon: Icon, label, value }: { icon: any; label: string; value: number }) {
+function RoleCard({ icon: Icon, label, value }: { icon: React.ComponentType<{ className?: string }>; label: string; value: number }) {
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -719,7 +719,7 @@ function FacilityDrawer({
   onClose,
 }: {
   id: string | null;
-  facilities: any[];
+  facilities: Array<{ id: string; name: string; photo_url?: string | null; address?: string | null; capacity?: number | null; status?: string }>;
   onClose: () => void;
 }) {
   const f = facilities.find((x) => x.id === id) ?? null;

@@ -35,7 +35,7 @@ type Item = {
   params?: Record<string, string>;
 };
 
-function buildItems(role: Role, t: (k: any) => string): Item[] {
+function buildItems(role: Role, t: (k: string) => string): Item[] {
   switch (role) {
     case "sysadmin":
       return [{ to: "/organizations", label: t("organizations"), icon: Building2 }];

@@ -12,7 +12,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       if (sessionStorage.getItem(STORAGE_KEY) === "1") setUnlocked(true);
-    } catch {}
+    } catch { /* ignore */ }
     setReady(true);
   }, []);
 
@@ -24,7 +24,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
     if (value === PASSWORD) {
       try {
         sessionStorage.setItem(STORAGE_KEY, "1");
-      } catch {}
+      } catch { /* ignore */ }
       setUnlocked(true);
     } else {
       setError(true);

@@ -535,7 +535,7 @@ export const FEES: Fee[] = [
     id: "fee-1",
     name: "huhuhuhuhu",
     amount: 234,
-    frequency: "Daily" as any,
+    frequency: "Daily" as Fee["frequency"],
     appliesToGroupIds: ["g-prueba-1"],
     sectionId: "sec-prueba",
     kind: "fee",
@@ -573,7 +573,7 @@ export const FEES: Fee[] = [
     id: "fee-5",
     name: "Grupo 1",
     amount: 120,
-    frequency: "Daily" as any,
+    frequency: "Daily" as Fee["frequency"],
     appliesToGroupIds: ["g-prueba-1"],
     sectionId: "sec-prueba",
     kind: "fee",
@@ -675,7 +675,7 @@ export const PAYMENTS: Payment[] = (() => {
       sectionId: "sec-prueba",
       categoryId: "cat-prueba-inf",
       amount: 234,
-      status: ["Active", "Pending", "Failed"][result.length % 3] as any,
+      status: ["Active", "Pending", "Failed"][result.length % 3] as Payment["status"],
       date,
     });
     extraDay++;

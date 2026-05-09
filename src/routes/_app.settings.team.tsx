@@ -85,7 +85,7 @@ function TeamPage() {
       }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["team"] }),
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const removeMember = useMutation({
@@ -105,7 +105,7 @@ function TeamPage() {
       toast.success(lang === "es" ? "Miembro eliminado" : "Member removed");
       qc.invalidateQueries({ queryKey: ["team"] });
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const [open, setOpen] = useState(false);
@@ -120,10 +120,11 @@ function TeamPage() {
         body: { email: form.email, full_name: form.full_name, roles: form.roles },
       });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
+      const d = data as { error?: string; invited?: boolean } | null;
+      if (d?.error) throw new Error(d.error);
       return data;
     },
-    onSuccess: (data: any) => {
+    onSuccess: (data: { invited?: boolean } | null) => {
       toast.success(
         data?.invited
           ? lang === "es"
@@ -137,7 +138,7 @@ function TeamPage() {
       setForm({ email: "", full_name: "", roles: ["manager"] });
       setOpen(false);
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const members = membersQ.data ?? [];

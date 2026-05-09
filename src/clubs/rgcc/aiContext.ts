@@ -177,7 +177,7 @@ export function rgccLocalFallback(
 ): string | null {
   const text = q.toLowerCase();
   if (/clases?.*(hoy|del d[ií]a)/.test(text) && "clasesHoy" in ctx) {
-    const list = (ctx as any).clasesHoy as ReturnType<typeof compactSession>[];
+    const list = (ctx as Record<string, unknown>).clasesHoy as ReturnType<typeof compactSession>[];
     if (!list?.length) return "No hay clases programadas hoy.";
     return (
       `**Clases de hoy (${list.length}):**\n` +
@@ -190,19 +190,19 @@ export function rgccLocalFallback(
     );
   }
   if (/sin monitor/.test(text) && "clasesSinMonitor" in ctx) {
-    const list = (ctx as any).clasesSinMonitor as any[];
+    const list = (ctx as Record<string, unknown>).clasesSinMonitor as unknown[];
     return list?.length
       ? `Hay ${list.length} clase(s) sin monitor.`
       : "No hay clases sin monitor hoy. ✅";
   }
   if (/incidenc/.test(text) && "incidencias" in ctx) {
-    const list = (ctx as any).incidencias as any[];
+    const list = (ctx as Record<string, unknown>).incidencias as unknown[];
     return list?.length
       ? `Hay ${list.length} incidencia(s) abierta(s).`
       : "Sin incidencias abiertas.";
   }
   if ("misReservas" in ctx && /reserv/.test(text)) {
-    const list = (ctx as any).misReservas as any[];
+    const list = (ctx as Record<string, unknown>).misReservas as unknown[];
     return list?.length ? `Tienes ${list.length} reserva(s).` : "No tienes reservas próximas.";
   }
   return null;
