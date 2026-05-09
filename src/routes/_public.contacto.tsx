@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ContactPage } from "@/components/site/ContactPage";
+import { hrefLangLinks } from "@/lib/seo";
 
 export const Route = createFileRoute("/_public/contacto")({
   head: () => ({
@@ -9,6 +10,7 @@ export const Route = createFileRoute("/_public/contacto")({
       { property: "og:title", content: "Contacto — SAITO" },
       { property: "og:description", content: "Pide una demo personalizada para tu club." },
     ],
+    links: hrefLangLinks("/contacto", "es"),
   }),
   component: () => <ContactPage locale="es" />,
 });
