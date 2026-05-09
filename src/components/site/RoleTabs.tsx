@@ -20,7 +20,7 @@ export function RoleTabs({ roles }: Props) {
 
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 p-2 backdrop-blur">
-      <div className="flex flex-wrap gap-1 rounded-2xl bg-white/5 p-1">
+      <div className="grid grid-cols-2 gap-1 rounded-2xl bg-white/5 p-1 sm:flex sm:flex-wrap">
         {roles.map((r) => {
           const Icon = r.icon;
           const isActive = r.key === active;
@@ -28,17 +28,17 @@ export function RoleTabs({ roles }: Props) {
             <button
               key={r.key}
               onClick={() => setActive(r.key)}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-all ${
+              className={`flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all sm:flex-1 ${
                 isActive ? "bg-white text-saito-navy shadow" : "text-white/70 hover:text-white"
               }`}
             >
-              <Icon className="size-4" />
-              {r.label}
+              <Icon className="size-4 shrink-0" />
+              <span className="truncate">{r.label}</span>
             </button>
           );
         })}
       </div>
-      <div className="grid gap-6 p-6 md:grid-cols-2">
+      <div className="grid gap-6 p-4 sm:p-6 md:grid-cols-2">
         <ul className="space-y-3">
           {current.bullets.map((b) => (
             <li key={b} className="flex items-start gap-3 text-white/85">
