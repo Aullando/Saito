@@ -6,9 +6,16 @@ export const Route = createFileRoute("/_public/en/")({
   head: () => ({
     meta: [
       { title: "SAITO — Run your sports club from a single platform" },
-      { name: "description", content: "All-in-one platform for sports clubs: members, calendar, payments, communication and role-based AI. Privacy-by-design AI." },
+      {
+        name: "description",
+        content:
+          "All-in-one platform for sports clubs: members, calendar, payments, communication and role-based AI. Privacy-by-design AI.",
+      },
       { property: "og:title", content: "SAITO — Sports club platform" },
-      { property: "og:description", content: "Members, calendar, payments and communication in one place. Built-in AI." },
+      {
+        property: "og:description",
+        content: "Members, calendar, payments and communication in one place. Built-in AI.",
+      },
     ],
     links: hrefLangLinks("/", "en"),
     scripts: [

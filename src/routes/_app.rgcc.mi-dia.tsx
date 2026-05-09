@@ -10,9 +10,7 @@ import { useAuth } from "@/lib/auth";
 import { getRgccMiDiaView, isRgccAdmin } from "@/clubs/rgcc/permissions";
 import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
-import {
-  RGCC_SESSIONS, RGCC_PT_SESSIONS, RGCC_VENUES, RGCC_MEMBERS,
-} from "@/clubs/rgcc/seed";
+import { RGCC_SESSIONS, RGCC_PT_SESSIONS, RGCC_VENUES, RGCC_MEMBERS } from "@/clubs/rgcc/seed";
 import { Clock, PlayCircle, Users, MapPin, AlertTriangle, CalendarOff, Check } from "lucide-react";
 
 export const Route = createFileRoute("/_app/rgcc/mi-dia")({
@@ -32,7 +30,9 @@ function MiDiaGate() {
     const monitorName = identity.coachName ?? identity.displayName ?? "";
     return <MiDiaMonitor monitorName={monitorName} isAdmin={isAdmin} />;
   }
-  return <MiDiaSocio memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
+  return (
+    <MiDiaSocio memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />
+  );
 }
 
 // ─── Monitor ────────────────────────────────────────────────────────────────
@@ -44,7 +44,8 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
   const misClases = useMemo(
     () =>
       RGCC_SESSIONS.filter(
-        (c) => c.date === today && (c.primaryCoach === monitorName || c.substituteCoach === monitorName),
+        (c) =>
+          c.date === today && (c.primaryCoach === monitorName || c.substituteCoach === monitorName),
       ).sort((a, b) => a.time.localeCompare(b.time)),
     [today, monitorName],
   );
@@ -54,7 +55,7 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
     [monitorName],
   );
 
-  const horas = +(misClases.reduce((a, c) => a + c.durationMin / 60, 0)).toFixed(1);
+  const horas = +misClases.reduce((a, c) => a + c.durationMin / 60, 0).toFixed(1);
   const proxima = misClases.find((c) => c.time >= ahora) ?? misClases[0];
 
   const [checkedIn, setCheckedIn] = useState<Record<string, boolean>>({});
@@ -73,7 +74,8 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
           Hola {monitorName || "monitor"}
         </div>
         <div className="mt-1 text-xl font-bold">
-          Tienes {misClases.length} clase{misClases.length === 1 ? "" : "s"} hoy · {horas}h producción
+          Tienes {misClases.length} clase{misClases.length === 1 ? "" : "s"} hoy · {horas}h
+          producción
         </div>
         <div className="text-sm opacity-70 mt-1">
           {misEp.length} sesión EP asignada{misEp.length === 1 ? "" : "s"}
@@ -110,7 +112,9 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
               <div className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold flex items-center gap-1.5">
                 <Clock className="h-3 w-3" /> Próxima clase · ahora {ahora}
               </div>
-              <div className="mt-1 text-xl font-bold leading-tight truncate">{proxima.activity}</div>
+              <div className="mt-1 text-xl font-bold leading-tight truncate">
+                {proxima.activity}
+              </div>
               <div className="text-sm text-muted-foreground mt-1">
                 <span className="font-bold tabular-nums">{proxima.time}</span> ·{" "}
                 {RGCC_VENUES.find((v) => v.id === proxima.venueId)?.name} · {proxima.roomLabel}
@@ -169,7 +173,9 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
           })}
           {misClases.length === 0 && (
             <Card>
-              <p className="text-sm text-muted-foreground text-center py-6">No tienes clases hoy.</p>
+              <p className="text-sm text-muted-foreground text-center py-6">
+                No tienes clases hoy.
+              </p>
             </Card>
           )}
         </div>
@@ -228,7 +234,9 @@ function MiDiaSocio({ memberNumber, memberName }: { memberNumber: string; member
                   </div>
                 </div>
                 <div className="text-right text-xs">
-                  <div className="font-bold">{c.date} · {c.time}</div>
+                  <div className="font-bold">
+                    {c.date} · {c.time}
+                  </div>
                   <div className="text-muted-foreground">Monitor: {c.primaryCoach}</div>
                 </div>
               </div>

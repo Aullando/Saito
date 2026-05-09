@@ -8,7 +8,10 @@ export function WhyItMattersSection({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow={t(locale, { es: "Por qué importa", en: "Why it matters" })}
-          title={t(locale, { es: "Un club gestiona mucho más que partidos", en: "A club manages much more than matches" })}
+          title={t(locale, {
+            es: "Un club gestiona mucho más que partidos",
+            en: "A club manages much more than matches",
+          })}
         />
         <div className="mt-8 space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>

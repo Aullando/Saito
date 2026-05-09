@@ -8,7 +8,10 @@ export function ImplementationStatusSection({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow={t(locale, { es: "Transparencia", en: "Transparency" })}
-          title={t(locale, { es: "Estado real de implementación", en: "Real implementation status" })}
+          title={t(locale, {
+            es: "Estado real de implementación",
+            en: "Real implementation status",
+          })}
           subtitle={t(locale, {
             es: "Publicamos en abierto qué controles están activos hoy y cuáles entran durante la fase de piloto. La validación se hace con el club, no a su espalda.",
             en: "We publish openly which controls are active today and which enter during the pilot phase. Validation happens with the club, not behind their back.",
@@ -18,7 +21,9 @@ export function ImplementationStatusSection({ locale }: { locale: Locale }) {
           <table className="w-full text-sm">
             <thead className="bg-muted/40 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <tr>
-                <th className="px-5 py-3 text-left">{t(locale, { es: "Control", en: "Control" })}</th>
+                <th className="px-5 py-3 text-left">
+                  {t(locale, { es: "Control", en: "Control" })}
+                </th>
                 <th className="px-5 py-3 text-left">{t(locale, { es: "Estado", en: "Status" })}</th>
               </tr>
             </thead>

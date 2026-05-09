@@ -11,7 +11,9 @@ export function LangSwitcher() {
       <Link
         to={paths.es as any}
         className={`rounded-full px-3 py-1 transition-colors ${
-          locale === "es" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+          locale === "es"
+            ? "bg-foreground text-background"
+            : "text-muted-foreground hover:text-foreground"
         }`}
       >
         ES
@@ -19,7 +21,9 @@ export function LangSwitcher() {
       <Link
         to={paths.en as any}
         className={`rounded-full px-3 py-1 transition-colors ${
-          locale === "en" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+          locale === "en"
+            ? "bg-foreground text-background"
+            : "text-muted-foreground hover:text-foreground"
         }`}
       >
         EN

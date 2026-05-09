@@ -14,9 +14,12 @@ Deno.serve(async (req) => {
     const roleScope: Record<string, string> = {
       sysadmin: "Tienes acceso completo a organizaciones, usuarios y datos del sistema.",
       admin: "Tienes acceso a datos del club: deportistas, pagos, cuotas, calendario, médico.",
-      manager: "Tienes acceso a operaciones del club: deportistas, pagos, cuotas, calendario. NO accedes a datos sensibles médicos detallados.",
-      technical: "Solo accedes a datos deportivos: deportistas, grupos, entrenamientos, rendimiento. NO accedes a información económica.",
-      medical: "Solo accedes a datos médicos: citas, estado médico de deportistas, tratamientos. NO accedes a información económica.",
+      manager:
+        "Tienes acceso a operaciones del club: deportistas, pagos, cuotas, calendario. NO accedes a datos sensibles médicos detallados.",
+      technical:
+        "Solo accedes a datos deportivos: deportistas, grupos, entrenamientos, rendimiento. NO accedes a información económica.",
+      medical:
+        "Solo accedes a datos médicos: citas, estado médico de deportistas, tratamientos. NO accedes a información económica.",
     };
 
     const isRgcc = club === "rgcc";
@@ -48,16 +51,24 @@ ${JSON.stringify(context).slice(0, 60000)}`;
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Límite de peticiones alcanzado, intenta en un momento." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ error: "Límite de peticiones alcanzado, intenta en un momento." }),
+          {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Se han agotado los créditos de IA. Añade saldo en tu workspace." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            error: "Se han agotado los créditos de IA. Añade saldo en tu workspace.",
+          }),
+          {
+            status: 402,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
@@ -72,9 +83,12 @@ ${JSON.stringify(context).slice(0, 60000)}`;
     });
   } catch (e) {
     console.error("ai-chat error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Error desconocido" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: e instanceof Error ? e.message : "Error desconocido" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   }
 });

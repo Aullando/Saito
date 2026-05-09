@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const setUser = useLocalAuth((s) => s.setUser);
 
   const value = useMemo<AuthCtx>(() => {
-    const demo = currentUserId ? DEMO_USERS.find((u) => u.id === currentUserId) ?? null : null;
+    const demo = currentUserId ? (DEMO_USERS.find((u) => u.id === currentUserId) ?? null) : null;
     if (!demo) {
       return {
         session: null,

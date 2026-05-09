@@ -13,14 +13,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background">
       <Topbar />
       <Sidebar />
-      <div
-        className="transition-[padding] duration-200"
-        style={{ paddingLeft: 0 }}
-      >
-        <div
-          className="hidden md:block"
-          style={{ paddingLeft: collapsed ? 72 : 224 }}
-        >
+      <div className="transition-[padding] duration-200" style={{ paddingLeft: 0 }}>
+        <div className="hidden md:block" style={{ paddingLeft: collapsed ? 72 : 224 }}>
           <main className="px-4 py-5 pt-[72px] md:px-8 md:py-8 md:pt-[88px] lg:px-10">
             {children}
           </main>

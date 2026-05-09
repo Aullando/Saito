@@ -63,7 +63,9 @@ export function Topbar() {
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
-            placeholder={user.language === "es" ? `Buscar en ${club.brand.name}` : `Search ${club.brand.name}`}
+            placeholder={
+              user.language === "es" ? `Buscar en ${club.brand.name}` : `Search ${club.brand.name}`
+            }
             className="h-9 md:h-10 w-full rounded-full border border-border bg-card pl-10 pr-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
@@ -97,9 +99,15 @@ export function Topbar() {
             aria-label="Switch role"
           >
             <span className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center overflow-hidden rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
-              {avatar ? <img src={avatar} alt={user.name} className="h-full w-full object-cover" /> : user.initials}
+              {avatar ? (
+                <img src={avatar} alt={user.name} className="h-full w-full object-cover" />
+              ) : (
+                user.initials
+              )}
             </span>
-            <span className="hidden md:inline text-xs font-medium">{ROLE_LABEL[user.role] ?? user.role}</span>
+            <span className="hidden md:inline text-xs font-medium">
+              {ROLE_LABEL[user.role] ?? user.role}
+            </span>
             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
           {open && (
@@ -111,7 +119,10 @@ export function Topbar() {
                 {DEMO_USERS.filter((u) => ROLE_LABEL[u.role]).map((u) => (
                   <li key={u.id}>
                     <button
-                      onClick={() => { setUser(u.id); setOpen(false); }}
+                      onClick={() => {
+                        setUser(u.id);
+                        setOpen(false);
+                      }}
                       className={cn(
                         "flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-muted",
                         u.id === user.id && "bg-primary/10",
@@ -141,7 +152,11 @@ export function Topbar() {
             <input
               autoFocus
               type="search"
-              placeholder={user.language === "es" ? `Buscar en ${club.brand.name}` : `Search ${club.brand.name}`}
+              placeholder={
+                user.language === "es"
+                  ? `Buscar en ${club.brand.name}`
+                  : `Search ${club.brand.name}`
+              }
               className="h-10 w-full rounded-full border border-border bg-card pl-10 pr-10 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
             <button

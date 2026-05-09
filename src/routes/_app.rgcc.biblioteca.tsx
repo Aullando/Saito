@@ -5,10 +5,7 @@ import { useMemo, useState } from "react";
 import { Card, PageHeader, Pill, EmptyState } from "@/components/ui-kit";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
-import {
-  RGCC_EXERCISES, RGCC_ROUTINES,
-  type RgccExercise,
-} from "@/clubs/rgcc/seed";
+import { RGCC_EXERCISES, RGCC_ROUTINES, type RgccExercise } from "@/clubs/rgcc/seed";
 import { getRgccExerciseImage } from "@/clubs/rgcc/exerciseImages";
 import { BookOpen, Dumbbell, Search, Filter, ImageOff } from "lucide-react";
 
@@ -90,7 +87,9 @@ function Biblioteca() {
               onChange={(e) => setCat(e.target.value)}
               className="rounded-full border border-border bg-background px-3 py-2 text-sm"
             >
-              {categories.map((c) => <option key={c}>{c}</option>)}
+              {categories.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
             </select>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Filter className="h-3 w-3" /> origen
@@ -104,14 +103,18 @@ function Biblioteca() {
                 {s === "all" ? "Todos" : s === "library" ? "Catálogo" : "Evidencia"}
               </button>
             ))}
-            <div className="ml-auto text-xs text-muted-foreground">{filtered.length} resultados</div>
+            <div className="ml-auto text-xs text-muted-foreground">
+              {filtered.length} resultados
+            </div>
           </div>
 
           {filtered.length === 0 ? (
             <EmptyState>No hay ejercicios para ese filtro.</EmptyState>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filtered.map((ex) => <ExerciseCard key={ex.id} ex={ex} />)}
+              {filtered.map((ex) => (
+                <ExerciseCard key={ex.id} ex={ex} />
+              ))}
             </div>
           )}
         </>
@@ -122,7 +125,9 @@ function Biblioteca() {
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="font-semibold">{r.name}</div>
-                  <div className="text-xs text-muted-foreground">{r.level} · {r.durationMin} min</div>
+                  <div className="text-xs text-muted-foreground">
+                    {r.level} · {r.durationMin} min
+                  </div>
                 </div>
                 <Pill tone="info">{r.exerciseIds.length} ej.</Pill>
               </div>
@@ -131,7 +136,10 @@ function Biblioteca() {
                 {r.exerciseIds.map((id) => {
                   const ex = RGCC_EXERCISES.find((e) => e.id === id);
                   return (
-                    <li key={id} className="flex items-center justify-between gap-2 rounded-md bg-muted/40 px-2 py-1">
+                    <li
+                      key={id}
+                      className="flex items-center justify-between gap-2 rounded-md bg-muted/40 px-2 py-1"
+                    >
                       <span className="truncate">{ex?.name ?? id}</span>
                       <span className="text-muted-foreground">{ex?.dose}</span>
                     </li>
@@ -174,7 +182,9 @@ function ExerciseCard({ ex }: { ex: RgccExercise }) {
             {ex.source === "evidence" ? "EV" : "Cat."}
           </Pill>
         </div>
-        <div className="mt-1 text-xs text-muted-foreground">{ex.category} · {ex.group}</div>
+        <div className="mt-1 text-xs text-muted-foreground">
+          {ex.category} · {ex.group}
+        </div>
         <div className="mt-2 flex flex-wrap gap-1 text-[11px]">
           <span className="rounded-full bg-muted px-2 py-0.5">{ex.equipment}</span>
           <span className="rounded-full bg-muted px-2 py-0.5">{ex.level}</span>

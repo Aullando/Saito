@@ -12,8 +12,7 @@ export const useActiveClubStore = create<ActiveClubState>()(
   persist(
     (set) => ({
       overrideClubId: null,
-      switchClub: (id) =>
-        set({ overrideClubId: id && CLUBS[id] ? id : null }),
+      switchClub: (id) => set({ overrideClubId: id && CLUBS[id] ? id : null }),
     }),
     { name: "saito-active-club" },
   ),

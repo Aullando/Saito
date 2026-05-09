@@ -11,8 +11,12 @@ import { getRgccView } from "@/clubs/rgcc/permissions";
 import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
-  RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_ROUTINES, RGCC_EXERCISES,
-  type RgccPtSession, type RgccWorkout,
+  RGCC_PT_SESSIONS,
+  RGCC_WORKOUTS,
+  RGCC_ROUTINES,
+  RGCC_EXERCISES,
+  type RgccPtSession,
+  type RgccWorkout,
 } from "@/clubs/rgcc/seed";
 import { getRgccExerciseImage } from "@/clubs/rgcc/exerciseImages";
 import { Clock, Dumbbell, User, Sparkles, ListChecks } from "lucide-react";
@@ -31,7 +35,9 @@ function PtGate() {
   const identity = resolveRgccIdentity(user, roles);
   if (view === "cockpit") return <PtCockpit />;
   if (view === "coach") return <PtCoach name={identity.coachName ?? ""} />;
-  return <PtMember memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
+  return (
+    <PtMember memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />
+  );
 }
 
 // ─── Admin / Manager ────────────────────────────────────────────────────────
@@ -42,7 +48,10 @@ function PtCockpit() {
         title="Entrenamiento Personal"
         subtitle="Sesiones del día y entrenamientos asignados a socios."
         actions={
-          <Link to="/rgcc/biblioteca" className="rounded-full bg-primary px-3 py-1.5 text-sm text-primary-foreground hover:opacity-90">
+          <Link
+            to="/rgcc/biblioteca"
+            className="rounded-full bg-primary px-3 py-1.5 text-sm text-primary-foreground hover:opacity-90"
+          >
             <Dumbbell className="mr-1 inline h-4 w-4" />
             Abrir Biblioteca
           </Link>
@@ -51,19 +60,33 @@ function PtCockpit() {
 
       <div className="mb-6 grid gap-3 sm:grid-cols-4">
         <KpiCard label="Sesiones hoy" value={RGCC_PT_SESSIONS.length} />
-        <KpiCard label="Confirmadas" value={RGCC_PT_SESSIONS.filter((s) => s.status === "confirmed").length} />
-        <KpiCard label="Pendientes" value={RGCC_PT_SESSIONS.filter((s) => s.status === "pending").length} />
+        <KpiCard
+          label="Confirmadas"
+          value={RGCC_PT_SESSIONS.filter((s) => s.status === "confirmed").length}
+        />
+        <KpiCard
+          label="Pendientes"
+          value={RGCC_PT_SESSIONS.filter((s) => s.status === "pending").length}
+        />
         <KpiCard label="Asignaciones activas" value={RGCC_WORKOUTS.length} />
       </div>
 
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Agenda EP</h2>
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        Agenda EP
+      </h2>
       <div className="mb-8 grid gap-3 lg:grid-cols-2">
-        {RGCC_PT_SESSIONS.map((s) => <PtSessionCard key={s.id} session={s} />)}
+        {RGCC_PT_SESSIONS.map((s) => (
+          <PtSessionCard key={s.id} session={s} />
+        ))}
       </div>
 
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Asignaciones recientes</h2>
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        Asignaciones recientes
+      </h2>
       <div className="grid gap-3 lg:grid-cols-2">
-        {RGCC_WORKOUTS.map((w) => <WorkoutCard key={w.id} workout={w} />)}
+        {RGCC_WORKOUTS.map((w) => (
+          <WorkoutCard key={w.id} workout={w} />
+        ))}
       </div>
     </>
   );
@@ -71,10 +94,7 @@ function PtCockpit() {
 
 // ─── Coach view ─────────────────────────────────────────────────────────────
 function PtCoach({ name }: { name: string }) {
-  const mine = useMemo(
-    () => RGCC_PT_SESSIONS.filter((s) => name && s.coachName === name),
-    [name],
-  );
+  const mine = useMemo(() => RGCC_PT_SESSIONS.filter((s) => name && s.coachName === name), [name]);
   return (
     <>
       <PageHeader
@@ -85,7 +105,9 @@ function PtCoach({ name }: { name: string }) {
         <EmptyState>No tienes sesiones EP programadas.</EmptyState>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
-          {mine.map((s) => <PtSessionCard key={s.id} session={s} />)}
+          {mine.map((s) => (
+            <PtSessionCard key={s.id} session={s} />
+          ))}
         </div>
       )}
     </>
@@ -109,7 +131,9 @@ function PtMember({ memberNumber, memberName }: { memberNumber: string; memberNa
         <EmptyState>No tienes entrenamientos asignados.</EmptyState>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
-          {mine.map((w) => <WorkoutCard key={w.id} workout={w} showAthleteView />)}
+          {mine.map((w) => (
+            <WorkoutCard key={w.id} workout={w} showAthleteView />
+          ))}
         </div>
       )}
     </>
@@ -129,9 +153,13 @@ function KpiCard({ label, value }: { label: string; value: number }) {
 function PtSessionCard({ session: s }: { session: RgccPtSession }) {
   const routine = RGCC_ROUTINES.find((r) => r.id === s.routineId);
   const tone =
-    s.status === "confirmed" ? "success" :
-    s.status === "ready" ? "info" :
-    s.status === "done" ? "default" : "warning";
+    s.status === "confirmed"
+      ? "success"
+      : s.status === "ready"
+        ? "info"
+        : s.status === "done"
+          ? "default"
+          : "warning";
   return (
     <Card>
       <div className="flex items-start justify-between gap-3">
@@ -150,7 +178,9 @@ function PtSessionCard({ session: s }: { session: RgccPtSession }) {
         <div className="mt-3 rounded-lg bg-muted/40 p-3">
           <div className="flex items-center justify-between text-xs">
             <span className="font-medium">{routine.name}</span>
-            <span className="text-muted-foreground">{routine.durationMin} min · {routine.level}</span>
+            <span className="text-muted-foreground">
+              {routine.durationMin} min · {routine.level}
+            </span>
           </div>
           <div className="mt-1 text-[11px] text-muted-foreground">{routine.goal}</div>
         </div>
@@ -160,10 +190,15 @@ function PtSessionCard({ session: s }: { session: RgccPtSession }) {
   );
 }
 
-function WorkoutCard({ workout: w, showAthleteView }: { workout: RgccWorkout; showAthleteView?: boolean }) {
+function WorkoutCard({
+  workout: w,
+  showAthleteView,
+}: {
+  workout: RgccWorkout;
+  showAthleteView?: boolean;
+}) {
   const tone =
-    w.status === "completed" ? "success" :
-    w.status === "in_progress" ? "info" : "warning";
+    w.status === "completed" ? "success" : w.status === "in_progress" ? "info" : "warning";
   return (
     <Card>
       <div className="flex items-start justify-between gap-2">
@@ -176,7 +211,10 @@ function WorkoutCard({ workout: w, showAthleteView }: { workout: RgccWorkout; sh
         <div className="flex flex-col items-end gap-1">
           <Pill tone={tone as never}>{w.status}</Pill>
           {w.source === "ai" && (
-            <Pill tone="info"><Sparkles className="mr-1 inline h-3 w-3" />IA</Pill>
+            <Pill tone="info">
+              <Sparkles className="mr-1 inline h-3 w-3" />
+              IA
+            </Pill>
           )}
         </div>
       </div>
@@ -189,7 +227,12 @@ function WorkoutCard({ workout: w, showAthleteView }: { workout: RgccWorkout; sh
             <li key={i} className="flex items-center gap-3 rounded-lg bg-muted/40 p-2">
               <div className="h-10 w-10 shrink-0 overflow-hidden rounded-md bg-muted">
                 {img ? (
-                  <img src={img} alt={b.name} className="h-full w-full object-cover" loading="lazy" />
+                  <img
+                    src={img}
+                    alt={b.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
                 ) : (
                   <div className="flex h-full items-center justify-center text-muted-foreground">
                     <ListChecks className="h-4 w-4" />
@@ -199,7 +242,8 @@ function WorkoutCard({ workout: w, showAthleteView }: { workout: RgccWorkout; sh
               <div className="min-w-0 flex-1">
                 <div className="truncate text-xs font-medium">{b.name}</div>
                 <div className="text-[10px] text-muted-foreground">
-                  {b.dose}{b.rest ? ` · descanso ${b.rest}` : ""}
+                  {b.dose}
+                  {b.rest ? ` · descanso ${b.rest}` : ""}
                   {ex?.category ? ` · ${ex.category}` : ""}
                 </div>
               </div>

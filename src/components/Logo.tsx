@@ -19,12 +19,7 @@ export function Logo({ size = 32, withText = true }: { size?: number; withText?:
     );
   }
   return (
-    <img
-      src={fullSrc}
-      alt={alt}
-      style={{ height: size }}
-      className="shrink-0 object-contain"
-    />
+    <img src={fullSrc} alt={alt} style={{ height: size }} className="shrink-0 object-contain" />
   );
 }
 

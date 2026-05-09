@@ -8,7 +8,10 @@ export function CtaSection({ locale }: { locale: Locale }) {
     <section className="py-20">
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-          {t(locale, { es: "¿Quieres ver cómo lo aplicamos en tu club?", en: "Want to see how we apply this to your club?" })}
+          {t(locale, {
+            es: "¿Quieres ver cómo lo aplicamos en tu club?",
+            en: "Want to see how we apply this to your club?",
+          })}
         </h2>
         <p className="mt-3 text-muted-foreground">
           {t(locale, {

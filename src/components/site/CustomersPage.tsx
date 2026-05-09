@@ -44,7 +44,10 @@ export function CustomersPage({ locale }: { locale: Locale }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Clientes", "Customers")}
-            title={t("Clubes que ya no vuelven a las hojas de cálculo", "Clubs that never go back to spreadsheets")}
+            title={t(
+              "Clubes que ya no vuelven a las hojas de cálculo",
+              "Clubs that never go back to spreadsheets",
+            )}
           />
         </div>
       </section>
@@ -54,7 +57,10 @@ export function CustomersPage({ locale }: { locale: Locale }) {
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
             <img
               src={customerVisual}
-              alt={t("Club operando con SAITO en su día a día", "Club operating with SAITO every day")}
+              alt={t(
+                "Club operando con SAITO en su día a día",
+                "Club operating with SAITO every day",
+              )}
               loading="lazy"
               width={1800}
               height={1125}
@@ -67,13 +73,18 @@ export function CustomersPage({ locale }: { locale: Locale }) {
       <section className="pb-20 pt-8">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
           {cases.map((c) => (
-            <article key={c.club} className="flex flex-col rounded-3xl border border-border bg-card p-7">
+            <article
+              key={c.club}
+              className="flex flex-col rounded-3xl border border-border bg-card p-7"
+            >
               <Quote className="size-6 text-primary" />
               <p className="mt-4 text-base leading-relaxed">"{c.quote}"</p>
               <div className="mt-6 border-t border-border pt-4">
                 <p className="font-semibold">{c.club}</p>
                 <p className="text-xs text-muted-foreground">{c.sport}</p>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{c.author}</p>
+                <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {c.author}
+                </p>
               </div>
             </article>
           ))}
@@ -82,9 +93,17 @@ export function CustomersPage({ locale }: { locale: Locale }) {
 
       <section className="border-t border-border bg-saito-gradient py-16 text-white">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-bold sm:text-3xl">{t("¿Quieres ser el siguiente caso?", "Want to be the next case?")}</h3>
-          <Button asChild size="lg" className="mt-6 rounded-full bg-white px-6 text-saito-navy hover:bg-white/90">
-            <Link to={localizedPath("/contacto", locale) as any}>{t("Pide una demo", "Book a demo")}</Link>
+          <h3 className="text-2xl font-bold sm:text-3xl">
+            {t("¿Quieres ser el siguiente caso?", "Want to be the next case?")}
+          </h3>
+          <Button
+            asChild
+            size="lg"
+            className="mt-6 rounded-full bg-white px-6 text-saito-navy hover:bg-white/90"
+          >
+            <Link to={localizedPath("/contacto", locale) as any}>
+              {t("Pide una demo", "Book a demo")}
+            </Link>
           </Button>
         </div>
       </section>

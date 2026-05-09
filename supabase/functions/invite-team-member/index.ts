@@ -33,17 +33,25 @@ Deno.serve(async (req) => {
 
     // Verify caller is admin in their org
     const { data: profile } = await admin
-      .from("profiles").select("organization_id").eq("id", caller.id).maybeSingle();
+      .from("profiles")
+      .select("organization_id")
+      .eq("id", caller.id)
+      .maybeSingle();
     const orgId = profile?.organization_id;
     if (!orgId) return json({ error: "no_org" }, 400);
 
     const { data: roleRows } = await admin
-      .from("user_roles").select("role").eq("user_id", caller.id).eq("organization_id", orgId);
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", caller.id)
+      .eq("organization_id", orgId);
     const callerRoles = (roleRows ?? []).map((r) => r.role);
     if (!callerRoles.includes("admin")) return json({ error: "forbidden" }, 403);
 
     const body = await req.json().catch(() => ({}));
-    const email = String(body.email ?? "").trim().toLowerCase();
+    const email = String(body.email ?? "")
+      .trim()
+      .toLowerCase();
     const fullName = String(body.full_name ?? "").trim() || null;
     const roles: string[] = Array.isArray(body.roles) ? body.roles : [];
     const validRoles = ["admin", "manager", "technical", "medical"];

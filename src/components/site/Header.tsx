@@ -41,7 +41,11 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to={localizedPath("/", locale) as any} className="flex items-center gap-2">
-          <img src={logoFrase} alt="SAITO — gestión inteligente para clubes deportivos" className="h-8 w-auto" />
+          <img
+            src={logoFrase}
+            alt="SAITO — gestión inteligente para clubes deportivos"
+            className="h-8 w-auto"
+          />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
@@ -51,7 +55,9 @@ export function Header() {
               to={localizedPath(it.to, locale) as any}
               activeOptions={it.to === "/" ? { exact: true } : undefined}
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              activeProps={{ className: "rounded-md px-3 py-2 text-sm font-semibold text-foreground bg-accent" }}
+              activeProps={{
+                className: "rounded-md px-3 py-2 text-sm font-semibold text-foreground bg-accent",
+              }}
             >
               {it.label}
             </Link>
@@ -101,15 +107,22 @@ export function Header() {
               <div className="flex items-center gap-2">
                 {session ? (
                   <Button asChild variant="outline" className="rounded-full">
-                    <Link to="/dashboard" onClick={() => setOpen(false)}>{panelLabel}</Link>
+                    <Link to="/dashboard" onClick={() => setOpen(false)}>
+                      {panelLabel}
+                    </Link>
                   </Button>
                 ) : (
                   <Button asChild variant="ghost" className="rounded-full">
-                    <Link to="/login" onClick={() => setOpen(false)}>{loginLabel}</Link>
+                    <Link to="/login" onClick={() => setOpen(false)}>
+                      {loginLabel}
+                    </Link>
                   </Button>
                 )}
                 <Button asChild className="rounded-full">
-                  <Link to={localizedPath("/contacto", locale) as any} onClick={() => setOpen(false)}>
+                  <Link
+                    to={localizedPath("/contacto", locale) as any}
+                    onClick={() => setOpen(false)}
+                  >
                     {cta}
                   </Link>
                 </Button>

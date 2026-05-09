@@ -8,10 +8,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,7 +49,11 @@ type Org = {
 
 const PAGE_SIZE = 8;
 const slugify = (s: string) =>
-  s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  s
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 function OrganizationsPage() {
   const qc = useQueryClient();
@@ -71,7 +84,9 @@ function OrganizationsPage() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["organizations"] });
       setOpen(false);
-      setName(""); setSlug(""); setLanguage("es");
+      setName("");
+      setSlug("");
+      setLanguage("es");
     },
   });
 
@@ -106,14 +121,24 @@ function OrganizationsPage() {
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="rounded-full"><Plus className="mr-1 h-4 w-4" /> New organization</Button>
+              <Button className="rounded-full">
+                <Plus className="mr-1 h-4 w-4" /> New organization
+              </Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>New organization</DialogTitle></DialogHeader>
+              <DialogHeader>
+                <DialogTitle>New organization</DialogTitle>
+              </DialogHeader>
               <div className="space-y-3">
                 <div>
                   <Label>Name</Label>
-                  <Input value={name} onChange={(e) => { setName(e.target.value); if (!slug) setSlug(slugify(e.target.value)); }} />
+                  <Input
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (!slug) setSlug(slugify(e.target.value));
+                    }}
+                  />
                 </div>
                 <div>
                   <Label>Slug</Label>
@@ -122,7 +147,9 @@ function OrganizationsPage() {
                 <div>
                   <Label>Language</Label>
                   <Select value={language} onValueChange={setLanguage}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="es">Español</SelectItem>
                       <SelectItem value="en">English</SelectItem>
@@ -131,11 +158,15 @@ function OrganizationsPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
                 <Button
                   disabled={!name.trim() || !slug.trim() || addOrg.isPending}
                   onClick={() => addOrg.mutate({ name: name.trim(), slug: slug.trim(), language })}
-                >Create</Button>
+                >
+                  Create
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -157,21 +188,44 @@ function OrganizationsPage() {
             </thead>
             <tbody>
               {orgsQ.isLoading && (
-                <tr><td colSpan={6} className="px-5 py-6 text-center text-muted-foreground">…</td></tr>
+                <tr>
+                  <td colSpan={6} className="px-5 py-6 text-center text-muted-foreground">
+                    …
+                  </td>
+                </tr>
               )}
               {!orgsQ.isLoading && paged.length === 0 && (
-                <tr><td colSpan={6} className="px-5 py-6 text-center text-muted-foreground">No organizations</td></tr>
+                <tr>
+                  <td colSpan={6} className="px-5 py-6 text-center text-muted-foreground">
+                    No organizations
+                  </td>
+                </tr>
               )}
               {paged.map((o) => (
                 <tr key={o.id} className="border-t border-border hover:bg-muted/30">
                   <td className="px-5 py-3 font-medium">{o.name}</td>
                   <td className="px-5 py-3 text-muted-foreground">{o.slug}</td>
                   <td className="px-5 py-3 uppercase text-xs">{o.language}</td>
-                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">{formatDateTime(o.created_at)}</td>
-                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">{formatDateTime(o.updated_at)}</td>
+                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">
+                    {formatDateTime(o.created_at)}
+                  </td>
+                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">
+                    {formatDateTime(o.updated_at)}
+                  </td>
                   <td className="px-5 py-3 text-right whitespace-nowrap">
-                    <Button size="sm" variant="ghost" onClick={() => setDetail(o)}>Details</Button>
-                    <Button size="sm" variant="ghost" className="text-destructive" onClick={() => { if (confirm("Delete this organization?")) delOrg.mutate(o.id); }}>Delete</Button>
+                    <Button size="sm" variant="ghost" onClick={() => setDetail(o)}>
+                      Details
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-destructive"
+                      onClick={() => {
+                        if (confirm("Delete this organization?")) delOrg.mutate(o.id);
+                      }}
+                    >
+                      Delete
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -182,11 +236,29 @@ function OrganizationsPage() {
 
       {totalPages > 1 && (
         <div className="mt-4 flex items-center justify-end gap-3 text-sm">
-          <button className="text-muted-foreground hover:text-foreground disabled:opacity-40" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>Previous</button>
+          <button
+            className="text-muted-foreground hover:text-foreground disabled:opacity-40"
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
+            Previous
+          </button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-            <button key={n} onClick={() => setPage(n)} className={`flex h-7 w-7 items-center justify-center rounded-full ${n === page ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}>{n}</button>
+            <button
+              key={n}
+              onClick={() => setPage(n)}
+              className={`flex h-7 w-7 items-center justify-center rounded-full ${n === page ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            >
+              {n}
+            </button>
           ))}
-          <button className="text-muted-foreground hover:text-foreground disabled:opacity-40" disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}>Next</button>
+          <button
+            className="text-muted-foreground hover:text-foreground disabled:opacity-40"
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Next
+          </button>
         </div>
       )}
 
@@ -194,9 +266,14 @@ function OrganizationsPage() {
         <SheetContent className="w-full sm:max-w-md">
           {detail && (
             <>
-              <SheetHeader><SheetTitle>{detail.name}</SheetTitle></SheetHeader>
+              <SheetHeader>
+                <SheetTitle>{detail.name}</SheetTitle>
+              </SheetHeader>
               <div className="mt-6 space-y-4 text-sm">
-                <div><span className="text-muted-foreground">ID:</span> <span className="font-mono text-xs">{detail.id}</span></div>
+                <div>
+                  <span className="text-muted-foreground">ID:</span>{" "}
+                  <span className="font-mono text-xs">{detail.id}</span>
+                </div>
                 <div>
                   <Label>Name</Label>
                   <Input
@@ -217,9 +294,14 @@ function OrganizationsPage() {
                   <Label>Language</Label>
                   <Select
                     value={detail.language}
-                    onValueChange={(v) => { setDetail({ ...detail, language: v }); updateOrg.mutate({ id: detail.id, patch: { language: v } }); }}
+                    onValueChange={(v) => {
+                      setDetail({ ...detail, language: v });
+                      updateOrg.mutate({ id: detail.id, patch: { language: v } });
+                    }}
                   >
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="es">Español</SelectItem>
                       <SelectItem value="en">English</SelectItem>
@@ -227,11 +309,19 @@ function OrganizationsPage() {
                   </Select>
                 </div>
                 <div className="text-xs text-muted-foreground pt-2">
-                  Created: {formatDateTime(detail.created_at)}<br />
+                  Created: {formatDateTime(detail.created_at)}
+                  <br />
                   Updated: {formatDateTime(detail.updated_at)}
                 </div>
                 <div className="pt-4">
-                  <Button variant="destructive" onClick={() => { if (confirm("Delete this organization?")) delOrg.mutate(detail.id); }}>Delete organization</Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      if (confirm("Delete this organization?")) delOrg.mutate(detail.id);
+                    }}
+                  >
+                    Delete organization
+                  </Button>
                 </div>
               </div>
             </>

@@ -15,7 +15,8 @@ export function AIPage({ locale }: { locale: Locale }) {
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold">
-                <Sparkles className="size-3.5" /> {t("SAITO AI · privada por diseño", "SAITO AI · privacy by design")}
+                <Sparkles className="size-3.5" />{" "}
+                {t("SAITO AI · privada por diseño", "SAITO AI · privacy by design")}
               </div>
               <h1 className="mt-5 text-4xl font-extrabold sm:text-5xl md:text-6xl">
                 {t("Una IA que conoce tu club", "An AI that knows your club")}
@@ -54,9 +55,30 @@ export function AIPage({ locale }: { locale: Locale }) {
           />
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {[
-              { i: Cpu, t: t("Modelos avanzados", "Advanced models"), d: t("Respuestas rápidas y multimodales sobre los datos de tu club.", "Fast, multimodal answers over your club data.") },
-              { i: ShieldCheck, t: t("Privacidad por diseño", "Privacy by design"), d: t("Aislamiento por club, permisos por rol y trazabilidad de uso.", "Per-club isolation, role-based permissions and usage audit.") },
-              { i: Sparkles, t: t("Acciones, no solo respuestas", "Actions, not just answers"), d: t("Genera comunicaciones, crea convocatorias y propone planes.", "Drafts comms, creates call-ups and proposes plans.") },
+              {
+                i: Cpu,
+                t: t("Modelos avanzados", "Advanced models"),
+                d: t(
+                  "Respuestas rápidas y multimodales sobre los datos de tu club.",
+                  "Fast, multimodal answers over your club data.",
+                ),
+              },
+              {
+                i: ShieldCheck,
+                t: t("Privacidad por diseño", "Privacy by design"),
+                d: t(
+                  "Aislamiento por club, permisos por rol y trazabilidad de uso.",
+                  "Per-club isolation, role-based permissions and usage audit.",
+                ),
+              },
+              {
+                i: Sparkles,
+                t: t("Acciones, no solo respuestas", "Actions, not just answers"),
+                d: t(
+                  "Genera comunicaciones, crea convocatorias y propone planes.",
+                  "Drafts comms, creates call-ups and proposes plans.",
+                ),
+              },
             ].map((b) => {
               const I = b.i;
               return (
@@ -75,9 +97,13 @@ export function AIPage({ locale }: { locale: Locale }) {
 
       <section className="border-t border-border py-16">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-bold sm:text-3xl">{t("Prueba la IA con datos de tu club", "Try the AI with your club's data")}</h3>
+          <h3 className="text-2xl font-bold sm:text-3xl">
+            {t("Prueba la IA con datos de tu club", "Try the AI with your club's data")}
+          </h3>
           <Button asChild size="lg" className="mt-6 rounded-full px-6">
-            <Link to={localizedPath("/contacto", locale) as any}>{t("Pide una demo", "Book a demo")}</Link>
+            <Link to={localizedPath("/contacto", locale) as any}>
+              {t("Pide una demo", "Book a demo")}
+            </Link>
           </Button>
         </div>
       </section>

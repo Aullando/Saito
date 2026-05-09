@@ -1,22 +1,37 @@
 // RGCC AI context — feeds the SAITO assistant when the active club is RGCC.
 // La identidad la resuelve resolveRgccIdentity (ver identity.ts), no full_name.
 import {
-  RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES,
-  RGCC_COACHES, RGCC_MEMBERS, RGCC_VENUES, RGCC_ROOMS,
-  RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_ROUTINES, RGCC_EXERCISES,
+  RGCC_SESSIONS,
+  RGCC_INCIDENTS,
+  RGCC_ABSENCES,
+  RGCC_COACHES,
+  RGCC_MEMBERS,
+  RGCC_VENUES,
+  RGCC_ROOMS,
+  RGCC_PT_SESSIONS,
+  RGCC_WORKOUTS,
+  RGCC_ROUTINES,
+  RGCC_EXERCISES,
 } from "./seed";
 import { resolveRgccIdentity, type RgccIdentity, type RgccScope } from "./identity";
 import type { Role } from "@/lib/types";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
-function compactSession(s: typeof RGCC_SESSIONS[number]) {
+function compactSession(s: (typeof RGCC_SESSIONS)[number]) {
   const venue = RGCC_VENUES.find((v) => v.id === s.venueId)?.name;
   return {
-    id: s.id, fecha: s.date, hora: s.time, actividad: s.activity,
-    sede: venue, sala: s.roomLabel, monitor: s.primaryCoach,
-    sustituto: s.substituteCoach, aforo: s.capacity,
-    reservados: s.bookings.length, espera: s.waitlist.length,
+    id: s.id,
+    fecha: s.date,
+    hora: s.time,
+    actividad: s.activity,
+    sede: venue,
+    sala: s.roomLabel,
+    monitor: s.primaryCoach,
+    sustituto: s.substituteCoach,
+    aforo: s.capacity,
+    reservados: s.bookings.length,
+    espera: s.waitlist.length,
     estado: s.status,
   };
 }
@@ -35,8 +50,18 @@ export function buildRgccContext(role: Role | string, user: RgccUserLike, rolesA
 
 export function buildRgccContextFromIdentity(identity: RgccIdentity) {
   const fechaHoy = today();
-  const sedes = RGCC_VENUES.map((v) => ({ id: v.id, nombre: v.name, zona: v.zone, estado: v.status }));
-  const salas = RGCC_ROOMS.map((r) => ({ id: r.id, sedeId: r.venueId, nombre: r.name, capacidad: r.capacity }));
+  const sedes = RGCC_VENUES.map((v) => ({
+    id: v.id,
+    nombre: v.name,
+    zona: v.zone,
+    estado: v.status,
+  }));
+  const salas = RGCC_ROOMS.map((r) => ({
+    id: r.id,
+    sedeId: r.venueId,
+    nombre: r.name,
+    capacidad: r.capacity,
+  }));
 
   // Coordinación → cockpit completo
   if (identity.scope === "coordinacion") {
@@ -45,21 +70,29 @@ export function buildRgccContextFromIdentity(identity: RgccIdentity) {
       club: "Real Grupo de Cultura Covadonga",
       alcance: "coordinacion" as const,
       fechaHoy,
-      sedes, salas,
+      sedes,
+      salas,
       clasesHoy: RGCC_SESSIONS.filter((s) => s.date === fechaHoy).map(compactSession),
       clasesProximas: RGCC_SESSIONS.filter((s) => s.date > fechaHoy).map(compactSession),
-      clasesSinMonitor: RGCC_SESSIONS
-        .filter((s) => s.date === fechaHoy && !s.primaryCoach)
-        .map(compactSession),
+      clasesSinMonitor: RGCC_SESSIONS.filter((s) => s.date === fechaHoy && !s.primaryCoach).map(
+        compactSession,
+      ),
       monitores: RGCC_COACHES.map((c) => ({
-        nombre: c.name, especialidad: c.specialty, estado: c.status,
-        horasContratadas: c.contractedHours, horasTotales: c.totalHours,
+        nombre: c.name,
+        especialidad: c.specialty,
+        estado: c.status,
+        horasContratadas: c.contractedHours,
+        horasTotales: c.totalHours,
       })),
       incidencias: incidenciasAbiertas,
       ausenciasPendientes: RGCC_ABSENCES.filter((a) => a.status === "requested"),
       ep: RGCC_PT_SESSIONS,
       sociosTotales: RGCC_MEMBERS.length,
-      bibliotecaTotales: { ejercicios: RGCC_EXERCISES.length, rutinas: RGCC_ROUTINES.length, workouts: RGCC_WORKOUTS.length },
+      bibliotecaTotales: {
+        ejercicios: RGCC_EXERCISES.length,
+        rutinas: RGCC_ROUTINES.length,
+        workouts: RGCC_WORKOUTS.length,
+      },
     };
   }
 
@@ -87,10 +120,12 @@ export function buildRgccContextFromIdentity(identity: RgccIdentity) {
 
   // Socio
   const memberNumber = identity.memberNumber ?? "";
-  const misReservas = RGCC_SESSIONS.filter((s) => s.bookings.includes(memberNumber)).map(compactSession);
-  const disponibles = RGCC_SESSIONS
-    .filter((s) => s.date >= fechaHoy && !s.bookings.includes(memberNumber) && s.status !== "cancelled")
-    .map(compactSession);
+  const misReservas = RGCC_SESSIONS.filter((s) => s.bookings.includes(memberNumber)).map(
+    compactSession,
+  );
+  const disponibles = RGCC_SESSIONS.filter(
+    (s) => s.date >= fechaHoy && !s.bookings.includes(memberNumber) && s.status !== "cancelled",
+  ).map(compactSession);
   return {
     club: "Real Grupo de Cultura Covadonga",
     alcance: "socio" as const,
@@ -105,7 +140,11 @@ export function buildRgccContextFromIdentity(identity: RgccIdentity) {
 }
 
 /** Sugerencias contextuales RGCC por alcance. */
-export function rgccSuggestions(role: Role | string, user?: RgccUserLike, rolesArg?: Role[]): string[] {
+export function rgccSuggestions(
+  role: Role | string,
+  user?: RgccUserLike,
+  rolesArg?: Role[],
+): string[] {
   const roles = (rolesArg ?? [role as Role]).filter(Boolean) as Role[];
   const id = resolveRgccIdentity(user, roles);
   if (id.scope === "coordinacion") {
@@ -131,20 +170,36 @@ export function rgccSuggestions(role: Role | string, user?: RgccUserLike, rolesA
 }
 
 /** Resolver determinista local — fallback rápido cuando la IA no responde. */
-export function rgccLocalFallback(_role: string, ctx: ReturnType<typeof buildRgccContextFromIdentity>, q: string): string | null {
+export function rgccLocalFallback(
+  _role: string,
+  ctx: ReturnType<typeof buildRgccContextFromIdentity>,
+  q: string,
+): string | null {
   const text = q.toLowerCase();
   if (/clases?.*(hoy|del d[ií]a)/.test(text) && "clasesHoy" in ctx) {
     const list = (ctx as any).clasesHoy as ReturnType<typeof compactSession>[];
     if (!list?.length) return "No hay clases programadas hoy.";
-    return `**Clases de hoy (${list.length}):**\n` + list.map((c) => `- ${c.hora} · ${c.actividad} · ${c.sede ?? ""} ${c.sala ? "· " + c.sala : ""} (${c.reservados}/${c.aforo}) — ${c.monitor}`).join("\n");
+    return (
+      `**Clases de hoy (${list.length}):**\n` +
+      list
+        .map(
+          (c) =>
+            `- ${c.hora} · ${c.actividad} · ${c.sede ?? ""} ${c.sala ? "· " + c.sala : ""} (${c.reservados}/${c.aforo}) — ${c.monitor}`,
+        )
+        .join("\n")
+    );
   }
   if (/sin monitor/.test(text) && "clasesSinMonitor" in ctx) {
     const list = (ctx as any).clasesSinMonitor as any[];
-    return list?.length ? `Hay ${list.length} clase(s) sin monitor.` : "No hay clases sin monitor hoy. ✅";
+    return list?.length
+      ? `Hay ${list.length} clase(s) sin monitor.`
+      : "No hay clases sin monitor hoy. ✅";
   }
   if (/incidenc/.test(text) && "incidencias" in ctx) {
     const list = (ctx as any).incidencias as any[];
-    return list?.length ? `Hay ${list.length} incidencia(s) abierta(s).` : "Sin incidencias abiertas.";
+    return list?.length
+      ? `Hay ${list.length} incidencia(s) abierta(s).`
+      : "Sin incidencias abiertas.";
   }
   if ("misReservas" in ctx && /reserv/.test(text)) {
     const list = (ctx as any).misReservas as any[];

@@ -20,8 +20,7 @@ type Notification = {
 
 function timeAgo(iso: string, lang: "es" | "en") {
   const diff = (Date.now() - new Date(iso).getTime()) / 1000;
-  const r = (n: number, es: string, en: string) =>
-    `${Math.floor(n)} ${lang === "es" ? es : en}`;
+  const r = (n: number, es: string, en: string) => `${Math.floor(n)} ${lang === "es" ? es : en}`;
   if (diff < 60) return lang === "es" ? "ahora" : "now";
   if (diff < 3600) return r(diff / 60, "min", "min");
   if (diff < 86400) return r(diff / 3600, "h", "h");

@@ -23,7 +23,10 @@ export function PricingPage({ locale }: { locale: Locale }) {
     {
       name: "Pro",
       price: t("Desde 249 € /mes", "From €249 /mo"),
-      desc: t("Para clubes consolidados con varios equipos.", "For established clubs with several teams."),
+      desc: t(
+        "Para clubes consolidados con varios equipos.",
+        "For established clubs with several teams.",
+      ),
       features: [
         t("Socios ilimitados", "Unlimited members"),
         t("IA por rol incluida", "Role-based AI included"),
@@ -36,7 +39,10 @@ export function PricingPage({ locale }: { locale: Locale }) {
     {
       name: "Multi-club",
       price: t("A medida", "Custom"),
-      desc: t("Para entidades polideportivas con varias sedes.", "For multi-sport organisations with several venues."),
+      desc: t(
+        "Para entidades polideportivas con varias sedes.",
+        "For multi-sport organisations with several venues.",
+      ),
       features: [
         t("Sedes y secciones ilimitadas", "Unlimited venues & sections"),
         t("Gobierno y permisos avanzados", "Advanced governance & permissions"),
@@ -54,11 +60,17 @@ export function PricingPage({ locale }: { locale: Locale }) {
     },
     {
       q: t("¿Migráis los datos?", "Do you migrate our data?"),
-      a: t("Sí. Migración asistida desde Excel o tu sistema actual.", "Yes. Assisted migration from Excel or your current system."),
+      a: t(
+        "Sí. Migración asistida desde Excel o tu sistema actual.",
+        "Yes. Assisted migration from Excel or your current system.",
+      ),
     },
     {
       q: t("¿Está incluida la IA?", "Is AI included?"),
-      a: t("Sí en planes Pro y Multi-club; con cuotas justas de uso.", "Yes on Pro and Multi-club plans, with fair usage."),
+      a: t(
+        "Sí en planes Pro y Multi-club; con cuotas justas de uso.",
+        "Yes on Pro and Multi-club plans, with fair usage.",
+      ),
     },
   ];
 
@@ -69,7 +81,10 @@ export function PricingPage({ locale }: { locale: Locale }) {
           <SectionHeading
             eyebrow={t("Precios", "Pricing")}
             title={t("Planes que crecen con tu club", "Plans that grow with your club")}
-            subtitle={t("Sin sorpresas. Habla con nosotros para una propuesta a medida.", "No surprises. Talk to us for a tailored quote.")}
+            subtitle={t(
+              "Sin sorpresas. Habla con nosotros para una propuesta a medida.",
+              "No surprises. Talk to us for a tailored quote.",
+            )}
           />
         </div>
       </section>
@@ -80,7 +95,9 @@ export function PricingPage({ locale }: { locale: Locale }) {
             <div
               key={p.name}
               className={`relative flex flex-col rounded-3xl border p-7 ${
-                p.highlight ? "border-primary bg-saito-navy text-white shadow-xl" : "border-border bg-card"
+                p.highlight
+                  ? "border-primary bg-saito-navy text-white shadow-xl"
+                  : "border-border bg-card"
               }`}
             >
               {p.highlight && (
@@ -89,12 +106,18 @@ export function PricingPage({ locale }: { locale: Locale }) {
                 </span>
               )}
               <h3 className="text-xl font-bold">{p.name}</h3>
-              <p className={`mt-1 text-sm ${p.highlight ? "text-white/70" : "text-muted-foreground"}`}>{p.desc}</p>
+              <p
+                className={`mt-1 text-sm ${p.highlight ? "text-white/70" : "text-muted-foreground"}`}
+              >
+                {p.desc}
+              </p>
               <p className="mt-6 text-3xl font-extrabold">{p.price}</p>
               <ul className="mt-6 flex-1 space-y-2 text-sm">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <Check className={`mt-0.5 size-4 shrink-0 ${p.highlight ? "text-saito-green" : "text-saito-green"}`} />
+                    <Check
+                      className={`mt-0.5 size-4 shrink-0 ${p.highlight ? "text-saito-green" : "text-saito-green"}`}
+                    />
                     {f}
                   </li>
                 ))}
@@ -113,7 +136,9 @@ export function PricingPage({ locale }: { locale: Locale }) {
 
       <section className="border-t border-border bg-muted/40 py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-bold sm:text-3xl">{t("Preguntas frecuentes", "Frequently asked questions")}</h3>
+          <h3 className="text-2xl font-bold sm:text-3xl">
+            {t("Preguntas frecuentes", "Frequently asked questions")}
+          </h3>
           <dl className="mt-8 space-y-6">
             {faqs.map((f) => (
               <div key={f.q} className="rounded-2xl border border-border bg-card p-5">

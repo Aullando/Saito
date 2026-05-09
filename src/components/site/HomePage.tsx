@@ -33,14 +33,70 @@ export function HomePage({ locale }: Props) {
   const t = (es: string, en: string) => (locale === "en" ? en : es);
 
   const modules = [
-    { icon: Users, title: t("Socios y deportistas", "Members & athletes"), description: t("Ficha única, altas, bajas, categorías y fichajes en un solo lugar.", "Single profile, sign-ups, drop-offs, categories and signings in one place.") },
-    { icon: CalendarDays, title: t("Calendario y reservas", "Calendar & bookings"), description: t("Entrenamientos, partidos y reserva de instalaciones sin choques.", "Training, matches and facility booking with zero clashes.") },
-    { icon: ClipboardList, title: t("Staff y entrenadores", "Staff & coaches"), description: t("Plantillas, asistencias, alineaciones y reportes por jugador.", "Squads, attendance, line-ups and per-player reports.") },
-    { icon: CreditCard, title: t("Pagos y cuotas", "Payments & fees"), description: t("Cobros recurrentes, recordatorios automáticos y conciliación.", "Recurring billing, automated reminders and reconciliation.") },
-    { icon: MessageSquare, title: t("Comunicación", "Communication"), description: t("Mensajes a equipos, familias y secciones desde un único hilo.", "Messaging to teams, families and sections from a single thread.") },
-    { icon: HeartPulse, title: t("Salud y seguimiento", "Health & tracking"), description: t("Historial médico, lesiones y carga de entrenamiento.", "Medical history, injuries and training load.") },
-    { icon: Building2, title: t("Instalaciones", "Facilities"), description: t("Pistas, vestuarios, salas y cobros por uso.", "Pitches, locker rooms, halls and pay-per-use.") },
-    { icon: Sparkles, title: t("IA por rol", "AI by role"), description: t("Cada perfil ve solo lo que le importa, con respuestas accionables.", "Every role sees only what matters, with actionable answers.") },
+    {
+      icon: Users,
+      title: t("Socios y deportistas", "Members & athletes"),
+      description: t(
+        "Ficha única, altas, bajas, categorías y fichajes en un solo lugar.",
+        "Single profile, sign-ups, drop-offs, categories and signings in one place.",
+      ),
+    },
+    {
+      icon: CalendarDays,
+      title: t("Calendario y reservas", "Calendar & bookings"),
+      description: t(
+        "Entrenamientos, partidos y reserva de instalaciones sin choques.",
+        "Training, matches and facility booking with zero clashes.",
+      ),
+    },
+    {
+      icon: ClipboardList,
+      title: t("Staff y entrenadores", "Staff & coaches"),
+      description: t(
+        "Plantillas, asistencias, alineaciones y reportes por jugador.",
+        "Squads, attendance, line-ups and per-player reports.",
+      ),
+    },
+    {
+      icon: CreditCard,
+      title: t("Pagos y cuotas", "Payments & fees"),
+      description: t(
+        "Cobros recurrentes, recordatorios automáticos y conciliación.",
+        "Recurring billing, automated reminders and reconciliation.",
+      ),
+    },
+    {
+      icon: MessageSquare,
+      title: t("Comunicación", "Communication"),
+      description: t(
+        "Mensajes a equipos, familias y secciones desde un único hilo.",
+        "Messaging to teams, families and sections from a single thread.",
+      ),
+    },
+    {
+      icon: HeartPulse,
+      title: t("Salud y seguimiento", "Health & tracking"),
+      description: t(
+        "Historial médico, lesiones y carga de entrenamiento.",
+        "Medical history, injuries and training load.",
+      ),
+    },
+    {
+      icon: Building2,
+      title: t("Instalaciones", "Facilities"),
+      description: t(
+        "Pistas, vestuarios, salas y cobros por uso.",
+        "Pitches, locker rooms, halls and pay-per-use.",
+      ),
+    },
+    {
+      icon: Sparkles,
+      title: t("IA por rol", "AI by role"),
+      description: t(
+        "Cada perfil ve solo lo que le importa, con respuestas accionables.",
+        "Every role sees only what matters, with actionable answers.",
+      ),
+    },
   ];
 
   const benefits = [
@@ -74,7 +130,10 @@ export function HomePage({ locale }: Props) {
                 </span>
               </h1>
               <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                SAITO · <span className="text-foreground">S</span>port <span className="text-foreground">AI</span> <span className="text-foreground">T</span>raining <span className="text-foreground">O</span>ptimisation
+                SAITO · <span className="text-foreground">S</span>port{" "}
+                <span className="text-foreground">AI</span>{" "}
+                <span className="text-foreground">T</span>raining{" "}
+                <span className="text-foreground">O</span>ptimisation
               </p>
               <p className="mt-6 max-w-xl text-lg text-muted-foreground">
                 {t(
@@ -128,14 +187,22 @@ export function HomePage({ locale }: Props) {
       <section className="border-y border-border bg-muted/40 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {t("Clubes y federaciones que confían en SAITO", "Clubs and federations that trust SAITO")}
+            {t(
+              "Clubes y federaciones que confían en SAITO",
+              "Clubs and federations that trust SAITO",
+            )}
           </p>
           <div className="mt-6 grid grid-cols-2 items-center gap-6 opacity-70 sm:grid-cols-3 md:grid-cols-6">
-            {["Atlético FC", "RC Norte", "Pádel Pro", "Vela Bay", "Hockey 95", "Basket City"].map((n) => (
-              <div key={n} className="text-center text-sm font-semibold tracking-wide text-muted-foreground">
-                {n}
-              </div>
-            ))}
+            {["Atlético FC", "RC Norte", "Pádel Pro", "Vela Bay", "Hockey 95", "Basket City"].map(
+              (n) => (
+                <div
+                  key={n}
+                  className="text-center text-sm font-semibold tracking-wide text-muted-foreground"
+                >
+                  {n}
+                </div>
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -144,7 +211,10 @@ export function HomePage({ locale }: Props) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Producto", "Product")}
-            title={t("Todo lo que tu club necesita, sin más herramientas", "Everything your club needs, without extra tools")}
+            title={t(
+              "Todo lo que tu club necesita, sin más herramientas",
+              "Everything your club needs, without extra tools",
+            )}
             subtitle={t(
               "Módulos integrados, datos compartidos y flujos pensados para el día a día deportivo.",
               "Integrated modules, shared data and workflows designed for daily club life.",
@@ -172,7 +242,10 @@ export function HomePage({ locale }: Props) {
         <div className="relative flex h-full items-end">
           <div className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
-              {t("Hecho para los clubes que viven el deporte", "Built for clubs that live the game")}
+              {t(
+                "Hecho para los clubes que viven el deporte",
+                "Built for clubs that live the game",
+              )}
             </p>
             <h2 className="mt-3 max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl md:text-5xl">
               {t(
@@ -185,12 +258,22 @@ export function HomePage({ locale }: Props) {
       </section>
 
       <section className="relative overflow-hidden bg-saito-gradient py-24 text-white">
-        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 50%)" }} aria-hidden />
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 50%)",
+          }}
+          aria-hidden
+        />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             invert
             eyebrow={t("IA por rol", "Role-based AI")}
-            title={t("Una IA que entiende cómo funciona un club", "An AI that understands how a club works")}
+            title={t(
+              "Una IA que entiende cómo funciona un club",
+              "An AI that understands how a club works",
+            )}
             subtitle={t(
               "Cada perfil ve solo lo que le importa. SAITO aprende de los datos de tu club y propone acciones, no solo gráficos.",
               "Every role sees only what matters. SAITO learns from your club's data and proposes actions, not just charts.",
@@ -223,8 +306,14 @@ export function HomePage({ locale }: Props) {
               </p>
               <ul className="mt-6 space-y-3">
                 {[
-                  t("Permisos por sede, sección y rol.", "Permissions per venue, section and role."),
-                  t("Cuotas y descuentos cruzados entre secciones.", "Cross-section fees and discounts."),
+                  t(
+                    "Permisos por sede, sección y rol.",
+                    "Permissions per venue, section and role.",
+                  ),
+                  t(
+                    "Cuotas y descuentos cruzados entre secciones.",
+                    "Cross-section fees and discounts.",
+                  ),
                   t("Reporting consolidado y por unidad.", "Consolidated and per-unit reporting."),
                 ].map((b) => (
                   <li key={b} className="flex items-start gap-3 text-sm">
@@ -237,7 +326,10 @@ export function HomePage({ locale }: Props) {
             <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
               <img
                 src={multiclubVisual}
-                alt={t("Diagrama multi-club: matriz, sedes y secciones", "Multi-club diagram: parent, venues and sections")}
+                alt={t(
+                  "Diagrama multi-club: matriz, sedes y secciones",
+                  "Multi-club diagram: parent, venues and sections",
+                )}
                 loading="lazy"
                 width={1800}
                 height={1125}
@@ -258,7 +350,10 @@ export function HomePage({ locale }: Props) {
             {benefits.map((b) => {
               const Icon = b.icon;
               return (
-                <div key={b.title} className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-5">
+                <div
+                  key={b.title}
+                  className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-5"
+                >
                   <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <Icon className="size-5" />
                   </div>
@@ -273,7 +368,10 @@ export function HomePage({ locale }: Props) {
       <section className="relative overflow-hidden bg-saito-gradient py-24 text-white">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl">
-            {t("Lleva la gestión de tu club al siguiente nivel", "Take your club management to the next level")}
+            {t(
+              "Lleva la gestión de tu club al siguiente nivel",
+              "Take your club management to the next level",
+            )}
           </h2>
           <p className="mt-4 text-white/80">
             {t(
@@ -282,12 +380,21 @@ export function HomePage({ locale }: Props) {
             )}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button asChild size="lg" className="rounded-full bg-white px-6 text-saito-navy hover:bg-white/90">
+            <Button
+              asChild
+              size="lg"
+              className="rounded-full bg-white px-6 text-saito-navy hover:bg-white/90"
+            >
               <Link to={localizedPath("/contacto", locale) as any}>
                 {t("Pide una demo", "Book a demo")} <ArrowRight className="ml-1 size-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="rounded-full border-white/30 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="rounded-full border-white/30 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white"
+            >
               <Link to={localizedPath("/precios", locale) as any}>
                 {t("Ver precios", "See pricing")}
               </Link>

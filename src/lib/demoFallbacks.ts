@@ -202,13 +202,12 @@ export const DEMO_DASHBOARD_STATS = (() => {
       end_time: e.end_time,
       type: e.type,
     }));
-  const monthRevenue = DEMO_PAYMENTS_ROWS
-    .filter((p) => p.status === "Paid" && (p.payment_date ?? "") >= ms)
-    .reduce((s, p) => s + Number(p.amount ?? 0), 0);
+  const monthRevenue = DEMO_PAYMENTS_ROWS.filter(
+    (p) => p.status === "Paid" && (p.payment_date ?? "") >= ms,
+  ).reduce((s, p) => s + Number(p.amount ?? 0), 0);
   const pending = DEMO_PAYMENTS_ROWS.filter((p) => p.status === "Pending");
   const pendingAmount = pending.reduce((s, p) => s + Number(p.amount ?? 0), 0);
-  const upcomingAppts = DEMO_MEDICAL_APPOINTMENTS_ROWS
-    .filter((a) => a.appointment_date >= t)
+  const upcomingAppts = DEMO_MEDICAL_APPOINTMENTS_ROWS.filter((a) => a.appointment_date >= t)
     .slice(0, 5)
     .map((a) => ({
       id: a.id,
@@ -235,10 +234,23 @@ export const DEMO_DASHBOARD_STATS = (() => {
 
 export const DEMO_DASHBOARD_CHARTS = (() => {
   const now = new Date();
-  const monthLabels = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  const monthLabels = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
   const revenueSeries = Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
-    const base = 3200 + (i * 480) + ((i * 137) % 600);
+    const base = 3200 + i * 480 + ((i * 137) % 600);
     return {
       key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
       label: monthLabels[d.getMonth()],
@@ -270,7 +282,7 @@ export const DEMO_DASHBOARD_CHARTS = (() => {
 /** Returns `data` if present, otherwise the demo fallback when there's no real org context. */
 export function withDemo<T>(data: T | undefined, hasOrg: boolean, fallback: T): T {
   if (data !== undefined) return data;
-  return hasOrg ? data ?? fallback : fallback;
+  return hasOrg ? (data ?? fallback) : fallback;
 }
 
 export const DEMO_ORG_ID_VALUE = DEMO_ORG_ID;

@@ -6,11 +6,13 @@ import type { ClubSeed } from "../types";
 import { RGCC_VENUES, RGCC_ROOMS } from "./seed/venues";
 import { RGCC_SECTIONS } from "./seed/sections";
 import { RGCC_COACHES, RGCC_MEMBERS } from "./seed/people";
+import { RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES } from "./seed/sessions";
 import {
-  RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES,
-} from "./seed/sessions";
-import {
-  RGCC_EXERCISES, RGCC_ROUTINES, RGCC_PT_SESSIONS, RGCC_WORKOUTS, RGCC_KIT,
+  RGCC_EXERCISES,
+  RGCC_ROUTINES,
+  RGCC_PT_SESSIONS,
+  RGCC_WORKOUTS,
+  RGCC_KIT,
 } from "./seed/library";
 
 export const rgccSeed: ClubSeed = {

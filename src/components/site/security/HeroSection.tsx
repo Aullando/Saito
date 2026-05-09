@@ -56,7 +56,10 @@ export function HeroSection({ locale }: { locale: Locale }) {
           >
             <img
               src={securityVisual}
-              alt={t(locale, { es: "Seguridad y trazabilidad en SAITO", en: "Security and traceability in SAITO" })}
+              alt={t(locale, {
+                es: "Seguridad y trazabilidad en SAITO",
+                en: "Security and traceability in SAITO",
+              })}
               width={1800}
               height={1125}
               className="h-full w-full object-cover"

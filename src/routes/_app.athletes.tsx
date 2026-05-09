@@ -8,10 +8,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useT } from "@/lib/i18n";
@@ -67,38 +76,57 @@ function AthletesPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("athletes")
-        .select("id, first_name, last_name, section_id, category_id, status, medical_status, performance_status")
+        .select(
+          "id, first_name, last_name, section_id, category_id, status, medical_status, performance_status",
+        )
         .order("last_name");
       if (error) throw error;
       return (data ?? []) as AthleteRow[];
     },
   });
   const sectionsQ = useQuery({
-    queryKey: ["sections", orgId], enabled: !!orgId,
+    queryKey: ["sections", orgId],
+    enabled: !!orgId,
     queryFn: async () => {
-      const { data, error } = await supabase.from("sport_sections").select("id, name").order("name");
-      if (error) throw error; return (data ?? []) as SectionRow[];
+      const { data, error } = await supabase
+        .from("sport_sections")
+        .select("id, name")
+        .order("name");
+      if (error) throw error;
+      return (data ?? []) as SectionRow[];
     },
   });
   const categoriesQ = useQuery({
-    queryKey: ["categories", orgId], enabled: !!orgId,
+    queryKey: ["categories", orgId],
+    enabled: !!orgId,
     queryFn: async () => {
-      const { data, error } = await supabase.from("categories").select("id, name, section_id").order("name");
-      if (error) throw error; return (data ?? []) as CategoryRow[];
+      const { data, error } = await supabase
+        .from("categories")
+        .select("id, name, section_id")
+        .order("name");
+      if (error) throw error;
+      return (data ?? []) as CategoryRow[];
     },
   });
   const groupsQ = useQuery({
-    queryKey: ["groups", orgId], enabled: !!orgId,
+    queryKey: ["groups", orgId],
+    enabled: !!orgId,
     queryFn: async () => {
-      const { data, error } = await supabase.from("groups").select("id, name, section_id, category_id").order("name");
-      if (error) throw error; return (data ?? []) as GroupRow[];
+      const { data, error } = await supabase
+        .from("groups")
+        .select("id, name, section_id, category_id")
+        .order("name");
+      if (error) throw error;
+      return (data ?? []) as GroupRow[];
     },
   });
   const athleteGroupsQ = useQuery({
-    queryKey: ["athlete_groups", orgId], enabled: !!orgId,
+    queryKey: ["athlete_groups", orgId],
+    enabled: !!orgId,
     queryFn: async () => {
       const { data, error } = await supabase.from("athlete_groups").select("athlete_id, group_id");
-      if (error) throw error; return (data ?? []) as AthleteGroupRow[];
+      if (error) throw error;
+      return (data ?? []) as AthleteGroupRow[];
     },
   });
 
@@ -121,8 +149,11 @@ function AthletesPage() {
   const [detail, setDetail] = useState<AthleteRow | null>(null);
 
   const [newAth, setNewAth] = useState({
-    firstName: "", lastName: "",
-    sectionId: "", categoryId: "", groupId: "",
+    firstName: "",
+    lastName: "",
+    sectionId: "",
+    categoryId: "",
+    groupId: "",
   });
 
   const filtered = athletes.filter((a) => {
@@ -131,7 +162,8 @@ function AthletesPage() {
     if (catF !== "all" && a.category_id !== catF) return false;
     if (grpF !== "all" && !groupsByAthlete(a.id).includes(grpF)) return false;
     if (medF !== "all" && a.medical_status !== medF) return false;
-    if (q && !`${a.first_name} ${a.last_name}`.toLowerCase().includes(q.toLowerCase())) return false;
+    if (q && !`${a.first_name} ${a.last_name}`.toLowerCase().includes(q.toLowerCase()))
+      return false;
     return true;
   });
 
@@ -156,7 +188,9 @@ function AthletesPage() {
       if (error) throw error;
       if (vals.groupId) {
         const { error: e2 } = await supabase.from("athlete_groups").insert({
-          athlete_id: data.id, group_id: vals.groupId, organization_id: orgId,
+          athlete_id: data.id,
+          group_id: vals.groupId,
+          organization_id: orgId,
         });
         if (e2) throw e2;
       }
@@ -189,92 +223,210 @@ function AthletesPage() {
     <>
       <PageHeader
         title={t("athletes_management")}
-        actions={canManage && (
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button className="rounded-full"><Plus className="mr-1 h-4 w-4" />{t("new_athlete")}</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>{t("new_athlete")}</DialogTitle></DialogHeader>
-              <div className="grid grid-cols-2 gap-3">
-                <div><Label>{t("name")}</Label><Input value={newAth.firstName} onChange={(e) => setNewAth({ ...newAth, firstName: e.target.value })} /></div>
-                <div><Label>Apellido</Label><Input value={newAth.lastName} onChange={(e) => setNewAth({ ...newAth, lastName: e.target.value })} /></div>
-                <div className="col-span-2">
-                  <Label>{t("section")}</Label>
-                  <Select value={newAth.sectionId} onValueChange={(v) => setNewAth({ ...newAth, sectionId: v, categoryId: "", groupId: "" })}>
-                    <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
-                    <SelectContent>{sections.map((s) => (<SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>))}</SelectContent>
-                  </Select>
+        actions={
+          canManage && (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button className="rounded-full">
+                  <Plus className="mr-1 h-4 w-4" />
+                  {t("new_athlete")}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{t("new_athlete")}</DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label>{t("name")}</Label>
+                    <Input
+                      value={newAth.firstName}
+                      onChange={(e) => setNewAth({ ...newAth, firstName: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>Apellido</Label>
+                    <Input
+                      value={newAth.lastName}
+                      onChange={(e) => setNewAth({ ...newAth, lastName: e.target.value })}
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <Label>{t("section")}</Label>
+                    <Select
+                      value={newAth.sectionId}
+                      onValueChange={(v) =>
+                        setNewAth({ ...newAth, sectionId: v, categoryId: "", groupId: "" })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="—" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sections.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="col-span-2">
+                    <Label>{t("category")}</Label>
+                    <Select
+                      value={newAth.categoryId}
+                      onValueChange={(v) => setNewAth({ ...newAth, categoryId: v, groupId: "" })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="—" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories
+                          .filter((c) => c.section_id === newAth.sectionId)
+                          .map((c) => (
+                            <SelectItem key={c.id} value={c.id}>
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="col-span-2">
+                    <Label>{t("group")}</Label>
+                    <Select
+                      value={newAth.groupId}
+                      onValueChange={(v) => setNewAth({ ...newAth, groupId: v })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="—" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {groups
+                          .filter((g) => g.category_id === newAth.categoryId)
+                          .map((g) => (
+                            <SelectItem key={g.id} value={g.id}>
+                              {g.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <div className="col-span-2">
-                  <Label>{t("category")}</Label>
-                  <Select value={newAth.categoryId} onValueChange={(v) => setNewAth({ ...newAth, categoryId: v, groupId: "" })}>
-                    <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
-                    <SelectContent>{categories.filter((c) => c.section_id === newAth.sectionId).map((c) => (<SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>))}</SelectContent>
-                  </Select>
-                </div>
-                <div className="col-span-2">
-                  <Label>{t("group")}</Label>
-                  <Select value={newAth.groupId} onValueChange={(v) => setNewAth({ ...newAth, groupId: v })}>
-                    <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
-                    <SelectContent>{groups.filter((g) => g.category_id === newAth.categoryId).map((g) => (<SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>))}</SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>{t("cancel")}</Button>
-                <Button
-                  disabled={createAthlete.isPending || !newAth.firstName || !newAth.lastName}
-                  onClick={() => createAthlete.mutate(newAth)}
-                >{t("save")}</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        )}
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpen(false)}>
+                    {t("cancel")}
+                  </Button>
+                  <Button
+                    disabled={createAthlete.isPending || !newAth.firstName || !newAth.lastName}
+                    onClick={() => createAthlete.mutate(newAth)}
+                  >
+                    {t("save")}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )
+        }
       />
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("search")} className="w-56 rounded-full pl-9" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder={t("search")}
+            className="w-56 rounded-full pl-9"
+          />
         </div>
         {!isMedical && (
           <Select value={statusF} onValueChange={setStatusF}>
-            <SelectTrigger className="w-40 rounded-full"><SelectValue placeholder={t("all_statuses")} /></SelectTrigger>
+            <SelectTrigger className="w-40 rounded-full">
+              <SelectValue placeholder={t("all_statuses")} />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t("all_statuses")}</SelectItem>
-              {["Active", "Inactive", "Pending"].map((s) => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
+              {["Active", "Inactive", "Pending"].map((s) => (
+                <SelectItem key={s} value={s}>
+                  {s}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         )}
-        <Select value={secF} onValueChange={(v) => { setSecF(v); setCatF("all"); setGrpF("all"); }}>
-          <SelectTrigger className="w-44 rounded-full"><SelectValue placeholder={t("all_sections")} /></SelectTrigger>
+        <Select
+          value={secF}
+          onValueChange={(v) => {
+            setSecF(v);
+            setCatF("all");
+            setGrpF("all");
+          }}
+        >
+          <SelectTrigger className="w-44 rounded-full">
+            <SelectValue placeholder={t("all_sections")} />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("all_sections")}</SelectItem>
-            {sections.map((s) => (<SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>))}
+            {sections.map((s) => (
+              <SelectItem key={s.id} value={s.id}>
+                {s.name}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        <Select value={catF} onValueChange={(v) => { setCatF(v); setGrpF("all"); }}>
-          <SelectTrigger className="w-40 rounded-full"><SelectValue placeholder={t("all_categories")} /></SelectTrigger>
+        <Select
+          value={catF}
+          onValueChange={(v) => {
+            setCatF(v);
+            setGrpF("all");
+          }}
+        >
+          <SelectTrigger className="w-40 rounded-full">
+            <SelectValue placeholder={t("all_categories")} />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("all_categories")}</SelectItem>
-            {categories.filter((c) => secF === "all" || c.section_id === secF).map((c) => (<SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>))}
+            {categories
+              .filter((c) => secF === "all" || c.section_id === secF)
+              .map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
         {!isMedical && (
           <Select value={grpF} onValueChange={setGrpF}>
-            <SelectTrigger className="w-40 rounded-full"><SelectValue placeholder={t("all_groups")} /></SelectTrigger>
+            <SelectTrigger className="w-40 rounded-full">
+              <SelectValue placeholder={t("all_groups")} />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t("all_groups")}</SelectItem>
-              {groups.filter((g) => (secF === "all" || g.section_id === secF) && (catF === "all" || g.category_id === catF)).map((g) => (<SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>))}
+              {groups
+                .filter(
+                  (g) =>
+                    (secF === "all" || g.section_id === secF) &&
+                    (catF === "all" || g.category_id === catF),
+                )
+                .map((g) => (
+                  <SelectItem key={g.id} value={g.id}>
+                    {g.name}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         )}
         <Select value={medF} onValueChange={setMedF}>
-          <SelectTrigger className="w-44 rounded-full"><SelectValue placeholder={t("medical_status")} /></SelectTrigger>
+          <SelectTrigger className="w-44 rounded-full">
+            <SelectValue placeholder={t("medical_status")} />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("medical_status")}</SelectItem>
-            {["Fit", "Injured", "Under review", "Unknown"].map((s) => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
+            {["Fit", "Injured", "Under review", "Unknown"].map((s) => (
+              <SelectItem key={s} value={s}>
+                {s}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -295,7 +447,9 @@ function AthletesPage() {
                 <th className="px-5 py-3 font-semibold">{t("category")}</th>
                 {!isMedical && <th className="px-5 py-3 font-semibold">{t("groups")}</th>}
                 {isTechnical && <th className="px-5 py-3 font-semibold">{t("performance")}</th>}
-                <th className="px-5 py-3 font-semibold">{isMedical || isTechnical ? t("medical_status") : t("status")}</th>
+                <th className="px-5 py-3 font-semibold">
+                  {isMedical || isTechnical ? t("medical_status") : t("status")}
+                </th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
@@ -306,22 +460,78 @@ function AthletesPage() {
                 const grpIds = groupsByAthlete(a.id);
                 return (
                   <tr key={a.id} className="border-t border-border hover:bg-muted/30">
-                    <td className="px-5 py-3 font-medium">{a.first_name} {a.last_name.toUpperCase()}</td>
+                    <td className="px-5 py-3 font-medium">
+                      {a.first_name} {a.last_name.toUpperCase()}
+                    </td>
                     <td className="px-5 py-3 text-muted-foreground">{sec?.name ?? "—"}</td>
                     <td className="px-5 py-3 text-muted-foreground">{cat?.name ?? "—"}</td>
-                    {!isMedical && <td className="px-5 py-3 text-muted-foreground">{grpIds.map((id) => groups.find((g) => g.id === id)?.name).filter(Boolean).join(", ") || "—"}</td>}
-                    {isTechnical && <td className="px-5 py-3"><Pill tone={a.performance_status === "High" ? "success" : a.performance_status === "Low" ? "warning" : "info"}>{a.performance_status}</Pill></td>}
+                    {!isMedical && (
+                      <td className="px-5 py-3 text-muted-foreground">
+                        {grpIds
+                          .map((id) => groups.find((g) => g.id === id)?.name)
+                          .filter(Boolean)
+                          .join(", ") || "—"}
+                      </td>
+                    )}
+                    {isTechnical && (
+                      <td className="px-5 py-3">
+                        <Pill
+                          tone={
+                            a.performance_status === "High"
+                              ? "success"
+                              : a.performance_status === "Low"
+                                ? "warning"
+                                : "info"
+                          }
+                        >
+                          {a.performance_status}
+                        </Pill>
+                      </td>
+                    )}
                     <td className="px-5 py-3">
-                      {(isMedical || isTechnical) ? (
-                        <Pill tone={a.medical_status === "Fit" ? "success" : a.medical_status === "Injured" ? "danger" : a.medical_status === "Under review" ? "warning" : "default"}>{a.medical_status}</Pill>
+                      {isMedical || isTechnical ? (
+                        <Pill
+                          tone={
+                            a.medical_status === "Fit"
+                              ? "success"
+                              : a.medical_status === "Injured"
+                                ? "danger"
+                                : a.medical_status === "Under review"
+                                  ? "warning"
+                                  : "default"
+                          }
+                        >
+                          {a.medical_status}
+                        </Pill>
                       ) : (
-                        <Pill tone={a.status === "Active" ? "success" : a.status === "Pending" ? "warning" : "default"}>{a.status}</Pill>
+                        <Pill
+                          tone={
+                            a.status === "Active"
+                              ? "success"
+                              : a.status === "Pending"
+                                ? "warning"
+                                : "default"
+                          }
+                        >
+                          {a.status}
+                        </Pill>
                       )}
                     </td>
                     <td className="px-5 py-3 text-right whitespace-nowrap">
-                      <Button size="sm" variant="ghost" onClick={() => setDetail(a)}>{t("view_profile")}</Button>
+                      <Button size="sm" variant="ghost" onClick={() => setDetail(a)}>
+                        {t("view_profile")}
+                      </Button>
                       {canManage && (
-                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => { if (confirm(t("delete_confirm"))) removeAthlete.mutate(a.id); }}>{t("delete")}</Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => {
+                            if (confirm(t("delete_confirm"))) removeAthlete.mutate(a.id);
+                          }}
+                        >
+                          {t("delete")}
+                        </Button>
                       )}
                     </td>
                   </tr>
@@ -339,14 +549,31 @@ function AthletesPage() {
               <SheetHeader>
                 <div className="flex items-center gap-4">
                   <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-base font-bold text-primary">
-                    {detail.first_name[0]}{detail.last_name[0]}
+                    {detail.first_name[0]}
+                    {detail.last_name[0]}
                   </div>
                   <div>
-                    <SheetTitle className="text-xl">{detail.first_name} {detail.last_name.toUpperCase()}</SheetTitle>
+                    <SheetTitle className="text-xl">
+                      {detail.first_name} {detail.last_name.toUpperCase()}
+                    </SheetTitle>
                     <div className="mt-1 flex flex-wrap gap-1.5">
-                      <Pill tone="info">{sections.find((s) => s.id === detail.section_id)?.name ?? "—"}</Pill>
-                      <Pill>{categories.find((c) => c.id === detail.category_id)?.name ?? "—"}</Pill>
-                      <Pill tone={detail.medical_status === "Fit" ? "success" : detail.medical_status === "Injured" ? "danger" : "warning"}>{detail.medical_status}</Pill>
+                      <Pill tone="info">
+                        {sections.find((s) => s.id === detail.section_id)?.name ?? "—"}
+                      </Pill>
+                      <Pill>
+                        {categories.find((c) => c.id === detail.category_id)?.name ?? "—"}
+                      </Pill>
+                      <Pill
+                        tone={
+                          detail.medical_status === "Fit"
+                            ? "success"
+                            : detail.medical_status === "Injured"
+                              ? "danger"
+                              : "warning"
+                        }
+                      >
+                        {detail.medical_status}
+                      </Pill>
                     </div>
                   </div>
                 </div>
@@ -354,12 +581,27 @@ function AthletesPage() {
 
               <div className="mt-6 space-y-5 text-sm">
                 <section className="rounded-2xl border border-border p-4">
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Detalles</h3>
+                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Detalles
+                  </h3>
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div><span className="text-muted-foreground">Estado:</span> {detail.status}</div>
-                    <div><span className="text-muted-foreground">Médico:</span> {detail.medical_status}</div>
-                    <div><span className="text-muted-foreground">Rendimiento:</span> {detail.performance_status}</div>
-                    <div><span className="text-muted-foreground">Grupos:</span> {groupsByAthlete(detail.id).map((id) => groups.find((g) => g.id === id)?.name).filter(Boolean).join(", ") || "—"}</div>
+                    <div>
+                      <span className="text-muted-foreground">Estado:</span> {detail.status}
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Médico:</span> {detail.medical_status}
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Rendimiento:</span>{" "}
+                      {detail.performance_status}
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Grupos:</span>{" "}
+                      {groupsByAthlete(detail.id)
+                        .map((id) => groups.find((g) => g.id === id)?.name)
+                        .filter(Boolean)
+                        .join(", ") || "—"}
+                    </div>
                   </div>
                 </section>
               </div>

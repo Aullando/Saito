@@ -1,12 +1,34 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
-  Organization, Facility, SportSection, Category, Group, Athlete,
-  CalendarEvent, Fee, Payment, Conversation, MedicalAppointment, User, Message,
+  Organization,
+  Facility,
+  SportSection,
+  Category,
+  Group,
+  Athlete,
+  CalendarEvent,
+  Fee,
+  Payment,
+  Conversation,
+  MedicalAppointment,
+  User,
+  Message,
 } from "./types";
 import {
-  DEMO_USERS, ORGANIZATIONS, FACILITIES, SECTIONS, CATEGORIES, GROUPS,
-  ATHLETES, EVENTS, FEES, PAYMENTS, CONVERSATIONS, MEDICAL_APPOINTMENTS, ALL_USERS,
+  DEMO_USERS,
+  ORGANIZATIONS,
+  FACILITIES,
+  SECTIONS,
+  CATEGORIES,
+  GROUPS,
+  ATHLETES,
+  EVENTS,
+  FEES,
+  PAYMENTS,
+  CONVERSATIONS,
+  MEDICAL_APPOINTMENTS,
+  ALL_USERS,
 } from "./seed";
 
 interface AuthState {
@@ -31,15 +53,23 @@ export const useAuth = create<AuthState>()(
       sidebarCollapsed: false,
       setUser: (id) => set({ currentUserId: id, mobileNavOpen: false }),
       setAvatar: (id, dataUrl) => set((s) => ({ avatars: { ...s.avatars, [id]: dataUrl } })),
-      removeAvatar: (id) => set((s) => {
-        const { [id]: _, ...rest } = s.avatars;
-        return { avatars: rest };
-      }),
+      removeAvatar: (id) =>
+        set((s) => {
+          const { [id]: _, ...rest } = s.avatars;
+          return { avatars: rest };
+        }),
       setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
       setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
       toggleSidebarCollapsed: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
     }),
-    { name: "saito-auth", partialize: (s) => ({ currentUserId: s.currentUserId, avatars: s.avatars, sidebarCollapsed: s.sidebarCollapsed }) },
+    {
+      name: "saito-auth",
+      partialize: (s) => ({
+        currentUserId: s.currentUserId,
+        avatars: s.avatars,
+        sidebarCollapsed: s.sidebarCollapsed,
+      }),
+    },
   ),
 );
 
@@ -135,80 +165,134 @@ export const useData = create<DataState>()(
       addOrganization: (o) =>
         set((s) => ({
           organizations: [
-            { ...o, id: uid("org"), createdAt: new Date().toISOString().slice(0, 10), updatedAt: new Date().toISOString().slice(0, 10) },
+            {
+              ...o,
+              id: uid("org"),
+              createdAt: new Date().toISOString().slice(0, 10),
+              updatedAt: new Date().toISOString().slice(0, 10),
+            },
             ...s.organizations,
           ],
         })),
       toggleOrgAi: (id) =>
         set((s) => ({
-          organizations: s.organizations.map((o) => (o.id === id ? { ...o, aiEnabled: !o.aiEnabled, updatedAt: new Date().toISOString().slice(0, 10) } : o)),
+          organizations: s.organizations.map((o) =>
+            o.id === id
+              ? { ...o, aiEnabled: !o.aiEnabled, updatedAt: new Date().toISOString().slice(0, 10) }
+              : o,
+          ),
         })),
       setOrgStatus: (id, status) =>
         set((s) => ({
-          organizations: s.organizations.map((o) => (o.id === id ? { ...o, status, updatedAt: new Date().toISOString().slice(0, 10) } : o)),
+          organizations: s.organizations.map((o) =>
+            o.id === id ? { ...o, status, updatedAt: new Date().toISOString().slice(0, 10) } : o,
+          ),
         })),
 
       addUser: (u) =>
         set((s) => ({
-          users: [...s.users, { ...u, id: uid("u"), initials: u.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase() }],
+          users: [
+            ...s.users,
+            {
+              ...u,
+              id: uid("u"),
+              initials: u.name
+                .split(" ")
+                .map((p) => p[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase(),
+            },
+          ],
         })),
       deleteUser: (id) => set((s) => ({ users: s.users.filter((u) => u.id !== id) })),
       addFacility: (f) => set((s) => ({ facilities: [...s.facilities, { ...f, id: uid("f") }] })),
       deleteFacility: (id) => set((s) => ({ facilities: s.facilities.filter((f) => f.id !== id) })),
-      addSection: (name) => set((s) => ({ sections: [...s.sections, { id: uid("sec"), name, athleteCount: 0 }] })),
-      deleteSection: (id) => set((s) => ({
-        sections: s.sections.filter((x) => x.id !== id),
-        categories: s.categories.filter((c) => c.sectionId !== id),
-        groups: s.groups.filter((g) => g.sectionId !== id),
-        athletes: s.athletes.filter((a) => a.sectionId !== id),
-      })),
-      addAthlete: (a) => set((s) => {
-        const newA = { ...a, id: uid("ath") };
-        return {
-          athletes: [...s.athletes, newA],
-          sections: s.sections.map((sec) => sec.id === a.sectionId ? { ...sec, athleteCount: sec.athleteCount + 1 } : sec),
-        };
-      }),
-      deleteAthlete: (id) => set((s) => {
-        const a = s.athletes.find((x) => x.id === id);
-        return {
-          athletes: s.athletes.filter((x) => x.id !== id),
-          sections: a ? s.sections.map((sec) => sec.id === a.sectionId ? { ...sec, athleteCount: Math.max(0, sec.athleteCount - 1) } : sec) : s.sections,
-          payments: s.payments.filter((p) => p.athleteId !== id),
-          appointments: s.appointments.filter((p) => p.athleteId !== id),
-        };
-      }),
+      addSection: (name) =>
+        set((s) => ({ sections: [...s.sections, { id: uid("sec"), name, athleteCount: 0 }] })),
+      deleteSection: (id) =>
+        set((s) => ({
+          sections: s.sections.filter((x) => x.id !== id),
+          categories: s.categories.filter((c) => c.sectionId !== id),
+          groups: s.groups.filter((g) => g.sectionId !== id),
+          athletes: s.athletes.filter((a) => a.sectionId !== id),
+        })),
+      addAthlete: (a) =>
+        set((s) => {
+          const newA = { ...a, id: uid("ath") };
+          return {
+            athletes: [...s.athletes, newA],
+            sections: s.sections.map((sec) =>
+              sec.id === a.sectionId ? { ...sec, athleteCount: sec.athleteCount + 1 } : sec,
+            ),
+          };
+        }),
+      deleteAthlete: (id) =>
+        set((s) => {
+          const a = s.athletes.find((x) => x.id === id);
+          return {
+            athletes: s.athletes.filter((x) => x.id !== id),
+            sections: a
+              ? s.sections.map((sec) =>
+                  sec.id === a.sectionId
+                    ? { ...sec, athleteCount: Math.max(0, sec.athleteCount - 1) }
+                    : sec,
+                )
+              : s.sections,
+            payments: s.payments.filter((p) => p.athleteId !== id),
+            appointments: s.appointments.filter((p) => p.athleteId !== id),
+          };
+        }),
       addEvent: (e) => set((s) => ({ events: [...s.events, { ...e, id: uid("ev") }] })),
       deleteEvent: (id) => set((s) => ({ events: s.events.filter((e) => e.id !== id) })),
-      addEventException: (id, date) => set((s) => ({
-        events: s.events.map((e) => e.id === id ? { ...e, exceptions: [...(e.exceptions ?? []), date] } : e),
-      })),
+      addEventException: (id, date) =>
+        set((s) => ({
+          events: s.events.map((e) =>
+            e.id === id ? { ...e, exceptions: [...(e.exceptions ?? []), date] } : e,
+          ),
+        })),
       addFee: (f) => set((s) => ({ fees: [...s.fees, { ...f, id: uid(f.kind) }] })),
       deleteFee: (id) => set((s) => ({ fees: s.fees.filter((f) => f.id !== id) })),
       setPaymentStatus: (id, status) =>
         set((s) => ({ payments: s.payments.map((p) => (p.id === id ? { ...p, status } : p)) })),
-      addAppointment: (a) => set((s) => ({ appointments: [...s.appointments, { ...a, id: uid("apt") }] })),
-      deleteAppointment: (id) => set((s) => ({ appointments: s.appointments.filter((a) => a.id !== id) })),
+      addAppointment: (a) =>
+        set((s) => ({ appointments: [...s.appointments, { ...a, id: uid("apt") }] })),
+      deleteAppointment: (id) =>
+        set((s) => ({ appointments: s.appointments.filter((a) => a.id !== id) })),
       addAppointmentNote: (id, note) =>
-        set((s) => ({ appointments: s.appointments.map((a) => a.id === id ? { ...a, notes: (a.notes ? a.notes + "\n" : "") + note } : a) })),
-      deleteOrganization: (id) => set((s) => ({ organizations: s.organizations.filter((o) => o.id !== id) })),
+        set((s) => ({
+          appointments: s.appointments.map((a) =>
+            a.id === id ? { ...a, notes: (a.notes ? a.notes + "\n" : "") + note } : a,
+          ),
+        })),
+      deleteOrganization: (id) =>
+        set((s) => ({ organizations: s.organizations.filter((o) => o.id !== id) })),
 
       sendMessage: (conversationId, msg) =>
         set((s) => ({
           conversations: s.conversations.map((c) =>
             c.id === conversationId
-              ? { ...c, messages: [...c.messages, { ...msg, id: uid("m"), createdAt: new Date().toISOString() }] }
+              ? {
+                  ...c,
+                  messages: [
+                    ...c.messages,
+                    { ...msg, id: uid("m"), createdAt: new Date().toISOString() },
+                  ],
+                }
               : c,
           ),
         })),
       markConversationRead: (id) =>
-        set((s) => ({ conversations: s.conversations.map((c) => (c.id === id ? { ...c, unreadCount: 0 } : c)) })),
+        set((s) => ({
+          conversations: s.conversations.map((c) => (c.id === id ? { ...c, unreadCount: 0 } : c)),
+        })),
       addConversation: (c) => {
         const id = uid("conv");
         set((s) => ({ conversations: [{ ...c, id }, ...s.conversations] }));
         return id;
       },
-      deleteConversation: (id) => set((s) => ({ conversations: s.conversations.filter((c) => c.id !== id) })),
+      deleteConversation: (id) =>
+        set((s) => ({ conversations: s.conversations.filter((c) => c.id !== id) })),
 
       reset: () => set(initial()),
     }),

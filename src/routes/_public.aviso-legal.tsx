@@ -6,7 +6,10 @@ export const Route = createFileRoute("/_public/aviso-legal")({
   head: () => ({
     meta: [
       { title: "Aviso legal — SAITO" },
-      { name: "description", content: "Información legal y datos identificativos del prestador del servicio SAITO." },
+      {
+        name: "description",
+        content: "Información legal y datos identificativos del prestador del servicio SAITO.",
+      },
     ],
     links: hrefLangLinks("/aviso-legal", "es"),
   }),

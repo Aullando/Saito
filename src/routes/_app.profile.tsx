@@ -62,13 +62,12 @@ function ProfilePage() {
 
   const setName = useMutation({
     mutationFn: async (full_name: string) => {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ full_name })
-        .eq("id", user!.id);
+      const { error } = await supabase.from("profiles").update({ full_name }).eq("id", user!.id);
       if (error) throw error;
     },
-    onSuccess: async () => { await refresh(); },
+    onSuccess: async () => {
+      await refresh();
+    },
   });
 
   const [editingName, setEditingName] = useState(false);
@@ -107,9 +106,15 @@ function ProfilePage() {
           <div className="flex flex-col items-center text-center">
             <div className="relative">
               {avatar || profile?.avatar_url ? (
-                <img src={avatar || profile?.avatar_url || ""} alt={name} className="h-20 w-20 rounded-full object-cover" />
+                <img
+                  src={avatar || profile?.avatar_url || ""}
+                  alt={name}
+                  className="h-20 w-20 rounded-full object-cover"
+                />
               ) : (
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">{initials}</div>
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
+                  {initials}
+                </div>
               )}
               <button
                 type="button"
@@ -140,16 +145,25 @@ function ProfilePage() {
             <div className="text-sm text-muted-foreground">{user.email}</div>
             <div className="mt-2 flex flex-wrap justify-center gap-1">
               {roles.map((r) => (
-                <span key={r} className="rounded-full bg-primary/10 px-2 py-0.5 text-xs uppercase tracking-wider text-primary">{r}</span>
+                <span
+                  key={r}
+                  className="rounded-full bg-primary/10 px-2 py-0.5 text-xs uppercase tracking-wider text-primary"
+                >
+                  {r}
+                </span>
               ))}
               {roles.length === 0 && (
-                <span className="text-xs uppercase tracking-wider text-muted-foreground">{role}</span>
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {role}
+                </span>
               )}
             </div>
             {orgQ.data && (
               <div className="mt-3 text-xs text-muted-foreground">{orgQ.data.name}</div>
             )}
-            <Button variant="outline" className="mt-6 rounded-full" onClick={handleLogout}>{t("logout")}</Button>
+            <Button variant="outline" className="mt-6 rounded-full" onClick={handleLogout}>
+              {t("logout")}
+            </Button>
           </div>
         </Card>
 
@@ -166,11 +180,29 @@ function ProfilePage() {
                       onChange={(e) => setDraftName(e.target.value)}
                       className="rounded-md border border-border bg-background px-2 py-1 text-sm"
                     />
-                    <Button size="sm" onClick={() => { setName.mutate(draftName); setEditingName(false); }}>OK</Button>
-                    <Button size="sm" variant="ghost" onClick={() => setEditingName(false)}>X</Button>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setName.mutate(draftName);
+                        setEditingName(false);
+                      }}
+                    >
+                      OK
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => setEditingName(false)}>
+                      X
+                    </Button>
                   </div>
                 ) : (
-                  <Button size="sm" variant="outline" className="rounded-full" onClick={() => { setDraftName(profile?.full_name ?? ""); setEditingName(true); }}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="rounded-full"
+                    onClick={() => {
+                      setDraftName(profile?.full_name ?? "");
+                      setEditingName(true);
+                    }}
+                  >
                     {lang === "es" ? "Editar" : "Edit"}
                   </Button>
                 )

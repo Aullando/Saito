@@ -6,7 +6,10 @@ export const Route = createFileRoute("/_public/en/cookies")({
   head: () => ({
     meta: [
       { title: "Cookie policy — SAITO" },
-      { name: "description", content: "Information about the cookies used on the SAITO site and how to manage them." },
+      {
+        name: "description",
+        content: "Information about the cookies used on the SAITO site and how to manage them.",
+      },
     ],
     links: hrefLangLinks("/cookies", "en"),
   }),
@@ -39,9 +42,7 @@ export const Route = createFileRoute("/_public/en/cookies")({
         },
         {
           title: "4. More information",
-          body: [
-            "For any cookie or privacy enquiry, please write to hola@saito.app.",
-          ],
+          body: ["For any cookie or privacy enquiry, please write to hola@saito.app."],
         },
       ]}
     />
