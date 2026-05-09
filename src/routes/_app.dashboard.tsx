@@ -24,8 +24,8 @@ import {
   BarChart3,
 } from "lucide-react";
 import {
-import { demoOr, EMPTY_DASHBOARD_STATS, EMPTY_DASHBOARD_CHARTS } from "@/lib/demoFallback";
 import { isDemoMode } from "@/lib/appMode";
+import { demoOr, EMPTY_DASHBOARD_STATS, EMPTY_DASHBOARD_CHARTS } from "@/lib/demoFallback";
   ResponsiveContainer,
   AreaChart,
   Area,
