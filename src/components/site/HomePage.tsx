@@ -188,7 +188,7 @@ export function HomePage({ locale }: Props) {
                 className="float-y absolute -right-3 top-1/3 hidden items-center gap-2 rounded-full border border-border bg-card/90 px-3 py-1.5 text-xs font-semibold shadow-lg backdrop-blur md:inline-flex"
               >
                 <Sparkles className="size-3.5 text-primary" />
-                {t("IA por rol", "AI by role")}
+                {t("Copiloto Inteligente", "Smart Copilot")}
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
