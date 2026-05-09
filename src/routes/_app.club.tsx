@@ -370,6 +370,8 @@ function ClubPage() {
                 address?: string | null;
                 capacity?: number | null;
                 status?: string;
+                location?: string | null;
+                sports?: string[] | null;
               }) => (
                 <div
                   key={f.id}
@@ -746,6 +748,8 @@ function FacilityDrawer({
     address?: string | null;
     capacity?: number | null;
     status?: string;
+    location?: string | null;
+    sports?: string[] | null;
   }>;
   onClose: () => void;
 }) {
