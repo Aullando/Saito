@@ -3,6 +3,7 @@ import * as Icons from "lucide-react";
 import {
   Building2, CalendarDays, Users, Wallet, Receipt, MessageSquare,
   Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X, ShieldCheck,
+  ClipboardCheck, Activity, ListChecks,
 } from "lucide-react";
 
 import { useCurrentUser, useAuth } from "@/lib/store";
@@ -32,24 +33,29 @@ function buildItems(role: Role, t: (k: any) => string): Item[] {
         { to: "/club", label: t("club_organization"), icon: Building2, module: "club" },
         { to: "/calendar", label: t("calendar"), icon: CalendarDays, module: "calendar" },
         { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
+        { to: "/attendance", label: "Asistencia", icon: ClipboardCheck, module: "calendar" },
         { to: "/economic/fees", label: t("economic_management"), icon: Wallet, module: "economic" },
         { to: "/economic/fees", label: t("fees_rates"), icon: Receipt, indent: true, module: "economic" },
         { to: "/economic/payments", label: t("payment_status"), icon: Receipt, indent: true, module: "economic" },
         { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
         ...(role === "admin" ? [
+          { to: "/medical/restrictions", label: "Restricciones médicas", icon: Activity, module: "medical" as ClubModuleId },
           { to: "/settings/team", label: t("users_permissions"), icon: Users, module: "settings" as ClubModuleId },
           { to: "/settings/privacy", label: t("privacy_security") || "Privacidad y seguridad", icon: ShieldCheck, module: "settings" as ClubModuleId },
+          { to: "/settings/qa", label: "Checklist piloto", icon: ListChecks, module: "settings" as ClubModuleId },
         ] : []),
       ];
     case "technical":
       return [
         { to: "/calendar", label: t("calendar"), icon: CalendarDays, module: "calendar" },
         { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
+        { to: "/attendance", label: "Asistencia", icon: ClipboardCheck, module: "calendar" },
         { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
       ];
     case "medical":
       return [
         { to: "/medical/calendar", label: t("medical_calendar"), icon: Stethoscope, module: "medical" },
+        { to: "/medical/restrictions", label: "Restricciones y lesiones", icon: Activity, module: "medical" },
         { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
         { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
       ];
