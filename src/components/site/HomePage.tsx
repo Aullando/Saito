@@ -123,8 +123,8 @@ export function HomePage({ locale }: Props) {
               </p>
               <p className="mt-6 max-w-xl text-lg text-muted-foreground">
                 {t(
-                  "SAITO unifica socios, calendario, pagos, comunicación e IA por rol. Pensado para clubes que crecen y para entidades multi-sección.",
-                  "SAITO unifies members, calendar, payments, communication and role-based AI. Built for clubs that grow and multi-section organisations.",
+                  "SAITO unifica socios, calendario, pagos, comunicación y copiloto inteligente según el rol. Pensado para clubes que crecen y para entidades multi-sección.",
+                  "SAITO unifies members, calendar, payments, communication and a smart copilot tailored to each role. Built for clubs that grow and multi-section organisations.",
                 )}
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
