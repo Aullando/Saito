@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import * as Icons from "lucide-react";
 import {
   Building2, CalendarDays, Users, Wallet, Receipt, MessageSquare,
-  Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X,
+  Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X, ShieldCheck,
 } from "lucide-react";
 
 import { useCurrentUser, useAuth } from "@/lib/store";
