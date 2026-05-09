@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { Download } from "lucide-react";
 import { formatMoneyEs, formatDate, formatName } from "@/lib/format";
 import { paymentLabel } from "@/lib/labels";
+import { demoOrEmpty } from "@/lib/demoFallback";
 
 export const Route = createFileRoute("/_app/economic/payments")({
   component: () => (
@@ -100,10 +101,10 @@ function PaymentsPage() {
     },
   });
 
-  const payments = (paymentsQ.data ?? DEMO_PAYMENTS_ROWS) as DBPayment[];
-  const athletes = athletesQ.data ?? DEMO_ATHLETES_MIN_ROWS;
-  const sections = sectionsQ.data ?? DEMO_SECTIONS_ROWS;
-  const categories = categoriesQ.data ?? DEMO_CATEGORIES_ROWS;
+  const payments = demoOrEmpty(paymentsQ.data, DEMO_PAYMENTS_ROWS) as DBPayment[];
+  const athletes = demoOrEmpty(athletesQ.data, DEMO_ATHLETES_MIN_ROWS);
+  const sections = demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
+  const categories = demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
 
   const setStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: PaymentStatus }) => {

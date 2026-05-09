@@ -29,6 +29,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { DEMO_ATHLETES_MIN_ROWS, DEMO_MEDICAL_APPOINTMENTS_ROWS } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { demoOrEmpty } from "@/lib/demoFallback";
 
 export const Route = createFileRoute("/_app/medical/calendar")({
   component: () => (
@@ -84,8 +85,8 @@ function MedicalCalendarPage() {
     },
   });
 
-  const athletes = athletesQ.data ?? DEMO_ATHLETES_MIN_ROWS;
-  const appointments = (apptQ.data ?? DEMO_MEDICAL_APPOINTMENTS_ROWS) as DBAppt[];
+  const athletes = demoOrEmpty(athletesQ.data, DEMO_ATHLETES_MIN_ROWS);
+  const appointments = demoOrEmpty(apptQ.data, DEMO_MEDICAL_APPOINTMENTS_ROWS) as DBAppt[];
 
   const addAppt = useMutation({
     mutationFn: async (a: {
