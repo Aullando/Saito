@@ -8,6 +8,7 @@ import {
   RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES, RGCC_PT_SESSIONS,
   RGCC_EXERCISES, RGCC_ROUTINES, RGCC_WORKOUTS,
 } from "@/clubs/rgcc/seed";
+import { RGCC_SECTION_ICONS } from "@/clubs/rgcc/sectionIcons";
 
 export const Route = createFileRoute("/rgcc/$slug")({
   component: () => (
@@ -99,14 +100,26 @@ function previewFor(slug: string): React.ReactNode | null {
     case "secciones":
       return (
         <Grid>
-          {RGCC_SECTIONS.map((s) => (
-            <Card key={s.id}>
-              <div className="font-semibold">{s.name}</div>
-              <div className="text-xs text-muted-foreground">{s.category} · {s.venueLabel}</div>
-              <div className="mt-1 text-xs">Resp.: {s.responsible}</div>
-              <div className="mt-1 text-xs text-primary">{s.membersCount} socios</div>
-            </Card>
-          ))}
+          {RGCC_SECTIONS.map((s) => {
+            const icon = RGCC_SECTION_ICONS[s.id];
+            return (
+              <Card key={s.id}>
+                <div className="flex items-start gap-3">
+                  {icon && (
+                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-muted">
+                      <img src={icon} alt="" className="h-9 w-9 object-contain" loading="lazy" />
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <div className="font-semibold truncate">{s.name}</div>
+                    <div className="text-xs text-muted-foreground">{s.category} · {s.venueLabel}</div>
+                    <div className="mt-1 text-xs">Resp.: {s.responsible}</div>
+                    <div className="mt-1 text-xs text-primary">{s.membersCount} socios</div>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
         </Grid>
       );
     case "monitores":
