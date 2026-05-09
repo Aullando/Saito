@@ -234,24 +234,15 @@ export function HomePage({ locale }: Props) {
               </ul>
             </div>
 
-            <div className="relative overflow-hidden rounded-3xl border border-border shadow-xl">
+            <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
               <img
-                src={photoTeam}
-                alt={t("Equipo unido en cancha", "Team huddled together")}
+                src={multiclubVisual}
+                alt={t("Diagrama multi-club: matriz, sedes y secciones", "Multi-club diagram: parent, venues and sections")}
                 loading="lazy"
-                width={1024}
-                height={1024}
+                width={1800}
+                height={1125}
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-                <div className="flex flex-wrap gap-2">
-                  {["Fútbol", "Pádel", "Tenis", "Vela", "Hockey", "Basket", "Natación", "Gimnasia"].map((s) => (
-                    <span key={s} className="rounded-full border border-white/30 bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>
