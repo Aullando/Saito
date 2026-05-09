@@ -58,40 +58,46 @@
 
 :root {
   --radius: 0.625rem; /* inputs 10px */
-  /* SAITO exact palette */
+  /* SAITO exact palette (brand manual 2026) */
+  --saito-navy: #21324a;     /* dark blue */
+  --saito-blue: #0067c9;     /* primary blue */
+  --saito-green: #00a74d;
+  --saito-red: #f12f4a;
+  --saito-yellow: #fdb113;
+
   --background: oklch(0.978 0.006 250);            /* rgb(247,249,252) */
-  --foreground: oklch(0.255 0.035 262);            /* rgb(26,32,44) */
+  --foreground: var(--saito-navy);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.27 0.04 260);
+  --card-foreground: var(--saito-navy);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.27 0.04 260);
-  --primary: oklch(0.58 0.17 252);                 /* #0074D9 */
+  --popover-foreground: var(--saito-navy);
+  --primary: var(--saito-blue);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.96 0.01 250);
-  --secondary-foreground: oklch(0.27 0.04 260);
+  --secondary-foreground: var(--saito-navy);
   --muted: oklch(0.96 0.01 250);
-  --muted-foreground: oklch(0.46 0.035 255);       /* darker for AA contrast */
+  --muted-foreground: oklch(0.46 0.035 255);       /* AA contrast */
   --accent: oklch(0.94 0.03 252);
-  --accent-foreground: oklch(0.30 0.12 252);
-  --destructive: oklch(0.55 0.22 27);
+  --accent-foreground: var(--saito-navy);
+  --destructive: var(--saito-red);
   --destructive-foreground: oklch(1 0 0);
-  --success: oklch(0.55 0.15 155);
+  --success: var(--saito-green);
   --success-foreground: oklch(1 0 0);
-  --warning: oklch(0.58 0.14 70);
-  --warning-foreground: oklch(1 0 0);
-  --info: oklch(0.55 0.14 230);
+  --warning: var(--saito-yellow);
+  --warning-foreground: var(--saito-navy);
+  --info: var(--saito-blue);
   --info-foreground: oklch(1 0 0);
   --border: oklch(0.88 0.012 250);
   --input: oklch(0.88 0.012 250);
-  --ring: oklch(0.58 0.17 252);
+  --ring: var(--saito-blue);
   --sidebar: oklch(0.99 0.005 250);
-  --sidebar-foreground: oklch(0.27 0.04 260);
-  --sidebar-primary: oklch(0.58 0.17 252);
+  --sidebar-foreground: var(--saito-navy);
+  --sidebar-primary: var(--saito-blue);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.96 0.015 250);
-  --sidebar-accent-foreground: oklch(0.27 0.04 260);
+  --sidebar-accent-foreground: var(--saito-navy);
   --sidebar-border: oklch(0.93 0.01 250);
-  --sidebar-ring: oklch(0.58 0.17 252);
+  --sidebar-ring: var(--saito-blue);
 }
 
 .dark {
