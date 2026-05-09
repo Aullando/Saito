@@ -160,7 +160,7 @@ export function HomePage({ locale }: Props) {
                 {stats.slice(0, 3).map((s) => (
                   <div key={s.label} className="px-3 text-center first:pl-0 last:pr-0">
                     <p className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
-                      <CountUp end={s.value} prefix={s.prefix} suffix={s.suffix} />
+                      <CountUp to={s.value} prefix={s.prefix} suffix={s.suffix} />
                     </p>
                     <p className="mt-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground sm:text-[11px]">
                       {s.label}
