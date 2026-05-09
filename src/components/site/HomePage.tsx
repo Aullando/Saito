@@ -86,35 +86,37 @@ export function HomePage({ locale }: Props) {
   return (
     <main>
       {/* ============= HERO ============= */}
-      <section ref={heroRef} className="relative overflow-hidden">
-        {/* Layered backgrounds: mesh gradient halo + subtle grid */}
-        <div className="absolute inset-0 bg-grid opacity-60" aria-hidden />
+      <section ref={heroRef} className="relative overflow-hidden border-b border-border bg-background">
+        {/* Subtle grid only — no gradient halos */}
+        <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
         <motion.div
-          className="absolute -top-40 left-1/2 h-[700px] w-[1100px] -translate-x-1/2 rounded-full blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle at 30% 30%, rgba(0,103,201,0.32), transparent 55%), radial-gradient(circle at 70% 60%, rgba(0,167,77,0.18), transparent 60%), radial-gradient(circle at 50% 80%, rgba(253,177,19,0.16), transparent 60%)",
-            opacity: heroFade,
-          }}
+          className="pointer-events-none absolute -left-24 top-24 hidden h-[420px] w-[420px] rounded-full border border-primary/10 lg:block"
+          style={{ opacity: heroFade }}
+          aria-hidden
+        />
+        <motion.div
+          className="pointer-events-none absolute -right-32 bottom-0 hidden h-[520px] w-[520px] rounded-full border border-saito-green/10 lg:block"
+          style={{ opacity: heroFade }}
           aria-hidden
         />
 
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:px-8 lg:pt-24">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              <span className="gemini-chip inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] shadow-sm">
-                <Sparkles className="size-3.5" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground shadow-sm">
+                <span className="size-1.5 rounded-full bg-saito-green" />
                 {t("Powered by IA", "Powered by AI")}
               </span>
-              <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] sm:text-5xl md:text-6xl">
+              <h1 className="mt-5 text-[2.5rem] font-extrabold leading-[1.02] tracking-tight sm:text-5xl md:text-6xl lg:text-[4.25rem]">
                 {t("Gestiona tu club deportivo", "Run your sports club")}
                 <br />
-                <span className="text-saito-gradient">
+                <span className="relative inline-block text-primary">
                   {t("en una sola plataforma", "from a single platform")}
+                  <span className="absolute -bottom-1 left-0 h-[6px] w-full rounded-full bg-saito-yellow/60" aria-hidden />
                 </span>
               </h1>
               <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.22em]">
