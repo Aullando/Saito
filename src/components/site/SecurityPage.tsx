@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "./SectionHeading";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
+import securityVisual from "@/assets/site/saito-security-trust.png";
 
 interface Props {
   locale: Locale;
