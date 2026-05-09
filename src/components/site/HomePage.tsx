@@ -443,7 +443,7 @@ export function HomePage({ locale }: Props) {
                 <motion.div
                   key={b.title}
                   variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
-                  className="group flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+                  className="group flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                   <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                     <Icon className="size-5" />
