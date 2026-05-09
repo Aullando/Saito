@@ -101,7 +101,7 @@ export function AIPage({ locale }: { locale: Locale }) {
             {t("Prueba la IA con datos de tu club", "Try the AI with your club's data")}
           </h3>
           <Button asChild size="lg" className="mt-6 rounded-full px-6">
-            <Link to={localizedPath("/contacto", locale) as any}>
+            <Link to={localizedPath("/contacto", locale) as unknown as never}>
               {t("Pide una demo", "Book a demo")}
             </Link>
           </Button>

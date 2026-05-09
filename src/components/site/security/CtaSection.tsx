@@ -21,12 +21,12 @@ export function CtaSection({ locale }: { locale: Locale }) {
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg" className="rounded-full px-6">
-            <Link to={localizedPath("/contacto", locale) as any}>
+            <Link to={localizedPath("/contacto", locale) as unknown as never}>
               {t(locale, { es: "Solicitar demo", en: "Book a demo" })}
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="rounded-full px-6">
-            <Link to={localizedPath("/producto", locale) as any}>
+            <Link to={localizedPath("/producto", locale) as unknown as never}>
               {t(locale, { es: "Ver producto", en: "See product" })}
             </Link>
           </Button>

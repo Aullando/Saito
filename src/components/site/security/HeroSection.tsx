@@ -36,13 +36,13 @@ export function HeroSection({ locale }: { locale: Locale }) {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="rounded-full px-6">
-                <Link to={localizedPath("/contacto", locale) as any}>
+                <Link to={localizedPath("/contacto", locale) as unknown as never}>
                   {t(locale, { es: "Solicitar demo", en: "Book a demo" })}
                   <ArrowRight className="ml-2 size-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full px-6">
-                <Link to={localizedPath("/producto", locale) as any}>
+                <Link to={localizedPath("/producto", locale) as unknown as never}>
                   {t(locale, { es: "Ver producto", en: "See product" })}
                 </Link>
               </Button>

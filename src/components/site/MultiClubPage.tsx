@@ -156,7 +156,7 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
             size="lg"
             className="mt-6 rounded-full bg-white px-6 text-saito-navy hover:bg-white/90"
           >
-            <Link to={localizedPath("/contacto", locale) as any}>
+            <Link to={localizedPath("/contacto", locale) as unknown as never}>
               {t("Pide una demo", "Book a demo")}
             </Link>
           </Button>

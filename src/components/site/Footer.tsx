@@ -44,7 +44,7 @@ export function Footer() {
               {links.map((l) => (
                 <li key={l.to}>
                   <Link
-                    to={localizedPath(l.to, locale) as any}
+                    to={localizedPath(l.to, locale) as unknown as never}
                     className="text-sm text-white/70 transition-colors hover:text-white"
                   >
                     {l.label}
@@ -61,19 +61,19 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-4">
             <Link
-              to={localizedPath("/aviso-legal", locale) as any}
+              to={localizedPath("/aviso-legal", locale) as unknown as never}
               className="text-white/70 transition-colors hover:text-white"
             >
               {t("Aviso legal", "Legal notice")}
             </Link>
             <Link
-              to={localizedPath("/privacidad", locale) as any}
+              to={localizedPath("/privacidad", locale) as unknown as never}
               className="text-white/70 transition-colors hover:text-white"
             >
               {t("Privacidad", "Privacy")}
             </Link>
             <Link
-              to={localizedPath("/cookies", locale) as any}
+              to={localizedPath("/cookies", locale) as unknown as never}
               className="text-white/70 transition-colors hover:text-white"
             >
               {t("Cookies", "Cookies")}

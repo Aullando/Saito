@@ -204,7 +204,7 @@ export function CommercialAIChat() {
           <div className="border-t border-border px-3 py-2 text-[11px] text-muted-foreground">
             {t("¿Quieres ver SAITO en acción?", "Want to see SAITO in action?")}{" "}
             <Link
-              to={(locale === "en" ? "/en/contacto" : "/contacto") as any}
+              to={(locale === "en" ? "/en/contacto" : "/contacto") as unknown as never}
               className="font-semibold text-primary hover:underline"
             >
               {t("Solicitar demo", "Book a demo")}

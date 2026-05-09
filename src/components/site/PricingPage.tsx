@@ -127,7 +127,7 @@ export function PricingPage({ locale }: { locale: Locale }) {
                 className={`mt-8 w-full rounded-full ${p.highlight ? "bg-white text-saito-navy hover:bg-white/90" : ""}`}
                 variant={p.highlight ? "default" : "outline"}
               >
-                <Link to={localizedPath("/contacto", locale) as any}>{p.cta}</Link>
+                <Link to={localizedPath("/contacto", locale) as unknown as never}>{p.cta}</Link>
               </Button>
             </div>
           ))}

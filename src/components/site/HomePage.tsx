@@ -143,12 +143,12 @@ export function HomePage({ locale }: Props) {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg" className="rounded-full px-6">
-                  <Link to={localizedPath("/contacto", locale) as any}>
+                  <Link to={localizedPath("/contacto", locale) as unknown as never}>
                     {t("Pide una demo", "Book a demo")} <ArrowRight className="ml-1 size-4" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="rounded-full px-6">
-                  <Link to={localizedPath("/producto", locale) as any}>
+                  <Link to={localizedPath("/producto", locale) as unknown as never}>
                     {t("Ver funcionalidades", "See features")}
                   </Link>
                 </Button>
@@ -385,7 +385,7 @@ export function HomePage({ locale }: Props) {
               size="lg"
               className="rounded-full bg-white px-6 text-saito-navy hover:bg-white/90"
             >
-              <Link to={localizedPath("/contacto", locale) as any}>
+              <Link to={localizedPath("/contacto", locale) as unknown as never}>
                 {t("Pide una demo", "Book a demo")} <ArrowRight className="ml-1 size-4" />
               </Link>
             </Button>
@@ -395,7 +395,7 @@ export function HomePage({ locale }: Props) {
               variant="outline"
               className="rounded-full border-white/30 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white"
             >
-              <Link to={localizedPath("/precios", locale) as any}>
+              <Link to={localizedPath("/precios", locale) as unknown as never}>
                 {t("Ver precios", "See pricing")}
               </Link>
             </Button>

@@ -356,7 +356,7 @@ export function ProductPage({ locale }: { locale: Locale }) {
             )}
           </p>
           <Button asChild size="lg" className="mt-6 rounded-full px-6">
-            <Link to={localizedPath("/contacto", locale) as any}>
+            <Link to={localizedPath("/contacto", locale) as unknown as never}>
               {t("Pide una demo", "Book a demo")}
             </Link>
           </Button>
