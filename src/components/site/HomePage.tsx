@@ -217,7 +217,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= MODULES ============= */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Producto", "Product")}
@@ -233,7 +233,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= HOW IT WORKS — TIMELINE ============= */}
-      <section className="border-t border-border bg-muted/40 py-24">
+      <section className="border-t border-border bg-muted/40 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Cómo funciona", "How it works")}
@@ -306,7 +306,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= AI ROLES ============= */}
-      <section className="relative overflow-hidden bg-saito-gradient py-24 text-white">
+      <section className="relative overflow-hidden bg-saito-gradient py-16 text-white sm:py-24">
         <div className="absolute inset-0 opacity-30"
           style={{ backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 50%)" }}
           aria-hidden />
@@ -324,7 +324,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= MULTI-CLUB ============= */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <Reveal>
@@ -366,7 +366,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= BENEFITS ============= */}
-      <section className="border-t border-border bg-muted/40 py-20">
+      <section className="border-t border-border bg-muted/40 py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Por qué SAITO", "Why SAITO")}
@@ -393,7 +393,7 @@ export function HomePage({ locale }: Props) {
       </section>
 
       {/* ============= FINAL CTA ============= */}
-      <section className="relative overflow-hidden bg-saito-gradient py-24 text-white">
+      <section className="relative overflow-hidden bg-saito-gradient py-16 text-white sm:py-24">
         <div className="absolute inset-0 bg-grid opacity-20" aria-hidden />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>

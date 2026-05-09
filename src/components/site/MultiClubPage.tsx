@@ -35,7 +35,7 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-14 sm:py-20">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
             <img

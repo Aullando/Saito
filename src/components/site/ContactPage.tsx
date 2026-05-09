@@ -47,7 +47,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-14 sm:py-20">
         <div className="mx-auto grid max-w-5xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:px-8">
           <form
             onSubmit={onSubmit}
