@@ -12,7 +12,7 @@ import {
 import { getRgccExerciseImage } from "@/clubs/rgcc/exerciseImages";
 import { BookOpen, Dumbbell, Search, Filter, ImageOff } from "lucide-react";
 
-export const Route = createFileRoute("/rgcc/biblioteca")({
+export const Route = createFileRoute("/_app/rgcc/biblioteca")({
   component: () => (
     <RgccGuard>
       <Biblioteca />

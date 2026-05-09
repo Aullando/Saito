@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/onboarding")({
+export const Route = createFileRoute("/_app/onboarding")({
   head: () => ({ meta: [{ title: "Welcome — SAITO" }] }),
   component: OnboardingPage,
 });

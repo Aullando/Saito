@@ -10,7 +10,7 @@ import {
 } from "@/clubs/rgcc/seed";
 import { RGCC_SECTION_ICONS } from "@/clubs/rgcc/sectionIcons";
 
-export const Route = createFileRoute("/rgcc/$slug")({
+export const Route = createFileRoute("/_app/rgcc/$slug")({
   component: () => (
     <RgccGuard>
       <RgccModulePage />

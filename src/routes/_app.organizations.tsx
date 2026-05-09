@@ -18,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Plus } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
 
-export const Route = createFileRoute("/organizations")({
+export const Route = createFileRoute("/_app/organizations")({
   component: () => (
     <RoleGate roles={["sysadmin"]}>
       <AppLayout>

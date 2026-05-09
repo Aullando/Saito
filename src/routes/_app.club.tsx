@@ -17,7 +17,7 @@ import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 import { Plus, Building2, Users, Stethoscope, Wrench, UserSquare2, MapPin, Trash2, FolderTree } from "lucide-react";
 
-export const Route = createFileRoute("/club")({
+export const Route = createFileRoute("/_app/club")({
   component: () => (
     <RoleGate roles={["admin", "manager"]}>
       <AppLayout>

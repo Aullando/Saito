@@ -25,7 +25,7 @@ import {
   Legend,
 } from "recharts";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/_app/dashboard")({
   component: () => (
     <RoleGate roles={["sysadmin", "admin", "manager", "technical", "medical"]}>
       <AppLayout>

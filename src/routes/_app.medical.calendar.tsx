@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 
-export const Route = createFileRoute("/medical/calendar")({
+export const Route = createFileRoute("/_app/medical/calendar")({
   component: () => (
     <RoleGate roles={["medical"]}>
       <AppLayout>

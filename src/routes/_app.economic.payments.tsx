@@ -16,7 +16,7 @@ import { Download } from "lucide-react";
 import { formatMoneyEs, formatDate, formatName } from "@/lib/format";
 import { paymentLabel } from "@/lib/labels";
 
-export const Route = createFileRoute("/economic/payments")({
+export const Route = createFileRoute("/_app/economic/payments")({
   component: () => (
     <RoleGate roles={["admin", "manager"]}>
       <AppLayout>

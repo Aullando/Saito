@@ -15,7 +15,7 @@ import {
 } from "@/clubs/rgcc/seed";
 import { Clock, PlayCircle, Users, MapPin, AlertTriangle, CalendarOff, Check } from "lucide-react";
 
-export const Route = createFileRoute("/rgcc/mi-dia")({
+export const Route = createFileRoute("/_app/rgcc/mi-dia")({
   component: () => (
     <RgccGuard>
       <MiDiaGate />

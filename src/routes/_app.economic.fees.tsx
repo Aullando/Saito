@@ -18,7 +18,7 @@ import { Plus } from "lucide-react";
 import { formatMoneyEs, formatDate } from "@/lib/format";
 import { frequencyLabel } from "@/lib/labels";
 
-export const Route = createFileRoute("/economic/fees")({
+export const Route = createFileRoute("/_app/economic/fees")({
   component: () => (
     <RoleGate roles={["admin", "manager"]}>
       <AppLayout>

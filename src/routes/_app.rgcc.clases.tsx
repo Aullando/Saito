@@ -17,7 +17,7 @@ import {
 } from "@/clubs/rgcc/seed";
 import { AlertTriangle, Building2, Users, MapPin, Megaphone } from "lucide-react";
 
-export const Route = createFileRoute("/rgcc/clases")({
+export const Route = createFileRoute("/_app/rgcc/clases")({
   component: () => (
     <RgccGuard>
       <RgccClasesGate />

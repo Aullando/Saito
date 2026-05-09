@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { Plus, Send } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
 
-export const Route = createFileRoute("/communication")({
+export const Route = createFileRoute("/_app/communication")({
   component: () => (
     <RoleGate roles={["admin", "manager", "technical", "medical"]}>
       <AppLayout>
