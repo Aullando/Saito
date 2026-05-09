@@ -21,7 +21,8 @@ import { ModuleCard } from "@/components/site/ModuleCard";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { RoleTabs, defaultRolesEs, defaultRolesEn } from "@/components/site/RoleTabs";
 import photoMatch from "@/assets/photos/match.jpg";
-import photoTeam from "@/assets/photos/team-huddle.jpg";
+import heroVisual from "@/assets/site/saito-hero-command-center.png";
+import multiclubVisual from "@/assets/site/saito-multiclub-network.png";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 interface Props {
