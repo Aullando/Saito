@@ -17,9 +17,15 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: "bun run dev",
+        command: "npm run dev",
         url: BASE_URL,
         reuseExistingServer: true,
         timeout: 60_000,
+        env: {
+          // El password gate global bloquearía cualquier navegación durante e2e.
+          VITE_ENABLE_PASSWORD_GATE: "false",
+          // Forzamos modo demo para tests deterministas con datos seed.
+          VITE_DEMO_MODE: "true",
+        },
       },
 });

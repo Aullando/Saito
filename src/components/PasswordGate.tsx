@@ -1,15 +1,20 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 
 const STORAGE_KEY = "site-password-ok";
-const PASSWORD = "hola";
+const PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "hola";
+const ENABLED = import.meta.env.VITE_ENABLE_PASSWORD_GATE !== "false";
 
 export function PasswordGate({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
-  const [unlocked, setUnlocked] = useState(false);
+  const [unlocked, setUnlocked] = useState(!ENABLED);
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (!ENABLED) {
+      setReady(true);
+      return;
+    }
     try {
       if (sessionStorage.getItem(STORAGE_KEY) === "1") setUnlocked(true);
     } catch {
