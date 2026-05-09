@@ -11,18 +11,18 @@ interface Props {
 }
 
 const variants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-export function Reveal({ children, delay = 0, y = 24, className, stagger = false }: Props) {
+export function Reveal({ children, delay = 0, y = 20, className, stagger = false }: Props) {
   if (stagger) {
     return (
       <motion.div
         className={className}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, margin: "-80px" }}
+        viewport={{ once: true, margin: "-40px" }}
         variants={{
           hidden: {},
           show: { transition: { staggerChildren: 0.08, delayChildren: delay } },
@@ -37,8 +37,8 @@ export function Reveal({ children, delay = 0, y = 24, className, stagger = false
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.55, delay, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
       variants={variants}
     >
       {children}
