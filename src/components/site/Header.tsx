@@ -85,52 +85,59 @@ export function Header() {
         </div>
 
         <button
-          className="inline-flex items-center justify-center rounded-md p-2 lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-md lg:hidden"
           onClick={() => setOpen((o) => !o)}
           aria-label="Toggle menu"
+          aria-expanded={open}
         >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          {open ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
 
       {open && (
         <div className="border-t border-border bg-background lg:hidden">
-          <div className="space-y-1 px-4 py-4">
+          <div className="space-y-1 px-4 pb-[env(safe-area-inset-bottom)] pt-3">
             {items.map((it) => (
               <Link
                 key={it.to}
                 to={localizedPath(it.to, locale) as unknown as never}
                 onClick={() => setOpen(false)}
-                className="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-accent"
+                className="block rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-accent active:bg-accent"
+                activeProps={{
+                  className:
+                    "block rounded-lg px-3 py-3 text-base font-semibold text-primary bg-accent",
+                }}
+                activeOptions={it.to === "/" ? { exact: true } : undefined}
               >
                 {it.label}
               </Link>
             ))}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-3">
+            <div className="flex items-center justify-between gap-2 pt-4">
               <LangSwitcher />
-              <div className="flex items-center gap-2">
-                {session ? (
-                  <Button asChild variant="outline" className="rounded-full">
-                    <Link to="/dashboard" onClick={() => setOpen(false)}>
-                      {panelLabel}
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button asChild variant="ghost" className="rounded-full">
-                    <Link to="/login" onClick={() => setOpen(false)}>
-                      {loginLabel}
-                    </Link>
-                  </Button>
-                )}
-                <Button asChild className="rounded-full">
-                  <Link
-                    to={localizedPath("/contacto", locale) as unknown as never}
-                    onClick={() => setOpen(false)}
-                  >
-                    {cta}
+              {session && (
+                <Button asChild variant="outline" size="sm" className="rounded-full">
+                  <Link to="/dashboard" onClick={() => setOpen(false)}>
+                    {panelLabel}
                   </Link>
                 </Button>
-              </div>
+              )}
+            </div>
+            <div className="mt-3 grid grid-cols-1 gap-2">
+              {!session && (
+                <Button asChild variant="outline" className="h-11 w-full rounded-full">
+                  <Link to="/login" onClick={() => setOpen(false)}>
+                    {loginLabel}
+                  </Link>
+                </Button>
+              )}
+              <Button asChild className="h-11 w-full rounded-full">
+                <Link
+                  to={localizedPath("/contacto", locale) as unknown as never}
+                  onClick={() => setOpen(false)}
+                >
+                  {cta}
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
