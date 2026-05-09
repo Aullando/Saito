@@ -17,7 +17,7 @@ import {
 import { getRgccExerciseImage } from "@/clubs/rgcc/exerciseImages";
 import { Clock, Dumbbell, User, Sparkles, ListChecks } from "lucide-react";
 
-export const Route = createFileRoute("/rgcc/entrenamiento-personal")({
+export const Route = createFileRoute("/_app/rgcc/entrenamiento-personal")({
   component: () => (
     <RgccGuard>
       <PtGate />
