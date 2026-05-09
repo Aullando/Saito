@@ -120,9 +120,15 @@ export function ContactPage({ locale }: { locale: Locale }) {
                     "By submitting you accept our privacy policy. We only use this data to contact you.",
                   )}
                 </p>
-                <Button type="submit" size="lg" className="w-full rounded-full" disabled={loading}>
-                  {loading ? t("Enviando…", "Sending…") : t("Enviar solicitud", "Send request")}
+                <Button type="submit" size="lg" className="w-full rounded-full" disabled>
+                  {t("Envío desactivado", "Submissions disabled")}
                 </Button>
+                <p className="text-center text-xs text-muted-foreground">
+                  {t(
+                    "El formulario está temporalmente bloqueado. Contáctanos en hola@saito.app.",
+                    "The form is temporarily disabled. Contact us at hola@saito.app.",
+                  )}
+                </p>
               </div>
             )}
           </form>
