@@ -139,6 +139,12 @@
 @layer base {
   * { border-color: var(--color-border); }
   html, body { font-family: var(--font-sans); }
+  html {
+    scroll-behavior: smooth;
+    /* Sticky header is 4rem; offset anchor scroll so titles aren't hidden */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -147,6 +153,23 @@
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
+  /* Avoid iOS auto-zoom on focus by keeping form inputs ≥16px */
+  @media (max-width: 640px) {
+    input, select, textarea { font-size: 16px; }
+  }
+  /* Larger range thumb on touch devices for the impact calculator */
+  .impact-range { height: 1.75rem; }
+  .impact-range::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none;
+    width: 22px; height: 22px; border-radius: 9999px;
+    background: var(--color-saito-green); border: 2px solid white;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.2); cursor: pointer;
+  }
+  .impact-range::-moz-range-thumb {
+    width: 22px; height: 22px; border-radius: 9999px;
+    background: var(--color-saito-green); border: 2px solid white;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.2); cursor: pointer;
+  }
 }
 
 @layer components {
