@@ -27,6 +27,7 @@ import { Reveal } from "@/components/site/motion/Reveal";
 import { CountUp } from "@/components/site/motion/CountUp";
 import { TiltCard } from "@/components/site/motion/TiltCard";
 import { LogoMarquee } from "@/components/site/motion/LogoMarquee";
+import { ImpactCalculator } from "@/components/site/ImpactCalculator";
 import photoMatch from "@/assets/photos/match.jpg";
 import heroVisual from "@/assets/site/saito-hero-command-center-clean.png";
 import multiclubVisual from "@/assets/site/saito-multiclub-network-clean.png";
@@ -271,6 +272,9 @@ export function HomePage({ locale }: Props) {
           </Reveal>
         </div>
       </section>
+
+      {/* ============= IMPACT CALCULATOR ============= */}
+      <ImpactCalculator locale={locale} />
 
       {/* ============= CINEMATIC PHOTO BAND ============= */}
       <section className="relative h-[55vh] min-h-[360px] w-full overflow-hidden">
