@@ -8,6 +8,7 @@ import { useLocale, localizedPath } from "@/lib/site-i18n";
 import { useAuth } from "@/lib/auth";
 
 const navEs = [
+  { to: "/", label: "Inicio" },
   { to: "/producto", label: "Producto" },
   { to: "/ia", label: "IA" },
   { to: "/multi-club", label: "Multi-club" },
@@ -17,6 +18,7 @@ const navEs = [
   { to: "/contacto", label: "Contacto" },
 ];
 const navEn = [
+  { to: "/", label: "Home" },
   { to: "/producto", label: "Product" },
   { to: "/ia", label: "AI" },
   { to: "/multi-club", label: "Multi-club" },
