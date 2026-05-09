@@ -6,12 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { Locale } from "@/lib/site-i18n";
 
 export function ContactPage({ locale }: { locale: Locale }) {
   const t = (es: string, en: string) => (locale === "en" ? en : es);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [members, setMembers] = useState<string>("");
+  const [sports, setSports] = useState<string>("");
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -54,27 +63,63 @@ export function ContactPage({ locale }: { locale: Locale }) {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="name">{t("Nombre", "Name")}</Label>
-                    <Input id="name" required />
+                    <Input id="name" required autoComplete="name" />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="club">{t("Club / entidad", "Club / organisation")}</Label>
-                    <Input id="club" required />
+                    <Label htmlFor="role">{t("Tu rol en el club", "Your role in the club")}</Label>
+                    <Input id="role" required placeholder={t("Presidente, gerente…", "President, manager…")} />
                   </div>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
-                    <Label htmlFor="email">{t("Email", "Email")}</Label>
-                    <Input id="email" type="email" required />
+                    <Label htmlFor="club">{t("Club / entidad", "Club / organisation")}</Label>
+                    <Input id="club" required />
                   </div>
                   <div className="space-y-1.5">
+                    <Label htmlFor="email">{t("Email corporativo", "Work email")}</Label>
+                    <Input id="email" type="email" required autoComplete="email" />
+                  </div>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="phone">{t("Teléfono", "Phone")}</Label>
-                    <Input id="phone" />
+                    <Input id="phone" autoComplete="tel" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="members">{t("Nº de socios", "Members")}</Label>
+                    <Select value={members} onValueChange={setMembers}>
+                      <SelectTrigger id="members">
+                        <SelectValue placeholder={t("Selecciona un rango", "Select a range")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="<100">&lt; 100</SelectItem>
+                        <SelectItem value="100-500">100 – 500</SelectItem>
+                        <SelectItem value="500-1500">500 – 1.500</SelectItem>
+                        <SelectItem value="1500-5000">1.500 – 5.000</SelectItem>
+                        <SelectItem value=">5000">&gt; 5.000</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="msg">{t("Cuéntanos sobre tu club", "Tell us about your club")}</Label>
-                  <Textarea id="msg" rows={5} placeholder={t("Secciones, número de socios, herramientas actuales…", "Sections, number of members, current tools…")} />
+                  <Label htmlFor="sports">{t("Deportes / secciones", "Sports / sections")}</Label>
+                  <Input
+                    id="sports"
+                    value={sports}
+                    onChange={(e) => setSports(e.target.value)}
+                    placeholder={t("Fútbol, baloncesto, natación…", "Football, basketball, swimming…")}
+                  />
                 </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="msg">{t("Cuéntanos sobre tu club", "Tell us about your club")}</Label>
+                  <Textarea id="msg" rows={4} placeholder={t("Herramientas actuales, prioridades, plazos…", "Current tools, priorities, timeline…")} />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {t(
+                    "Al enviar aceptas nuestra política de privacidad. Usamos estos datos solo para contactarte.",
+                    "By submitting you accept our privacy policy. We only use this data to contact you.",
+                  )}
+                </p>
                 <Button type="submit" size="lg" className="w-full rounded-full" disabled={loading}>
                   {loading ? t("Enviando…", "Sending…") : t("Enviar solicitud", "Send request")}
                 </Button>

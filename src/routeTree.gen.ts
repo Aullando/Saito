@@ -15,11 +15,14 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicProductoRouteImport } from './routes/_public.producto'
+import { Route as PublicPrivacidadRouteImport } from './routes/_public.privacidad'
 import { Route as PublicPreciosRouteImport } from './routes/_public.precios'
 import { Route as PublicMultiClubRouteImport } from './routes/_public.multi-club'
 import { Route as PublicIaRouteImport } from './routes/_public.ia'
+import { Route as PublicCookiesRouteImport } from './routes/_public.cookies'
 import { Route as PublicContactoRouteImport } from './routes/_public.contacto'
 import { Route as PublicClientesRouteImport } from './routes/_public.clientes'
+import { Route as PublicAvisoLegalRouteImport } from './routes/_public.aviso-legal'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppOrganizationsRouteImport } from './routes/_app.organizations'
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
@@ -30,11 +33,14 @@ import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAthletesRouteImport } from './routes/_app.athletes'
 import { Route as PublicEnIndexRouteImport } from './routes/_public.en.index'
 import { Route as PublicEnProductoRouteImport } from './routes/_public.en.producto'
+import { Route as PublicEnPrivacidadRouteImport } from './routes/_public.en.privacidad'
 import { Route as PublicEnPreciosRouteImport } from './routes/_public.en.precios'
 import { Route as PublicEnMultiClubRouteImport } from './routes/_public.en.multi-club'
 import { Route as PublicEnIaRouteImport } from './routes/_public.en.ia'
+import { Route as PublicEnCookiesRouteImport } from './routes/_public.en.cookies'
 import { Route as PublicEnContactoRouteImport } from './routes/_public.en.contacto'
 import { Route as PublicEnClientesRouteImport } from './routes/_public.en.clientes'
+import { Route as PublicEnAvisoLegalRouteImport } from './routes/_public.en.aviso-legal'
 import { Route as AppSettingsTeamRouteImport } from './routes/_app.settings.team'
 import { Route as AppRgccMiDiaRouteImport } from './routes/_app.rgcc.mi-dia'
 import { Route as AppRgccEntrenamientoPersonalRouteImport } from './routes/_app.rgcc.entrenamiento-personal'
@@ -73,6 +79,11 @@ const PublicProductoRoute = PublicProductoRouteImport.update({
   path: '/producto',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicPrivacidadRoute = PublicPrivacidadRouteImport.update({
+  id: '/privacidad',
+  path: '/privacidad',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicPreciosRoute = PublicPreciosRouteImport.update({
   id: '/precios',
   path: '/precios',
@@ -88,6 +99,11 @@ const PublicIaRoute = PublicIaRouteImport.update({
   path: '/ia',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicCookiesRoute = PublicCookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicContactoRoute = PublicContactoRouteImport.update({
   id: '/contacto',
   path: '/contacto',
@@ -96,6 +112,11 @@ const PublicContactoRoute = PublicContactoRouteImport.update({
 const PublicClientesRoute = PublicClientesRouteImport.update({
   id: '/clientes',
   path: '/clientes',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicAvisoLegalRoute = PublicAvisoLegalRouteImport.update({
+  id: '/aviso-legal',
+  path: '/aviso-legal',
   getParentRoute: () => PublicRoute,
 } as any)
 const AppProfileRoute = AppProfileRouteImport.update({
@@ -148,6 +169,11 @@ const PublicEnProductoRoute = PublicEnProductoRouteImport.update({
   path: '/en/producto',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicEnPrivacidadRoute = PublicEnPrivacidadRouteImport.update({
+  id: '/en/privacidad',
+  path: '/en/privacidad',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicEnPreciosRoute = PublicEnPreciosRouteImport.update({
   id: '/en/precios',
   path: '/en/precios',
@@ -163,6 +189,11 @@ const PublicEnIaRoute = PublicEnIaRouteImport.update({
   path: '/en/ia',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicEnCookiesRoute = PublicEnCookiesRouteImport.update({
+  id: '/en/cookies',
+  path: '/en/cookies',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicEnContactoRoute = PublicEnContactoRouteImport.update({
   id: '/en/contacto',
   path: '/en/contacto',
@@ -171,6 +202,11 @@ const PublicEnContactoRoute = PublicEnContactoRouteImport.update({
 const PublicEnClientesRoute = PublicEnClientesRouteImport.update({
   id: '/en/clientes',
   path: '/en/clientes',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnAvisoLegalRoute = PublicEnAvisoLegalRouteImport.update({
+  id: '/en/aviso-legal',
+  path: '/en/aviso-legal',
   getParentRoute: () => PublicRoute,
 } as any)
 const AppSettingsTeamRoute = AppSettingsTeamRouteImport.update({
@@ -232,11 +268,14 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof AppOnboardingRoute
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
+  '/aviso-legal': typeof PublicAvisoLegalRoute
   '/clientes': typeof PublicClientesRoute
   '/contacto': typeof PublicContactoRoute
+  '/cookies': typeof PublicCookiesRoute
   '/ia': typeof PublicIaRoute
   '/multi-club': typeof PublicMultiClubRoute
   '/precios': typeof PublicPreciosRoute
+  '/privacidad': typeof PublicPrivacidadRoute
   '/producto': typeof PublicProductoRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
@@ -247,11 +286,14 @@ export interface FileRoutesByFullPath {
   '/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof AppRgccMiDiaRoute
   '/settings/team': typeof AppSettingsTeamRoute
+  '/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/en/clientes': typeof PublicEnClientesRoute
   '/en/contacto': typeof PublicEnContactoRoute
+  '/en/cookies': typeof PublicEnCookiesRoute
   '/en/ia': typeof PublicEnIaRoute
   '/en/multi-club': typeof PublicEnMultiClubRoute
   '/en/precios': typeof PublicEnPreciosRoute
+  '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
   '/en/': typeof PublicEnIndexRoute
 }
@@ -267,11 +309,14 @@ export interface FileRoutesByTo {
   '/onboarding': typeof AppOnboardingRoute
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
+  '/aviso-legal': typeof PublicAvisoLegalRoute
   '/clientes': typeof PublicClientesRoute
   '/contacto': typeof PublicContactoRoute
+  '/cookies': typeof PublicCookiesRoute
   '/ia': typeof PublicIaRoute
   '/multi-club': typeof PublicMultiClubRoute
   '/precios': typeof PublicPreciosRoute
+  '/privacidad': typeof PublicPrivacidadRoute
   '/producto': typeof PublicProductoRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
@@ -282,11 +327,14 @@ export interface FileRoutesByTo {
   '/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof AppRgccMiDiaRoute
   '/settings/team': typeof AppSettingsTeamRoute
+  '/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/en/clientes': typeof PublicEnClientesRoute
   '/en/contacto': typeof PublicEnContactoRoute
+  '/en/cookies': typeof PublicEnCookiesRoute
   '/en/ia': typeof PublicEnIaRoute
   '/en/multi-club': typeof PublicEnMultiClubRoute
   '/en/precios': typeof PublicEnPreciosRoute
+  '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
   '/en': typeof PublicEnIndexRoute
 }
@@ -304,11 +352,14 @@ export interface FileRoutesById {
   '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/organizations': typeof AppOrganizationsRoute
   '/_app/profile': typeof AppProfileRoute
+  '/_public/aviso-legal': typeof PublicAvisoLegalRoute
   '/_public/clientes': typeof PublicClientesRoute
   '/_public/contacto': typeof PublicContactoRoute
+  '/_public/cookies': typeof PublicCookiesRoute
   '/_public/ia': typeof PublicIaRoute
   '/_public/multi-club': typeof PublicMultiClubRoute
   '/_public/precios': typeof PublicPreciosRoute
+  '/_public/privacidad': typeof PublicPrivacidadRoute
   '/_public/producto': typeof PublicProductoRoute
   '/_public/': typeof PublicIndexRoute
   '/_app/economic/fees': typeof AppEconomicFeesRoute
@@ -320,11 +371,14 @@ export interface FileRoutesById {
   '/_app/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/_app/rgcc/mi-dia': typeof AppRgccMiDiaRoute
   '/_app/settings/team': typeof AppSettingsTeamRoute
+  '/_public/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/_public/en/clientes': typeof PublicEnClientesRoute
   '/_public/en/contacto': typeof PublicEnContactoRoute
+  '/_public/en/cookies': typeof PublicEnCookiesRoute
   '/_public/en/ia': typeof PublicEnIaRoute
   '/_public/en/multi-club': typeof PublicEnMultiClubRoute
   '/_public/en/precios': typeof PublicEnPreciosRoute
+  '/_public/en/privacidad': typeof PublicEnPrivacidadRoute
   '/_public/en/producto': typeof PublicEnProductoRoute
   '/_public/en/': typeof PublicEnIndexRoute
 }
@@ -342,11 +396,14 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/organizations'
     | '/profile'
+    | '/aviso-legal'
     | '/clientes'
     | '/contacto'
+    | '/cookies'
     | '/ia'
     | '/multi-club'
     | '/precios'
+    | '/privacidad'
     | '/producto'
     | '/economic/fees'
     | '/economic/payments'
@@ -357,11 +414,14 @@ export interface FileRouteTypes {
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/team'
+    | '/en/aviso-legal'
     | '/en/clientes'
     | '/en/contacto'
+    | '/en/cookies'
     | '/en/ia'
     | '/en/multi-club'
     | '/en/precios'
+    | '/en/privacidad'
     | '/en/producto'
     | '/en/'
   fileRoutesByTo: FileRoutesByTo
@@ -377,11 +437,14 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/organizations'
     | '/profile'
+    | '/aviso-legal'
     | '/clientes'
     | '/contacto'
+    | '/cookies'
     | '/ia'
     | '/multi-club'
     | '/precios'
+    | '/privacidad'
     | '/producto'
     | '/economic/fees'
     | '/economic/payments'
@@ -392,11 +455,14 @@ export interface FileRouteTypes {
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/team'
+    | '/en/aviso-legal'
     | '/en/clientes'
     | '/en/contacto'
+    | '/en/cookies'
     | '/en/ia'
     | '/en/multi-club'
     | '/en/precios'
+    | '/en/privacidad'
     | '/en/producto'
     | '/en'
   id:
@@ -413,11 +479,14 @@ export interface FileRouteTypes {
     | '/_app/onboarding'
     | '/_app/organizations'
     | '/_app/profile'
+    | '/_public/aviso-legal'
     | '/_public/clientes'
     | '/_public/contacto'
+    | '/_public/cookies'
     | '/_public/ia'
     | '/_public/multi-club'
     | '/_public/precios'
+    | '/_public/privacidad'
     | '/_public/producto'
     | '/_public/'
     | '/_app/economic/fees'
@@ -429,11 +498,14 @@ export interface FileRouteTypes {
     | '/_app/rgcc/entrenamiento-personal'
     | '/_app/rgcc/mi-dia'
     | '/_app/settings/team'
+    | '/_public/en/aviso-legal'
     | '/_public/en/clientes'
     | '/_public/en/contacto'
+    | '/_public/en/cookies'
     | '/_public/en/ia'
     | '/_public/en/multi-club'
     | '/_public/en/precios'
+    | '/_public/en/privacidad'
     | '/_public/en/producto'
     | '/_public/en/'
   fileRoutesById: FileRoutesById
@@ -489,6 +561,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicProductoRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/privacidad': {
+      id: '/_public/privacidad'
+      path: '/privacidad'
+      fullPath: '/privacidad'
+      preLoaderRoute: typeof PublicPrivacidadRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/precios': {
       id: '/_public/precios'
       path: '/precios'
@@ -510,6 +589,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIaRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/cookies': {
+      id: '/_public/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof PublicCookiesRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/contacto': {
       id: '/_public/contacto'
       path: '/contacto'
@@ -522,6 +608,13 @@ declare module '@tanstack/react-router' {
       path: '/clientes'
       fullPath: '/clientes'
       preLoaderRoute: typeof PublicClientesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/aviso-legal': {
+      id: '/_public/aviso-legal'
+      path: '/aviso-legal'
+      fullPath: '/aviso-legal'
+      preLoaderRoute: typeof PublicAvisoLegalRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_app/profile': {
@@ -594,6 +687,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicEnProductoRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/en/privacidad': {
+      id: '/_public/en/privacidad'
+      path: '/en/privacidad'
+      fullPath: '/en/privacidad'
+      preLoaderRoute: typeof PublicEnPrivacidadRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/en/precios': {
       id: '/_public/en/precios'
       path: '/en/precios'
@@ -615,6 +715,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicEnIaRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/en/cookies': {
+      id: '/_public/en/cookies'
+      path: '/en/cookies'
+      fullPath: '/en/cookies'
+      preLoaderRoute: typeof PublicEnCookiesRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/en/contacto': {
       id: '/_public/en/contacto'
       path: '/en/contacto'
@@ -627,6 +734,13 @@ declare module '@tanstack/react-router' {
       path: '/en/clientes'
       fullPath: '/en/clientes'
       preLoaderRoute: typeof PublicEnClientesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/aviso-legal': {
+      id: '/_public/en/aviso-legal'
+      path: '/en/aviso-legal'
+      fullPath: '/en/aviso-legal'
+      preLoaderRoute: typeof PublicEnAvisoLegalRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_app/settings/team': {
@@ -738,35 +852,47 @@ const AppRouteChildren: AppRouteChildren = {
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface PublicRouteChildren {
+  PublicAvisoLegalRoute: typeof PublicAvisoLegalRoute
   PublicClientesRoute: typeof PublicClientesRoute
   PublicContactoRoute: typeof PublicContactoRoute
+  PublicCookiesRoute: typeof PublicCookiesRoute
   PublicIaRoute: typeof PublicIaRoute
   PublicMultiClubRoute: typeof PublicMultiClubRoute
   PublicPreciosRoute: typeof PublicPreciosRoute
+  PublicPrivacidadRoute: typeof PublicPrivacidadRoute
   PublicProductoRoute: typeof PublicProductoRoute
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicEnAvisoLegalRoute: typeof PublicEnAvisoLegalRoute
   PublicEnClientesRoute: typeof PublicEnClientesRoute
   PublicEnContactoRoute: typeof PublicEnContactoRoute
+  PublicEnCookiesRoute: typeof PublicEnCookiesRoute
   PublicEnIaRoute: typeof PublicEnIaRoute
   PublicEnMultiClubRoute: typeof PublicEnMultiClubRoute
   PublicEnPreciosRoute: typeof PublicEnPreciosRoute
+  PublicEnPrivacidadRoute: typeof PublicEnPrivacidadRoute
   PublicEnProductoRoute: typeof PublicEnProductoRoute
   PublicEnIndexRoute: typeof PublicEnIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicAvisoLegalRoute: PublicAvisoLegalRoute,
   PublicClientesRoute: PublicClientesRoute,
   PublicContactoRoute: PublicContactoRoute,
+  PublicCookiesRoute: PublicCookiesRoute,
   PublicIaRoute: PublicIaRoute,
   PublicMultiClubRoute: PublicMultiClubRoute,
   PublicPreciosRoute: PublicPreciosRoute,
+  PublicPrivacidadRoute: PublicPrivacidadRoute,
   PublicProductoRoute: PublicProductoRoute,
   PublicIndexRoute: PublicIndexRoute,
+  PublicEnAvisoLegalRoute: PublicEnAvisoLegalRoute,
   PublicEnClientesRoute: PublicEnClientesRoute,
   PublicEnContactoRoute: PublicEnContactoRoute,
+  PublicEnCookiesRoute: PublicEnCookiesRoute,
   PublicEnIaRoute: PublicEnIaRoute,
   PublicEnMultiClubRoute: PublicEnMultiClubRoute,
   PublicEnPreciosRoute: PublicEnPreciosRoute,
+  PublicEnPrivacidadRoute: PublicEnPrivacidadRoute,
   PublicEnProductoRoute: PublicEnProductoRoute,
   PublicEnIndexRoute: PublicEnIndexRoute,
 }
