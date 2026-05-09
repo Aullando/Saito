@@ -45,6 +45,7 @@ import { Route as PublicEnContactoRouteImport } from './routes/_public.en.contac
 import { Route as PublicEnClientesRouteImport } from './routes/_public.en.clientes'
 import { Route as PublicEnAvisoLegalRouteImport } from './routes/_public.en.aviso-legal'
 import { Route as AppSettingsTeamRouteImport } from './routes/_app.settings.team'
+import { Route as AppSettingsPrivacyRouteImport } from './routes/_app.settings.privacy'
 import { Route as AppRgccMiDiaRouteImport } from './routes/_app.rgcc.mi-dia'
 import { Route as AppRgccEntrenamientoPersonalRouteImport } from './routes/_app.rgcc.entrenamiento-personal'
 import { Route as AppRgccClasesRouteImport } from './routes/_app.rgcc.clases'
@@ -232,6 +233,11 @@ const AppSettingsTeamRoute = AppSettingsTeamRouteImport.update({
   path: '/settings/team',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsPrivacyRoute = AppSettingsPrivacyRouteImport.update({
+  id: '/settings/privacy',
+  path: '/settings/privacy',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRgccMiDiaRoute = AppRgccMiDiaRouteImport.update({
   id: '/rgcc/mi-dia',
   path: '/rgcc/mi-dia',
@@ -305,6 +311,7 @@ export interface FileRoutesByFullPath {
   '/rgcc/clases': typeof AppRgccClasesRoute
   '/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof AppRgccMiDiaRoute
+  '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/team': typeof AppSettingsTeamRoute
   '/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/en/clientes': typeof PublicEnClientesRoute
@@ -349,6 +356,7 @@ export interface FileRoutesByTo {
   '/rgcc/clases': typeof AppRgccClasesRoute
   '/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof AppRgccMiDiaRoute
+  '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/team': typeof AppSettingsTeamRoute
   '/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/en/clientes': typeof PublicEnClientesRoute
@@ -395,6 +403,7 @@ export interface FileRoutesById {
   '/_app/rgcc/clases': typeof AppRgccClasesRoute
   '/_app/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/_app/rgcc/mi-dia': typeof AppRgccMiDiaRoute
+  '/_app/settings/privacy': typeof AppSettingsPrivacyRoute
   '/_app/settings/team': typeof AppSettingsTeamRoute
   '/_public/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/_public/en/clientes': typeof PublicEnClientesRoute
@@ -441,6 +450,7 @@ export interface FileRouteTypes {
     | '/rgcc/clases'
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
+    | '/settings/privacy'
     | '/settings/team'
     | '/en/aviso-legal'
     | '/en/clientes'
@@ -485,6 +495,7 @@ export interface FileRouteTypes {
     | '/rgcc/clases'
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
+    | '/settings/privacy'
     | '/settings/team'
     | '/en/aviso-legal'
     | '/en/clientes'
@@ -530,6 +541,7 @@ export interface FileRouteTypes {
     | '/_app/rgcc/clases'
     | '/_app/rgcc/entrenamiento-personal'
     | '/_app/rgcc/mi-dia'
+    | '/_app/settings/privacy'
     | '/_app/settings/team'
     | '/_public/en/aviso-legal'
     | '/_public/en/clientes'
@@ -806,6 +818,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsTeamRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/privacy': {
+      id: '/_app/settings/privacy'
+      path: '/settings/privacy'
+      fullPath: '/settings/privacy'
+      preLoaderRoute: typeof AppSettingsPrivacyRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/rgcc/mi-dia': {
       id: '/_app/rgcc/mi-dia'
       path: '/rgcc/mi-dia'
@@ -882,6 +901,7 @@ interface AppRouteChildren {
   AppRgccClasesRoute: typeof AppRgccClasesRoute
   AppRgccEntrenamientoPersonalRoute: typeof AppRgccEntrenamientoPersonalRoute
   AppRgccMiDiaRoute: typeof AppRgccMiDiaRoute
+  AppSettingsPrivacyRoute: typeof AppSettingsPrivacyRoute
   AppSettingsTeamRoute: typeof AppSettingsTeamRoute
 }
 
@@ -902,6 +922,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppRgccClasesRoute: AppRgccClasesRoute,
   AppRgccEntrenamientoPersonalRoute: AppRgccEntrenamientoPersonalRoute,
   AppRgccMiDiaRoute: AppRgccMiDiaRoute,
+  AppSettingsPrivacyRoute: AppSettingsPrivacyRoute,
   AppSettingsTeamRoute: AppSettingsTeamRoute,
 }
 

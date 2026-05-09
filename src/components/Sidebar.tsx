@@ -36,7 +36,10 @@ function buildItems(role: Role, t: (k: any) => string): Item[] {
         { to: "/economic/fees", label: t("fees_rates"), icon: Receipt, indent: true, module: "economic" },
         { to: "/economic/payments", label: t("payment_status"), icon: Receipt, indent: true, module: "economic" },
         { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
-        ...(role === "admin" ? [{ to: "/settings/team", label: t("users_permissions"), icon: Users, module: "settings" as ClubModuleId }] : []),
+        ...(role === "admin" ? [
+          { to: "/settings/team", label: t("users_permissions"), icon: Users, module: "settings" as ClubModuleId },
+          { to: "/settings/privacy", label: lang === "en" ? "Privacy & security" : "Privacidad y seguridad", icon: ShieldCheck, module: "settings" as ClubModuleId },
+        ] : []),
       ];
     case "technical":
       return [
