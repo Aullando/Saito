@@ -28,9 +28,9 @@ import {
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
-import {
 import { isDemoMode } from "@/lib/appMode";
 import { demoOrEmpty } from "@/lib/demoFallback";
+import {
   Plus,
   Building2,
   Users,
