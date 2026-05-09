@@ -25,6 +25,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
       <AIChat />
+      <DataSourceBadge variant="fixed" />
     </div>
   );
 }
