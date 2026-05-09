@@ -182,6 +182,16 @@ export function ProductPage({ locale }: { locale: Locale }) {
               </a>
             ))}
           </div>
+          <div className="mt-12 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+            <img
+              src={modulesGridVisual}
+              alt={t("Mapa de módulos de SAITO", "SAITO modules map")}
+              loading="lazy"
+              width={1800}
+              height={1125}
+              className="h-full w-full object-cover"
+            />
+          </div>
         </div>
       </section>
 
