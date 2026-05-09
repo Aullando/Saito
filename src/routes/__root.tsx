@@ -136,20 +136,38 @@ function RootComponent() {
   );
 }
 
-const PUBLIC_ROUTES = ["/login", "/signup", "/reset-password"];
+// Private route prefixes — anything else is treated as public (marketing site, login, signup).
+const PRIVATE_PREFIXES = [
+  "/dashboard",
+  "/athletes",
+  "/calendar",
+  "/club",
+  "/communication",
+  "/economic",
+  "/medical",
+  "/rgcc",
+  "/settings",
+  "/profile",
+  "/organizations",
+  "/onboarding",
+];
+
+function isPrivatePath(pathname: string) {
+  return PRIVATE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"));
+}
 
 function AuthGate({ children }: { children: React.ReactNode }) {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isPublic = PUBLIC_ROUTES.includes(pathname);
+  const isPrivate = isPrivatePath(pathname);
 
   useEffect(() => {
     if (loading) return;
-    if (!session && !isPublic) navigate({ to: "/login" });
-  }, [loading, session, isPublic, navigate]);
+    if (!session && isPrivate) navigate({ to: "/login" });
+  }, [loading, session, isPrivate, navigate]);
 
-  if (loading && !isPublic) {
+  if (loading && isPrivate) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
