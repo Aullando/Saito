@@ -1,6 +1,6 @@
 import { useClub } from "@/clubs/ClubProvider";
-import saitoFull from "@/assets/saito-logo.png";
-import saitoMark from "@/assets/saito-mark.png";
+import saitoFull from "@/assets/brand/saito-logo-frase.png";
+import saitoMark from "@/assets/brand/saito-iso.svg";
 
 export function Logo({ size = 32, withText = true }: { size?: number; withText?: boolean }) {
   const { club } = useClub();
