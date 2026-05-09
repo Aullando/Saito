@@ -32,6 +32,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCommunicationRouteImport } from './routes/_app.communication'
 import { Route as AppClubRouteImport } from './routes/_app.club'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
+import { Route as AppAttendanceRouteImport } from './routes/_app.attendance'
 import { Route as AppAthletesRouteImport } from './routes/_app.athletes'
 import { Route as PublicEnIndexRouteImport } from './routes/_public.en.index'
 import { Route as PublicEnSeguridadRouteImport } from './routes/_public.en.seguridad'
@@ -45,12 +46,14 @@ import { Route as PublicEnContactoRouteImport } from './routes/_public.en.contac
 import { Route as PublicEnClientesRouteImport } from './routes/_public.en.clientes'
 import { Route as PublicEnAvisoLegalRouteImport } from './routes/_public.en.aviso-legal'
 import { Route as AppSettingsTeamRouteImport } from './routes/_app.settings.team'
+import { Route as AppSettingsQaRouteImport } from './routes/_app.settings.qa'
 import { Route as AppSettingsPrivacyRouteImport } from './routes/_app.settings.privacy'
 import { Route as AppRgccMiDiaRouteImport } from './routes/_app.rgcc.mi-dia'
 import { Route as AppRgccEntrenamientoPersonalRouteImport } from './routes/_app.rgcc.entrenamiento-personal'
 import { Route as AppRgccClasesRouteImport } from './routes/_app.rgcc.clases'
 import { Route as AppRgccBibliotecaRouteImport } from './routes/_app.rgcc.biblioteca'
 import { Route as AppRgccSlugRouteImport } from './routes/_app.rgcc.$slug'
+import { Route as AppMedicalRestrictionsRouteImport } from './routes/_app.medical.restrictions'
 import { Route as AppMedicalCalendarRouteImport } from './routes/_app.medical.calendar'
 import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.payments'
 import { Route as AppEconomicFeesRouteImport } from './routes/_app.economic.fees'
@@ -168,6 +171,11 @@ const AppCalendarRoute = AppCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAttendanceRoute = AppAttendanceRouteImport.update({
+  id: '/attendance',
+  path: '/attendance',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAthletesRoute = AppAthletesRouteImport.update({
   id: '/athletes',
   path: '/athletes',
@@ -233,6 +241,11 @@ const AppSettingsTeamRoute = AppSettingsTeamRouteImport.update({
   path: '/settings/team',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsQaRoute = AppSettingsQaRouteImport.update({
+  id: '/settings/qa',
+  path: '/settings/qa',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsPrivacyRoute = AppSettingsPrivacyRouteImport.update({
   id: '/settings/privacy',
   path: '/settings/privacy',
@@ -264,6 +277,11 @@ const AppRgccSlugRoute = AppRgccSlugRouteImport.update({
   path: '/rgcc/$slug',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMedicalRestrictionsRoute = AppMedicalRestrictionsRouteImport.update({
+  id: '/medical/restrictions',
+  path: '/medical/restrictions',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppMedicalCalendarRoute = AppMedicalCalendarRouteImport.update({
   id: '/medical/calendar',
   path: '/medical/calendar',
@@ -286,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/athletes': typeof AppAthletesRoute
+  '/attendance': typeof AppAttendanceRoute
   '/calendar': typeof AppCalendarRoute
   '/club': typeof AppClubRoute
   '/communication': typeof AppCommunicationRoute
@@ -306,12 +325,14 @@ export interface FileRoutesByFullPath {
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
+  '/medical/restrictions': typeof AppMedicalRestrictionsRoute
   '/rgcc/$slug': typeof AppRgccSlugRoute
   '/rgcc/biblioteca': typeof AppRgccBibliotecaRoute
   '/rgcc/clases': typeof AppRgccClasesRoute
   '/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof AppRgccMiDiaRoute
   '/settings/privacy': typeof AppSettingsPrivacyRoute
+  '/settings/qa': typeof AppSettingsQaRoute
   '/settings/team': typeof AppSettingsTeamRoute
   '/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/en/clientes': typeof PublicEnClientesRoute
@@ -331,6 +352,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/athletes': typeof AppAthletesRoute
+  '/attendance': typeof AppAttendanceRoute
   '/calendar': typeof AppCalendarRoute
   '/club': typeof AppClubRoute
   '/communication': typeof AppCommunicationRoute
@@ -351,12 +373,14 @@ export interface FileRoutesByTo {
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
+  '/medical/restrictions': typeof AppMedicalRestrictionsRoute
   '/rgcc/$slug': typeof AppRgccSlugRoute
   '/rgcc/biblioteca': typeof AppRgccBibliotecaRoute
   '/rgcc/clases': typeof AppRgccClasesRoute
   '/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/rgcc/mi-dia': typeof AppRgccMiDiaRoute
   '/settings/privacy': typeof AppSettingsPrivacyRoute
+  '/settings/qa': typeof AppSettingsQaRoute
   '/settings/team': typeof AppSettingsTeamRoute
   '/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/en/clientes': typeof PublicEnClientesRoute
@@ -377,6 +401,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_app/athletes': typeof AppAthletesRoute
+  '/_app/attendance': typeof AppAttendanceRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/club': typeof AppClubRoute
   '/_app/communication': typeof AppCommunicationRoute
@@ -398,12 +423,14 @@ export interface FileRoutesById {
   '/_app/economic/fees': typeof AppEconomicFeesRoute
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
   '/_app/medical/calendar': typeof AppMedicalCalendarRoute
+  '/_app/medical/restrictions': typeof AppMedicalRestrictionsRoute
   '/_app/rgcc/$slug': typeof AppRgccSlugRoute
   '/_app/rgcc/biblioteca': typeof AppRgccBibliotecaRoute
   '/_app/rgcc/clases': typeof AppRgccClasesRoute
   '/_app/rgcc/entrenamiento-personal': typeof AppRgccEntrenamientoPersonalRoute
   '/_app/rgcc/mi-dia': typeof AppRgccMiDiaRoute
   '/_app/settings/privacy': typeof AppSettingsPrivacyRoute
+  '/_app/settings/qa': typeof AppSettingsQaRoute
   '/_app/settings/team': typeof AppSettingsTeamRoute
   '/_public/en/aviso-legal': typeof PublicEnAvisoLegalRoute
   '/_public/en/clientes': typeof PublicEnClientesRoute
@@ -425,6 +452,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/athletes'
+    | '/attendance'
     | '/calendar'
     | '/club'
     | '/communication'
@@ -445,12 +473,14 @@ export interface FileRouteTypes {
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
+    | '/medical/restrictions'
     | '/rgcc/$slug'
     | '/rgcc/biblioteca'
     | '/rgcc/clases'
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/privacy'
+    | '/settings/qa'
     | '/settings/team'
     | '/en/aviso-legal'
     | '/en/clientes'
@@ -470,6 +500,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/athletes'
+    | '/attendance'
     | '/calendar'
     | '/club'
     | '/communication'
@@ -490,12 +521,14 @@ export interface FileRouteTypes {
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
+    | '/medical/restrictions'
     | '/rgcc/$slug'
     | '/rgcc/biblioteca'
     | '/rgcc/clases'
     | '/rgcc/entrenamiento-personal'
     | '/rgcc/mi-dia'
     | '/settings/privacy'
+    | '/settings/qa'
     | '/settings/team'
     | '/en/aviso-legal'
     | '/en/clientes'
@@ -515,6 +548,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_app/athletes'
+    | '/_app/attendance'
     | '/_app/calendar'
     | '/_app/club'
     | '/_app/communication'
@@ -536,12 +570,14 @@ export interface FileRouteTypes {
     | '/_app/economic/fees'
     | '/_app/economic/payments'
     | '/_app/medical/calendar'
+    | '/_app/medical/restrictions'
     | '/_app/rgcc/$slug'
     | '/_app/rgcc/biblioteca'
     | '/_app/rgcc/clases'
     | '/_app/rgcc/entrenamiento-personal'
     | '/_app/rgcc/mi-dia'
     | '/_app/settings/privacy'
+    | '/_app/settings/qa'
     | '/_app/settings/team'
     | '/_public/en/aviso-legal'
     | '/_public/en/clientes'
@@ -727,6 +763,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCalendarRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/attendance': {
+      id: '/_app/attendance'
+      path: '/attendance'
+      fullPath: '/attendance'
+      preLoaderRoute: typeof AppAttendanceRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/athletes': {
       id: '/_app/athletes'
       path: '/athletes'
@@ -818,6 +861,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsTeamRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/qa': {
+      id: '/_app/settings/qa'
+      path: '/settings/qa'
+      fullPath: '/settings/qa'
+      preLoaderRoute: typeof AppSettingsQaRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/privacy': {
       id: '/_app/settings/privacy'
       path: '/settings/privacy'
@@ -860,6 +910,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRgccSlugRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/medical/restrictions': {
+      id: '/_app/medical/restrictions'
+      path: '/medical/restrictions'
+      fullPath: '/medical/restrictions'
+      preLoaderRoute: typeof AppMedicalRestrictionsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/medical/calendar': {
       id: '/_app/medical/calendar'
       path: '/medical/calendar'
@@ -886,6 +943,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppAthletesRoute: typeof AppAthletesRoute
+  AppAttendanceRoute: typeof AppAttendanceRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppClubRoute: typeof AppClubRoute
   AppCommunicationRoute: typeof AppCommunicationRoute
@@ -896,17 +954,20 @@ interface AppRouteChildren {
   AppEconomicFeesRoute: typeof AppEconomicFeesRoute
   AppEconomicPaymentsRoute: typeof AppEconomicPaymentsRoute
   AppMedicalCalendarRoute: typeof AppMedicalCalendarRoute
+  AppMedicalRestrictionsRoute: typeof AppMedicalRestrictionsRoute
   AppRgccSlugRoute: typeof AppRgccSlugRoute
   AppRgccBibliotecaRoute: typeof AppRgccBibliotecaRoute
   AppRgccClasesRoute: typeof AppRgccClasesRoute
   AppRgccEntrenamientoPersonalRoute: typeof AppRgccEntrenamientoPersonalRoute
   AppRgccMiDiaRoute: typeof AppRgccMiDiaRoute
   AppSettingsPrivacyRoute: typeof AppSettingsPrivacyRoute
+  AppSettingsQaRoute: typeof AppSettingsQaRoute
   AppSettingsTeamRoute: typeof AppSettingsTeamRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAthletesRoute: AppAthletesRoute,
+  AppAttendanceRoute: AppAttendanceRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppClubRoute: AppClubRoute,
   AppCommunicationRoute: AppCommunicationRoute,
@@ -917,12 +978,14 @@ const AppRouteChildren: AppRouteChildren = {
   AppEconomicFeesRoute: AppEconomicFeesRoute,
   AppEconomicPaymentsRoute: AppEconomicPaymentsRoute,
   AppMedicalCalendarRoute: AppMedicalCalendarRoute,
+  AppMedicalRestrictionsRoute: AppMedicalRestrictionsRoute,
   AppRgccSlugRoute: AppRgccSlugRoute,
   AppRgccBibliotecaRoute: AppRgccBibliotecaRoute,
   AppRgccClasesRoute: AppRgccClasesRoute,
   AppRgccEntrenamientoPersonalRoute: AppRgccEntrenamientoPersonalRoute,
   AppRgccMiDiaRoute: AppRgccMiDiaRoute,
   AppSettingsPrivacyRoute: AppSettingsPrivacyRoute,
+  AppSettingsQaRoute: AppSettingsQaRoute,
   AppSettingsTeamRoute: AppSettingsTeamRoute,
 }
 
