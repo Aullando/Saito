@@ -17,6 +17,10 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEMO_ATHLETES_MIN_ROWS,
+  DEMO_MEDICAL_APPOINTMENTS_ROWS,
+} from "@/lib/demoFallbacks";
 import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 
@@ -69,8 +73,8 @@ function MedicalCalendarPage() {
     },
   });
 
-  const athletes = athletesQ.data ?? [];
-  const appointments = apptQ.data ?? [];
+  const athletes = athletesQ.data ?? DEMO_ATHLETES_MIN_ROWS;
+  const appointments = (apptQ.data ?? DEMO_MEDICAL_APPOINTMENTS_ROWS) as DBAppt[];
 
   const addAppt = useMutation({
     mutationFn: async (a: { athlete_id: string; appointment_date: string; appointment_time: string; reason: string }) => {

@@ -18,6 +18,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEMO_CALENDAR_EVENTS_ROWS,
+  DEMO_SECTIONS_ROWS,
+  DEMO_CATEGORIES_ROWS,
+  DEMO_GROUPS_ROWS,
+} from "@/lib/demoFallbacks";
 import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 
@@ -98,10 +104,10 @@ function CalendarPage() {
     },
   });
 
-  const events = eventsQ.data ?? [];
-  const sections = sectionsQ.data ?? [];
-  const categories = categoriesQ.data ?? [];
-  const groups = groupsQ.data ?? [];
+  const events = (eventsQ.data ?? DEMO_CALENDAR_EVENTS_ROWS) as DBEvent[];
+  const sections = sectionsQ.data ?? DEMO_SECTIONS_ROWS;
+  const categories = categoriesQ.data ?? DEMO_CATEGORIES_ROWS;
+  const groups = groupsQ.data ?? DEMO_GROUPS_ROWS;
 
   const addEvent = useMutation({
     mutationFn: async (e: { title: string; event_date: string; start_time: string; group_id: string | null; section_id: string | null; category_id: string | null; recurrence: DBEvent["recurrence"] }) => {
