@@ -17,6 +17,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEMO_ATHLETES_ROWS,
+  DEMO_SECTIONS_ROWS,
+  DEMO_CATEGORIES_ROWS,
+  DEMO_GROUPS_ROWS,
+  DEMO_ATHLETE_GROUPS_ROWS,
+} from "@/lib/demoFallbacks";
 import { Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 
@@ -95,11 +102,11 @@ function AthletesPage() {
     },
   });
 
-  const athletes = athletesQ.data ?? [];
-  const sections = sectionsQ.data ?? [];
-  const categories = categoriesQ.data ?? [];
-  const groups = groupsQ.data ?? [];
-  const athleteGroups = athleteGroupsQ.data ?? [];
+  const athletes = (athletesQ.data ?? DEMO_ATHLETES_ROWS) as AthleteRow[];
+  const sections = (sectionsQ.data ?? DEMO_SECTIONS_ROWS) as SectionRow[];
+  const categories = (categoriesQ.data ?? DEMO_CATEGORIES_ROWS) as CategoryRow[];
+  const groups = (groupsQ.data ?? DEMO_GROUPS_ROWS) as GroupRow[];
+  const athleteGroups = (athleteGroupsQ.data ?? DEMO_ATHLETE_GROUPS_ROWS) as AthleteGroupRow[];
   const groupsByAthlete = (athleteId: string) =>
     athleteGroups.filter((ag) => ag.athlete_id === athleteId).map((ag) => ag.group_id);
 
@@ -176,11 +183,7 @@ function AthletesPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  if (!orgId) {
-    return <EmptyState>You need to belong to an organization.</EmptyState>;
-  }
-
-  const loading = athletesQ.isLoading || sectionsQ.isLoading;
+  const loading = !!orgId && (athletesQ.isLoading || sectionsQ.isLoading);
 
   return (
     <>
