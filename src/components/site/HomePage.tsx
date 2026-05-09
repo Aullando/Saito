@@ -273,6 +273,9 @@ export function HomePage({ locale }: Props) {
         </div>
       </section>
 
+      {/* ============= IMPACT CALCULATOR ============= */}
+      <ImpactCalculator locale={locale} />
+
       {/* ============= CINEMATIC PHOTO BAND ============= */}
       <section className="relative h-[55vh] min-h-[360px] w-full overflow-hidden">
         <motion.img
