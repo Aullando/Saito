@@ -115,7 +115,7 @@ export function HomePage({ locale }: Props) {
                 <br />
                 <span className="relative inline-block text-primary">
                   {t("en una sola plataforma", "from a single platform")}
-                  <span className="absolute -bottom-1 left-0 h-[6px] w-full rounded-full bg-saito-yellow/60" aria-hidden />
+                  <span className="saito-underline absolute -bottom-1 left-0 h-[6px] w-full rounded-full" aria-hidden />
                 </span>
               </h1>
               <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.22em]">
