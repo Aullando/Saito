@@ -116,7 +116,7 @@ export function HomePage({ locale }: Props) {
                   {t("en una sola plataforma", "from a single platform")}
                 </span>
               </h1>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.22em]">
                 SAITO · <span className="text-foreground">S</span>port{" "}
                 <span className="text-foreground">AI</span>{" "}
                 <span className="text-foreground">T</span>raining{" "}
@@ -128,13 +128,13 @@ export function HomePage({ locale }: Props) {
                   "SAITO unifies members, calendar, payments, communication and a smart copilot tailored to each role. Built for clubs that grow and multi-section organisations.",
                 )}
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg" className="shimmer-btn rounded-full px-6">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <Button asChild size="lg" className="shimmer-btn w-full rounded-full px-6 sm:w-auto">
                   <Link to={localizedPath("/contacto", locale) as unknown as never}>
                     {t("Pide una demo", "Book a demo")} <ArrowRight className="ml-1 size-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="rounded-full px-6">
+                <Button asChild variant="outline" size="lg" className="w-full rounded-full px-6 sm:w-auto">
                   <Link to={localizedPath("/producto", locale) as unknown as never}>
                     {t("Ver funcionalidades", "See features")}
                   </Link>
