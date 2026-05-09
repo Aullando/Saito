@@ -20,6 +20,7 @@ import {
   Rocket,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { ModuleCard } from "@/components/site/ModuleCard";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { RoleTabs, defaultRolesEs, defaultRolesEn } from "@/components/site/RoleTabs";
@@ -85,35 +86,37 @@ export function HomePage({ locale }: Props) {
   return (
     <main>
       {/* ============= HERO ============= */}
-      <section ref={heroRef} className="relative overflow-hidden">
-        {/* Layered backgrounds: mesh gradient halo + subtle grid */}
-        <div className="absolute inset-0 bg-grid opacity-60" aria-hidden />
+      <section ref={heroRef} className="relative overflow-hidden border-b border-border bg-background">
+        {/* Subtle grid only — no gradient halos */}
+        <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
         <motion.div
-          className="absolute -top-40 left-1/2 h-[700px] w-[1100px] -translate-x-1/2 rounded-full blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle at 30% 30%, rgba(0,103,201,0.32), transparent 55%), radial-gradient(circle at 70% 60%, rgba(0,167,77,0.18), transparent 60%), radial-gradient(circle at 50% 80%, rgba(253,177,19,0.16), transparent 60%)",
-            opacity: heroFade,
-          }}
+          className="pointer-events-none absolute -left-24 top-24 hidden h-[420px] w-[420px] rounded-full border border-primary/10 lg:block"
+          style={{ opacity: heroFade }}
+          aria-hidden
+        />
+        <motion.div
+          className="pointer-events-none absolute -right-32 bottom-0 hidden h-[520px] w-[520px] rounded-full border border-saito-green/10 lg:block"
+          style={{ opacity: heroFade }}
           aria-hidden
         />
 
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:px-8 lg:pt-24">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              <span className="gemini-chip inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] shadow-sm">
-                <Sparkles className="size-3.5" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground shadow-sm">
+                <span className="size-1.5 rounded-full bg-saito-green" />
                 {t("Powered by IA", "Powered by AI")}
               </span>
-              <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] sm:text-5xl md:text-6xl">
+              <h1 className="mt-5 text-[2.5rem] font-extrabold leading-[1.02] tracking-tight sm:text-5xl md:text-6xl lg:text-[4.25rem]">
                 {t("Gestiona tu club deportivo", "Run your sports club")}
                 <br />
-                <span className="text-saito-gradient">
+                <span className="relative inline-block text-primary">
                   {t("en una sola plataforma", "from a single platform")}
+                  <span className="absolute -bottom-1 left-0 h-[6px] w-full rounded-full bg-saito-yellow/60" aria-hidden />
                 </span>
               </h1>
               <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.22em]">
@@ -149,6 +152,20 @@ export function HomePage({ locale }: Props) {
                   <span key={f} className="inline-flex items-center gap-1.5">
                     <CheckCircle2 className="size-3.5 text-saito-green" /> {f}
                   </span>
+                ))}
+              </div>
+
+              {/* KPI strip */}
+              <div className="mt-10 grid grid-cols-3 divide-x divide-border rounded-2xl border border-border bg-card/60 p-4 backdrop-blur">
+                {stats.slice(0, 3).map((s) => (
+                  <div key={s.label} className="px-3 text-center first:pl-0 last:pr-0">
+                    <p className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
+                      <CountUp to={s.value} prefix={s.prefix} suffix={s.suffix} />
+                    </p>
+                    <p className="mt-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground sm:text-[11px]">
+                      {s.label}
+                    </p>
+                  </div>
                 ))}
               </div>
             </motion.div>
@@ -224,7 +241,23 @@ export function HomePage({ locale }: Props) {
             title={t("Todo lo que tu club necesita, sin más herramientas", "Everything your club needs, without extra tools")}
             subtitle={t("Módulos integrados, datos compartidos y flujos pensados para el día a día deportivo.", "Integrated modules, shared data and workflows designed for daily club life.")}
           />
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Mobile: carousel */}
+          <div className="mt-10 sm:hidden">
+            <Carousel opts={{ align: "start" }}>
+              <CarouselContent className="-ml-3">
+                {modules.map((m, i) => (
+                  <CarouselItem key={m.title} className="basis-[78%] pl-3">
+                    <ModuleCard {...m} index={i} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+            <p className="mt-3 text-center text-[11px] uppercase tracking-wider text-muted-foreground">
+              {t("Desliza para ver más", "Swipe to see more")}
+            </p>
+          </div>
+          {/* Tablet/Desktop: grid */}
+          <div className="mt-12 hidden gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4">
             {modules.map((m, i) => (
               <ModuleCard key={m.title} {...m} index={i} />
             ))}
@@ -240,7 +273,38 @@ export function HomePage({ locale }: Props) {
             title={t("De la hoja de cálculo a la temporada lanzada", "From spreadsheet chaos to season ready")}
             subtitle={t("Cuatro pasos. Acompañamiento real en cada uno.", "Four steps. Real support at each one.")}
           />
-          <Reveal stagger className="relative mt-14 grid gap-8 md:grid-cols-4">
+          {/* Mobile: carousel of step cards (more impactful than stacked) */}
+          <div className="mt-10 sm:hidden">
+            <Carousel opts={{ align: "start" }}>
+              <CarouselContent className="-ml-3">
+                {steps.map((s, i) => {
+                  const Icon = s.icon;
+                  return (
+                    <CarouselItem key={s.title} className="basis-[82%] pl-3">
+                      <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm">
+                        <div className="absolute right-3 top-3 text-5xl font-extrabold leading-none text-primary/10">
+                          0{i + 1}
+                        </div>
+                        <div className="relative z-10 mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <Icon className="size-6" />
+                        </div>
+                        <h3 className="relative text-base font-semibold">{s.title}</h3>
+                        <p className="relative mt-1 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+                      </div>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
+            <div className="mt-4 flex items-center justify-center gap-1.5">
+              {steps.map((_, i) => (
+                <span key={i} className="h-1.5 w-6 rounded-full bg-border first:bg-primary" />
+              ))}
+            </div>
+          </div>
+
+          {/* Tablet/Desktop: timeline grid */}
+          <Reveal stagger className="relative mt-14 hidden gap-8 sm:grid md:grid-cols-4">
             {/* Connecting line on md+ */}
             <div
               className="absolute left-0 right-0 top-7 hidden h-px md:block"
