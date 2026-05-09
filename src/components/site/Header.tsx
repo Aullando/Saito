@@ -12,6 +12,7 @@ const navEs = [
   { to: "/ia", label: "IA" },
   { to: "/multi-club", label: "Multi-club" },
   { to: "/clientes", label: "Clientes" },
+  { to: "/seguridad", label: "Seguridad" },
   { to: "/precios", label: "Precios" },
   { to: "/contacto", label: "Contacto" },
 ];
@@ -20,6 +21,7 @@ const navEn = [
   { to: "/ia", label: "AI" },
   { to: "/multi-club", label: "Multi-club" },
   { to: "/clientes", label: "Customers" },
+  { to: "/seguridad", label: "Security" },
   { to: "/precios", label: "Pricing" },
   { to: "/contacto", label: "Contact" },
 ];

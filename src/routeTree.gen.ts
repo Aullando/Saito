@@ -15,6 +15,7 @@ import { Route as EnRouteImport } from './routes/en'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as PublicSeguridadRouteImport } from './routes/_public.seguridad'
 import { Route as PublicProductoRouteImport } from './routes/_public.producto'
 import { Route as PublicPrivacidadRouteImport } from './routes/_public.privacidad'
 import { Route as PublicPreciosRouteImport } from './routes/_public.precios'
@@ -33,6 +34,7 @@ import { Route as AppClubRouteImport } from './routes/_app.club'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAthletesRouteImport } from './routes/_app.athletes'
 import { Route as PublicEnIndexRouteImport } from './routes/_public.en.index'
+import { Route as PublicEnSeguridadRouteImport } from './routes/_public.en.seguridad'
 import { Route as PublicEnProductoRouteImport } from './routes/_public.en.producto'
 import { Route as PublicEnPrivacidadRouteImport } from './routes/_public.en.privacidad'
 import { Route as PublicEnPreciosRouteImport } from './routes/_public.en.precios'
@@ -78,6 +80,11 @@ const AppRoute = AppRouteImport.update({
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSeguridadRoute = PublicSeguridadRouteImport.update({
+  id: '/seguridad',
+  path: '/seguridad',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicProductoRoute = PublicProductoRouteImport.update({
@@ -168,6 +175,11 @@ const AppAthletesRoute = AppAthletesRouteImport.update({
 const PublicEnIndexRoute = PublicEnIndexRouteImport.update({
   id: '/en/',
   path: '/en/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEnSeguridadRoute = PublicEnSeguridadRouteImport.update({
+  id: '/en/seguridad',
+  path: '/en/seguridad',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicEnProductoRoute = PublicEnProductoRouteImport.update({
@@ -284,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/precios': typeof PublicPreciosRoute
   '/privacidad': typeof PublicPrivacidadRoute
   '/producto': typeof PublicProductoRoute
+  '/seguridad': typeof PublicSeguridadRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
@@ -302,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/en/precios': typeof PublicEnPreciosRoute
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
+  '/en/seguridad': typeof PublicEnSeguridadRoute
   '/en/': typeof PublicEnIndexRoute
 }
 export interface FileRoutesByTo {
@@ -326,6 +340,7 @@ export interface FileRoutesByTo {
   '/precios': typeof PublicPreciosRoute
   '/privacidad': typeof PublicPrivacidadRoute
   '/producto': typeof PublicProductoRoute
+  '/seguridad': typeof PublicSeguridadRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
@@ -344,6 +359,7 @@ export interface FileRoutesByTo {
   '/en/precios': typeof PublicEnPreciosRoute
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
+  '/en/seguridad': typeof PublicEnSeguridadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -369,6 +385,7 @@ export interface FileRoutesById {
   '/_public/precios': typeof PublicPreciosRoute
   '/_public/privacidad': typeof PublicPrivacidadRoute
   '/_public/producto': typeof PublicProductoRoute
+  '/_public/seguridad': typeof PublicSeguridadRoute
   '/_public/': typeof PublicIndexRoute
   '/_app/economic/fees': typeof AppEconomicFeesRoute
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
@@ -388,6 +405,7 @@ export interface FileRoutesById {
   '/_public/en/precios': typeof PublicEnPreciosRoute
   '/_public/en/privacidad': typeof PublicEnPrivacidadRoute
   '/_public/en/producto': typeof PublicEnProductoRoute
+  '/_public/en/seguridad': typeof PublicEnSeguridadRoute
   '/_public/en/': typeof PublicEnIndexRoute
 }
 export interface FileRouteTypes {
@@ -414,6 +432,7 @@ export interface FileRouteTypes {
     | '/precios'
     | '/privacidad'
     | '/producto'
+    | '/seguridad'
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
@@ -432,6 +451,7 @@ export interface FileRouteTypes {
     | '/en/precios'
     | '/en/privacidad'
     | '/en/producto'
+    | '/en/seguridad'
     | '/en/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -456,6 +476,7 @@ export interface FileRouteTypes {
     | '/precios'
     | '/privacidad'
     | '/producto'
+    | '/seguridad'
     | '/economic/fees'
     | '/economic/payments'
     | '/medical/calendar'
@@ -474,6 +495,7 @@ export interface FileRouteTypes {
     | '/en/precios'
     | '/en/privacidad'
     | '/en/producto'
+    | '/en/seguridad'
   id:
     | '__root__'
     | '/_app'
@@ -498,6 +520,7 @@ export interface FileRouteTypes {
     | '/_public/precios'
     | '/_public/privacidad'
     | '/_public/producto'
+    | '/_public/seguridad'
     | '/_public/'
     | '/_app/economic/fees'
     | '/_app/economic/payments'
@@ -517,6 +540,7 @@ export interface FileRouteTypes {
     | '/_public/en/precios'
     | '/_public/en/privacidad'
     | '/_public/en/producto'
+    | '/_public/en/seguridad'
     | '/_public/en/'
   fileRoutesById: FileRoutesById
 }
@@ -570,6 +594,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/seguridad': {
+      id: '/_public/seguridad'
+      path: '/seguridad'
+      fullPath: '/seguridad'
+      preLoaderRoute: typeof PublicSeguridadRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/producto': {
@@ -696,6 +727,13 @@ declare module '@tanstack/react-router' {
       path: '/en'
       fullPath: '/en/'
       preLoaderRoute: typeof PublicEnIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/en/seguridad': {
+      id: '/_public/en/seguridad'
+      path: '/en/seguridad'
+      fullPath: '/en/seguridad'
+      preLoaderRoute: typeof PublicEnSeguridadRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/en/producto': {
@@ -879,6 +917,7 @@ interface PublicRouteChildren {
   PublicPreciosRoute: typeof PublicPreciosRoute
   PublicPrivacidadRoute: typeof PublicPrivacidadRoute
   PublicProductoRoute: typeof PublicProductoRoute
+  PublicSeguridadRoute: typeof PublicSeguridadRoute
   PublicIndexRoute: typeof PublicIndexRoute
   PublicEnAvisoLegalRoute: typeof PublicEnAvisoLegalRoute
   PublicEnClientesRoute: typeof PublicEnClientesRoute
@@ -889,6 +928,7 @@ interface PublicRouteChildren {
   PublicEnPreciosRoute: typeof PublicEnPreciosRoute
   PublicEnPrivacidadRoute: typeof PublicEnPrivacidadRoute
   PublicEnProductoRoute: typeof PublicEnProductoRoute
+  PublicEnSeguridadRoute: typeof PublicEnSeguridadRoute
   PublicEnIndexRoute: typeof PublicEnIndexRoute
 }
 
@@ -902,6 +942,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicPreciosRoute: PublicPreciosRoute,
   PublicPrivacidadRoute: PublicPrivacidadRoute,
   PublicProductoRoute: PublicProductoRoute,
+  PublicSeguridadRoute: PublicSeguridadRoute,
   PublicIndexRoute: PublicIndexRoute,
   PublicEnAvisoLegalRoute: PublicEnAvisoLegalRoute,
   PublicEnClientesRoute: PublicEnClientesRoute,
@@ -912,6 +953,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicEnPreciosRoute: PublicEnPreciosRoute,
   PublicEnPrivacidadRoute: PublicEnPrivacidadRoute,
   PublicEnProductoRoute: PublicEnProductoRoute,
+  PublicEnSeguridadRoute: PublicEnSeguridadRoute,
   PublicEnIndexRoute: PublicEnIndexRoute,
 }
 
