@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Building2, CheckCircle2, MinusCircle } from "lucide-react";
+import { CheckCircle2, MinusCircle } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Button } from "@/components/ui/button";
-import iso from "@/assets/brand/saito-iso.svg";
+import multiclubVisual from "@/assets/site/saito-multiclub-network.png";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 export function MultiClubPage({ locale }: { locale: Locale }) {
