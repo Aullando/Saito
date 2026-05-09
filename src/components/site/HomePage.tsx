@@ -87,8 +87,7 @@ export function HomePage({ locale }: Props) {
     <main>
       {/* ============= HERO ============= */}
       <section ref={heroRef} className="relative overflow-hidden border-b border-border bg-background">
-        {/* Subtle grid only — no gradient halos */}
-        <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
+        {/* Clean background — no grid, no gradient halos */}
         <motion.div
           className="pointer-events-none absolute -left-24 top-24 hidden h-[420px] w-[420px] rounded-full border border-primary/10 lg:block"
           style={{ opacity: heroFade }}
