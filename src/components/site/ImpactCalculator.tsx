@@ -204,6 +204,12 @@ export function ImpactCalculator({ locale }: Props) {
             "Move the sliders. The estimate updates live. Constants are conservative and formulas are open — no tricks.",
           )}
         </p>
+        <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-xs text-amber-700 dark:text-amber-300">
+          {t(
+            "⚠️ Esta calculadora está en fase de pruebas. Los resultados son estimaciones orientativas y pueden ajustarse a medida que recogemos datos reales de clubs piloto.",
+            "⚠️ This calculator is in beta. Results are indicative estimates and may be refined as we gather real data from pilot clubs.",
+          )}
+        </div>
       </div>
 
       <div className="grid gap-8 md:grid-cols-[1fr_400px] md:gap-12">
