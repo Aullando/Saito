@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Building2, ChevronDown, Check } from "lucide-react";
 import { useClub } from "@/clubs/ClubProvider";
 import { cn } from "@/lib/utils";
-import saitoMark from "@/assets/saito-mark.png";
+import saitoMark from "@/assets/brand/saito-iso.svg";
 
 export function ClubSwitcher() {
   const { club, availableClubs, switchClub } = useClub();
