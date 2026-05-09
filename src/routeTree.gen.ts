@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as EnRouteImport } from './routes/en'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
@@ -59,6 +60,11 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnRoute = EnRouteImport.update({
+  id: '/en',
+  path: '/en',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicRoute = PublicRouteImport.update({
@@ -258,6 +264,7 @@ const AppEconomicFeesRoute = AppEconomicFeesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/en': typeof EnRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/athletes': typeof AppAthletesRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
+  '/en': typeof PublicEnIndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/athletes': typeof AppAthletesRoute
@@ -336,12 +344,12 @@ export interface FileRoutesByTo {
   '/en/precios': typeof PublicEnPreciosRoute
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
-  '/en': typeof PublicEnIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/en': typeof EnRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_app/athletes': typeof AppAthletesRoute
@@ -386,6 +394,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/en'
     | '/login'
     | '/signup'
     | '/athletes'
@@ -427,6 +436,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/en'
     | '/login'
     | '/signup'
     | '/athletes'
@@ -464,11 +474,11 @@ export interface FileRouteTypes {
     | '/en/precios'
     | '/en/privacidad'
     | '/en/producto'
-    | '/en'
   id:
     | '__root__'
     | '/_app'
     | '/_public'
+    | '/en'
     | '/login'
     | '/signup'
     | '/_app/athletes'
@@ -513,6 +523,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
+  EnRoute: typeof EnRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
 }
@@ -531,6 +542,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en': {
+      id: '/en'
+      path: '/en'
+      fullPath: '/en'
+      preLoaderRoute: typeof EnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public': {
@@ -903,6 +921,7 @@ const PublicRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
+  EnRoute: EnRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
 }
