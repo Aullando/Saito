@@ -12,6 +12,14 @@ import {
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEMO_SECTIONS_ROWS,
+  DEMO_CATEGORIES_ROWS,
+  DEMO_GROUPS_ROWS,
+  DEMO_FACILITIES_ROWS,
+  DEMO_ATHLETES_ROWS,
+  DEMO_ORG_USERS_ROWS,
+} from "@/lib/demoFallbacks";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
@@ -104,11 +112,12 @@ function ClubPage() {
     },
   });
 
+  const orgUsers = usersQ.data ?? DEMO_ORG_USERS_ROWS;
   const counts = {
-    managers: (usersQ.data ?? []).filter((u) => u.roles.includes("manager")).length,
-    medical: (usersQ.data ?? []).filter((u) => u.roles.includes("medical")).length,
-    technical: (usersQ.data ?? []).filter((u) => u.roles.includes("technical")).length,
-    athletes: athletesCountQ.data ?? 0,
+    managers: orgUsers.filter((u) => u.roles.includes("manager")).length,
+    medical: orgUsers.filter((u) => u.roles.includes("medical")).length,
+    technical: orgUsers.filter((u) => u.roles.includes("technical")).length,
+    athletes: athletesCountQ.data ?? DEMO_ATHLETES_ROWS.length,
   };
 
   // Section CRUD
@@ -198,10 +207,10 @@ function ClubPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
-  const sections = sectionsQ.data ?? [];
-  const categories = categoriesQ.data ?? [];
-  const groups = groupsQ.data ?? [];
-  const facilities = facilitiesQ.data ?? [];
+  const sections = sectionsQ.data ?? DEMO_SECTIONS_ROWS;
+  const categories = categoriesQ.data ?? DEMO_CATEGORIES_ROWS;
+  const groups = groupsQ.data ?? DEMO_GROUPS_ROWS;
+  const facilities = facilitiesQ.data ?? DEMO_FACILITIES_ROWS;
 
   return (
     <>

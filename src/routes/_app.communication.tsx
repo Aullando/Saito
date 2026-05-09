@@ -13,6 +13,11 @@ import {
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEMO_CONVERSATIONS_ROWS,
+  DEMO_PROFILES_MIN_ROWS,
+  demoMessagesFor,
+} from "@/lib/demoFallbacks";
 import { toast } from "sonner";
 import { Plus, Send } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
@@ -69,7 +74,7 @@ function CommunicationPage() {
     },
   });
 
-  const conversations = convsQ.data ?? [];
+  const conversations = (convsQ.data ?? DEMO_CONVERSATIONS_ROWS) as DBConv[];
   const [activeId, setActiveId] = useState<string | null>(null);
   useEffect(() => {
     if (!activeId && conversations.length) setActiveId(conversations[0].id);
@@ -99,8 +104,8 @@ function CommunicationPage() {
     },
   });
 
-  const profiles = profilesQ.data ?? [];
-  const messages = msgsQ.data ?? [];
+  const profiles = profilesQ.data ?? DEMO_PROFILES_MIN_ROWS;
+  const messages = (msgsQ.data ?? (activeId ? demoMessagesFor(activeId) : [])) as DBMsg[];
 
   const sendMsg = useMutation({
     mutationFn: async (content: string) => {

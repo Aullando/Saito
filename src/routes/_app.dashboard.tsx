@@ -8,6 +8,11 @@ import { useT } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
+import {
+  DEMO_DASHBOARD_STATS,
+  DEMO_DASHBOARD_CHARTS,
+  DEMO_ATHLETES_MIN_ROWS,
+} from "@/lib/demoFallbacks";
 import { Users, Calendar, CreditCard, Activity, MessageSquare, Stethoscope, TrendingUp, BarChart3 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -186,7 +191,11 @@ function DashboardPage() {
   const fmtMoney = (n: number) =>
     new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(n);
 
-  const s = stats.data;
+  const s = stats.data ?? DEMO_DASHBOARD_STATS;
+  const chartsData = charts.data ?? DEMO_DASHBOARD_CHARTS;
+  const athleteNamesMap = athleteNames.data ?? new Map<string, string>(
+    DEMO_ATHLETES_MIN_ROWS.map((a) => [a.id, `${a.first_name} ${a.last_name}`])
+  );
 
   return (
     <>
@@ -266,7 +275,7 @@ function DashboardPage() {
               {s.upcomingAppts.map((a) => (
                 <li key={a.id} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
                   <div>
-                    <div className="font-medium">{athleteNames.data?.get(a.athlete_id) ?? "—"}</div>
+                    <div className="font-medium">{athleteNamesMap.get(a.athlete_id) ?? "—"}</div>
                     <div className="text-xs text-muted-foreground">{a.reason ?? ""}</div>
                   </div>
                   <div className="text-xs text-muted-foreground">
@@ -287,9 +296,9 @@ function DashboardPage() {
             </h2>
           </div>
           <div className="h-64 w-full">
-            {charts.data && (
+            {chartsData && (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={charts.data.revenueSeries} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
+                <AreaChart data={chartsData.revenueSeries} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
                   <defs>
                     <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
@@ -319,9 +328,9 @@ function DashboardPage() {
             </h2>
           </div>
           <div className="h-64 w-full">
-            {charts.data && (
+            {chartsData && (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={charts.data.eventsSeries} margin={{ top: 8, right: 12, left: -20, bottom: 0 }}>
+                <BarChart data={chartsData.eventsSeries} margin={{ top: 8, right: 12, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} interval={4} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
@@ -338,11 +347,11 @@ function DashboardPage() {
         <Card>
           <h2 className="mb-3 text-lg font-semibold">{lang === "es" ? "Tipos de evento" : "Event types"}</h2>
           <div className="h-56 w-full">
-            {charts.data && charts.data.typeData.length > 0 && (
+            {chartsData && chartsData.typeData.length > 0 && (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={charts.data.typeData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
-                    {charts.data.typeData.map((_, i) => (
+                  <Pie data={chartsData.typeData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
+                    {chartsData.typeData.map((_: unknown, i: number) => (
                       <Cell key={i} fill={["hsl(var(--primary))", "hsl(var(--success))", "hsl(var(--warning))", "hsl(var(--destructive))"][i % 4]} />
                     ))}
                   </Pie>
@@ -357,11 +366,11 @@ function DashboardPage() {
         <Card>
           <h2 className="mb-3 text-lg font-semibold">{lang === "es" ? "Estado médico" : "Medical status"}</h2>
           <div className="h-56 w-full">
-            {charts.data && charts.data.medData.length > 0 && (
+            {chartsData && chartsData.medData.length > 0 && (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={charts.data.medData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
-                    {charts.data.medData.map((entry, i) => {
+                  <Pie data={chartsData.medData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
+                    {chartsData.medData.map((entry: { name: string; value: number }, i: number) => {
                       const colorMap: Record<string, string> = {
                         Fit: "hsl(var(--success))",
                         Injured: "hsl(var(--destructive))",

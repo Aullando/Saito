@@ -11,6 +11,12 @@ import {
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEMO_PAYMENTS_ROWS,
+  DEMO_ATHLETES_MIN_ROWS,
+  DEMO_SECTIONS_ROWS,
+  DEMO_CATEGORIES_ROWS,
+} from "@/lib/demoFallbacks";
 import { toast } from "sonner";
 import { Download } from "lucide-react";
 import { formatMoneyEs, formatDate, formatName } from "@/lib/format";
@@ -88,10 +94,10 @@ function PaymentsPage() {
     },
   });
 
-  const payments = paymentsQ.data ?? [];
-  const athletes = athletesQ.data ?? [];
-  const sections = sectionsQ.data ?? [];
-  const categories = categoriesQ.data ?? [];
+  const payments = (paymentsQ.data ?? DEMO_PAYMENTS_ROWS) as DBPayment[];
+  const athletes = athletesQ.data ?? DEMO_ATHLETES_MIN_ROWS;
+  const sections = sectionsQ.data ?? DEMO_SECTIONS_ROWS;
+  const categories = categoriesQ.data ?? DEMO_CATEGORIES_ROWS;
 
   const setStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: PaymentStatus }) => {
