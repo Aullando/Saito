@@ -24,8 +24,8 @@ export function Footer() {
             <img src={logoBlanco} alt="SAITO" className="h-9 w-auto" />
             <p className="mt-4 max-w-sm text-sm text-white/70">
               {t(
-                "La plataforma de gestión todo-en-uno para clubes deportivos. Powered by Gemini.",
-                "The all-in-one management platform for sports clubs. Powered by Gemini.",
+                "La plataforma de gestión todo-en-uno para clubes deportivos. IA integrada y privada por diseño.",
+                "The all-in-one management platform for sports clubs. Built-in, privacy-by-design AI.",
               )}
             </p>
           </div>
