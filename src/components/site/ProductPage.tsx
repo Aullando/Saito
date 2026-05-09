@@ -146,7 +146,7 @@ export function ProductPage({ locale }: { locale: Locale }) {
     {
       id: "ia",
       icon: Sparkles,
-      title: t("IA por rol", "Role-based AI"),
+      title: t("Copiloto Inteligente", "Smart Copilot"),
       description: t(
         "Asistente que entiende los datos del club y propone acciones según el perfil del usuario.",
         "Assistant that understands club data and proposes actions per user role.",

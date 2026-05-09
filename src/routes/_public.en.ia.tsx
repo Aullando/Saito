@@ -5,7 +5,7 @@ import { hrefLangLinks } from "@/lib/seo";
 export const Route = createFileRoute("/_public/en/ia")({
   head: () => ({
     meta: [
-      { title: "AI by role — SAITO" },
+      { title: "Smart Copilot — SAITO" },
       {
         name: "description",
         content: "An AI that understands how a club works. SAITO AI, privacy by design.",

@@ -49,8 +49,8 @@ export function softwareJsonLd(locale: "es" | "en") {
     operatingSystem: "Web",
     description:
       locale === "en"
-        ? "All-in-one platform for sports clubs: members, calendar, payments, communication and role-based AI."
-        : "Plataforma todo-en-uno para clubes deportivos: socios, calendario, pagos, comunicación e IA por rol.",
+        ? "All-in-one platform for sports clubs: members, calendar, payments, communication and Smart Copilot."
+        : "Plataforma todo-en-uno para clubes deportivos: socios, calendario, pagos, comunicación e Copiloto Inteligente.",
     offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
   };
 }

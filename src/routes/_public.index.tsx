@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_public/")({
       {
         name: "description",
         content:
-          "Plataforma todo-en-uno para clubes deportivos: socios, calendario, pagos, comunicación e IA por rol. IA privada por diseño.",
+          "Plataforma todo-en-uno para clubes deportivos: socios, calendario, pagos, comunicación e Copiloto Inteligente. IA privada por diseño.",
       },
       { property: "og:title", content: "SAITO — Plataforma para clubes deportivos" },
       {
