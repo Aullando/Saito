@@ -192,7 +192,7 @@ function DashboardPage() {
     new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(n);
 
   const s = stats.data ?? DEMO_DASHBOARD_STATS;
-  const chartsData = chartsData ?? DEMO_DASHBOARD_CHARTS;
+  const chartsData = charts.data ?? DEMO_DASHBOARD_CHARTS;
   const athleteNamesMap = athleteNames.data ?? new Map<string, string>(
     DEMO_ATHLETES_MIN_ROWS.map((a) => [a.id, `${a.first_name} ${a.last_name}`])
   );
