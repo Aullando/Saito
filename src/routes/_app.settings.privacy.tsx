@@ -19,7 +19,7 @@ import {
 
 export const Route = createFileRoute("/_app/settings/privacy")({
   component: () => (
-    <RoleGate roles={["admin"]}>
+    <RoleGate roles={["admin", "sysadmin"]}>
       <AppLayout>
         <PrivacyMockup />
       </AppLayout>
@@ -48,9 +48,9 @@ const ACCESS_LOG = [
 ];
 
 const SUB_PROCESSORS = [
-  { name: "Lovable Cloud (Supabase)", purpose: "Hosting, base de datos, auth, storage", region: "EU", dpa: true },
-  { name: "Resend", purpose: "Envío transaccional de emails", region: "EU/US", dpa: true },
-  { name: "Lovable AI Gateway", purpose: "Inferencia IA con privacidad por diseño", region: "EU/US", dpa: true },
+  { name: "SAITO Cloud", purpose: "Proveedor de infraestructura cloud: hosting, base de datos, auth y storage", region: "EU", dpa: true },
+  { name: "Proveedor de email transaccional", purpose: "Envío de notificaciones y comunicaciones por email", region: "EU/US", dpa: true },
+  { name: "SAITO AI Gateway", purpose: "Proveedor de servicios de IA con privacidad por diseño", region: "EU/US", dpa: true },
 ];
 
 const RETENTION = [

@@ -9,7 +9,7 @@ export const SITE_URL = "https://saitopilot.lovable.app";
  */
 export function hrefLangLinks(esPath: string, locale: "es" | "en") {
   const es = esPath === "/" ? "/" : esPath;
-  const en = esPath === "/" ? "/en" : `/en${esPath}`;
+  const en = esPath === "/" ? "/en/" : `/en${esPath}`;
   const current = locale === "en" ? en : es;
   return [
     { rel: "canonical", href: `${SITE_URL}${current}` },

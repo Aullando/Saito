@@ -62,7 +62,7 @@ export function HomePage({ locale }: Props) {
             >
               <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1 text-xs font-semibold text-muted-foreground backdrop-blur">
                 <Sparkles className="size-3.5 text-primary" />
-                {t("Powered by Gemini", "Powered by Gemini")}
+                {t("IA privada por diseño", "Privacy-by-design AI")}
               </div>
               <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] sm:text-5xl md:text-6xl">
                 {t("Gestiona tu club deportivo", "Run your sports club")}
