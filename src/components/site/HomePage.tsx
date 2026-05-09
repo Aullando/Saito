@@ -20,6 +20,7 @@ import {
   Rocket,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { ModuleCard } from "@/components/site/ModuleCard";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { RoleTabs, defaultRolesEs, defaultRolesEn } from "@/components/site/RoleTabs";
