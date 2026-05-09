@@ -6,7 +6,7 @@ export const Route = createFileRoute("/_public/en/ia")({
   head: () => ({
     meta: [
       { title: "AI by role — SAITO" },
-      { name: "description", content: "An AI that understands how a club works. Powered by Gemini." },
+      { name: "description", content: "An AI that understands how a club works. SAITO AI, privacy by design." },
     ],
     links: hrefLangLinks("/ia", "en"),
   }),
