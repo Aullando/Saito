@@ -15,7 +15,7 @@ const variants: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-export function Reveal({ children, delay = 0, y = 24, className, stagger = false }: Props) {
+export function Reveal({ children, delay = 0, y = 20, className, stagger = false }: Props) {
   if (stagger) {
     return (
       <motion.div
