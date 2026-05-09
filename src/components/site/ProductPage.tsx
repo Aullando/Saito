@@ -14,6 +14,21 @@ import type { LucideIcon } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Button } from "@/components/ui/button";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
+import photoFamily from "@/assets/photos/family.jpg";
+import photoCoach from "@/assets/photos/coach-tablet.jpg";
+import photoFacility from "@/assets/photos/facility.jpg";
+import photoMedical from "@/assets/photos/medical.jpg";
+import photoTeam from "@/assets/photos/team-huddle.jpg";
+import photoMatch from "@/assets/photos/match.jpg";
+
+const MODULE_PHOTOS: Record<string, string> = {
+  socios: photoFamily,
+  calendario: photoCoach,
+  staff: photoTeam,
+  comunicacion: photoMatch,
+  salud: photoMedical,
+  instalaciones: photoFacility,
+};
 
 interface Item {
   id: string;
@@ -187,13 +202,24 @@ export function ProductPage({ locale }: { locale: Locale }) {
                     ))}
                   </ul>
                 </div>
-                <div className={`rounded-3xl border border-border bg-card p-6 ${i % 2 ? "md:order-1" : ""}`}>
-                  <div className="aspect-[4/3] rounded-2xl bg-saito-gradient p-6">
-                    <div className="flex h-full w-full flex-col justify-between rounded-xl bg-white/5 p-4 text-white backdrop-blur">
-                      <Icon className="size-7" />
-                      <p className="text-sm font-semibold">{it.title}</p>
+                <div className={`overflow-hidden rounded-3xl border border-border bg-card shadow-sm ${i % 2 ? "md:order-1" : ""}`}>
+                  {MODULE_PHOTOS[it.id] ? (
+                    <img
+                      src={MODULE_PHOTOS[it.id]}
+                      alt={it.title}
+                      loading="lazy"
+                      width={1024}
+                      height={768}
+                      className="aspect-[4/3] w-full object-cover"
+                    />
+                  ) : (
+                    <div className="aspect-[4/3] bg-saito-gradient p-6">
+                      <div className="flex h-full w-full flex-col justify-between rounded-xl bg-white/5 p-4 text-white backdrop-blur">
+                        <Icon className="size-7" />
+                        <p className="text-sm font-semibold">{it.title}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </article>
             );
