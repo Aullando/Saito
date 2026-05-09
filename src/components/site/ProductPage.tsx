@@ -14,20 +14,23 @@ import type { LucideIcon } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Button } from "@/components/ui/button";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
-import photoFamily from "@/assets/photos/family.jpg";
-import photoCoach from "@/assets/photos/coach-tablet.jpg";
-import photoFacility from "@/assets/photos/facility.jpg";
-import photoMedical from "@/assets/photos/medical.jpg";
-import photoTeam from "@/assets/photos/team-huddle.jpg";
-import photoMatch from "@/assets/photos/match.jpg";
+import modulesGridVisual from "@/assets/site/saito-product-modules-grid.png";
+import membersVisual from "@/assets/site/saito-members-athletes.png";
+import calendarVisual from "@/assets/site/saito-calendar-staff.png";
+import paymentsVisual from "@/assets/site/saito-payments-comms.png";
+import healthVisual from "@/assets/site/saito-health-privacy.png";
+import facilitiesVisual from "@/assets/site/saito-facilities-bookings.png";
+import aiVisual from "@/assets/site/saito-ai-role-assistant.png";
 
 const MODULE_PHOTOS: Record<string, string> = {
-  socios: photoFamily,
-  calendario: photoCoach,
-  staff: photoTeam,
-  comunicacion: photoMatch,
-  salud: photoMedical,
-  instalaciones: photoFacility,
+  socios: membersVisual,
+  calendario: calendarVisual,
+  staff: calendarVisual,
+  pagos: paymentsVisual,
+  comunicacion: paymentsVisual,
+  salud: healthVisual,
+  instalaciones: facilitiesVisual,
+  ia: aiVisual,
 };
 
 interface Item {
@@ -178,6 +181,16 @@ export function ProductPage({ locale }: { locale: Locale }) {
                 {it.title}
               </a>
             ))}
+          </div>
+          <div className="mt-12 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+            <img
+              src={modulesGridVisual}
+              alt={t("Mapa de módulos de SAITO", "SAITO modules map")}
+              loading="lazy"
+              width={1800}
+              height={1125}
+              className="h-full w-full object-cover"
+            />
           </div>
         </div>
       </section>

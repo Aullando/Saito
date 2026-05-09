@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Quote } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Button } from "@/components/ui/button";
+import customerVisual from "@/assets/site/saito-customer-operations.png";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 export function CustomersPage({ locale }: { locale: Locale }) {
@@ -48,7 +49,22 @@ export function CustomersPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+            <img
+              src={customerVisual}
+              alt={t("Club operando con SAITO en su día a día", "Club operating with SAITO every day")}
+              loading="lazy"
+              width={1800}
+              height={1125}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="pb-20 pt-8">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
           {cases.map((c) => (
             <article key={c.club} className="flex flex-col rounded-3xl border border-border bg-card p-7">

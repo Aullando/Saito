@@ -21,7 +21,8 @@ import { ModuleCard } from "@/components/site/ModuleCard";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { RoleTabs, defaultRolesEs, defaultRolesEn } from "@/components/site/RoleTabs";
 import photoMatch from "@/assets/photos/match.jpg";
-import photoTeam from "@/assets/photos/team-huddle.jpg";
+import heroVisual from "@/assets/site/saito-hero-command-center.png";
+import multiclubVisual from "@/assets/site/saito-multiclub-network.png";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 interface Props {
@@ -110,8 +111,15 @@ export function HomePage({ locale }: Props) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
+              className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl"
             >
-              <DashboardMockup />
+              <img
+                src={heroVisual}
+                alt={t("Panel operativo de SAITO", "SAITO operations command center")}
+                width={1800}
+                height={1125}
+                className="h-full w-full object-cover"
+              />
             </motion.div>
           </div>
         </div>
@@ -226,24 +234,15 @@ export function HomePage({ locale }: Props) {
               </ul>
             </div>
 
-            <div className="relative overflow-hidden rounded-3xl border border-border shadow-xl">
+            <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
               <img
-                src={photoTeam}
-                alt={t("Equipo unido en cancha", "Team huddled together")}
+                src={multiclubVisual}
+                alt={t("Diagrama multi-club: matriz, sedes y secciones", "Multi-club diagram: parent, venues and sections")}
                 loading="lazy"
-                width={1024}
-                height={1024}
+                width={1800}
+                height={1125}
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-                <div className="flex flex-wrap gap-2">
-                  {["Fútbol", "Pádel", "Tenis", "Vela", "Hockey", "Basket", "Natación", "Gimnasia"].map((s) => (
-                    <span key={s} className="rounded-full border border-white/30 bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>

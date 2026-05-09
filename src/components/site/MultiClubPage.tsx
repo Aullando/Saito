@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Building2, CheckCircle2, MinusCircle } from "lucide-react";
+import { CheckCircle2, MinusCircle } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Button } from "@/components/ui/button";
-import iso from "@/assets/brand/saito-iso.svg";
+import multiclubVisual from "@/assets/site/saito-multiclub-network.png";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 export function MultiClubPage({ locale }: { locale: Locale }) {
@@ -34,29 +34,15 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
 
       <section className="py-20">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-          <div className="rounded-3xl border border-border bg-card p-8">
-            <div className="flex flex-col items-center gap-5">
-              <div className="flex items-center gap-2 rounded-2xl border border-border bg-background px-5 py-3 shadow-sm">
-                <img src={iso} className="size-5" alt="" /> <span className="text-sm font-semibold">{t("Club matriz", "Parent club")}</span>
-              </div>
-              <div className="h-6 w-px bg-border" />
-              <div className="grid grid-cols-3 gap-3">
-                {[t("Sede Norte", "North venue"), t("Sede Centro", "Central venue"), t("Sede Sur", "South venue")].map((s) => (
-                  <div key={s} className="rounded-xl border border-border bg-muted px-3 py-2 text-center text-xs font-semibold">
-                    <Building2 className="mx-auto mb-1 size-4 text-primary" />
-                    {s}
-                  </div>
-                ))}
-              </div>
-              <div className="h-6 w-px bg-border" />
-              <div className="grid grid-cols-4 gap-2 text-[11px]">
-                {["Fútbol", "Pádel", "Tenis", "Vela", "Hockey", "Basket", "Natación", "Gimnasia"].map((s) => (
-                  <span key={s} className="rounded-full border border-border bg-background px-2.5 py-1 text-center font-medium text-muted-foreground">
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </div>
+          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
+            <img
+              src={multiclubVisual}
+              alt={t("Diagrama multi-club: matriz, sedes y secciones", "Multi-club diagram: parent, venues and sections")}
+              loading="lazy"
+              width={1800}
+              height={1125}
+              className="h-full w-full object-cover"
+            />
           </div>
 
           <div>
