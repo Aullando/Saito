@@ -129,7 +129,16 @@ export function SecurityPage({ locale }: Props) {
                 <ShieldCheck className="size-3.5 text-primary" />
                 {t("Seguridad y privacidad", "Security & privacy")}
               </span>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              <div className="mt-4 inline-flex items-start gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-left text-xs leading-relaxed text-amber-900 dark:text-amber-200">
+                <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                <span>
+                  {t(
+                    "Esta página describe el modelo de seguridad y privacidad sobre el que SAITO está siendo construido y validado en piloto. Los controles marcados como “Activo” están operativos hoy; los marcados como “En piloto” o “Planificado” se completan antes del despliegue general.",
+                    "This page describes the security and privacy model SAITO is being built and validated against during piloting. Controls marked “Active” are operational today; those marked “In pilot” or “Planned” are completed before general availability.",
+                  )}
+                </span>
+              </div>
+              <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
                 {t(
                   "Privacidad y seguridad diseñadas para clubes deportivos",
                   "Privacy and security built for sports clubs",
