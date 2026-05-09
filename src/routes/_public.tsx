@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { CommercialAIChat } from "@/components/site/CommercialAIChat";
 import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/_public")({
@@ -15,7 +16,9 @@ function PublicLayout() {
         <Outlet />
       </div>
       <Footer />
+      <CommercialAIChat />
       <Toaster />
     </div>
   );
 }
+
