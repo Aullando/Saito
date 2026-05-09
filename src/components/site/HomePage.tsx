@@ -21,6 +21,8 @@ import { ModuleCard } from "@/components/site/ModuleCard";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { RoleTabs, defaultRolesEs, defaultRolesEn } from "@/components/site/RoleTabs";
 import iso from "@/assets/brand/saito-iso.svg";
+import photoMatch from "@/assets/photos/match.jpg";
+import photoTeam from "@/assets/photos/team-huddle.jpg";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 interface Props {
@@ -146,6 +148,32 @@ export function HomePage({ locale }: Props) {
         </div>
       </section>
 
+      {/* Cinematic visual band */}
+      <section className="relative h-[55vh] min-h-[360px] w-full overflow-hidden">
+        <img
+          src={photoMatch}
+          alt={t("Partido del club al atardecer", "Club match at sunset")}
+          loading="lazy"
+          width={1920}
+          height={1080}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-saito-navy via-saito-navy/40 to-transparent" />
+        <div className="relative flex h-full items-end">
+          <div className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+              {t("Hecho para los clubes que viven el deporte", "Built for clubs that live the game")}
+            </p>
+            <h2 className="mt-3 max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl md:text-5xl">
+              {t(
+                "Mientras la grada vibra, tu club funciona solo.",
+                "While the stands roar, your club just runs.",
+              )}
+            </h2>
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden bg-saito-gradient py-24 text-white">
         <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 50%)" }} aria-hidden />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -196,33 +224,22 @@ export function HomePage({ locale }: Props) {
               </ul>
             </div>
 
-            <div className="rounded-3xl border border-border bg-card p-8">
-              <div className="flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="flex items-center gap-2 rounded-2xl border border-border bg-background px-5 py-3 shadow-sm">
-                    <img src={iso} className="size-5" alt="" />
-                    <span className="text-sm font-semibold">Club matriz</span>
-                  </div>
-                  <div className="h-6 w-px bg-border" />
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      t("Sede Norte", "North venue"),
-                      t("Sede Centro", "Central venue"),
-                      t("Sede Sur", "South venue"),
-                    ].map((s) => (
-                      <div key={s} className="rounded-xl border border-border bg-muted px-3 py-2 text-center text-xs font-semibold">
-                        {s}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="h-6 w-px bg-border" />
-                  <div className="grid grid-cols-4 gap-2 text-[11px]">
-                    {["Fútbol", "Pádel", "Tenis", "Vela", "Hockey", "Basket", "Natación", "Gimnasia"].map((s) => (
-                      <span key={s} className="rounded-full border border-border bg-background px-2.5 py-1 text-center font-medium text-muted-foreground">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
+            <div className="relative overflow-hidden rounded-3xl border border-border shadow-xl">
+              <img
+                src={photoTeam}
+                alt={t("Equipo unido en cancha", "Team huddled together")}
+                loading="lazy"
+                width={1024}
+                height={1024}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+                <div className="flex flex-wrap gap-2">
+                  {["Fútbol", "Pádel", "Tenis", "Vela", "Hockey", "Basket", "Natación", "Gimnasia"].map((s) => (
+                    <span key={s} className="rounded-full border border-white/30 bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
+                      {s}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
