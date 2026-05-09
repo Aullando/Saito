@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/athletes")({
+export const Route = createFileRoute("/_app/athletes")({
   component: () => (
     <RoleGate roles={["admin", "manager", "technical", "medical"]}>
       <AppLayout>

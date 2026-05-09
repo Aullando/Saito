@@ -12,7 +12,7 @@ import { useT } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { Camera } from "lucide-react";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/_app/profile")({
   component: () => (
     <RoleGate roles={["sysadmin", "admin", "manager", "technical", "medical"]}>
       <AppLayout>
