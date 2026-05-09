@@ -75,7 +75,6 @@ export function ClubProvider({ children }: { children: ReactNode }) {
     [club, switchClub],
   );
 
-
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

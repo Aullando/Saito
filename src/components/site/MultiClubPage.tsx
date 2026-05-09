@@ -23,7 +23,10 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Multi-club", "Multi-club")}
-            title={t("Para clubes históricos y entidades polideportivas", "For historic clubs and multi-sport organisations")}
+            title={t(
+              "Para clubes históricos y entidades polideportivas",
+              "For historic clubs and multi-sport organisations",
+            )}
             subtitle={t(
               "Una arquitectura pensada para clubes con varias sedes, secciones deportivas y equipos directivos.",
               "An architecture for clubs with several venues, sporting sections and leadership teams.",
@@ -37,7 +40,10 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
             <img
               src={multiclubVisual}
-              alt={t("Diagrama multi-club: matriz, sedes y secciones", "Multi-club diagram: parent, venues and sections")}
+              alt={t(
+                "Diagrama multi-club: matriz, sedes y secciones",
+                "Multi-club diagram: parent, venues and sections",
+              )}
               loading="lazy"
               width={1800}
               height={1125}
@@ -46,7 +52,9 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
           </div>
 
           <div>
-            <h3 className="text-2xl font-bold sm:text-3xl">{t("Lo que cambia frente a un club simple", "What changes vs a single club")}</h3>
+            <h3 className="text-2xl font-bold sm:text-3xl">
+              {t("Lo que cambia frente a un club simple", "What changes vs a single club")}
+            </h3>
             <div className="mt-6 overflow-hidden rounded-2xl border border-border">
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -61,10 +69,18 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
                     <tr key={String(label)} className="border-t border-border">
                       <td className="px-4 py-3">{label as string}</td>
                       <td className="px-4 py-3 text-center">
-                        {a ? <CheckCircle2 className="mx-auto size-4 text-saito-green" /> : <MinusCircle className="mx-auto size-4 text-muted-foreground/50" />}
+                        {a ? (
+                          <CheckCircle2 className="mx-auto size-4 text-saito-green" />
+                        ) : (
+                          <MinusCircle className="mx-auto size-4 text-muted-foreground/50" />
+                        )}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        {b ? <CheckCircle2 className="mx-auto size-4 text-saito-green" /> : <MinusCircle className="mx-auto size-4 text-muted-foreground/50" />}
+                        {b ? (
+                          <CheckCircle2 className="mx-auto size-4 text-saito-green" />
+                        ) : (
+                          <MinusCircle className="mx-auto size-4 text-muted-foreground/50" />
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -79,7 +95,10 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Jerarquía", "Hierarchy")}
-            title={t("Una plataforma para los seis niveles del club", "One platform for the six levels of the club")}
+            title={t(
+              "Una plataforma para los seis niveles del club",
+              "One platform for the six levels of the club",
+            )}
             subtitle={t(
               "Desde gobierno hasta familias, cada nivel ve lo que le corresponde y nada más.",
               "From governance to families, each level sees only what concerns them.",
@@ -88,11 +107,26 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
           <div className="mt-12 space-y-3">
             {[
               { name: "Board", desc: t("Gobierno y estrategia.", "Governance and strategy.") },
-              { name: "C-Level", desc: t("Dirección ejecutiva del club.", "Executive direction of the club.") },
-              { name: t("BD, Finanzas y Dirección Deportiva", "BD, Finance & Sport Directors"), desc: t("Liderazgo funcional por área.", "Functional leadership per area.") },
-              { name: t("Administración y Coordinación", "Administration & Coordination"), desc: t("Operación diaria del club.", "Day-to-day club operations.") },
-              { name: t("Entrenadores y Árbitros", "Coaches & Referees"), desc: t("Staff técnico y arbitral.", "Technical and refereeing staff.") },
-              { name: t("Deportistas y Familias", "Athletes & Families"), desc: t("Experiencia final del usuario.", "End-user experience.") },
+              {
+                name: "C-Level",
+                desc: t("Dirección ejecutiva del club.", "Executive direction of the club."),
+              },
+              {
+                name: t("BD, Finanzas y Dirección Deportiva", "BD, Finance & Sport Directors"),
+                desc: t("Liderazgo funcional por área.", "Functional leadership per area."),
+              },
+              {
+                name: t("Administración y Coordinación", "Administration & Coordination"),
+                desc: t("Operación diaria del club.", "Day-to-day club operations."),
+              },
+              {
+                name: t("Entrenadores y Árbitros", "Coaches & Referees"),
+                desc: t("Staff técnico y arbitral.", "Technical and refereeing staff."),
+              },
+              {
+                name: t("Deportistas y Familias", "Athletes & Families"),
+                desc: t("Experiencia final del usuario.", "End-user experience."),
+              },
             ].map((lvl, i) => (
               <div
                 key={lvl.name}
@@ -114,9 +148,17 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
 
       <section className="border-t border-border bg-saito-gradient py-16 text-white">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-bold sm:text-3xl">{t("Hablemos de tu estructura", "Let's talk about your structure")}</h3>
-          <Button asChild size="lg" className="mt-6 rounded-full bg-white px-6 text-saito-navy hover:bg-white/90">
-            <Link to={localizedPath("/contacto", locale) as any}>{t("Pide una demo", "Book a demo")}</Link>
+          <h3 className="text-2xl font-bold sm:text-3xl">
+            {t("Hablemos de tu estructura", "Let's talk about your structure")}
+          </h3>
+          <Button
+            asChild
+            size="lg"
+            className="mt-6 rounded-full bg-white px-6 text-saito-navy hover:bg-white/90"
+          >
+            <Link to={localizedPath("/contacto", locale) as unknown as never}>
+              {t("Pide una demo", "Book a demo")}
+            </Link>
           </Button>
         </div>
       </section>

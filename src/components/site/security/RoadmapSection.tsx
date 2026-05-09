@@ -9,7 +9,10 @@ export function RoadmapSection({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow={t(locale, { es: "Hoja de ruta de confianza", en: "Trust roadmap" })}
-          title={t(locale, { es: "Cómo crece nuestra postura de seguridad", en: "How our security posture grows" })}
+          title={t(locale, {
+            es: "Cómo crece nuestra postura de seguridad",
+            en: "How our security posture grows",
+          })}
         />
         <ol className="mt-10 space-y-6">
           {roadmap.map((r, i) => {

@@ -94,7 +94,10 @@ export const STR: Dict = {
   change_password: { en: "Change Password", es: "Cambiar contraseña" },
   settings: { en: "Settings", es: "Ajustes" },
   no_athletes: { en: "No athletes in this group", es: "No hay deportistas en este grupo" },
-  no_payments: { en: "No payments match the selected filters.", es: "No hay pagos que cumplan los filtros." },
+  no_payments: {
+    en: "No payments match the selected filters.",
+    es: "No hay pagos que cumplan los filtros.",
+  },
   more: { en: "more", es: "más" },
 
   view_invoice_pdf: { en: "View invoice PDF", es: "Ver factura PDF" },
@@ -141,7 +144,10 @@ export const STR: Dict = {
   recipient_role_medical: { en: "Medical Staff", es: "Staff médico" },
   recipient_role_athlete: { en: "Athlete", es: "Deportista" },
   delete: { en: "Delete", es: "Eliminar" },
-  delete_confirm: { en: "Are you sure you want to delete this?", es: "¿Seguro que quieres eliminar esto?" },
+  delete_confirm: {
+    en: "Are you sure you want to delete this?",
+    es: "¿Seguro que quieres eliminar esto?",
+  },
   recurring: { en: "Recurring weekly", es: "Repetir semanalmente" },
   recur_until: { en: "Repeat until", es: "Repetir hasta" },
   delete_only_this: { en: "Delete only this day", es: "Eliminar solo este día" },

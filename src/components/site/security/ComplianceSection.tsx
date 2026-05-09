@@ -9,7 +9,10 @@ export function ComplianceSection({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow={t(locale, { es: "Cumplimiento y normativa", en: "Compliance & regulation" })}
-          title={t(locale, { es: "Diseñado para alinearse con el marco europeo y español", en: "Designed to align with the EU and Spanish framework" })}
+          title={t(locale, {
+            es: "Diseñado para alinearse con el marco europeo y español",
+            en: "Designed to align with the EU and Spanish framework",
+          })}
         />
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {compliance.map((c) => {
@@ -20,7 +23,9 @@ export function ComplianceSection({ locale }: { locale: Locale }) {
                   <FileCheck2 className="size-4 text-primary" />
                   <h3 className="text-sm font-semibold text-foreground">{title}</h3>
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, c.desc)}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {t(locale, c.desc)}
+                </p>
               </div>
             );
           })}

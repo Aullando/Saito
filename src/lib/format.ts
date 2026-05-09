@@ -1,5 +1,4 @@
-export const formatName = (first: string, last: string) =>
-  `${first} ${last.toUpperCase()}`;
+export const formatName = (first: string, last: string) => `${first} ${last.toUpperCase()}`;
 
 export const formatDateTime = (input: string | Date) => {
   const d = typeof input === "string" ? new Date(input) : input;
@@ -24,4 +23,5 @@ export const formatTime = (input: string | Date) => {
 };
 
 export const formatMoneyEs = (n: number) =>
-  new Intl.NumberFormat("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + " €";
+  new Intl.NumberFormat("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) +
+  " €";

@@ -1,19 +1,18 @@
 import { describe, it, expect } from "vitest";
-import {
-  getRgccView,
-  getRgccMiDiaView,
-  isRgccAdmin,
-  isRgccCoach,
-} from "./permissions";
+import { getRgccView, getRgccMiDiaView, isRgccAdmin, isRgccCoach } from "./permissions";
 import type { Role } from "@/lib/types";
 
 describe("RGCC permissions", () => {
-  const cases: Array<{ role: Role; view: ReturnType<typeof getRgccView>; miDia: ReturnType<typeof getRgccMiDiaView> }> = [
+  const cases: Array<{
+    role: Role;
+    view: ReturnType<typeof getRgccView>;
+    miDia: ReturnType<typeof getRgccMiDiaView>;
+  }> = [
     { role: "sysadmin", view: "cockpit", miDia: "monitor" },
-    { role: "admin",    view: "cockpit", miDia: "monitor" },
-    { role: "manager",  view: "cockpit", miDia: "monitor" },
-    { role: "technical",view: "coach",   miDia: "monitor" },
-    { role: "medical",  view: "member",  miDia: "member"  },
+    { role: "admin", view: "cockpit", miDia: "monitor" },
+    { role: "manager", view: "cockpit", miDia: "monitor" },
+    { role: "technical", view: "coach", miDia: "monitor" },
+    { role: "medical", view: "member", miDia: "member" },
   ];
 
   it.each(cases)("role $role → view=$view, mi-día=$miDia", ({ role, view, miDia }) => {

@@ -76,20 +76,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "SAITO — Gestión inteligente para clubes deportivos" },
-      { name: "description", content: "Plataforma SaaS para clubes deportivos: socios, calendario, pagos, comunicación, salud, instalaciones e IA." },
+      {
+        name: "description",
+        content:
+          "Plataforma SaaS para clubes deportivos: socios, calendario, pagos, comunicación, salud, instalaciones e IA.",
+      },
       { name: "author", content: "SAITO" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "SAITO" },
       { property: "og:title", content: "SAITO — Plataforma para clubes deportivos" },
-      { property: "og:description", content: "Gestión inteligente para clubes deportivos con IA, datos y privacidad por diseño." },
+      {
+        property: "og:description",
+        content:
+          "Gestión inteligente para clubes deportivos con IA, datos y privacidad por diseño.",
+      },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "SAITO — Plataforma para clubes deportivos" },
-      { name: "twitter:description", content: "Gestión inteligente para clubes deportivos con IA, datos y privacidad por diseño." },
+      {
+        name: "twitter:description",
+        content:
+          "Gestión inteligente para clubes deportivos con IA, datos y privacidad por diseño.",
+      },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,

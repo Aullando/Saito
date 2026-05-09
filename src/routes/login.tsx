@@ -105,7 +105,9 @@ function LoginPage() {
                     >
                       <div
                         className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${
-                          active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                          active
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground"
                         }`}
                       >
                         <Icon className="h-4 w-4" />

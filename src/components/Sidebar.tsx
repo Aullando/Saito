@@ -1,9 +1,22 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import * as Icons from "lucide-react";
 import {
-  Building2, CalendarDays, Users, Wallet, Receipt, MessageSquare,
-  Settings, LayoutGrid, Stethoscope, ChevronLeft, LogOut, X, ShieldCheck,
-  ClipboardCheck, Activity, ListChecks,
+  Building2,
+  CalendarDays,
+  Users,
+  Wallet,
+  Receipt,
+  MessageSquare,
+  Settings,
+  LayoutGrid,
+  Stethoscope,
+  ChevronLeft,
+  LogOut,
+  X,
+  ShieldCheck,
+  ClipboardCheck,
+  Activity,
+  ListChecks,
 } from "lucide-react";
 
 import { useCurrentUser, useAuth } from "@/lib/store";
@@ -22,48 +35,114 @@ type Item = {
   params?: Record<string, string>;
 };
 
-function buildItems(role: Role, t: (k: any) => string): Item[] {
+function buildItems(role: Role, t: (k: string) => string): Item[] {
   switch (role) {
     case "sysadmin":
       return [{ to: "/organizations", label: t("organizations"), icon: Building2 }];
     case "admin":
     case "manager":
       return [
-        { to: "/dashboard", label: t("dashboard") || "Dashboard", icon: LayoutGrid, module: "dashboard" },
+        {
+          to: "/dashboard",
+          label: t("dashboard") || "Dashboard",
+          icon: LayoutGrid,
+          module: "dashboard",
+        },
         { to: "/club", label: t("club_organization"), icon: Building2, module: "club" },
         { to: "/calendar", label: t("calendar"), icon: CalendarDays, module: "calendar" },
         { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
         { to: "/attendance", label: "Asistencia", icon: ClipboardCheck, module: "calendar" },
         { to: "/economic/fees", label: t("economic_management"), icon: Wallet, module: "economic" },
-        { to: "/economic/fees", label: t("fees_rates"), icon: Receipt, indent: true, module: "economic" },
-        { to: "/economic/payments", label: t("payment_status"), icon: Receipt, indent: true, module: "economic" },
-        { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
-        ...(role === "admin" ? [
-          { to: "/medical/restrictions", label: "Restricciones médicas", icon: Activity, module: "medical" as ClubModuleId },
-          { to: "/settings/team", label: t("users_permissions"), icon: Users, module: "settings" as ClubModuleId },
-          { to: "/settings/privacy", label: t("privacy_security") || "Privacidad y seguridad", icon: ShieldCheck, module: "settings" as ClubModuleId },
-          { to: "/settings/qa", label: "Checklist piloto", icon: ListChecks, module: "settings" as ClubModuleId },
-        ] : []),
+        {
+          to: "/economic/fees",
+          label: t("fees_rates"),
+          icon: Receipt,
+          indent: true,
+          module: "economic",
+        },
+        {
+          to: "/economic/payments",
+          label: t("payment_status"),
+          icon: Receipt,
+          indent: true,
+          module: "economic",
+        },
+        {
+          to: "/communication",
+          label: t("communication"),
+          icon: MessageSquare,
+          module: "communication",
+        },
+        ...(role === "admin"
+          ? [
+              {
+                to: "/medical/restrictions",
+                label: "Restricciones médicas",
+                icon: Activity,
+                module: "medical" as ClubModuleId,
+              },
+              {
+                to: "/settings/team",
+                label: t("users_permissions"),
+                icon: Users,
+                module: "settings" as ClubModuleId,
+              },
+              {
+                to: "/settings/privacy",
+                label: t("privacy_security") || "Privacidad y seguridad",
+                icon: ShieldCheck,
+                module: "settings" as ClubModuleId,
+              },
+              {
+                to: "/settings/qa",
+                label: "Checklist piloto",
+                icon: ListChecks,
+                module: "settings" as ClubModuleId,
+              },
+            ]
+          : []),
       ];
     case "technical":
       return [
         { to: "/calendar", label: t("calendar"), icon: CalendarDays, module: "calendar" },
         { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
         { to: "/attendance", label: "Asistencia", icon: ClipboardCheck, module: "calendar" },
-        { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
+        {
+          to: "/communication",
+          label: t("communication"),
+          icon: MessageSquare,
+          module: "communication",
+        },
       ];
     case "medical":
       return [
-        { to: "/medical/calendar", label: t("medical_calendar"), icon: Stethoscope, module: "medical" },
-        { to: "/medical/restrictions", label: "Restricciones y lesiones", icon: Activity, module: "medical" },
+        {
+          to: "/medical/calendar",
+          label: t("medical_calendar"),
+          icon: Stethoscope,
+          module: "medical",
+        },
+        {
+          to: "/medical/restrictions",
+          label: "Restricciones y lesiones",
+          icon: Activity,
+          module: "medical",
+        },
         { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
-        { to: "/communication", label: t("communication"), icon: MessageSquare, module: "communication" },
+        {
+          to: "/communication",
+          label: t("communication"),
+          icon: MessageSquare,
+          module: "communication",
+        },
       ];
   }
 }
 
 function navItemToItem(n: ClubNavItem): Item {
-  const IconCmp = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[n.icon] ?? LayoutGrid;
+  const IconCmp =
+    (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[n.icon] ??
+    LayoutGrid;
   return {
     to: n.to,
     label: n.label,
@@ -112,91 +191,93 @@ export function Sidebar() {
         )}
         style={{ width }}
       >
-      <div className="flex h-12 items-center justify-between px-3">
-        <button
-          onClick={() => setMobileOpen(false)}
-          className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:hidden"
-          aria-label="Close"
-        >
-          <X className="h-4 w-4" />
-        </button>
-        <button
-          onClick={toggleCollapsed}
-          className="ml-auto hidden h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:flex"
-          aria-label="Collapse"
-        >
-          <ChevronLeft className={cn("h-4 w-4 transition-transform", collapsed && "rotate-180")} />
-        </button>
-      </div>
-
-      {!collapsed && (
-        <div className="mx-3 mb-2 flex items-center gap-2 rounded-2xl bg-sidebar-accent px-3 py-2 text-xs">
-          {notifCount > 0 && (
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground">
-              {notifCount}
-            </span>
-          )}
-          <span className="truncate font-semibold text-sidebar-foreground">{user.name}</span>
+        <div className="flex h-12 items-center justify-between px-3">
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:hidden"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+          <button
+            onClick={toggleCollapsed}
+            className="ml-auto hidden h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:flex"
+            aria-label="Collapse"
+          >
+            <ChevronLeft
+              className={cn("h-4 w-4 transition-transform", collapsed && "rotate-180")}
+            />
+          </button>
         </div>
-      )}
 
-      <nav className="flex-1 overflow-y-auto px-3 py-2">
-        <ul className="space-y-1">
-          {items.map((it, idx) => {
-            const resolvedPath = it.params
-              ? Object.entries(it.params).reduce((acc, [k, v]) => acc.replace(`$${k}`, v), it.to)
-              : it.to;
-            const economicHeader = it.label === t("economic_management");
-            const active = economicHeader
-              ? path.startsWith("/economic")
-              : it.indent
-                ? path === resolvedPath
-                : path === resolvedPath || path.startsWith(resolvedPath + "/");
-            const Icon = it.icon;
-            return (
-              <li key={idx}>
-                <Link
-                  to={it.to}
-                  params={it.params as never}
-                  onClick={() => setMobileOpen(false)}
-                  className={cn(
-                    "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
-                    active
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent",
-                    it.indent && !collapsed && "ml-4 text-[13px]",
-                  )}
-                >
-                  <Icon className="h-[18px] w-[18px] shrink-0" />
-                  {!collapsed && <span className="truncate">{it.label}</span>}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+        {!collapsed && (
+          <div className="mx-3 mb-2 flex items-center gap-2 rounded-2xl bg-sidebar-accent px-3 py-2 text-xs">
+            {notifCount > 0 && (
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground">
+                {notifCount}
+              </span>
+            )}
+            <span className="truncate font-semibold text-sidebar-foreground">{user.name}</span>
+          </div>
+        )}
 
-      <div className="border-t border-sidebar-border p-3">
-        <Link
-          to="/profile"
-          className={cn(
-            "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium",
-            isActive("/profile")
-              ? "bg-primary text-primary-foreground"
-              : "text-sidebar-foreground hover:bg-sidebar-accent",
-          )}
-        >
-          <Settings className="h-[18px] w-[18px]" />
-          {!collapsed && <span>{t("profile_settings")}</span>}
-        </Link>
-        <button
-          onClick={() => setUser(null)}
-          className="mt-1 flex w-full items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent"
-        >
-          <LogOut className="h-[18px] w-[18px]" />
-          {!collapsed && <span>{t("logout")}</span>}
-        </button>
-      </div>
+        <nav className="flex-1 overflow-y-auto px-3 py-2">
+          <ul className="space-y-1">
+            {items.map((it, idx) => {
+              const resolvedPath = it.params
+                ? Object.entries(it.params).reduce((acc, [k, v]) => acc.replace(`$${k}`, v), it.to)
+                : it.to;
+              const economicHeader = it.label === t("economic_management");
+              const active = economicHeader
+                ? path.startsWith("/economic")
+                : it.indent
+                  ? path === resolvedPath
+                  : path === resolvedPath || path.startsWith(resolvedPath + "/");
+              const Icon = it.icon;
+              return (
+                <li key={idx}>
+                  <Link
+                    to={it.to}
+                    params={it.params as never}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
+                      active
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-sidebar-foreground hover:bg-sidebar-accent",
+                      it.indent && !collapsed && "ml-4 text-[13px]",
+                    )}
+                  >
+                    <Icon className="h-[18px] w-[18px] shrink-0" />
+                    {!collapsed && <span className="truncate">{it.label}</span>}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div className="border-t border-sidebar-border p-3">
+          <Link
+            to="/profile"
+            className={cn(
+              "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium",
+              isActive("/profile")
+                ? "bg-primary text-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent",
+            )}
+          >
+            <Settings className="h-[18px] w-[18px]" />
+            {!collapsed && <span>{t("profile_settings")}</span>}
+          </Link>
+          <button
+            onClick={() => setUser(null)}
+            className="mt-1 flex w-full items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent"
+          >
+            <LogOut className="h-[18px] w-[18px]" />
+            {!collapsed && <span>{t("logout")}</span>}
+          </button>
+        </div>
       </aside>
     </>
   );

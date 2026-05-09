@@ -63,9 +63,16 @@ export function CommercialAIChat() {
         try {
           const j = JSON.parse(errTxt);
           if (j.error) errMsg = j.error;
-        } catch {}
-        if (resp.status === 429) errMsg = t("Demasiadas peticiones. Espera un momento.", "Too many requests. Try again shortly.");
-        if (resp.status === 402) errMsg = t("Sin créditos de IA disponibles.", "AI credits exhausted.");
+        } catch {
+          /* ignore */
+        }
+        if (resp.status === 429)
+          errMsg = t(
+            "Demasiadas peticiones. Espera un momento.",
+            "Too many requests. Try again shortly.",
+          );
+        if (resp.status === 402)
+          errMsg = t("Sin créditos de IA disponibles.", "AI credits exhausted.");
         setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);
         setLoading(false);
         return;
@@ -89,7 +96,10 @@ export function CommercialAIChat() {
           if (line.endsWith("\r")) line = line.slice(0, -1);
           if (!line.startsWith("data: ")) continue;
           const json = line.slice(6).trim();
-          if (json === "[DONE]") { done = true; break; }
+          if (json === "[DONE]") {
+            done = true;
+            break;
+          }
           try {
             const parsed = JSON.parse(json);
             const delta = parsed.choices?.[0]?.delta?.content as string | undefined;
@@ -110,7 +120,13 @@ export function CommercialAIChat() {
       }
     } catch (e) {
       console.error(e);
-      setMsgs((m) => [...m, { role: "assistant", content: t("Error de conexión con la IA.", "Connection error with the AI.") }]);
+      setMsgs((m) => [
+        ...m,
+        {
+          role: "assistant",
+          content: t("Error de conexión con la IA.", "Connection error with the AI."),
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -134,7 +150,11 @@ export function CommercialAIChat() {
               <Sparkles className="h-4 w-4" />
               {t("SAITO Assistant", "SAITO Assistant")}
             </div>
-            <button onClick={() => setOpen(false)} aria-label="close" className="opacity-80 hover:opacity-100">
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="close"
+              className="opacity-80 hover:opacity-100"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -185,12 +205,18 @@ export function CommercialAIChat() {
           </div>
           <div className="border-t border-border px-3 py-2 text-[11px] text-muted-foreground">
             {t("¿Quieres ver SAITO en acción?", "Want to see SAITO in action?")}{" "}
-            <Link to={(locale === "en" ? "/en/contacto" : "/contacto") as any} className="font-semibold text-primary hover:underline">
+            <Link
+              to={(locale === "en" ? "/en/contacto" : "/contacto") as unknown as never}
+              className="font-semibold text-primary hover:underline"
+            >
               {t("Solicitar demo", "Book a demo")}
             </Link>
           </div>
           <form
-            onSubmit={(e) => { e.preventDefault(); ask(input); }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              ask(input);
+            }}
             className="flex items-center gap-2 border-t border-border p-3"
           >
             <input

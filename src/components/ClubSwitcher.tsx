@@ -26,7 +26,11 @@ export function ClubSwitcher() {
         aria-label="Switch club"
       >
         {club.brand.logoMark || club.id === "saito" ? (
-          <img src={club.brand.logoMark ?? saitoMark} alt="" className="h-5 w-5 rounded object-contain" />
+          <img
+            src={club.brand.logoMark ?? saitoMark}
+            alt=""
+            className="h-5 w-5 rounded object-contain"
+          />
         ) : (
           <Building2 className="h-4 w-4 text-muted-foreground" />
         )}
@@ -44,7 +48,10 @@ export function ClubSwitcher() {
               return (
                 <li key={c.id}>
                   <button
-                    onClick={() => { switchClub(c.id); setOpen(false); }}
+                    onClick={() => {
+                      switchClub(c.id);
+                      setOpen(false);
+                    }}
                     className={cn(
                       "flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-muted",
                       active && "bg-primary/10",
@@ -53,7 +60,11 @@ export function ClubSwitcher() {
                     {(() => {
                       const src = c.brand.logoMark ?? (c.id === "saito" ? saitoMark : undefined);
                       return src ? (
-                        <img src={src} alt="" className="h-7 w-7 rounded object-contain bg-muted/40" />
+                        <img
+                          src={src}
+                          alt=""
+                          className="h-7 w-7 rounded object-contain bg-muted/40"
+                        />
                       ) : (
                         <span className="flex h-7 w-7 items-center justify-center rounded bg-primary/15 text-[10px] font-bold text-primary">
                           {c.brand.shortName.slice(0, 3)}
@@ -83,7 +94,9 @@ export function ClubSwitcher() {
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-medium">Volver a la web</span>
-                <span className="block truncate text-[11px] text-muted-foreground">Sitio comercial de SAITO</span>
+                <span className="block truncate text-[11px] text-muted-foreground">
+                  Sitio comercial de SAITO
+                </span>
               </span>
             </Link>
           </div>

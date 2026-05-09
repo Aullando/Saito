@@ -55,7 +55,9 @@ function OnboardingPage() {
           <Logo size={44} />
         </div>
         <div className="saito-card p-8">
-          <h1 className="text-center text-2xl font-bold">Welcome{user?.email ? `, ${user.email.split("@")[0]}` : ""}</h1>
+          <h1 className="text-center text-2xl font-bold">
+            Welcome{user?.email ? `, ${user.email.split("@")[0]}` : ""}
+          </h1>
           <p className="mt-2 text-center text-sm text-muted-foreground">
             Create your organization to get started.
           </p>

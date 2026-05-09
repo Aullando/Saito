@@ -4,9 +4,18 @@ import { useClub } from "@/clubs/ClubProvider";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import { rgccNavItems } from "@/clubs/rgcc/modules";
 import {
-  RGCC_VENUES, RGCC_ROOMS, RGCC_SECTIONS, RGCC_COACHES, RGCC_MEMBERS,
-  RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES, RGCC_PT_SESSIONS,
-  RGCC_EXERCISES, RGCC_ROUTINES, RGCC_WORKOUTS,
+  RGCC_VENUES,
+  RGCC_ROOMS,
+  RGCC_SECTIONS,
+  RGCC_COACHES,
+  RGCC_MEMBERS,
+  RGCC_SESSIONS,
+  RGCC_INCIDENTS,
+  RGCC_ABSENCES,
+  RGCC_PT_SESSIONS,
+  RGCC_EXERCISES,
+  RGCC_ROUTINES,
+  RGCC_WORKOUTS,
 } from "@/clubs/rgcc/seed";
 import { RGCC_SECTION_ICONS } from "@/clubs/rgcc/sectionIcons";
 
@@ -61,7 +70,9 @@ function ComingSoon({ label, clubName }: { label: string; clubName: string }) {
 // ─── Per-module preview using RGCC seed data ────────────────────────────────
 
 function Card({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-2xl border border-border bg-card p-4 text-sm shadow-sm">{children}</div>;
+  return (
+    <div className="rounded-2xl border border-border bg-card p-4 text-sm shadow-sm">{children}</div>
+  );
 }
 
 function Grid({ children }: { children: React.ReactNode }) {
@@ -90,9 +101,15 @@ function previewFor(slug: string): React.ReactNode | null {
             <Card key={r.id}>
               <div className="flex items-center justify-between">
                 <span className="font-semibold">{r.name}</span>
-                <span className={`rounded-full px-2 py-0.5 text-[10px] ${r.status === "incident" ? "bg-amber-500/15 text-amber-600" : "bg-emerald-500/15 text-emerald-600"}`}>{r.status}</span>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] ${r.status === "incident" ? "bg-amber-500/15 text-amber-600" : "bg-emerald-500/15 text-emerald-600"}`}
+                >
+                  {r.status}
+                </span>
               </div>
-              <div className="text-xs text-muted-foreground">{r.type} · aforo {r.capacity}</div>
+              <div className="text-xs text-muted-foreground">
+                {r.type} · aforo {r.capacity}
+              </div>
             </Card>
           ))}
         </Grid>
@@ -112,7 +129,9 @@ function previewFor(slug: string): React.ReactNode | null {
                   )}
                   <div className="min-w-0">
                     <div className="font-semibold truncate">{s.name}</div>
-                    <div className="text-xs text-muted-foreground">{s.category} · {s.venueLabel}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {s.category} · {s.venueLabel}
+                    </div>
                     <div className="mt-1 text-xs">Resp.: {s.responsible}</div>
                     <div className="mt-1 text-xs text-primary">{s.membersCount} socios</div>
                   </div>
@@ -129,8 +148,12 @@ function previewFor(slug: string): React.ReactNode | null {
             <Card key={c.id}>
               <div className="font-semibold">{c.name}</div>
               <div className="text-xs text-muted-foreground">{c.specialty}</div>
-              <div className="mt-1 text-xs">Contrato: {c.contractedHours}h · Total: {c.totalHours}h</div>
-              <div className="mt-1 text-[11px] uppercase tracking-wide text-primary">{c.status}</div>
+              <div className="mt-1 text-xs">
+                Contrato: {c.contractedHours}h · Total: {c.totalHours}h
+              </div>
+              <div className="mt-1 text-[11px] uppercase tracking-wide text-primary">
+                {c.status}
+              </div>
             </Card>
           ))}
         </Grid>
@@ -140,9 +163,15 @@ function previewFor(slug: string): React.ReactNode | null {
         <Grid>
           {RGCC_MEMBERS.map((m) => (
             <Card key={m.id}>
-              <div className="font-semibold">{m.firstName} {m.lastName}</div>
-              <div className="text-xs text-muted-foreground">{m.memberNumber} · {m.activity}</div>
-              <div className="mt-1 text-xs">Monitor: {m.coachName} · Nivel {m.level}</div>
+              <div className="font-semibold">
+                {m.firstName} {m.lastName}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {m.memberNumber} · {m.activity}
+              </div>
+              <div className="mt-1 text-xs">
+                Monitor: {m.coachName} · Nivel {m.level}
+              </div>
               <div className="mt-1 text-[11px] text-muted-foreground line-clamp-2">{m.goal}</div>
             </Card>
           ))}
@@ -156,11 +185,17 @@ function previewFor(slug: string): React.ReactNode | null {
             <Card key={s.id}>
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <div className="font-semibold">{s.time} · {s.activity}</div>
-                  <div className="text-xs text-muted-foreground">{s.roomLabel} · {s.primaryCoach}</div>
+                  <div className="font-semibold">
+                    {s.time} · {s.activity}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {s.roomLabel} · {s.primaryCoach}
+                  </div>
                 </div>
                 <div className="text-right text-xs">
-                  <div>{s.bookings.length}/{s.capacity}</div>
+                  <div>
+                    {s.bookings.length}/{s.capacity}
+                  </div>
                   <div className="text-[10px] uppercase tracking-wide text-primary">{s.status}</div>
                 </div>
               </div>
@@ -173,7 +208,9 @@ function previewFor(slug: string): React.ReactNode | null {
         <div className="space-y-2">
           {RGCC_INCIDENTS.map((i) => (
             <Card key={i.id}>
-              <div className="font-semibold">{i.type} · {i.severity}</div>
+              <div className="font-semibold">
+                {i.type} · {i.severity}
+              </div>
               <div className="text-xs text-muted-foreground">Reportado por {i.reportedBy}</div>
               <p className="mt-1 text-xs">{i.description}</p>
             </Card>
@@ -186,8 +223,12 @@ function previewFor(slug: string): React.ReactNode | null {
         <div className="space-y-2">
           {RGCC_ABSENCES.map((a) => (
             <Card key={a.id}>
-              <div className="font-semibold">{a.coachName} — {a.reason}</div>
-              <div className="text-xs text-muted-foreground">{a.from} → {a.to}</div>
+              <div className="font-semibold">
+                {a.coachName} — {a.reason}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {a.from} → {a.to}
+              </div>
               {a.detail && <p className="mt-1 text-xs">{a.detail}</p>}
               <div className="mt-1 text-[11px] uppercase text-primary">{a.status}</div>
             </Card>
@@ -201,8 +242,12 @@ function previewFor(slug: string): React.ReactNode | null {
           <div className="mb-6 space-y-2">
             {RGCC_PT_SESSIONS.map((s) => (
               <Card key={s.id}>
-                <div className="font-semibold">{s.time} · {s.memberName}</div>
-                <div className="text-xs text-muted-foreground">Coach: {s.coachName} · {s.status}</div>
+                <div className="font-semibold">
+                  {s.time} · {s.memberName}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Coach: {s.coachName} · {s.status}
+                </div>
               </Card>
             ))}
           </div>
@@ -211,8 +256,12 @@ function previewFor(slug: string): React.ReactNode | null {
             {RGCC_WORKOUTS.map((w) => (
               <Card key={w.id}>
                 <div className="font-semibold">{w.title}</div>
-                <div className="text-xs text-muted-foreground">{w.memberNumber} · {w.coachName} · {w.status}</div>
-                <div className="mt-1 text-xs">{w.blocks.length} bloques · origen {w.source}</div>
+                <div className="text-xs text-muted-foreground">
+                  {w.memberNumber} · {w.coachName} · {w.status}
+                </div>
+                <div className="mt-1 text-xs">
+                  {w.blocks.length} bloques · origen {w.source}
+                </div>
               </Card>
             ))}
           </div>
@@ -226,7 +275,9 @@ function previewFor(slug: string): React.ReactNode | null {
             {RGCC_ROUTINES.map((r) => (
               <Card key={r.id}>
                 <div className="font-semibold">{r.name}</div>
-                <div className="text-xs text-muted-foreground">{r.level} · {r.durationMin} min</div>
+                <div className="text-xs text-muted-foreground">
+                  {r.level} · {r.durationMin} min
+                </div>
                 <p className="mt-1 text-xs">{r.goal}</p>
               </Card>
             ))}
@@ -236,8 +287,12 @@ function previewFor(slug: string): React.ReactNode | null {
             {RGCC_EXERCISES.map((e) => (
               <Card key={e.id}>
                 <div className="font-semibold">{e.name}</div>
-                <div className="text-xs text-muted-foreground">{e.category} · {e.group}</div>
-                <div className="mt-1 text-xs">{e.equipment} · {e.dose}</div>
+                <div className="text-xs text-muted-foreground">
+                  {e.category} · {e.group}
+                </div>
+                <div className="mt-1 text-xs">
+                  {e.equipment} · {e.dose}
+                </div>
               </Card>
             ))}
           </Grid>
@@ -249,7 +304,9 @@ function previewFor(slug: string): React.ReactNode | null {
         <Grid>
           <Card>
             <div className="text-xs text-muted-foreground">Sedes operativas</div>
-            <div className="text-2xl font-bold">{RGCC_VENUES.filter((v) => v.status === "active").length}</div>
+            <div className="text-2xl font-bold">
+              {RGCC_VENUES.filter((v) => v.status === "active").length}
+            </div>
           </Card>
           <Card>
             <div className="text-xs text-muted-foreground">Salas</div>

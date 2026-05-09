@@ -53,7 +53,8 @@ export function RoleTabs({ roles }: Props) {
           </div>
           <p className="mt-3 text-sm text-white/90">"{current.prompt}"</p>
           <div className="mt-4 rounded-xl bg-white/10 p-3 text-xs leading-relaxed text-white/80">
-            SAITO está consultando datos de tu club… listo. Te muestro el resumen y propongo siguientes pasos.
+            SAITO está consultando datos de tu club… listo. Te muestro el resumen y propongo
+            siguientes pasos.
           </div>
         </div>
       </div>

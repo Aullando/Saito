@@ -9,7 +9,10 @@ export function FaqSection({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow={t(locale, { es: "Preguntas frecuentes", en: "FAQ" })}
-          title={t(locale, { es: "Lo que más nos preguntan sobre seguridad", en: "Top security questions" })}
+          title={t(locale, {
+            es: "Lo que más nos preguntan sobre seguridad",
+            en: "Top security questions",
+          })}
         />
         <div className="mt-10 space-y-4">
           {faqs.map((f) => {
@@ -23,7 +26,9 @@ export function FaqSection({ locale }: { locale: Locale }) {
                   <span>{q}</span>
                   <KeyRound className="mt-1 size-4 shrink-0 text-primary transition-transform group-open:rotate-90" />
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t(locale, f.a)}</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {t(locale, f.a)}
+                </p>
               </details>
             );
           })}

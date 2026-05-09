@@ -164,8 +164,14 @@ export function ProductPage({ locale }: { locale: Locale }) {
       <section className="border-b border-border bg-muted/40">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow={t("Producto · Sport AI Training Optimisation", "Product · Sport AI Training Optimisation")}
-            title={t("Una plataforma. Todos los módulos del club.", "One platform. All your club modules.")}
+            eyebrow={t(
+              "Producto · Sport AI Training Optimisation",
+              "Product · Sport AI Training Optimisation",
+            )}
+            title={t(
+              "Una plataforma. Todos los módulos del club.",
+              "One platform. All your club modules.",
+            )}
             subtitle={t(
               "Cada bloque está pensado para resolver un trabajo real del día a día. Y todos comparten datos.",
               "Each block solves a real day-to-day job. And they all share data.",
@@ -209,7 +215,10 @@ export function ProductPage({ locale }: { locale: Locale }) {
             {[
               {
                 name: "Administration",
-                desc: t("Gestión societaria, económica y operativa.", "Member, financial and operational management."),
+                desc: t(
+                  "Gestión societaria, económica y operativa.",
+                  "Member, financial and operational management.",
+                ),
                 bullets: [
                   t("Socios y deportistas", "Members & athletes"),
                   t("Staff y permisos", "Staff & permissions"),
@@ -222,7 +231,10 @@ export function ProductPage({ locale }: { locale: Locale }) {
               },
               {
                 name: "Wellbeing",
-                desc: t("Salud, prevención y seguimiento clínico.", "Health, prevention and clinical follow-up."),
+                desc: t(
+                  "Salud, prevención y seguimiento clínico.",
+                  "Health, prevention and clinical follow-up.",
+                ),
                 bullets: [
                   t("Perfil de salud", "Health profiling"),
                   t("Historial del deportista", "Player health records"),
@@ -235,7 +247,10 @@ export function ProductPage({ locale }: { locale: Locale }) {
               },
               {
                 name: "Coaching",
-                desc: t("Planificación deportiva y rendimiento.", "Sport planning and performance."),
+                desc: t(
+                  "Planificación deportiva y rendimiento.",
+                  "Sport planning and performance.",
+                ),
                 bullets: [
                   t("Optimización del entrenamiento", "Training optimisation"),
                   t("Monitorización y reporting", "Monitoring & reporting"),
@@ -248,7 +263,10 @@ export function ProductPage({ locale }: { locale: Locale }) {
               },
               {
                 name: "Sport Life",
-                desc: t("Experiencia del deportista y la familia.", "Experience for athlete and family."),
+                desc: t(
+                  "Experiencia del deportista y la familia.",
+                  "Experience for athlete and family.",
+                ),
                 bullets: [
                   t("Auto-monitorización diaria", "Daily self-monitoring"),
                   t("Feedback de sesión", "Session feedback"),
@@ -261,7 +279,9 @@ export function ProductPage({ locale }: { locale: Locale }) {
               },
             ].map((p) => (
               <div key={p.name} className="rounded-3xl border border-border bg-card p-6">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{p.name}</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                  {p.name}
+                </div>
                 <p className="mt-2 text-sm text-muted-foreground">{p.desc}</p>
                 <ul className="mt-4 space-y-1.5 text-sm">
                   {p.bullets.map((b) => (
@@ -297,7 +317,9 @@ export function ProductPage({ locale }: { locale: Locale }) {
                     ))}
                   </ul>
                 </div>
-                <div className={`overflow-hidden rounded-3xl border border-border bg-card shadow-sm ${i % 2 ? "md:order-1" : ""}`}>
+                <div
+                  className={`overflow-hidden rounded-3xl border border-border bg-card shadow-sm ${i % 2 ? "md:order-1" : ""}`}
+                >
                   {MODULE_PHOTOS[it.id] ? (
                     <img
                       src={MODULE_PHOTOS[it.id]}
@@ -324,10 +346,19 @@ export function ProductPage({ locale }: { locale: Locale }) {
 
       <section className="border-t border-border bg-muted/40 py-16">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-bold sm:text-3xl">{t("¿Quieres verlo en tu club?", "Want to see it in your club?")}</h3>
-          <p className="mt-3 text-muted-foreground">{t("Te enseñamos SAITO con tus categorías y secciones.", "We'll show you SAITO with your own categories and sections.")}</p>
+          <h3 className="text-2xl font-bold sm:text-3xl">
+            {t("¿Quieres verlo en tu club?", "Want to see it in your club?")}
+          </h3>
+          <p className="mt-3 text-muted-foreground">
+            {t(
+              "Te enseñamos SAITO con tus categorías y secciones.",
+              "We'll show you SAITO with your own categories and sections.",
+            )}
+          </p>
           <Button asChild size="lg" className="mt-6 rounded-full px-6">
-            <Link to={localizedPath("/contacto", locale) as any}>{t("Pide una demo", "Book a demo")}</Link>
+            <Link to={localizedPath("/contacto", locale) as unknown as never}>
+              {t("Pide una demo", "Book a demo")}
+            </Link>
           </Button>
         </div>
       </section>

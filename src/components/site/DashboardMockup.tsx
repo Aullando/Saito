@@ -62,7 +62,9 @@ export function DashboardMockup() {
                 { l: "Reservas semana", v: "312", d: "+12" },
               ].map((k) => (
                 <div key={k.l} className="rounded-xl border border-border bg-background p-3">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{k.l}</p>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    {k.l}
+                  </p>
                   <p className="mt-1 text-xl font-bold text-foreground">{k.v}</p>
                   <p className="text-[10px] font-semibold text-saito-green">{k.d}</p>
                 </div>
@@ -73,7 +75,9 @@ export function DashboardMockup() {
               <div className="flex items-end justify-between">
                 <div>
                   <p className="text-xs font-semibold text-foreground">Asistencia semanal</p>
-                  <p className="text-[10px] text-muted-foreground">Entrenamientos · todas las secciones</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    Entrenamientos · todas las secciones
+                  </p>
                 </div>
                 <p className="text-[10px] text-muted-foreground">Esta semana</p>
               </div>

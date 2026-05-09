@@ -32,13 +32,66 @@ type Restriction = {
 };
 
 const POOL: Omit<Restriction, "athleteId" | "id">[] = [
-  { type: "Lesión", area: "Isquiotibial derecho", status: "Activa", startDate: "2026-04-30", expectedReturn: "2026-05-21", notes: "No carrera. Sí trabajo de core y movilidad.", visibility: "Médico + entrenador" },
-  { type: "Restricción", area: "Hombro izquierdo", status: "En recuperación", startDate: "2026-04-12", expectedReturn: "2026-05-12", notes: "Carga progresiva. Sin contacto pleno.", visibility: "Médico + entrenador" },
-  { type: "Seguimiento", area: "Tendón rotuliano", status: "Activa", startDate: "2026-04-25", notes: "Control semanal. No saltos repetidos.", visibility: "Solo médico" },
-  { type: "Lesión", area: "Tobillo derecho", status: "Alta médica", startDate: "2026-03-20", expectedReturn: "2026-04-15", notes: "Apto. Mantener vendaje funcional 2 semanas.", visibility: "Médico + dirección" },
-  { type: "Restricción", area: "Cervical", status: "En recuperación", startDate: "2026-04-28", notes: "Evitar cabezazos. Sin contacto frontal.", visibility: "Médico + entrenador" },
-  { type: "Lesión", area: "Cuádriceps", status: "Activa", startDate: "2026-05-02", expectedReturn: "2026-05-30", notes: "Trabajo en piscina. Reevaluar en 7 días.", visibility: "Solo médico" },
-  { type: "Seguimiento", area: "Carga de entrenamiento", status: "Activa", startDate: "2026-04-18", notes: "Sobrecarga acumulada. Reducir volumen 20%.", visibility: "Médico + entrenador" },
+  {
+    type: "Lesión",
+    area: "Isquiotibial derecho",
+    status: "Activa",
+    startDate: "2026-04-30",
+    expectedReturn: "2026-05-21",
+    notes: "No carrera. Sí trabajo de core y movilidad.",
+    visibility: "Médico + entrenador",
+  },
+  {
+    type: "Restricción",
+    area: "Hombro izquierdo",
+    status: "En recuperación",
+    startDate: "2026-04-12",
+    expectedReturn: "2026-05-12",
+    notes: "Carga progresiva. Sin contacto pleno.",
+    visibility: "Médico + entrenador",
+  },
+  {
+    type: "Seguimiento",
+    area: "Tendón rotuliano",
+    status: "Activa",
+    startDate: "2026-04-25",
+    notes: "Control semanal. No saltos repetidos.",
+    visibility: "Solo médico",
+  },
+  {
+    type: "Lesión",
+    area: "Tobillo derecho",
+    status: "Alta médica",
+    startDate: "2026-03-20",
+    expectedReturn: "2026-04-15",
+    notes: "Apto. Mantener vendaje funcional 2 semanas.",
+    visibility: "Médico + dirección",
+  },
+  {
+    type: "Restricción",
+    area: "Cervical",
+    status: "En recuperación",
+    startDate: "2026-04-28",
+    notes: "Evitar cabezazos. Sin contacto frontal.",
+    visibility: "Médico + entrenador",
+  },
+  {
+    type: "Lesión",
+    area: "Cuádriceps",
+    status: "Activa",
+    startDate: "2026-05-02",
+    expectedReturn: "2026-05-30",
+    notes: "Trabajo en piscina. Reevaluar en 7 días.",
+    visibility: "Solo médico",
+  },
+  {
+    type: "Seguimiento",
+    area: "Carga de entrenamiento",
+    status: "Activa",
+    startDate: "2026-04-18",
+    notes: "Sobrecarga acumulada. Reducir volumen 20%.",
+    visibility: "Médico + entrenador",
+  },
 ];
 
 const RESTRICTIONS: Restriction[] = ATHLETES.slice(0, 7).map((a, i) => ({
@@ -54,7 +107,8 @@ function RestrictionsPage() {
   const filtered = RESTRICTIONS.filter((r) => {
     const a = ATHLETES.find((x) => x.id === r.athleteId);
     const name = `${a?.firstName ?? ""} ${a?.lastName ?? ""}`.toLowerCase();
-    const matchQ = !q || name.includes(q.toLowerCase()) || r.area.toLowerCase().includes(q.toLowerCase());
+    const matchQ =
+      !q || name.includes(q.toLowerCase()) || r.area.toLowerCase().includes(q.toLowerCase());
     const matchS = statusF === "all" || r.status === statusF;
     return matchQ && matchS;
   });
@@ -75,29 +129,39 @@ function RestrictionsPage() {
       <div className="mb-4 flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 text-xs">
         <Lock className="h-4 w-4 shrink-0 text-primary" />
         <span>
-          Solo personal médico autorizado y dirección con permiso explícito ven el detalle clínico. Todos los accesos quedan registrados en{" "}
-          <a className="font-semibold text-primary hover:underline" href="/settings/privacy">Privacidad y seguridad</a>.
+          Solo personal médico autorizado y dirección con permiso explícito ven el detalle clínico.
+          Todos los accesos quedan registrados en{" "}
+          <a className="font-semibold text-primary hover:underline" href="/settings/privacy">
+            Privacidad y seguridad
+          </a>
+          .
         </span>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card className="p-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Restricciones activas</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Restricciones activas
+            </span>
             <ShieldAlert className="h-4 w-4 text-rose-600" />
           </div>
           <div className="mt-2 text-2xl font-bold">{counts.activa}</div>
         </Card>
         <Card className="p-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">En recuperación</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              En recuperación
+            </span>
             <Activity className="h-4 w-4 text-amber-600" />
           </div>
           <div className="mt-2 text-2xl font-bold">{counts.recup}</div>
         </Card>
         <Card className="p-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Altas médicas (mes)</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Altas médicas (mes)
+            </span>
             <Stethoscope className="h-4 w-4 text-emerald-600" />
           </div>
           <div className="mt-2 text-2xl font-bold">{counts.alta}</div>
@@ -146,16 +210,42 @@ function RestrictionsPage() {
                 return (
                   <tr key={r.id} className="border-t border-border align-top">
                     <td className="px-5 py-3">
-                      <div className="font-medium">{a?.firstName} {a?.lastName}</div>
+                      <div className="font-medium">
+                        {a?.firstName} {a?.lastName}
+                      </div>
                       <div className="text-xs text-muted-foreground">{r.notes}</div>
                     </td>
-                    <td className="px-3 py-3"><Pill tone={r.type === "Lesión" ? "danger" : r.type === "Restricción" ? "warning" : "info"}>{r.type}</Pill></td>
+                    <td className="px-3 py-3">
+                      <Pill
+                        tone={
+                          r.type === "Lesión"
+                            ? "danger"
+                            : r.type === "Restricción"
+                              ? "warning"
+                              : "info"
+                        }
+                      >
+                        {r.type}
+                      </Pill>
+                    </td>
                     <td className="px-3 py-3">{r.area}</td>
                     <td className="px-3 py-3">
-                      <Pill tone={r.status === "Activa" ? "danger" : r.status === "En recuperación" ? "warning" : "success"}>{r.status}</Pill>
+                      <Pill
+                        tone={
+                          r.status === "Activa"
+                            ? "danger"
+                            : r.status === "En recuperación"
+                              ? "warning"
+                              : "success"
+                        }
+                      >
+                        {r.status}
+                      </Pill>
                     </td>
                     <td className="px-3 py-3 text-xs text-muted-foreground">{r.startDate}</td>
-                    <td className="px-3 py-3 text-xs text-muted-foreground">{r.expectedReturn ?? "—"}</td>
+                    <td className="px-3 py-3 text-xs text-muted-foreground">
+                      {r.expectedReturn ?? "—"}
+                    </td>
                     <td className="px-3 py-3 text-xs text-muted-foreground">{r.visibility}</td>
                   </tr>
                 );
@@ -166,7 +256,8 @@ function RestrictionsPage() {
       </Card>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        Las restricciones activas se reflejan en asistencia, calendario y comunicación al staff técnico, sin exponer detalle clínico salvo a personal autorizado.
+        Las restricciones activas se reflejan en asistencia, calendario y comunicación al staff
+        técnico, sin exponer detalle clínico salvo a personal autorizado.
       </p>
     </>
   );

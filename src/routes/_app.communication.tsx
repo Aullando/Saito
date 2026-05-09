@@ -8,7 +8,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
@@ -125,7 +130,12 @@ function CommunicationPage() {
     mutationFn: async (data: { title: string; body: string }) => {
       const { data: conv, error } = await supabase
         .from("conversations")
-        .insert({ organization_id: orgId!, title: data.title, type: "circular", created_by: user!.id })
+        .insert({
+          organization_id: orgId!,
+          title: data.title,
+          type: "circular",
+          created_by: user!.id,
+        })
         .select("id")
         .single();
       if (error) throw error;
@@ -135,7 +145,10 @@ function CommunicationPage() {
         .insert({ organization_id: orgId!, conversation_id: cid, user_id: user!.id });
       if (pe) throw pe;
       const { error: me } = await supabase.from("messages").insert({
-        conversation_id: cid, organization_id: orgId!, author_id: user!.id, content: data.body,
+        conversation_id: cid,
+        organization_id: orgId!,
+        author_id: user!.id,
+        content: data.body,
       });
       if (me) throw me;
       return cid;
@@ -171,7 +184,12 @@ function CommunicationPage() {
   };
   const initialsOf = (id: string) => {
     const n = authorName(id);
-    return n.split(" ").map((x) => x[0]).slice(0, 2).join("").toUpperCase();
+    return n
+      .split(" ")
+      .map((x) => x[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
   };
 
   const send = async () => {
@@ -187,22 +205,47 @@ function CommunicationPage() {
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="rounded-full"><Plus className="mr-1 h-4 w-4" />{t("new_circular")}</Button>
+              <Button className="rounded-full">
+                <Plus className="mr-1 h-4 w-4" />
+                {t("new_circular")}
+              </Button>
             </DialogTrigger>
             <DialogContent className="max-w-lg">
-              <DialogHeader><DialogTitle>{t("new_circular")}</DialogTitle></DialogHeader>
+              <DialogHeader>
+                <DialogTitle>{t("new_circular")}</DialogTitle>
+              </DialogHeader>
               <div className="space-y-3">
-                <div><Label>Título</Label><Input value={newC.title} onChange={(e) => setNewC({ ...newC, title: e.target.value })} placeholder="Asunto" /></div>
-                <div><Label>Mensaje</Label><Input value={newC.body} onChange={(e) => setNewC({ ...newC, body: e.target.value })} placeholder="Contenido" /></div>
+                <div>
+                  <Label>Título</Label>
+                  <Input
+                    value={newC.title}
+                    onChange={(e) => setNewC({ ...newC, title: e.target.value })}
+                    placeholder="Asunto"
+                  />
+                </div>
+                <div>
+                  <Label>Mensaje</Label>
+                  <Input
+                    value={newC.body}
+                    onChange={(e) => setNewC({ ...newC, body: e.target.value })}
+                    placeholder="Contenido"
+                  />
+                </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>{t("cancel")}</Button>
-                <Button onClick={async () => {
-                  if (!newC.title || !newC.body) return;
-                  await newConv.mutateAsync(newC);
-                  setNewC({ title: "", body: "" });
-                  setOpen(false);
-                }}>{t("send")}</Button>
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                  {t("cancel")}
+                </Button>
+                <Button
+                  onClick={async () => {
+                    if (!newC.title || !newC.body) return;
+                    await newConv.mutateAsync(newC);
+                    setNewC({ title: "", body: "" });
+                    setOpen(false);
+                  }}
+                >
+                  {t("send")}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -219,11 +262,18 @@ function CommunicationPage() {
               const isActive = c.id === activeId;
               return (
                 <li key={c.id}>
-                  <button onClick={() => setActiveId(c.id)} className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left ${isActive ? "bg-primary/5" : "hover:bg-muted/40"}`}>
+                  <button
+                    onClick={() => setActiveId(c.id)}
+                    className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left ${isActive ? "bg-primary/5" : "hover:bg-muted/40"}`}
+                  >
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{c.title}</div>
-                      <div className="mt-0.5 text-[11px] text-muted-foreground"><Pill>{c.type}</Pill></div>
-                      <div className="mt-0.5 text-[11px] text-muted-foreground tabular-nums">{formatDateTime(c.created_at)}</div>
+                      <div className="mt-0.5 text-[11px] text-muted-foreground">
+                        <Pill>{c.type}</Pill>
+                      </div>
+                      <div className="mt-0.5 text-[11px] text-muted-foreground tabular-nums">
+                        {formatDateTime(c.created_at)}
+                      </div>
                     </div>
                   </button>
                 </li>
@@ -243,19 +293,32 @@ function CommunicationPage() {
                   <div className="text-base font-semibold">{active.title}</div>
                   <div className="text-xs text-muted-foreground">{active.type}</div>
                 </div>
-                <Button size="sm" variant="ghost" className="text-destructive" onClick={() => {
-                  if (!confirm(t("delete_confirm"))) return;
-                  delConv.mutate(active.id);
-                }}>{t("delete")}</Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-destructive"
+                  onClick={() => {
+                    if (!confirm(t("delete_confirm"))) return;
+                    delConv.mutate(active.id);
+                  }}
+                >
+                  {t("delete")}
+                </Button>
               </div>
               <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
                 {messages.map((m) => (
                   <div key={m.id} className="flex gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{initialsOf(m.author_id)}</div>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                      {initialsOf(m.author_id)}
+                    </div>
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2 text-xs">
-                        <span className="font-medium text-foreground">{authorName(m.author_id)}</span>
-                        <span className="text-muted-foreground tabular-nums">· {formatDateTime(m.created_at)}</span>
+                        <span className="font-medium text-foreground">
+                          {authorName(m.author_id)}
+                        </span>
+                        <span className="text-muted-foreground tabular-nums">
+                          · {formatDateTime(m.created_at)}
+                        </span>
                       </div>
                       <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{m.content}</div>
                     </div>
@@ -263,12 +326,25 @@ function CommunicationPage() {
                 ))}
               </div>
               <div className="flex items-center gap-2 border-t border-border px-4 py-3">
-                <Input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") send(); }} placeholder={t("type_message")} className="rounded-full" />
-                <Button onClick={send} className="rounded-full"><Send className="mr-1 h-4 w-4" />{t("send")}</Button>
+                <Input
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") send();
+                  }}
+                  placeholder={t("type_message")}
+                  className="rounded-full"
+                />
+                <Button onClick={send} className="rounded-full">
+                  <Send className="mr-1 h-4 w-4" />
+                  {t("send")}
+                </Button>
               </div>
             </>
           ) : (
-            <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">—</div>
+            <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+              —
+            </div>
           )}
         </div>
       </div>

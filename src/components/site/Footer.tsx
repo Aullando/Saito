@@ -21,7 +21,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-3">
           <div className="md:col-span-2">
-            <img src={logoBlanco} alt="SAITO — Sport AI Training Optimisation" className="h-9 w-auto" />
+            <img
+              src={logoBlanco}
+              alt="SAITO — Sport AI Training Optimisation"
+              className="h-9 w-auto"
+            />
             <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-white/80">
               Sport AI Training Optimisation
             </p>
@@ -40,7 +44,7 @@ export function Footer() {
               {links.map((l) => (
                 <li key={l.to}>
                   <Link
-                    to={localizedPath(l.to, locale) as any}
+                    to={localizedPath(l.to, locale) as unknown as never}
                     className="text-sm text-white/70 transition-colors hover:text-white"
                   >
                     {l.label}
@@ -51,15 +55,27 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} SAITO® · saito.sport · {t("Todos los derechos reservados.", "All rights reserved.")}</p>
+          <p>
+            © {new Date().getFullYear()} SAITO® · saito.sport ·{" "}
+            {t("Todos los derechos reservados.", "All rights reserved.")}
+          </p>
           <div className="flex items-center gap-4">
-            <Link to={localizedPath("/aviso-legal", locale) as any} className="text-white/70 transition-colors hover:text-white">
+            <Link
+              to={localizedPath("/aviso-legal", locale) as unknown as never}
+              className="text-white/70 transition-colors hover:text-white"
+            >
               {t("Aviso legal", "Legal notice")}
             </Link>
-            <Link to={localizedPath("/privacidad", locale) as any} className="text-white/70 transition-colors hover:text-white">
+            <Link
+              to={localizedPath("/privacidad", locale) as unknown as never}
+              className="text-white/70 transition-colors hover:text-white"
+            >
               {t("Privacidad", "Privacy")}
             </Link>
-            <Link to={localizedPath("/cookies", locale) as any} className="text-white/70 transition-colors hover:text-white">
+            <Link
+              to={localizedPath("/cookies", locale) as unknown as never}
+              className="text-white/70 transition-colors hover:text-white"
+            >
               {t("Cookies", "Cookies")}
             </Link>
           </div>

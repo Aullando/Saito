@@ -6,7 +6,10 @@ export const Route = createFileRoute("/_public/en/privacidad")({
   head: () => ({
     meta: [
       { title: "Privacy policy — SAITO" },
-      { name: "description", content: "How SAITO processes the personal data of visitors, customers and platform users." },
+      {
+        name: "description",
+        content: "How SAITO processes the personal data of visitors, customers and platform users.",
+      },
     ],
     links: hrefLangLinks("/privacidad", "en"),
   }),

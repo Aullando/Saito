@@ -8,7 +8,10 @@ export function PrinciplesSection({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow={t(locale, { es: "Principios de seguridad", en: "Security principles" })}
-          title={t(locale, { es: "Controles preparados desde el primer día", en: "Controls ready from day one" })}
+          title={t(locale, {
+            es: "Controles preparados desde el primer día",
+            en: "Controls ready from day one",
+          })}
         />
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {principles.map((p) => {
@@ -19,7 +22,9 @@ export function PrinciplesSection({ locale }: { locale: Locale }) {
                   <p.icon className="size-5" />
                 </div>
                 <h3 className="mt-4 text-base font-semibold text-foreground">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, p.desc)}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {t(locale, p.desc)}
+                </p>
               </div>
             );
           })}

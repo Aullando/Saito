@@ -8,7 +8,10 @@ export const Route = createFileRoute("/_public/clientes")({
       { title: "Clientes — SAITO" },
       { name: "description", content: "Clubes y entidades polideportivas que confían en SAITO." },
       { property: "og:title", content: "Clientes — SAITO" },
-      { property: "og:description", content: "Casos reales de clubes que dejaron las hojas de cálculo." },
+      {
+        property: "og:description",
+        content: "Casos reales de clubes que dejaron las hojas de cálculo.",
+      },
     ],
     links: hrefLangLinks("/clientes", "es"),
   }),

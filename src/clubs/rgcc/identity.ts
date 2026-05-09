@@ -36,7 +36,12 @@ const ADMIN_ROLES: Role[] = ["sysadmin", "admin", "manager"];
 /** Mapeo demo determinista por user.id → identidad RGCC. */
 const DEMO_OVERRIDES: Record<string, Partial<RgccIdentity>> = {
   "u-tec": { kind: "coach", scope: "monitor", coachName: "Sheila", displayName: "Sheila" },
-  "u-ath-nadia": { kind: "coach", scope: "monitor", coachName: "Maria A C", displayName: "Maria A C" },
+  "u-ath-nadia": {
+    kind: "coach",
+    scope: "monitor",
+    coachName: "Maria A C",
+    displayName: "Maria A C",
+  },
   "u-med": {
     kind: "member",
     scope: "socio",

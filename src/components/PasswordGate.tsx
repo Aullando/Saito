@@ -12,7 +12,9 @@ export function PasswordGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       if (sessionStorage.getItem(STORAGE_KEY) === "1") setUnlocked(true);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     setReady(true);
   }, []);
 
@@ -22,7 +24,11 @@ export function PasswordGate({ children }: { children: ReactNode }) {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (value === PASSWORD) {
-      try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch {}
+      try {
+        sessionStorage.setItem(STORAGE_KEY, "1");
+      } catch {
+        /* ignore */
+      }
       setUnlocked(true);
     } else {
       setError(true);
@@ -31,21 +37,32 @@ export function PasswordGate({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4 rounded-2xl border border-border bg-card p-6 shadow-lg">
+      <form
+        onSubmit={onSubmit}
+        className="w-full max-w-sm space-y-4 rounded-2xl border border-border bg-card p-6 shadow-lg"
+      >
         <div>
           <h1 className="text-lg font-semibold text-foreground">Acceso restringido</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Introduce la contraseña para continuar.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Introduce la contraseña para continuar.
+          </p>
         </div>
         <input
           type="password"
           autoFocus
           value={value}
-          onChange={(e) => { setValue(e.target.value); setError(false); }}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setError(false);
+          }}
           className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           placeholder="Contraseña"
         />
         {error && <p className="text-xs text-destructive">Contraseña incorrecta.</p>}
-        <button type="submit" className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+        <button
+          type="submit"
+          className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
           Entrar
         </button>
       </form>

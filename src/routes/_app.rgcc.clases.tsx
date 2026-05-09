@@ -11,8 +11,12 @@ import { getRgccView } from "@/clubs/rgcc/permissions";
 import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import {
-  RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES,
-  RGCC_VENUES, RGCC_ROOMS, RGCC_MEMBERS,
+  RGCC_SESSIONS,
+  RGCC_INCIDENTS,
+  RGCC_ABSENCES,
+  RGCC_VENUES,
+  RGCC_ROOMS,
+  RGCC_MEMBERS,
   type RgccSession,
 } from "@/clubs/rgcc/seed";
 import { AlertTriangle, Building2, Users, MapPin, Megaphone } from "lucide-react";
@@ -31,7 +35,12 @@ function RgccClasesGate() {
   const identity = resolveRgccIdentity(user, roles);
   if (view === "cockpit") return <ClasesCockpit />;
   if (view === "coach") return <ClasesCoach coachName={identity.coachName ?? ""} />;
-  return <ClasesSocio memberNumber={identity.memberNumber ?? ""} memberName={identity.memberName ?? ""} />;
+  return (
+    <ClasesSocio
+      memberNumber={identity.memberNumber ?? ""}
+      memberName={identity.memberName ?? ""}
+    />
+  );
 }
 
 // ─── Cockpit (admin/manager) ────────────────────────────────────────────────
@@ -39,19 +48,25 @@ function RgccClasesGate() {
 function ClasesCockpit() {
   const today = new Date().toISOString().slice(0, 10);
   const sessionsToday = useMemo(
-    () => RGCC_SESSIONS.filter((c) => c.date === today).sort((a, b) => a.time.localeCompare(b.time)),
+    () =>
+      RGCC_SESSIONS.filter((c) => c.date === today).sort((a, b) => a.time.localeCompare(b.time)),
     [today],
   );
 
   const absencesPending = RGCC_ABSENCES.filter((a) => a.status === "requested");
   const incidentsOpen = RGCC_INCIDENTS.filter((i) => i.status !== "resolved");
   const absentToday = new Set(
-    RGCC_ABSENCES.filter((a) => a.from <= today && a.to >= today && a.status !== "rejected").map((a) => a.coachName),
+    RGCC_ABSENCES.filter((a) => a.from <= today && a.to >= today && a.status !== "rejected").map(
+      (a) => a.coachName,
+    ),
   );
-  const sinMonitor = sessionsToday.filter((c) => absentToday.has(c.primaryCoach) && !c.substituteCoach);
+  const sinMonitor = sessionsToday.filter(
+    (c) => absentToday.has(c.primaryCoach) && !c.substituteCoach,
+  );
 
   const [venueFilter, setVenueFilter] = useState<string>("ALL");
-  const visibles = venueFilter === "ALL" ? sessionsToday : sessionsToday.filter((c) => c.venueId === venueFilter);
+  const visibles =
+    venueFilter === "ALL" ? sessionsToday : sessionsToday.filter((c) => c.venueId === venueFilter);
 
   return (
     <>
@@ -59,9 +74,21 @@ function ClasesCockpit() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Kpi label="Clases hoy" value={String(sessionsToday.length)} />
-        <Kpi label="Sin monitor" value={String(sinMonitor.length)} tone={sinMonitor.length ? "danger" : "success"} />
-        <Kpi label="Ausencias por aprobar" value={String(absencesPending.length)} tone={absencesPending.length ? "warning" : "success"} />
-        <Kpi label="Incidencias abiertas" value={String(incidentsOpen.length)} tone={incidentsOpen.length ? "warning" : "success"} />
+        <Kpi
+          label="Sin monitor"
+          value={String(sinMonitor.length)}
+          tone={sinMonitor.length ? "danger" : "success"}
+        />
+        <Kpi
+          label="Ausencias por aprobar"
+          value={String(absencesPending.length)}
+          tone={absencesPending.length ? "warning" : "success"}
+        />
+        <Kpi
+          label="Incidencias abiertas"
+          value={String(incidentsOpen.length)}
+          tone={incidentsOpen.length ? "warning" : "success"}
+        />
       </div>
 
       <div className="mt-6">
@@ -82,7 +109,9 @@ function ClasesCockpit() {
                   key={sede.id}
                   onClick={() => setVenueFilter(isFilter ? "ALL" : sede.id)}
                   className={`text-left rounded-lg border p-3 transition ${
-                    isFilter ? "border-primary bg-muted/50" : "border-border hover:border-primary/50"
+                    isFilter
+                      ? "border-primary bg-muted/50"
+                      : "border-border hover:border-primary/50"
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-2">
@@ -90,9 +119,20 @@ function ClasesCockpit() {
                     <div className="font-semibold text-sm truncate">{sede.name}</div>
                   </div>
                   <div className="grid grid-cols-2 gap-1 text-xs">
-                    <div><span className="text-muted-foreground">Clases</span> <span className="font-bold tabular-nums">{cs.length}</span></div>
-                    <div><span className="text-muted-foreground">Aforo</span> <span className="font-bold tabular-nums">{cap ? Math.round((ocup / cap) * 100) : 0}%</span></div>
-                    <div><span className="text-muted-foreground">Salas</span> <span className="font-bold tabular-nums">{salas.length}</span></div>
+                    <div>
+                      <span className="text-muted-foreground">Clases</span>{" "}
+                      <span className="font-bold tabular-nums">{cs.length}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Aforo</span>{" "}
+                      <span className="font-bold tabular-nums">
+                        {cap ? Math.round((ocup / cap) * 100) : 0}%
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Salas</span>{" "}
+                      <span className="font-bold tabular-nums">{salas.length}</span>
+                    </div>
                   </div>
                 </button>
               );
@@ -106,11 +146,16 @@ function ClasesCockpit() {
           <div>
             <h2 className="text-lg font-semibold">Clases programadas</h2>
             <p className="text-xs text-muted-foreground">
-              {venueFilter === "ALL" ? "Todas las sedes" : RGCC_VENUES.find((v) => v.id === venueFilter)?.name}
+              {venueFilter === "ALL"
+                ? "Todas las sedes"
+                : RGCC_VENUES.find((v) => v.id === venueFilter)?.name}
             </p>
           </div>
           {venueFilter !== "ALL" && (
-            <button onClick={() => setVenueFilter("ALL")} className="text-xs text-primary hover:underline">
+            <button
+              onClick={() => setVenueFilter("ALL")}
+              className="text-xs text-primary hover:underline"
+            >
               Quitar filtro
             </button>
           )}
@@ -138,19 +183,34 @@ function ClasesCockpit() {
                     <td className="px-3 py-2.5 font-bold tabular-nums">{c.time}</td>
                     <td className="px-3 py-2.5">
                       <div className="font-semibold">{c.activity}</div>
-                      {c.changeNote && <div className="text-[10.5px] text-warning mt-0.5">⚠ {c.changeNote}</div>}
+                      {c.changeNote && (
+                        <div className="text-[10.5px] text-warning mt-0.5">⚠ {c.changeNote}</div>
+                      )}
                     </td>
                     <td className="px-3 py-2.5">
                       <div className="font-medium text-xs truncate">{sede?.name}</div>
-                      <div className="text-[10.5px] text-muted-foreground truncate">{c.roomLabel}</div>
+                      <div className="text-[10.5px] text-muted-foreground truncate">
+                        {c.roomLabel}
+                      </div>
                     </td>
                     <td className="px-3 py-2.5">
-                      <div className={ausente ? "line-through text-destructive" : ""}>{c.primaryCoach}</div>
-                      {c.substituteCoach && <div className="text-[10.5px] text-success font-bold">→ {c.substituteCoach}</div>}
+                      <div className={ausente ? "line-through text-destructive" : ""}>
+                        {c.primaryCoach}
+                      </div>
+                      {c.substituteCoach && (
+                        <div className="text-[10.5px] text-success font-bold">
+                          → {c.substituteCoach}
+                        </div>
+                      )}
                     </td>
                     <td className="px-3 py-2.5 tabular-nums text-xs">
-                      <span className={lleno ? "text-destructive font-bold" : ""}>{ocup}</span>/{c.capacity}
-                      {c.waitlist.length > 0 && <span className="ml-1 text-[10px] text-muted-foreground">+{c.waitlist.length}</span>}
+                      <span className={lleno ? "text-destructive font-bold" : ""}>{ocup}</span>/
+                      {c.capacity}
+                      {c.waitlist.length > 0 && (
+                        <span className="ml-1 text-[10px] text-muted-foreground">
+                          +{c.waitlist.length}
+                        </span>
+                      )}
                     </td>
                     <td className="px-3 py-2.5">
                       {ausente ? (
@@ -198,7 +258,9 @@ function ClasesCoach({ coachName }: { coachName: string }) {
       <PageHeader title="Mis clases" subtitle={coachName || "Monitor"} />
       {myClasses.length === 0 ? (
         <Card>
-          <p className="text-sm text-muted-foreground">No tienes clases programadas próximamente.</p>
+          <p className="text-sm text-muted-foreground">
+            No tienes clases programadas próximamente.
+          </p>
         </Card>
       ) : (
         <div className="space-y-3">
@@ -242,7 +304,10 @@ function ClasesSocio({ memberNumber, memberName }: { memberNumber: string; membe
   const myBookings = RGCC_SESSIONS.filter((s) => s.bookings.includes(memberNumber));
   return (
     <>
-      <PageHeader title="Mis reservas" subtitle={memberNumber ? `${fullName} · ${memberNumber}` : ""} />
+      <PageHeader
+        title="Mis reservas"
+        subtitle={memberNumber ? `${fullName} · ${memberNumber}` : ""}
+      />
       {myBookings.length === 0 ? (
         <Card>
           <p className="text-sm text-muted-foreground">No tienes reservas próximas.</p>
@@ -262,7 +327,9 @@ function ClasesSocio({ memberNumber, memberName }: { memberNumber: string; membe
                     </div>
                   </div>
                   <div className="text-right text-xs">
-                    <div className="font-bold">{c.date} · {c.time}</div>
+                    <div className="font-bold">
+                      {c.date} · {c.time}
+                    </div>
                     <div className="text-muted-foreground">Monitor: {c.primaryCoach}</div>
                   </div>
                 </div>
@@ -277,14 +344,28 @@ function ClasesSocio({ memberNumber, memberName }: { memberNumber: string; membe
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function Kpi({ label, value, tone }: { label: string; value: string; tone?: "success" | "warning" | "danger" }) {
-  const c = tone === "danger" ? "text-destructive"
-    : tone === "warning" ? "text-warning"
-    : tone === "success" ? "text-success"
-    : "text-foreground";
+function Kpi({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: "success" | "warning" | "danger";
+}) {
+  const c =
+    tone === "danger"
+      ? "text-destructive"
+      : tone === "warning"
+        ? "text-warning"
+        : tone === "success"
+          ? "text-success"
+          : "text-foreground";
   return (
     <Card>
-      <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-bold">{label}</div>
+      <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-bold">
+        {label}
+      </div>
       <div className={`mt-2 text-3xl font-bold leading-none ${c}`}>{value}</div>
     </Card>
   );
