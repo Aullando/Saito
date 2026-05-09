@@ -89,6 +89,43 @@ export function MultiClubPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      <section className="border-t border-border py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow={t("Jerarquía", "Hierarchy")}
+            title={t("Una plataforma para los seis niveles del club", "One platform for the six levels of the club")}
+            subtitle={t(
+              "Desde gobierno hasta familias, cada nivel ve lo que le corresponde y nada más.",
+              "From governance to families, each level sees only what concerns them.",
+            )}
+          />
+          <div className="mt-12 space-y-3">
+            {[
+              { name: "Board", desc: t("Gobierno y estrategia.", "Governance and strategy.") },
+              { name: "C-Level", desc: t("Dirección ejecutiva del club.", "Executive direction of the club.") },
+              { name: t("BD, Finanzas y Dirección Deportiva", "BD, Finance & Sport Directors"), desc: t("Liderazgo funcional por área.", "Functional leadership per area.") },
+              { name: t("Administración y Coordinación", "Administration & Coordination"), desc: t("Operación diaria del club.", "Day-to-day club operations.") },
+              { name: t("Entrenadores y Árbitros", "Coaches & Referees"), desc: t("Staff técnico y arbitral.", "Technical and refereeing staff.") },
+              { name: t("Deportistas y Familias", "Athletes & Families"), desc: t("Experiencia final del usuario.", "End-user experience.") },
+            ].map((lvl, i) => (
+              <div
+                key={lvl.name}
+                className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4"
+                style={{ marginLeft: `${i * 24}px` }}
+              >
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                  {i + 1}
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-semibold">{lvl.name}</div>
+                  <div className="text-xs text-muted-foreground">{lvl.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="border-t border-border bg-saito-gradient py-16 text-white">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h3 className="text-2xl font-bold sm:text-3xl">{t("Hablemos de tu estructura", "Let's talk about your structure")}</h3>
