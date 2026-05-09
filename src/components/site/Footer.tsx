@@ -21,7 +21,10 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-3">
           <div className="md:col-span-2">
-            <img src={logoBlanco} alt="SAITO" className="h-9 w-auto" />
+            <img src={logoBlanco} alt="SAITO — Sport AI Training Optimisation" className="h-9 w-auto" />
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-white/80">
+              Sport AI Training Optimisation
+            </p>
             <p className="mt-4 max-w-sm text-sm text-white/70">
               {t(
                 "La plataforma de gestión todo-en-uno para clubes deportivos. IA integrada y privada por diseño.",

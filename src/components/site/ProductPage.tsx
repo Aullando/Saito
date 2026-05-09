@@ -161,7 +161,7 @@ export function ProductPage({ locale }: { locale: Locale }) {
       <section className="border-b border-border bg-muted/40">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow={t("Producto", "Product")}
+            eyebrow={t("Producto · Sport AI Training Optimisation", "Product · Sport AI Training Optimisation")}
             title={t("Una plataforma. Todos los módulos del club.", "One platform. All your club modules.")}
             subtitle={t(
               "Cada bloque está pensado para resolver un trabajo real del día a día. Y todos comparten datos.",

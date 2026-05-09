@@ -72,6 +72,9 @@ export function HomePage({ locale }: Props) {
                   {t("en una sola plataforma", "from a single platform")}
                 </span>
               </h1>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                SAITO · <span className="text-foreground">S</span>port <span className="text-foreground">AI</span> <span className="text-foreground">T</span>raining <span className="text-foreground">O</span>ptimisation
+              </p>
               <p className="mt-6 max-w-xl text-lg text-muted-foreground">
                 {t(
                   "SAITO unifica socios, calendario, pagos, comunicación e IA por rol. Pensado para clubes que crecen y para entidades multi-sección.",
