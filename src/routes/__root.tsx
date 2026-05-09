@@ -121,11 +121,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ClubProvider>
-          <Outlet />
-        </ClubProvider>
-      </AuthProvider>
+      <PasswordGate>
+        <AuthProvider>
+          <ClubProvider>
+            <Outlet />
+          </ClubProvider>
+        </AuthProvider>
+      </PasswordGate>
     </QueryClientProvider>
   );
 }
