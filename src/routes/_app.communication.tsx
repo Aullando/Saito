@@ -87,10 +87,21 @@ function CommunicationPage() {
     },
   });
 
-  const conversations = demoOrEmpty(convsQ.data, DEMO_CONVERSATIONS_ROWS) as DBConv[];
+  const allConversations = demoOrEmpty(convsQ.data, DEMO_CONVERSATIONS_ROWS) as DBConv[];
+  const { hiddenConvs, archivedConvs, hiddenMsgs, hideConv, archiveConv, unarchiveConv, hideMsg } =
+    useCommLocal();
+  const [showArchived, setShowArchived] = useState(false);
+  const conversations = allConversations.filter((c) => {
+    if (hiddenConvs.includes(c.id)) return false;
+    const archived = archivedConvs.includes(c.id);
+    return showArchived ? archived : !archived;
+  });
   const [activeId, setActiveId] = useState<string | null>(null);
   useEffect(() => {
     if (!activeId && conversations.length) setActiveId(conversations[0].id);
+    if (activeId && !conversations.find((c) => c.id === activeId)) {
+      setActiveId(conversations[0]?.id ?? null);
+    }
   }, [conversations, activeId]);
 
   const msgsQ = useQuery({
