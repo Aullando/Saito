@@ -205,14 +205,9 @@ function IncidentsView() {
                 <td className="px-3 py-2.5 text-muted-foreground">{r.date}</td>
                 <td className="px-3 py-2.5">{r.type}</td>
                 <td className="px-3 py-2.5">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${fitnessClass(
-                      r.fitness,
-                    )}`}
-                  >
-                    {r.fitness}
-                  </span>
+                  <StatusChip>{r.fitness}</StatusChip>
                 </td>
+
                 <td className="px-3 py-2.5 text-muted-foreground">{r.responsible}</td>
               </tr>
             ))}
