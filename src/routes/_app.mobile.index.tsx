@@ -11,13 +11,12 @@ import {
   Sparkles,
   CalendarX,
   Info,
-  MessageSquareHeart,
   HeartPulse,
-  Stethoscope,
-  CalendarPlus,
-  LineChart,
+  TrendingUp,
   Bell,
   MessageSquare,
+  MapPin,
+  ChevronRight,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useCurrentUser, useData } from "@/lib/store";
@@ -39,24 +38,11 @@ const COACH_ACTIONS: Action[] = [
   { label: "IA de sesión", icon: Sparkles, to: "/mobile/ai" },
 ];
 
-const ATHLETE_ACTIONS: Action[] = [
-  { label: "Calendario", icon: CalendarDays, to: "/mobile/calendar" },
-  { label: "Notificar ausencia", icon: CalendarX, to: "/mobile/absence" },
-  { label: "Info de sesión", icon: Info, to: "/mobile/session-info" },
-  { label: "Feedback", icon: MessageSquareHeart, to: "/mobile/feedback" },
-  { label: "Salud", icon: HeartPulse, to: "/mobile/health" },
-  { label: "Plan de tratamiento", icon: Stethoscope, to: "/mobile/treatment" },
-  { label: "Solicitar cita", icon: CalendarPlus, to: "/mobile/request-appointment" },
-  { label: "Rendimiento", icon: LineChart, to: "/mobile/performance" },
-  { label: "Notificaciones", icon: Bell, to: "/mobile/notifications" },
-];
-
 function MobileHome() {
   const user = useCurrentUser();
   const events = useData((s) => s.events);
   const today = new Date().toISOString().slice(0, 10);
   const isCoach = user?.role === "technical";
-  const actions = isCoach ? COACH_ACTIONS : ATHLETE_ACTIONS;
 
   const todays = useMemo(
     () => events.filter((e) => e.date === today).slice(0, 3),
@@ -78,6 +64,18 @@ function MobileHome() {
         </p>
       </header>
 
+      {isCoach ? (
+        <CoachHome todays={todays} />
+      ) : (
+        <AthleteHome todays={todays} />
+      )}
+    </div>
+  );
+}
+
+function CoachHome({ todays }: { todays: ReturnType<typeof useData.getState>["events"] }) {
+  return (
+    <>
       <section>
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Hoy
@@ -124,7 +122,7 @@ function MobileHome() {
           Accesos rápidos
         </h2>
         <div className="grid grid-cols-3 gap-2">
-          {actions.map((a) => {
+          {COACH_ACTIONS.map((a) => {
             const Icon = a.icon;
             return (
               <Link
@@ -143,6 +141,152 @@ function MobileHome() {
           })}
         </div>
       </section>
+    </>
+  );
+}
+
+function AthleteHome({ todays }: { todays: ReturnType<typeof useData.getState>["events"] }) {
+  const next = todays[0];
+
+  return (
+    <>
+      {/* Hero — próxima sesión */}
+      <section
+        className="rounded-2xl p-4 text-white shadow-md"
+        style={{
+          background:
+            "linear-gradient(135deg, #21324a 0%, #0067c9 100%)",
+        }}
+      >
+        <div className="text-[11px] font-semibold uppercase tracking-wider text-white/70">
+          {next ? "Hoy · Entrenamiento" : "Sin sesión hoy"}
+        </div>
+        <div className="mt-1 text-lg font-bold leading-tight">
+          {next?.title ?? "Disfruta del descanso"}
+        </div>
+        {next && (
+          <>
+            <div className="mt-2 flex items-center gap-1 text-xs text-white/80">
+              <Clock className="h-3.5 w-3.5" /> {next.startTime}
+            </div>
+
+            {next.location && (
+              <div className="mt-1 flex items-center gap-1 text-xs text-white/80">
+                <MapPin className="h-3.5 w-3.5" /> {next.location}
+              </div>
+            )}
+          </>
+        )}
+      </section>
+
+      {/* CTA principal y secundario */}
+      <section className="grid gap-2">
+        <Link
+          to="/mobile/session-info"
+          className="flex w-full items-center justify-between rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-md active:scale-[0.98]"
+        >
+          <span className="flex items-center gap-2">
+            <Info className="h-4 w-4" />
+            Información de la sesión
+          </span>
+          <ChevronRight className="h-4 w-4 opacity-70" />
+        </Link>
+        <Link
+          to="/mobile/absence"
+          className="flex w-full items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground shadow-sm active:scale-[0.98]"
+        >
+          <span className="flex items-center gap-2">
+            <CalendarX className="h-4 w-4 text-muted-foreground" />
+            Notificar ausencia
+          </span>
+          <ChevronRight className="h-4 w-4 opacity-50" />
+        </Link>
+      </section>
+
+      {/* Salud — tonos cálidos amarillo/naranja */}
+      <section>
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Salud
+        </h2>
+        <div className="grid grid-cols-2 gap-2">
+          <Link
+            to="/mobile/health"
+            className="rounded-2xl border border-amber-200 bg-amber-50 p-3 active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+                <HeartPulse className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-amber-800">
+                  Estado
+                </div>
+                <div className="text-sm font-bold text-amber-900">Apto</div>
+              </div>
+            </div>
+          </Link>
+          <Link
+            to="/mobile/health"
+            className="rounded-2xl border border-orange-200 bg-orange-50 p-3 active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-100 text-orange-700">
+                <Bell className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-orange-800">
+                  Bienestar
+                </div>
+                <div className="truncate text-sm font-bold text-orange-900">
+                  Registrar
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* Mi rendimiento */}
+      <section>
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Mi rendimiento
+        </h2>
+        <Link
+          to="/mobile/performance"
+          className="block rounded-2xl border border-border bg-card p-4 active:scale-[0.98]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <TrendingUp className="h-4 w-4" />
+              </div>
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Última valoración
+                </div>
+                <div className="text-sm font-bold text-foreground">8.2 / 10</div>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+            <Stat label="Técnica" value="8.2" />
+            <Stat label="Compromiso" value="9.0" />
+            <Stat label="Físico" value="7.5" />
+          </div>
+        </Link>
+      </section>
+    </>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg bg-muted px-2 py-2">
+      <div className="text-base font-bold leading-none text-foreground">{value}</div>
+      <div className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+        {label}
+      </div>
     </div>
   );
 }

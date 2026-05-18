@@ -16,17 +16,28 @@ export function MobileShell({
   tabs,
   children,
   title,
+  role,
 }: {
   tabs: MobileTab[];
   children: ReactNode;
   title?: string;
+  role?: "coach" | "athlete";
 }) {
   const user = useCurrentUser();
   const setUser = useLocalAuth((s) => s.setUser);
   const path = useRouterState({ select: (s) => s.location.pathname });
 
+  // Role-scoped accent: coach = green, athlete = red.
+  const roleStyle =
+    role === "athlete"
+      ? ({ ["--primary" as string]: "#f12f4a", ["--ring" as string]: "#f12f4a" } as React.CSSProperties)
+      : role === "coach"
+        ? ({ ["--primary" as string]: "#00a74d", ["--ring" as string]: "#00a74d" } as React.CSSProperties)
+        : undefined;
+
   return (
-    <div className="min-h-screen w-full bg-muted/40 px-2 py-4 sm:py-8">
+    <div className="min-h-screen w-full bg-muted/40 px-2 py-4 sm:py-8" style={roleStyle}>
+
       <div className="mx-auto" style={{ width: "min(100%, 390px)" }}>
         <div
           className="relative overflow-hidden rounded-[36px] border border-border bg-background shadow-xl"
