@@ -112,7 +112,8 @@ export function NotificationsBell() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm hover:text-foreground"
+        className="relative flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground"
+        style={{ background: "#FFFFFF", border: "1px solid #DDE6F0" }}
         aria-label="Notifications"
       >
         <Bell className="h-4 w-4" />
