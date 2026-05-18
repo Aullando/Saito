@@ -223,7 +223,7 @@ function CommunicationPage() {
       />
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="space-y-4">
-        <TabsList className="flex w-full flex-wrap justify-start gap-1 bg-muted/40 p-1">
+        <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-muted/40 p-1">
           <TabsTrigger value="circulars" className="gap-1.5">
             <Megaphone className="h-4 w-4" /> Circulares
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
