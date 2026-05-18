@@ -1409,9 +1409,7 @@ function CalendarPage() {
   );
 }
 
-    </>
-  );
-}
+
 
 function Row({
   icon,
