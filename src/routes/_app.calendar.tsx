@@ -296,6 +296,13 @@ function CalendarPage() {
     recurring: false,
     until: "",
   });
+  const [editEv, setEditEv] = useState<{
+    id: string;
+    title: string;
+    date: string;
+    startTime: string;
+    groupId: string;
+  } | null>(null);
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
