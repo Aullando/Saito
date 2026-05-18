@@ -619,9 +619,10 @@ function RequestsView() {
                       Fecha preferida: {r.preferred} · solicitada {r.requestedAt}
                     </div>
                   </div>
-                  <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
-                    Pendiente
+                  <span className="shrink-0">
+                    <StatusChip>Pendiente</StatusChip>
                   </span>
+
                 </div>
                 <div className="mt-3 flex justify-end">
                   <Button
