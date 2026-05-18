@@ -188,6 +188,17 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 const fmtEur = (n: number) =>
   new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
 
+// Safe-language helper for medical status. Never expose diagnosis or
+// auto-derived clinical judgement — labels come from professional input.
+function medicalStatusInfo(status: string): {
+  label: "Apto" | "No apto" | "En revisión";
+  tone: "success" | "danger" | "warning";
+} {
+  if (status === "Fit") return { label: "Apto", tone: "success" };
+  if (status === "Injured") return { label: "No apto", tone: "danger" };
+  return { label: "En revisión", tone: "warning" };
+}
+
 // ────────── ManagerView ──────────
 function ManagerView({
   athlete,
