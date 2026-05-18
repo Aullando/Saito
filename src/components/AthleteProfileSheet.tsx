@@ -341,25 +341,55 @@ function MedicalView({
   athlete: AthleteLike;
   appointments: { id: string; date: string; time: string; reason: string; status: string; notes: string }[];
 }) {
+  const info = medicalStatusInfo(athlete.medical_status);
   return (
     <>
       <MedicalDisclaimer className="mb-3" />
-      <Section
-        title="Acciones"
-        icon={Stethoscope}
-        action={
+
+      {/* Acciones — solo introducidas por profesional autorizado */}
+      <Section title="Acciones" icon={Stethoscope}>
+        <div className="flex flex-wrap gap-2">
           <Button size="sm" onClick={() => toast.success("Incidencia registrada")}>
             <Plus className="mr-1.5 h-3.5 w-3.5" />
             Registrar incidencia
           </Button>
-        }
-      >
-        <p className="text-xs text-muted-foreground">
-          Salud deportiva — información gestionada por staff médico autorizado.
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => toast.success("Plan de tratamiento creado")}
+          >
+            <Plus className="mr-1.5 h-3.5 w-3.5" />
+            Crear plan de tratamiento
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => toast.success("Cita médica agendada")}
+          >
+            <Plus className="mr-1.5 h-3.5 w-3.5" />
+            Agendar cita
+          </Button>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Salud deportiva — estado apto/no apto introducido por profesional autorizado.
+          SAITO no realiza diagnóstico ni alta automática.
         </p>
       </Section>
 
-      <Section title="Registro de incidencias" icon={HeartPulse}>
+      <Section title="Datos básicos del atleta" icon={Users}>
+        <Row label="Nombre" value={`${athlete.first_name} ${athlete.last_name}`} />
+        <Row label="Estado deportivo" value={athlete.status} />
+        <Row
+          label="Estado de salud deportiva"
+          value={<Pill tone={info.tone}>{info.label}</Pill>}
+        />
+        <Row
+          label="Última revisión"
+          value={<span className="text-muted-foreground">26/03/2026 · J. Romero (fisio)</span>}
+        />
+      </Section>
+
+      <Section title="Historial de incidencias" icon={HeartPulse}>
         <ul className="space-y-2 text-xs">
           <li className="rounded-lg border border-rose-200 bg-rose-50 p-2">
             <div className="font-medium text-rose-900">Molestias aductor derecho · 02/05/2026</div>
@@ -373,13 +403,16 @@ function MedicalView({
       </Section>
 
       <Section title="Restricciones operativas" icon={ShieldCheck}>
-        <Pill tone={athlete.medical_status === "Fit" ? "success" : "warning"}>
+        <Pill tone={info.tone}>
           {athlete.medical_status === "Fit" ? "Sin restricciones activas" : "Con restricciones"}
         </Pill>
         <ul className="mt-2 space-y-1 text-xs text-slate-700">
           <li>• Evitar trabajo pliométrico de alta intensidad.</li>
           <li>• No competición hasta revisión del 25/05.</li>
         </ul>
+        <p className="mt-2 text-[11px] text-muted-foreground">
+          Visible para el entrenador como información operativa, sin detalle clínico.
+        </p>
       </Section>
 
       <Section title="Citas médicas" icon={CalendarDays}>
@@ -405,26 +438,38 @@ function MedicalView({
         )}
       </Section>
 
-      <Section title="Planes de tratamiento bajo supervisión" icon={ClipboardList}>
+      <Section title="Planes de tratamiento activos" icon={ClipboardList}>
         <ul className="space-y-2 text-xs">
           <li className="rounded-lg bg-emerald-50 p-2">
             <div className="flex items-center justify-between">
               <span className="font-medium text-emerald-900">Readaptación aductor</span>
-              <Pill tone="success">Activo</Pill>
+              <Pill tone="success">Activo · supervisión</Pill>
             </div>
-            <div className="text-emerald-700">Fase 2 · 3 sesiones/semana · fisio responsable: J. Romero</div>
+            <div className="text-emerald-700">
+              Fase 2 · 3 sesiones/semana · fisio responsable: J. Romero
+            </div>
           </li>
+        </ul>
+        <p className="mt-2 text-[11px] text-muted-foreground">
+          Plan bajo supervisión profesional. No se recomiendan tratamientos por IA.
+        </p>
+      </Section>
+
+      <Section title="Planes finalizados" icon={ClipboardList}>
+        <ul className="space-y-2 text-xs">
           <li className="rounded-lg bg-slate-100 p-2">
             <div className="flex items-center justify-between">
               <span className="font-medium text-slate-700">Protocolo tobillo</span>
               <Pill>Finalizado</Pill>
             </div>
-            <div className="text-slate-600">Estado apto introducido por staff médico el 26/03/2026.</div>
+            <div className="text-slate-600">
+              Estado apto introducido por staff médico el 26/03/2026.
+            </div>
           </li>
         </ul>
       </Section>
 
-      <Section title="Adjuntos clínicos" icon={Paperclip}>
+      <Section title="Adjuntos" icon={Paperclip}>
         <ul className="space-y-1 text-xs">
           <li className="flex items-center justify-between rounded-lg bg-slate-50 px-2 py-1.5">
             <span>Informe ecografía aductor.pdf</span>
