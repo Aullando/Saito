@@ -71,6 +71,14 @@ export interface Athlete {
   performanceStatus: "High" | "Medium" | "Low";
 }
 
+export type CalendarEventType =
+  | "training"
+  | "match"
+  | "medical"
+  | "meeting"
+  | "club"
+  | "payment";
+
 export interface CalendarEvent {
   id: string;
   date: string; // YYYY-MM-DD
@@ -82,7 +90,8 @@ export interface CalendarEvent {
   athleteId?: string;
   staffId?: string;
   roleInGroup?: string;
-  type: "training" | "match" | "medical" | "meeting";
+  location?: string;
+  type: CalendarEventType;
   recurrence?: { freq: "weekly"; until: string };
   exceptions?: string[];
 }

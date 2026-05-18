@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -27,6 +29,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { useData } from "@/lib/store";
+import { useCalendarLocal } from "@/lib/calendarLocal";
 import { isDemoMode } from "@/lib/appMode";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -36,8 +39,22 @@ import {
   DEMO_GROUPS_ROWS,
 } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Pencil,
+  Plus,
+  Trash2,
+  Ban,
+  MapPin,
+  Users,
+  UserCog,
+  CalendarDays,
+  Clock,
+  CircleSlash,
+} from "lucide-react";
 import { demoOrEmpty } from "@/lib/demoFallback";
+import type { CalendarEventType } from "@/lib/types";
 
 export const Route = createFileRoute("/_app/calendar")({
   component: () => (
@@ -58,12 +75,52 @@ interface DBEvent {
   section_id: string | null;
   category_id: string | null;
   group_id: string | null;
+  staff_id?: string | null;
+  location?: string | null;
   recurrence: { freq: "weekly"; until: string; exceptions?: string[] } | null;
 }
 
 interface Occurrence {
   event: DBEvent;
   date: string;
+}
+
+const TYPE_OPTIONS: { value: CalendarEventType; label: string }[] = [
+  { value: "training", label: "Entrenamiento" },
+  { value: "match", label: "Partido" },
+  { value: "medical", label: "Cita médica" },
+  { value: "club", label: "Evento de club" },
+  { value: "payment", label: "Pago / Cuota" },
+];
+
+const TYPE_LABEL: Record<string, string> = {
+  training: "Entrenamiento",
+  match: "Partido",
+  medical: "Cita médica",
+  meeting: "Reunión",
+  club: "Evento de club",
+  payment: "Pago / Cuota",
+};
+
+const TYPE_STYLE: Record<string, string> = {
+  training: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  match: "bg-amber-50 text-amber-700 border-amber-200",
+  medical: "bg-rose-50 text-rose-700 border-rose-200",
+  meeting: "bg-slate-100 text-slate-700 border-slate-200",
+  club: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  payment: "bg-sky-50 text-sky-700 border-sky-200",
+};
+
+function TypeBadge({ type }: { type: string }) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${
+        TYPE_STYLE[type] ?? "bg-muted text-muted-foreground border-border"
+      }`}
+    >
+      {TYPE_LABEL[type] ?? type}
+    </span>
+  );
 }
 
 function CalendarPage() {
@@ -77,10 +134,23 @@ function CalendarPage() {
   const demoSections = useData((s) => s.sections);
   const demoCategories = useData((s) => s.categories);
   const demoGroups = useData((s) => s.groups);
+  const demoAthletes = useData((s) => s.athletes);
+  const demoUsers = useData((s) => s.users);
+  const demoPayments = useData((s) => s.payments);
+  const demoFacilities = useData((s) => s.facilities);
   const demoAddEvent = useData((s) => s.addEvent);
   const demoUpdateEvent = useData((s) => s.updateEvent);
   const demoDeleteEvent = useData((s) => s.deleteEvent);
   const demoAddEventException = useData((s) => s.addEventException);
+
+  const {
+    cancellations,
+    notes,
+    hasAttendance,
+    hasCommunication,
+    cancelEvent,
+    uncancelEvent,
+  } = useCalendarLocal();
 
   const eventsQ = useQuery({
     queryKey: ["calendar_events", orgId],
@@ -146,6 +216,8 @@ function CalendarPage() {
         section_id: e.sectionId ?? null,
         category_id: e.categoryId ?? null,
         group_id: e.groupId ?? null,
+        staff_id: e.staffId ?? null,
+        location: e.location ?? null,
         recurrence: e.recurrence ? { ...e.recurrence, exceptions: e.exceptions ?? [] } : null,
       }))
     : (demoOrEmpty(eventsQ.data, DEMO_CALENDAR_EVENTS_ROWS) as DBEvent[]);
@@ -164,25 +236,33 @@ function CalendarPage() {
       }))
     : demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
 
+  // ────── Mutations ──────
+  type AddPayload = {
+    title: string;
+    event_date: string;
+    start_time: string;
+    type: CalendarEventType;
+    group_id: string | null;
+    section_id: string | null;
+    category_id: string | null;
+    staff_id: string | null;
+    location: string | null;
+    recurrence: DBEvent["recurrence"];
+  };
+
   const addEvent = useMutation({
-    mutationFn: async (e: {
-      title: string;
-      event_date: string;
-      start_time: string;
-      group_id: string | null;
-      section_id: string | null;
-      category_id: string | null;
-      recurrence: DBEvent["recurrence"];
-    }) => {
+    mutationFn: async (e: AddPayload) => {
       if (demoMode) {
         demoAddEvent({
           title: e.title,
           date: e.event_date,
           startTime: e.start_time,
-          type: "training",
+          type: e.type,
           groupId: e.group_id ?? undefined,
           sectionId: e.section_id ?? undefined,
           categoryId: e.category_id ?? undefined,
+          staffId: e.staff_id ?? undefined,
+          location: e.location ?? undefined,
           recurrence: e.recurrence ?? undefined,
         });
         return;
@@ -192,7 +272,7 @@ function CalendarPage() {
         title: e.title,
         event_date: e.event_date,
         start_time: e.start_time,
-        type: "training",
+        type: e.type,
         group_id: e.group_id,
         section_id: e.section_id,
         category_id: e.category_id,
@@ -201,7 +281,7 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t("save"));
+      toast.success("Evento creado");
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -217,29 +297,38 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
+      toast.success("Evento eliminado");
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
   });
 
+  type EditPayload = {
+    id: string;
+    title: string;
+    event_date: string;
+    start_time: string;
+    type: CalendarEventType;
+    group_id: string | null;
+    section_id: string | null;
+    category_id: string | null;
+    staff_id: string | null;
+    location: string | null;
+  };
+
   const updateEvent = useMutation({
-    mutationFn: async (e: {
-      id: string;
-      title: string;
-      event_date: string;
-      start_time: string;
-      group_id: string | null;
-      section_id: string | null;
-      category_id: string | null;
-    }) => {
+    mutationFn: async (e: EditPayload) => {
       if (demoMode) {
         demoUpdateEvent(e.id, {
           title: e.title,
           date: e.event_date,
           startTime: e.start_time,
+          type: e.type,
           groupId: e.group_id ?? undefined,
           sectionId: e.section_id ?? undefined,
           categoryId: e.category_id ?? undefined,
+          staffId: e.staff_id ?? undefined,
+          location: e.location ?? undefined,
         });
         return;
       }
@@ -249,6 +338,7 @@ function CalendarPage() {
           title: e.title,
           event_date: e.event_date,
           start_time: e.start_time,
+          type: e.type,
           group_id: e.group_id,
           section_id: e.section_id,
           category_id: e.category_id,
@@ -257,7 +347,7 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t("save"));
+      toast.success("Evento actualizado");
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -282,26 +372,40 @@ function CalendarPage() {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  // ────── State ──────
   const [cursor, setCursor] = useState(() => new Date());
   const [secF, setSecF] = useState("all");
   const [catF, setCatF] = useState("all");
   const [grpF, setGrpF] = useState("all");
+  const [typeF, setTypeF] = useState<string>("all");
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState<Occurrence | null>(null);
-  const [newEv, setNewEv] = useState({
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelNotify, setCancelNotify] = useState(true);
+
+  const initialForm = () => ({
     title: "",
     date: new Date().toISOString().slice(0, 10),
     startTime: "10:00",
+    type: "training" as CalendarEventType,
     groupId: "",
+    staffId: "",
+    location: "",
     recurring: false,
     until: "",
   });
+  const [newEv, setNewEv] = useState(initialForm());
+
   const [editEv, setEditEv] = useState<{
     id: string;
     title: string;
     date: string;
     startTime: string;
+    type: CalendarEventType;
     groupId: string;
+    staffId: string;
+    location: string;
   } | null>(null);
 
   const year = cursor.getFullYear();
@@ -314,6 +418,7 @@ function CalendarPage() {
     if (secF !== "all" && e.section_id !== secF) return false;
     if (catF !== "all" && e.category_id !== catF) return false;
     if (grpF !== "all" && e.group_id !== grpF) return false;
+    if (typeF !== "all" && e.type !== typeF) return false;
     return true;
   };
 
@@ -342,6 +447,67 @@ function CalendarPage() {
 
   const fmtTime = (t: string | null) => (t ? t.slice(0, 5) : "");
 
+  // ────── Detail helpers ──────
+  const todayStr = new Date().toISOString().slice(0, 10);
+
+  const lookupGroup = (id: string | null | undefined) =>
+    id ? groups.find((g) => g.id === id) : undefined;
+  const lookupStaff = (id: string | null | undefined) =>
+    id ? demoUsers.find((u) => u.id === id) : undefined;
+
+  const participantsFor = (ev: DBEvent): { id: string; name: string }[] => {
+    if (!ev.group_id) return [];
+    return demoAthletes
+      .filter((a) => a.groupIds.includes(ev.group_id!))
+      .map((a) => ({ id: a.id, name: `${a.firstName} ${a.lastName}` }));
+  };
+
+  const facilityFor = (ev: DBEvent): string | null => {
+    if (ev.location) return ev.location;
+    if (ev.section_id) {
+      const f = demoFacilities.find((f) => f.sportSections.includes(ev.section_id!));
+      if (f) return f.name;
+    }
+    return null;
+  };
+
+  const associationsFor = (ev: DBEvent, dateStr: string) => {
+    const isPast = dateStr < todayStr;
+    const cancelled = !!cancellations[ev.id];
+    const hasNotes = !!notes[ev.id];
+    const hasAttn = !!hasAttendance[ev.id] || isPast;
+    const hasComm = !!hasCommunication[ev.id] || cancellations[ev.id]?.notified;
+    const hasPayment =
+      ev.type === "payment" ||
+      demoPayments.some(
+        (p) =>
+          p.date === dateStr &&
+          (!ev.section_id || p.sectionId === ev.section_id),
+      );
+    const participants = participantsFor(ev);
+    return {
+      isPast,
+      cancelled,
+      hasNotes,
+      hasAttn,
+      hasComm,
+      hasPayment,
+      hasParticipants: participants.length > 0,
+      participants,
+    };
+  };
+
+  const computeStatus = (ev: DBEvent, dateStr: string): {
+    label: string;
+    tone: "muted" | "ok" | "warn" | "danger";
+  } => {
+    if (cancellations[ev.id]) return { label: "Cancelado", tone: "danger" };
+    if (dateStr < todayStr) return { label: "Pasado", tone: "muted" };
+    if (dateStr === todayStr) return { label: "Hoy", tone: "warn" };
+    return { label: "Programado", tone: "ok" };
+  };
+
+  // ────── Render ──────
   return (
     <>
       <PageHeader
@@ -374,28 +540,56 @@ function CalendarPage() {
               <ChevronRight className="h-4 w-4" />
             </Button>
             {canEdit && (
-              <Dialog open={open} onOpenChange={setOpen}>
+              <Dialog
+                open={open}
+                onOpenChange={(o) => {
+                  setOpen(o);
+                  if (!o) setNewEv(initialForm());
+                }}
+              >
                 <DialogTrigger asChild>
                   <Button size="sm" className="rounded-full">
                     <Plus className="mr-1 h-4 w-4" />
-                    {t("add")}
+                    Nuevo evento
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-w-lg">
                   <DialogHeader>
-                    <DialogTitle>{t("add")}</DialogTitle>
+                    <DialogTitle>Nuevo evento</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-3">
-                    <div>
-                      <Label>{t("name")}</Label>
-                      <Input
-                        value={newEv.title}
-                        onChange={(e) => setNewEv({ ...newEv, title: e.target.value })}
-                      />
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label>Tipo</Label>
+                        <Select
+                          value={newEv.type}
+                          onValueChange={(v) =>
+                            setNewEv({ ...newEv, type: v as CalendarEventType })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {TYPE_OPTIONS.map((o) => (
+                              <SelectItem key={o.value} value={o.value}>
+                                {o.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Título</Label>
+                        <Input
+                          value={newEv.title}
+                          onChange={(e) => setNewEv({ ...newEv, title: e.target.value })}
+                        />
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label>{t("date")}</Label>
+                        <Label>Fecha</Label>
                         <Input
                           type="date"
                           value={newEv.date}
@@ -412,25 +606,57 @@ function CalendarPage() {
                       </div>
                     </div>
                     <div>
-                      <Label>{t("group")}</Label>
-                      <Select
-                        value={newEv.groupId}
-                        onValueChange={(v) => setNewEv({ ...newEv, groupId: v })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="—" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {groups.map((g) => (
-                            <SelectItem key={g.id} value={g.id}>
-                              {g.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label>Ubicación</Label>
+                      <Input
+                        value={newEv.location}
+                        onChange={(e) => setNewEv({ ...newEv, location: e.target.value })}
+                        placeholder="Pista 1, Sala médica, …"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label>Grupo</Label>
+                        <Select
+                          value={newEv.groupId}
+                          onValueChange={(v) => setNewEv({ ...newEv, groupId: v })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="—" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {groups.map((g) => (
+                              <SelectItem key={g.id} value={g.id}>
+                                {g.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Staff responsable</Label>
+                        <Select
+                          value={newEv.staffId}
+                          onValueChange={(v) => setNewEv({ ...newEv, staffId: v })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="—" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {demoUsers
+                              .filter((u) =>
+                                ["technical", "medical", "manager", "admin"].includes(u.role),
+                              )
+                              .map((u) => (
+                                <SelectItem key={u.id} value={u.id}>
+                                  {u.name}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                     <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
-                      <Label className="text-sm">{t("recurring")}</Label>
+                      <Label className="text-sm">Recurrente (semanal)</Label>
                       <Switch
                         checked={newEv.recurring}
                         onCheckedChange={(v) => setNewEv({ ...newEv, recurring: v })}
@@ -438,7 +664,7 @@ function CalendarPage() {
                     </div>
                     {newEv.recurring && (
                       <div>
-                        <Label>{t("recur_until")}</Label>
+                        <Label>Hasta</Label>
                         <Input
                           type="date"
                           value={newEv.until}
@@ -459,26 +685,22 @@ function CalendarPage() {
                           title: newEv.title,
                           event_date: newEv.date,
                           start_time: newEv.startTime,
+                          type: newEv.type,
                           group_id: newEv.groupId || null,
                           section_id: g?.section_id ?? null,
                           category_id: g?.category_id ?? null,
+                          staff_id: newEv.staffId || null,
+                          location: newEv.location || null,
                           recurrence:
                             newEv.recurring && newEv.until
                               ? { freq: "weekly", until: newEv.until }
                               : null,
                         });
-                        setNewEv({
-                          title: "",
-                          date: new Date().toISOString().slice(0, 10),
-                          startTime: "10:00",
-                          groupId: "",
-                          recurring: false,
-                          until: "",
-                        });
+                        setNewEv(initialForm());
                         setOpen(false);
                       }}
                     >
-                      {t("save")}
+                      Crear
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -549,6 +771,19 @@ function CalendarPage() {
               ))}
           </SelectContent>
         </Select>
+        <Select value={typeF} onValueChange={setTypeF}>
+          <SelectTrigger className="w-44 rounded-full">
+            <SelectValue placeholder="Todos los tipos" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos los tipos</SelectItem>
+            {TYPE_OPTIONS.map((o) => (
+              <SelectItem key={o.value} value={o.value}>
+                {o.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button
           variant="ghost"
           size="sm"
@@ -556,6 +791,7 @@ function CalendarPage() {
             setSecF("all");
             setCatF("all");
             setGrpF("all");
+            setTypeF("all");
           }}
         >
           {t("clear_filters")}
@@ -579,27 +815,40 @@ function CalendarPage() {
             return (
               <div
                 key={i}
-                className={`min-h-[110px] rounded-xl border p-2 ${inMonth ? "border-border bg-card" : "border-transparent bg-muted/30 text-muted-foreground"}`}
+                className={`min-h-[110px] rounded-xl border p-2 ${
+                  inMonth
+                    ? "border-border bg-card"
+                    : "border-transparent bg-muted/30 text-muted-foreground"
+                }`}
               >
                 <div className="mb-1 flex items-center justify-between text-[11px]">
                   <span
-                    className={`flex h-5 w-5 items-center justify-center rounded-full font-semibold ${isToday ? "bg-primary text-primary-foreground" : ""}`}
+                    className={`flex h-5 w-5 items-center justify-center rounded-full font-semibold ${
+                      isToday ? "bg-primary text-primary-foreground" : ""
+                    }`}
                   >
                     {d.getDate()}
                   </span>
                 </div>
                 <div className="space-y-1">
-                  {dayOcc.slice(0, 3).map((o, idx) => (
-                    <button
-                      key={o.event.id + idx}
-                      onClick={() => setDetail(o)}
-                      className="block w-full truncate rounded-md bg-primary/10 px-1.5 py-1 text-left text-[11px] font-medium text-primary hover:bg-primary/15"
-                    >
-                      {fmtTime(o.event.start_time)} ·{" "}
-                      {groups.find((g) => g.id === o.event.group_id)?.name ?? o.event.title}
-                      {o.event.recurrence && <span className="ml-1 text-[10px] opacity-60">↻</span>}
-                    </button>
-                  ))}
+                  {dayOcc.slice(0, 3).map((o, idx) => {
+                    const isCancelled = !!cancellations[o.event.id];
+                    return (
+                      <button
+                        key={o.event.id + idx}
+                        onClick={() => setDetail(o)}
+                        className={`block w-full truncate rounded-md border px-1.5 py-1 text-left text-[11px] font-medium transition hover:opacity-80 ${
+                          TYPE_STYLE[o.event.type] ??
+                          "bg-primary/10 text-primary border-primary/20"
+                        } ${isCancelled ? "line-through opacity-60" : ""}`}
+                      >
+                        {fmtTime(o.event.start_time)} · {o.event.title}
+                        {o.event.recurrence && (
+                          <span className="ml-1 text-[10px] opacity-60">↻</span>
+                        )}
+                      </button>
+                    );
+                  })}
                   {dayOcc.length > 3 && (
                     <div className="px-1.5 text-[11px] font-medium text-muted-foreground">
                       +{dayOcc.length - 3} {t("more")}
@@ -612,114 +861,292 @@ function CalendarPage() {
         </div>
       </div>
 
+      {/* ────── Detail Sheet ────── */}
       <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
         <SheetContent className="w-full sm:max-w-md">
-          {detail && (
-            <>
-              <SheetHeader>
-                <SheetTitle>{detail.event.title}</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 space-y-3 text-sm">
-                <div>
-                  <span className="text-muted-foreground">{t("date")}:</span> {detail.date}{" "}
-                  {fmtTime(detail.event.start_time)}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">{t("group")}:</span>{" "}
-                  {groups.find((g) => g.id === detail.event.group_id)?.name ?? "—"}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Tipo:</span> {detail.event.type}
-                </div>
-                {detail.event.recurrence && (
-                  <div>
-                    <Pill tone="info">↻ Semanal hasta {detail.event.recurrence.until}</Pill>
+          {detail && (() => {
+            const ev = detail.event;
+            const a = associationsFor(ev, detail.date);
+            const status = computeStatus(ev, detail.date);
+            const cancelInfo = cancellations[ev.id];
+            const isFuture = detail.date >= todayStr;
+            const canEditEvent = canEdit && isFuture && !a.cancelled;
+            const blockers = [
+              a.hasAttn && "asistencia registrada",
+              a.hasNotes && "notas",
+              a.hasPayment && "pagos asociados",
+              a.hasComm && "comunicación enviada",
+              a.hasParticipants && a.isPast && "participantes históricos",
+            ].filter(Boolean) as string[];
+            const canDelete = canEdit && !a.cancelled && blockers.length === 0;
+            const shouldCancel = canEdit && !a.cancelled && !canDelete && isFuture;
+            const group = lookupGroup(ev.group_id);
+            const staff = lookupStaff(ev.staff_id ?? null);
+            const facility = facilityFor(ev);
+            return (
+              <>
+                <SheetHeader>
+                  <div className="flex items-center gap-2">
+                    <TypeBadge type={ev.type} />
+                    <StatusPill tone={status.tone}>{status.label}</StatusPill>
                   </div>
-                )}
-                {canEdit && (
-                  <div className="flex flex-col gap-2 pt-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setEditEv({
-                          id: detail.event.id,
-                          title: detail.event.title,
-                          date: detail.event.event_date,
-                          startTime: detail.event.start_time ?? "10:00",
-                          groupId: detail.event.group_id ?? "",
-                        });
-                        setDetail(null);
-                      }}
-                    >
-                      <Pencil className="mr-1 h-4 w-4" />
-                      {t("edit") || "Editar"}
-                    </Button>
-                    {detail.event.recurrence ? (
-                      <>
+                  <SheetTitle className="mt-2">{ev.title}</SheetTitle>
+                </SheetHeader>
+
+                <div className="mt-5 space-y-4 text-sm">
+                  <div className="grid grid-cols-1 gap-2">
+                    <Row icon={<CalendarDays className="h-4 w-4" />} label="Fecha">
+                      {detail.date}
+                    </Row>
+                    <Row icon={<Clock className="h-4 w-4" />} label="Hora">
+                      {fmtTime(ev.start_time) || "—"}
+                    </Row>
+                    <Row icon={<MapPin className="h-4 w-4" />} label="Ubicación">
+                      {facility ?? "—"}
+                    </Row>
+                    <Row icon={<Users className="h-4 w-4" />} label="Grupo">
+                      {group?.name ?? "—"}
+                    </Row>
+                    <Row icon={<UserCog className="h-4 w-4" />} label="Staff responsable">
+                      {staff?.name ?? "—"}
+                    </Row>
+                  </div>
+
+                  <div>
+                    <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Participantes ({a.participants.length})
+                    </div>
+                    {a.participants.length === 0 ? (
+                      <div className="text-xs text-muted-foreground">
+                        Sin participantes asignados.
+                      </div>
+                    ) : (
+                      <div className="max-h-32 overflow-y-auto rounded-lg border border-border p-2">
+                        <ul className="space-y-1 text-xs">
+                          {a.participants.slice(0, 10).map((p) => (
+                            <li key={p.id} className="truncate">
+                              · {p.name}
+                            </li>
+                          ))}
+                          {a.participants.length > 10 && (
+                            <li className="text-muted-foreground">
+                              + {a.participants.length - 10} más
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
+                  {ev.recurrence && (
+                    <div>
+                      <Pill tone="info">↻ Semanal hasta {ev.recurrence.until}</Pill>
+                    </div>
+                  )}
+
+                  {cancelInfo && (
+                    <div className="rounded-lg border border-rose-200 bg-rose-50/60 px-3 py-2 text-xs text-rose-700">
+                      <div className="font-semibold">Motivo de cancelación</div>
+                      <div className="mt-0.5">{cancelInfo.reason}</div>
+                      <div className="mt-1 text-[11px] opacity-80">
+                        Cancelado el {new Date(cancelInfo.cancelledAt).toLocaleString()}
+                        {cancelInfo.notified ? " · participantes notificados" : ""}
+                      </div>
+                    </div>
+                  )}
+
+                  {!a.cancelled && blockers.length > 0 && (
+                    <div className="rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-xs text-amber-800">
+                      No se puede eliminar: el evento tiene {blockers.join(", ")}.
+                      {isFuture ? " Usa Cancelar para mantener el historial." : ""}
+                    </div>
+                  )}
+
+                  {canEdit && (
+                    <div className="flex flex-col gap-2 pt-2">
+                      {canEditEvent && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setEditEv({
+                              id: ev.id,
+                              title: ev.title,
+                              date: ev.event_date,
+                              startTime: ev.start_time ?? "10:00",
+                              type: (ev.type as CalendarEventType) || "training",
+                              groupId: ev.group_id ?? "",
+                              staffId: ev.staff_id ?? "",
+                              location: ev.location ?? "",
+                            });
+                            setDetail(null);
+                          }}
+                        >
+                          <Pencil className="mr-1 h-4 w-4" />
+                          Editar evento
+                        </Button>
+                      )}
+
+                      {ev.recurrence && isFuture && !a.cancelled && (
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={async () => {
-                            await addException.mutateAsync({ ev: detail.event, date: detail.date });
+                            await addException.mutateAsync({ ev, date: detail.date });
                             setDetail(null);
                           }}
                         >
-                          <Trash2 className="mr-1 h-4 w-4" />
-                          {t("delete_only_this")}
+                          <CircleSlash className="mr-1 h-4 w-4" />
+                          Omitir solo esta ocurrencia
                         </Button>
+                      )}
+
+                      {shouldCancel && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-rose-200 text-rose-700 hover:bg-rose-50"
+                          onClick={() => {
+                            setCancelReason("");
+                            setCancelNotify(true);
+                            setCancelOpen(true);
+                          }}
+                        >
+                          <Ban className="mr-1 h-4 w-4" />
+                          Cancelar evento
+                        </Button>
+                      )}
+
+                      {canDelete && (
                         <Button
                           variant="destructive"
                           size="sm"
                           onClick={async () => {
-                            if (!confirm(t("delete_confirm"))) return;
-                            await delEvent.mutateAsync(detail.event.id);
+                            if (!confirm("¿Eliminar este evento?")) return;
+                            await delEvent.mutateAsync(ev.id);
                             setDetail(null);
                           }}
                         >
                           <Trash2 className="mr-1 h-4 w-4" />
-                          {t("delete_series")}
+                          Eliminar evento
                         </Button>
-                      </>
-                    ) : (
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={async () => {
-                          if (!confirm(t("delete_confirm"))) return;
-                          await delEvent.mutateAsync(detail.event.id);
-                          setDetail(null);
-                        }}
-                      >
-                        <Trash2 className="mr-1 h-4 w-4" />
-                        {t("delete")}
-                      </Button>
-                    )}
-                  </div>
-                )}
-              </div>
-            </>
-          )}
+                      )}
+
+                      {a.cancelled && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            uncancelEvent(ev.id);
+                            toast.success("Cancelación revertida");
+                          }}
+                        >
+                          Revertir cancelación
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
+            );
+          })()}
         </SheetContent>
       </Sheet>
 
-      <Dialog open={!!editEv} onOpenChange={(o) => !o && setEditEv(null)}>
-        <DialogContent>
+      {/* ────── Cancel dialog ────── */}
+      <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{t("edit") || "Editar"}</DialogTitle>
+            <DialogTitle>Cancelar evento</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 text-sm">
+            <p className="text-muted-foreground">
+              El evento se mantendrá en el calendario marcado como cancelado, conservando
+              asistencia, notas y comunicaciones existentes.
+            </p>
+            <div>
+              <Label>Motivo de cancelación</Label>
+              <Textarea
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                rows={3}
+                placeholder="Ej: lluvia, instalación cerrada, lesión múltiple…"
+              />
+            </div>
+            <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
+              <Checkbox
+                checked={cancelNotify}
+                onCheckedChange={(v) => setCancelNotify(!!v)}
+              />
+              <span>Notificar a participantes</span>
+            </label>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCancelOpen(false)}>
+              Cerrar
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={!cancelReason.trim() || !detail}
+              onClick={() => {
+                if (!detail) return;
+                cancelEvent(detail.event.id, cancelReason.trim(), cancelNotify);
+                toast.success(
+                  cancelNotify
+                    ? "Evento cancelado y participantes notificados"
+                    : "Evento cancelado",
+                );
+                setCancelOpen(false);
+                setDetail(null);
+              }}
+            >
+              <Ban className="mr-1 h-4 w-4" />
+              Cancelar evento
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ────── Edit dialog ────── */}
+      <Dialog open={!!editEv} onOpenChange={(o) => !o && setEditEv(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Editar evento</DialogTitle>
           </DialogHeader>
           {editEv && (
             <div className="space-y-3">
-              <div>
-                <Label>{t("name")}</Label>
-                <Input
-                  value={editEv.title}
-                  onChange={(e) => setEditEv({ ...editEv, title: e.target.value })}
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Tipo</Label>
+                  <Select
+                    value={editEv.type}
+                    onValueChange={(v) =>
+                      setEditEv({ ...editEv, type: v as CalendarEventType })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TYPE_OPTIONS.map((o) => (
+                        <SelectItem key={o.value} value={o.value}>
+                          {o.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Título</Label>
+                  <Input
+                    value={editEv.title}
+                    onChange={(e) => setEditEv({ ...editEv, title: e.target.value })}
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label>{t("date")}</Label>
+                  <Label>Fecha</Label>
                   <Input
                     type="date"
                     value={editEv.date}
@@ -736,22 +1163,53 @@ function CalendarPage() {
                 </div>
               </div>
               <div>
-                <Label>{t("group")}</Label>
-                <Select
-                  value={editEv.groupId}
-                  onValueChange={(v) => setEditEv({ ...editEv, groupId: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="—" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {groups.map((g) => (
-                      <SelectItem key={g.id} value={g.id}>
-                        {g.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Ubicación</Label>
+                <Input
+                  value={editEv.location}
+                  onChange={(e) => setEditEv({ ...editEv, location: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Grupo</Label>
+                  <Select
+                    value={editEv.groupId}
+                    onValueChange={(v) => setEditEv({ ...editEv, groupId: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="—" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {groups.map((g) => (
+                        <SelectItem key={g.id} value={g.id}>
+                          {g.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Staff responsable</Label>
+                  <Select
+                    value={editEv.staffId}
+                    onValueChange={(v) => setEditEv({ ...editEv, staffId: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="—" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {demoUsers
+                        .filter((u) =>
+                          ["technical", "medical", "manager", "admin"].includes(u.role),
+                        )
+                        .map((u) => (
+                          <SelectItem key={u.id} value={u.id}>
+                            {u.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           )}
@@ -768,19 +1226,66 @@ function CalendarPage() {
                   title: editEv.title,
                   event_date: editEv.date,
                   start_time: editEv.startTime,
+                  type: editEv.type,
                   group_id: editEv.groupId || null,
                   section_id: g?.section_id ?? null,
                   category_id: g?.category_id ?? null,
+                  staff_id: editEv.staffId || null,
+                  location: editEv.location || null,
                 });
                 setEditEv(null);
               }}
             >
-              {t("save")}
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+function Row({
+  icon,
+  label,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-2">
+      <span className="mt-0.5 text-muted-foreground">{icon}</span>
+      <div className="flex-1">
+        <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+          {label}
+        </div>
+        <div className="text-sm text-foreground">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function StatusPill({
+  tone,
+  children,
+}: {
+  tone: "muted" | "ok" | "warn" | "danger";
+  children: React.ReactNode;
+}) {
+  const map: Record<typeof tone, string> = {
+    muted: "bg-slate-100 text-slate-600 border-slate-200",
+    ok: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    warn: "bg-amber-50 text-amber-700 border-amber-200",
+    danger: "bg-rose-50 text-rose-700 border-rose-200",
+  };
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${map[tone]}`}
+    >
+      {children}
+    </span>
   );
 }
 
