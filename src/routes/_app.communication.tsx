@@ -129,7 +129,8 @@ function CommunicationPage() {
   });
 
   const profiles = demoOrEmpty(profilesQ.data, DEMO_PROFILES_MIN_ROWS);
-  const messages = (msgsQ.data ?? (activeId ? demoMessagesFor(activeId) : [])) as DBMsg[];
+  const allMessages = (msgsQ.data ?? (activeId ? demoMessagesFor(activeId) : [])) as DBMsg[];
+  const messages = allMessages.filter((m) => !hiddenMsgs.includes(m.id));
 
   const sendMsg = useMutation({
     mutationFn: async (content: string) => {
