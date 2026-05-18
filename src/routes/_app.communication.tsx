@@ -954,11 +954,11 @@ function ConversationsTab({
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => onArchive(c.id)}>
                       <Archive className="mr-2 h-4 w-4" />
-                      Archivar
+                      Archivar <ProposalBadge className="ml-auto" />
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onHide(c.id)}>
                       <Inbox className="mr-2 h-4 w-4" />
-                      Eliminar de mi bandeja
+                      Eliminar de mi bandeja <ProposalBadge className="ml-auto" />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
