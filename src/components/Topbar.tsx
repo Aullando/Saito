@@ -15,6 +15,7 @@ const ROLE_LABEL: Record<string, string> = {
   manager: "Manager",
   technical: "Technical",
   medical: "Medical",
+  athlete: "Atleta",
 };
 
 export function Topbar() {
