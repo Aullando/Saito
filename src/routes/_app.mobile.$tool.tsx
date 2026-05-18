@@ -144,7 +144,9 @@ const ATT_OPTIONS: { key: AttStatus; label: string; cls: string }[] = [
 
 function Attendance() {
   const athletes = useDemoAthletes();
-  const [state, setState] = useState<Record<string, AttStatus>>({});
+  const saved = useSessionLocal((s) => s.attendance[DEMO_SESSION_ID] ?? {});
+  const saveAttendance = useSessionLocal((s) => s.saveAttendance);
+  const [state, setState] = useState<Record<string, AttStatus>>(saved);
   const counts = useMemo(() => {
     const c = { present: 0, absent: 0, justified: 0, injured: 0 } as Record<AttStatus, number>;
     Object.values(state).forEach((s) => (c[s] += 1));
@@ -195,7 +197,15 @@ function Attendance() {
         ))}
       </ul>
       <button
-        onClick={() => toast.success("Asistencia guardada")}
+        onClick={() => {
+          // sessionLocal solo conoce los 3 estados base; mapeamos justified/injured -> absent para conteo agregado.
+          const mapped: Record<string, "present" | "late" | "absent"> = {};
+          Object.entries(state).forEach(([k, v]) => {
+            mapped[k] = v === "present" ? "present" : v === "justified" ? "late" : "absent";
+          });
+          saveAttendance(DEMO_SESSION_ID, mapped);
+          toast.success("Asistencia guardada");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
         <Check className="h-4 w-4" /> Guardar asistencia
