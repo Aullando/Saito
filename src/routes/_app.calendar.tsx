@@ -135,8 +135,8 @@ function CalendarPage() {
     },
   });
 
-  const events = demoMode
-    ? demoEvents.map((e) => ({
+  const events: DBEvent[] = demoMode
+    ? demoEvents.map((e): DBEvent => ({
         id: e.id,
         title: e.title,
         event_date: e.date,
@@ -145,7 +145,7 @@ function CalendarPage() {
         section_id: e.sectionId ?? null,
         category_id: e.categoryId ?? null,
         group_id: e.groupId ?? null,
-        recurrence: e.recurrence ?? null,
+        recurrence: e.recurrence ? { ...e.recurrence, exceptions: e.exceptions ?? [] } : null,
       }))
     : (demoOrEmpty(eventsQ.data, DEMO_CALENDAR_EVENTS_ROWS) as DBEvent[]);
   const sections = demoMode
