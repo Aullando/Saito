@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
-import { PageHeader, Pill } from "@/components/ui-kit";
+import { PageHeader, Pill, EmptyState } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -15,25 +16,40 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useT } from "@/lib/i18n";
-import { useAuth } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  DEMO_CONVERSATIONS_ROWS,
-  DEMO_PROFILES_MIN_ROWS,
-  demoMessagesFor,
-} from "@/lib/demoFallbacks";
-import { toast } from "sonner";
-import { Plus, Send, Trash2, Archive, ArchiveRestore, MoreVertical } from "lucide-react";
-import { formatDateTime } from "@/lib/format";
-import { demoOrEmpty } from "@/lib/demoFallback";
-import { useCommLocal } from "@/lib/commLocal";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useData } from "@/lib/store";
+import { useCommLocal, type CircularStatus, type LocalCircular } from "@/lib/commLocal";
+import { formatDateTime } from "@/lib/format";
+import { toast } from "sonner";
+import {
+  Archive,
+  ArchiveRestore,
+  CalendarPlus,
+  CheckCircle2,
+  Inbox,
+  Megaphone,
+  MoreVertical,
+  Plus,
+  Send,
+  Stethoscope,
+  Trash2,
+  Undo2,
+  Users,
+} from "lucide-react";
+import type { Conversation, Message } from "@/lib/types";
 
 export const Route = createFileRoute("/_app/communication")({
   component: () => (
@@ -45,421 +61,1085 @@ export const Route = createFileRoute("/_app/communication")({
   ),
 });
 
-interface DBConv {
+// ────── Helpers ──────
+
+interface CircularItem {
   id: string;
   title: string;
-  type: string;
-  created_at: string;
+  body: string;
+  recipientsLabel: string;
+  recipientsCount: number;
+  reads: number;
+  createdAt: string;
+  status: CircularStatus;
+  withdrawReason?: string;
+  source: "seed" | "local";
 }
 
-interface DBMsg {
-  id: string;
-  author_id: string;
-  conversation_id: string;
-  content: string;
-  created_at: string;
+const STATUS_LABELS: Record<CircularStatus, string> = {
+  draft: "Borrador",
+  published: "Publicada",
+  archived: "Archivada",
+  withdrawn: "Retirada",
+};
+
+const STATUS_STYLES: Record<CircularStatus, string> = {
+  draft: "bg-amber-50 text-amber-700 border-amber-200",
+  published: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  archived: "bg-slate-100 text-slate-600 border-slate-200",
+  withdrawn: "bg-rose-50 text-rose-700 border-rose-200",
+};
+
+function StatusBadge({ status }: { status: CircularStatus }) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLES[status]}`}
+    >
+      {STATUS_LABELS[status]}
+    </span>
+  );
+}
+
+function isMedicalRequest(c: Conversation): boolean {
+  return /solicitud de cita médica/i.test(c.title);
 }
 
 function CommunicationPage() {
-  const t = useT();
-  const { user, profile } = useAuth();
-  const orgId = profile?.organization_id;
-  const qc = useQueryClient();
+  const {
+    conversations,
+    users,
+    athletes,
+    sendMessage,
+    addAppointment,
+  } = useData();
+  const {
+    archivedConvs,
+    hiddenConvs,
+    archiveConv,
+    unarchiveConv,
+    hideConv,
+    localCirculars,
+    circularStatus,
+    withdrawReasons,
+    addLocalCircular,
+    deleteLocalCircular,
+    publishCircular,
+    archiveCircular,
+    withdrawCircular,
+    handledRequests,
+    markRequestHandled,
+  } = useCommLocal();
 
-  const convsQ = useQuery({
-    queryKey: ["conversations", orgId, user?.id],
-    enabled: !!orgId && !!user,
-    queryFn: async () => {
-      const { data: parts, error: pe } = await supabase
-        .from("conversation_participants")
-        .select("conversation_id")
-        .eq("user_id", user!.id);
-      if (pe) throw pe;
-      const ids = (parts ?? []).map((p) => p.conversation_id);
-      if (ids.length === 0) return [] as DBConv[];
-      const { data, error } = await supabase
-        .from("conversations")
-        .select("id, title, type, created_at")
-        .in("id", ids)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data ?? []) as DBConv[];
-    },
-  });
+  const [tab, setTab] = useState<
+    "circulars" | "direct" | "groups" | "medical" | "archived"
+  >("circulars");
+  const [openNew, setOpenNew] = useState(false);
 
-  const allConversations = demoOrEmpty(convsQ.data, DEMO_CONVERSATIONS_ROWS) as DBConv[];
-  const { hiddenConvs, archivedConvs, hiddenMsgs, hideConv, archiveConv, unarchiveConv, hideMsg } =
-    useCommLocal();
-  const [showArchived, setShowArchived] = useState(false);
-  const conversations = allConversations.filter((c) => {
-    if (hiddenConvs.includes(c.id)) return false;
-    const archived = archivedConvs.includes(c.id);
-    return showArchived ? archived : !archived;
-  });
-  const [activeId, setActiveId] = useState<string | null>(null);
-  useEffect(() => {
-    if (!activeId && conversations.length) setActiveId(conversations[0].id);
-    if (activeId && !conversations.find((c) => c.id === activeId)) {
-      setActiveId(conversations[0]?.id ?? null);
+  // ────── Circulares ──────
+  // Derive seed circulars (flatten messages of type=circular convs)
+  const seedCirculars: CircularItem[] = useMemo(() => {
+    const items: CircularItem[] = [];
+    for (const c of conversations) {
+      if (c.type !== "circular") continue;
+      for (const m of c.messages) {
+        const recipientsCount = extractRecipientsCount(m.targetLabel) ?? c.participants.length;
+        const overridden = circularStatus[m.id];
+        items.push({
+          id: m.id,
+          title: m.content.slice(0, 80) + (m.content.length > 80 ? "…" : ""),
+          body: m.content,
+          recipientsLabel: m.targetLabel,
+          recipientsCount,
+          reads: Math.max(
+            0,
+            Math.min(
+              recipientsCount,
+              Math.round(recipientsCount * 0.78),
+            ),
+          ),
+          createdAt: m.createdAt,
+          status: overridden ?? "published",
+          withdrawReason: withdrawReasons[m.id],
+          source: "seed",
+        });
+      }
     }
-  }, [conversations, activeId]);
+    return items;
+  }, [conversations, circularStatus, withdrawReasons]);
 
-  const msgsQ = useQuery({
-    queryKey: ["messages", activeId],
-    enabled: !!activeId,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("messages")
-        .select("id, author_id, conversation_id, content, created_at")
-        .eq("conversation_id", activeId!)
-        .order("created_at");
-      if (error) throw error;
-      return (data ?? []) as DBMsg[];
-    },
-  });
+  const allCirculars: CircularItem[] = useMemo(() => {
+    const localItems: CircularItem[] = localCirculars.map((c: LocalCircular) => ({
+      id: c.id,
+      title: c.title,
+      body: c.body,
+      recipientsLabel: c.recipientsLabel,
+      recipientsCount: c.recipientsCount,
+      reads: c.reads,
+      createdAt: c.createdAt,
+      status: c.status,
+      withdrawReason: c.withdrawReason,
+      source: "local",
+    }));
+    return [...localItems, ...seedCirculars].sort((a, b) =>
+      b.createdAt.localeCompare(a.createdAt),
+    );
+  }, [seedCirculars, localCirculars]);
 
-  const profilesQ = useQuery({
-    queryKey: ["profiles_min", orgId],
-    enabled: !!orgId,
-    queryFn: async () => {
-      const { data, error } = await supabase.from("profiles").select("id, full_name, email");
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
+  // ────── Conversations split ──────
+  const visibleConvs = conversations.filter((c) => !hiddenConvs.includes(c.id));
+  const directChats = visibleConvs.filter(
+    (c) => c.type === "direct" && !isMedicalRequest(c) && !archivedConvs.includes(c.id),
+  );
+  const groupChats = visibleConvs.filter(
+    (c) => c.type === "group" && !archivedConvs.includes(c.id),
+  );
+  const medicalRequests = visibleConvs.filter((c) => isMedicalRequest(c));
+  const archivedList = visibleConvs.filter((c) => archivedConvs.includes(c.id));
 
-  const profiles = demoOrEmpty(profilesQ.data, DEMO_PROFILES_MIN_ROWS);
-  const allMessages = (msgsQ.data ?? (activeId ? demoMessagesFor(activeId) : [])) as DBMsg[];
-  const messages = allMessages.filter((m) => !hiddenMsgs.includes(m.id));
+  return (
+    <>
+      <PageHeader
+        title="Comunicación"
+        actions={
+          <Dialog open={openNew} onOpenChange={setOpenNew}>
+            <DialogTrigger asChild>
+              <Button className="rounded-full">
+                <Plus className="mr-1 h-4 w-4" />
+                Nueva circular
+              </Button>
+            </DialogTrigger>
+            <NewCircularDialog
+              onClose={() => setOpenNew(false)}
+              onSave={(payload, publish) => {
+                const id = addLocalCircular(payload);
+                if (publish) publishCircular(id);
+                toast.success(publish ? "Circular publicada" : "Borrador guardado");
+                setOpenNew(false);
+                setTab("circulars");
+              }}
+            />
+          </Dialog>
+        }
+      />
 
-  const sendMsg = useMutation({
-    mutationFn: async (content: string) => {
-      const { error } = await supabase.from("messages").insert({
-        conversation_id: activeId!,
-        organization_id: orgId!,
-        author_id: user!.id,
-        content,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["messages", activeId] }),
-    onError: (e: Error) => toast.error(e.message),
-  });
+      <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="space-y-4">
+        <TabsList className="flex w-full flex-wrap justify-start gap-1 bg-muted/40 p-1">
+          <TabsTrigger value="circulars" className="gap-1.5">
+            <Megaphone className="h-4 w-4" /> Circulares
+            <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
+              {allCirculars.length}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="direct" className="gap-1.5">
+            <Inbox className="h-4 w-4" /> Chats directos
+            <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
+              {directChats.length}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="groups" className="gap-1.5">
+            <Users className="h-4 w-4" /> Grupos
+            <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
+              {groupChats.length}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="medical" className="gap-1.5">
+            <Stethoscope className="h-4 w-4" /> Solicitudes médicas
+            <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
+              {medicalRequests.filter((r) => !handledRequests.includes(r.id)).length}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="archived" className="gap-1.5">
+            <Archive className="h-4 w-4" /> Archivados
+            <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
+              {archivedList.length}
+            </span>
+          </TabsTrigger>
+        </TabsList>
 
-  const newConv = useMutation({
-    mutationFn: async (data: { title: string; body: string }) => {
-      const { data: conv, error } = await supabase
-        .from("conversations")
-        .insert({
-          organization_id: orgId!,
-          title: data.title,
-          type: "circular",
-          created_by: user!.id,
-        })
-        .select("id")
-        .single();
-      if (error) throw error;
-      const cid = conv.id as string;
-      const { error: pe } = await supabase
-        .from("conversation_participants")
-        .insert({ organization_id: orgId!, conversation_id: cid, user_id: user!.id });
-      if (pe) throw pe;
-      const { error: me } = await supabase.from("messages").insert({
-        conversation_id: cid,
-        organization_id: orgId!,
-        author_id: user!.id,
-        content: data.body,
-      });
-      if (me) throw me;
-      return cid;
-    },
-    onSuccess: (cid) => {
-      toast.success(t("send"));
-      setActiveId(cid);
-      qc.invalidateQueries({ queryKey: ["conversations", orgId, user?.id] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
+        <TabsContent value="circulars" className="m-0">
+          <CircularsTab
+            items={allCirculars}
+            onDeleteDraft={(id) => {
+              deleteLocalCircular(id);
+              toast.success("Borrador eliminado");
+            }}
+            onPublish={(id) => {
+              publishCircular(id);
+              toast.success("Circular publicada");
+            }}
+            onArchive={(id) => {
+              archiveCircular(id);
+              toast.success("Circular archivada");
+            }}
+            onWithdraw={(id, reason) => {
+              withdrawCircular(id, reason);
+              toast.success("Circular retirada");
+            }}
+          />
+        </TabsContent>
 
-  const delConv = useMutation({
-    mutationFn: async (id: string) => {
-      hideConv(id);
-      await supabase.from("conversations").delete().eq("id", id);
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["conversations", orgId, user?.id] });
-      toast.success(t("delete"));
-    },
-  });
+        <TabsContent value="direct" className="m-0">
+          <ConversationsTab
+            conversations={directChats}
+            users={users}
+            onArchive={(id) => {
+              archiveConv(id);
+              toast.success("Conversación archivada");
+            }}
+            onHide={(id) => {
+              hideConv(id);
+              toast.success("Eliminada de tu bandeja");
+            }}
+            onSend={(id, content) =>
+              sendMessage(id, {
+                authorId: users[0]?.id ?? "u-adm",
+                authorRole: "admin",
+                targetLabel: "Conversación directa",
+                content,
+              })
+            }
+            emptyLabel="No hay chats directos."
+          />
+        </TabsContent>
 
-  const delMsg = useMutation({
-    mutationFn: async (id: string) => {
-      hideMsg(id);
-      await supabase.from("messages").delete().eq("id", id);
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["messages", activeId] });
-    },
-  });
+        <TabsContent value="groups" className="m-0">
+          <ConversationsTab
+            conversations={groupChats}
+            users={users}
+            onArchive={(id) => {
+              archiveConv(id);
+              toast.success("Grupo archivado");
+            }}
+            onHide={(id) => {
+              hideConv(id);
+              toast.success("Eliminado de tu bandeja");
+            }}
+            onSend={(id, content) =>
+              sendMessage(id, {
+                authorId: users[0]?.id ?? "u-adm",
+                authorRole: "admin",
+                targetLabel: "Conversación de grupo",
+                content,
+              })
+            }
+            emptyLabel="No hay conversaciones de grupo."
+          />
+        </TabsContent>
 
-  const [draft, setDraft] = useState("");
-  const [open, setOpen] = useState(false);
-  const [newC, setNewC] = useState({ title: "", body: "" });
+        <TabsContent value="medical" className="m-0">
+          <MedicalRequestsTab
+            requests={medicalRequests}
+            handled={handledRequests}
+            athletes={athletes}
+            users={users}
+            onCreateAppointment={(req, payload) => {
+              addAppointment(payload);
+              markRequestHandled(req.id);
+              toast.success("Cita médica creada");
+            }}
+            onArchive={(id) => {
+              archiveConv(id);
+              toast.success("Solicitud archivada");
+            }}
+          />
+        </TabsContent>
 
-  const active = conversations.find((c) => c.id === activeId) ?? null;
-  const authorName = (id: string) => {
-    const p = profiles.find((x) => x.id === id);
-    return p?.full_name ?? p?.email ?? id.slice(0, 6);
+        <TabsContent value="archived" className="m-0">
+          <ArchivedTab
+            conversations={archivedList}
+            onUnarchive={(id) => {
+              unarchiveConv(id);
+              toast.success("Restaurada en tu bandeja");
+            }}
+            onHide={(id) => {
+              hideConv(id);
+              toast.success("Eliminada de tu bandeja");
+            }}
+          />
+        </TabsContent>
+      </Tabs>
+    </>
+  );
+}
+
+// ────── Circulares Tab ──────
+
+function CircularsTab({
+  items,
+  onDeleteDraft,
+  onPublish,
+  onArchive,
+  onWithdraw,
+}: {
+  items: CircularItem[];
+  onDeleteDraft: (id: string) => void;
+  onPublish: (id: string) => void;
+  onArchive: (id: string) => void;
+  onWithdraw: (id: string, reason: string) => void;
+}) {
+  const [filter, setFilter] = useState<CircularStatus | "all">("all");
+  const filtered = items.filter((c) => (filter === "all" ? true : c.status === filter));
+  const counts: Record<CircularStatus | "all", number> = {
+    all: items.length,
+    draft: items.filter((c) => c.status === "draft").length,
+    published: items.filter((c) => c.status === "published").length,
+    archived: items.filter((c) => c.status === "archived").length,
+    withdrawn: items.filter((c) => c.status === "withdrawn").length,
   };
-  const initialsOf = (id: string) => {
-    const n = authorName(id);
-    return n
+
+  const [withdrawTarget, setWithdrawTarget] = useState<CircularItem | null>(null);
+  const [withdrawReason, setWithdrawReason] = useState("");
+
+  return (
+    <div className="saito-card p-0">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
+        {(["all", "draft", "published", "archived", "withdrawn"] as const).map((s) => (
+          <button
+            key={s}
+            onClick={() => setFilter(s)}
+            className={`rounded-full border px-3 py-1 text-xs transition ${
+              filter === s
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border bg-background text-muted-foreground hover:bg-muted/40"
+            }`}
+          >
+            {s === "all" ? "Todas" : STATUS_LABELS[s]}
+            <span className="ml-1.5 tabular-nums opacity-70">{counts[s]}</span>
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <EmptyState>No hay circulares en este estado.</EmptyState>
+      ) : (
+        <ul className="divide-y divide-border">
+          {filtered.map((c) => {
+            const pct = c.recipientsCount
+              ? Math.round((c.reads / c.recipientsCount) * 100)
+              : 0;
+            return (
+              <li key={c.id} className="px-4 py-4 hover:bg-muted/30">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <StatusBadge status={c.status} />
+                      <span className="text-[11px] text-muted-foreground tabular-nums">
+                        {formatDateTime(c.createdAt)}
+                      </span>
+                    </div>
+                    <div className="mt-1 truncate text-sm font-semibold text-foreground">
+                      {c.title}
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                      {c.body}
+                    </div>
+                    <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
+                      <span className="inline-flex items-center gap-1">
+                        <Users className="h-3 w-3" /> {c.recipientsLabel}
+                      </span>
+                      <span className="tabular-nums">
+                        {c.recipientsCount} destinatarios
+                      </span>
+                      {c.status !== "draft" && (
+                        <span className="tabular-nums">
+                          {c.reads} lecturas ({pct}%)
+                        </span>
+                      )}
+                    </div>
+                    {c.status === "withdrawn" && c.withdrawReason && (
+                      <div className="mt-2 rounded-md border border-rose-200 bg-rose-50/60 px-2 py-1 text-[11px] text-rose-700">
+                        <strong>Motivo retirada:</strong> {c.withdrawReason}
+                      </div>
+                    )}
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-52">
+                      {c.status === "draft" && (
+                        <>
+                          <DropdownMenuItem onClick={() => onPublish(c.id)}>
+                            <Send className="mr-2 h-4 w-4" />
+                            Publicar
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-destructive focus:text-destructive"
+                            onClick={() => {
+                              if (!confirm("¿Eliminar este borrador?")) return;
+                              onDeleteDraft(c.id);
+                            }}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Eliminar borrador
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      {c.status === "published" && (
+                        <>
+                          <DropdownMenuItem onClick={() => onArchive(c.id)}>
+                            <Archive className="mr-2 h-4 w-4" />
+                            Archivar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-rose-600 focus:text-rose-600"
+                            onClick={() => {
+                              setWithdrawTarget(c);
+                              setWithdrawReason("");
+                            }}
+                          >
+                            <Undo2 className="mr-2 h-4 w-4" />
+                            Retirar circular…
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      {c.status === "archived" && (
+                        <DropdownMenuItem disabled>
+                          <Archive className="mr-2 h-4 w-4" />
+                          Sólo lectura
+                        </DropdownMenuItem>
+                      )}
+                      {c.status === "withdrawn" && (
+                        <DropdownMenuItem disabled>
+                          <Undo2 className="mr-2 h-4 w-4" />
+                          Retirada
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <Dialog
+        open={!!withdrawTarget}
+        onOpenChange={(o) => {
+          if (!o) setWithdrawTarget(null);
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Retirar circular</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              La circular quedará marcada como retirada y dejará de ser visible para los
+              destinatarios. Es obligatorio indicar el motivo.
+            </p>
+            <Label>Motivo de retirada</Label>
+            <Textarea
+              value={withdrawReason}
+              onChange={(e) => setWithdrawReason(e.target.value)}
+              placeholder="Ej: información errónea, cambio de fecha, etc."
+              rows={3}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setWithdrawTarget(null)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={!withdrawReason.trim()}
+              onClick={() => {
+                if (withdrawTarget) onWithdraw(withdrawTarget.id, withdrawReason.trim());
+                setWithdrawTarget(null);
+              }}
+            >
+              <Undo2 className="mr-1 h-4 w-4" />
+              Retirar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// ────── New Circular Dialog ──────
+
+function NewCircularDialog({
+  onClose,
+  onSave,
+}: {
+  onClose: () => void;
+  onSave: (
+    payload: {
+      title: string;
+      body: string;
+      recipientsLabel: string;
+      recipientsCount: number;
+    },
+    publish: boolean,
+  ) => void;
+}) {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [recipients, setRecipients] = useState("Todo el club");
+  const [count, setCount] = useState(32);
+
+  return (
+    <DialogContent className="max-w-lg">
+      <DialogHeader>
+        <DialogTitle>Nueva circular</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-3">
+        <div>
+          <Label>Título</Label>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Asunto" />
+        </div>
+        <div>
+          <Label>Mensaje</Label>
+          <Textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Contenido de la circular"
+            rows={5}
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label>Destinatarios</Label>
+            <Input value={recipients} onChange={(e) => setRecipients(e.target.value)} />
+          </div>
+          <div>
+            <Label>Nº destinatarios</Label>
+            <Input
+              type="number"
+              value={count}
+              onChange={(e) => setCount(Number(e.target.value) || 0)}
+            />
+          </div>
+        </div>
+      </div>
+      <DialogFooter className="gap-2">
+        <Button variant="outline" onClick={onClose}>
+          Cancelar
+        </Button>
+        <Button
+          variant="secondary"
+          disabled={!title || !body}
+          onClick={() =>
+            onSave(
+              { title, body, recipientsLabel: recipients, recipientsCount: count },
+              false,
+            )
+          }
+        >
+          Guardar borrador
+        </Button>
+        <Button
+          disabled={!title || !body}
+          onClick={() =>
+            onSave(
+              { title, body, recipientsLabel: recipients, recipientsCount: count },
+              true,
+            )
+          }
+        >
+          <Send className="mr-1 h-4 w-4" />
+          Publicar
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  );
+}
+
+// ────── Conversations Tab (chats / groups) ──────
+
+function ConversationsTab({
+  conversations,
+  users,
+  onArchive,
+  onHide,
+  onSend,
+  emptyLabel,
+}: {
+  conversations: Conversation[];
+  users: { id: string; name: string; initials: string }[];
+  onArchive: (id: string) => void;
+  onHide: (id: string) => void;
+  onSend: (id: string, content: string) => void;
+  emptyLabel: string;
+}) {
+  const [activeId, setActiveId] = useState<string | null>(conversations[0]?.id ?? null);
+  const active =
+    conversations.find((c) => c.id === activeId) ?? conversations[0] ?? null;
+  const [draft, setDraft] = useState("");
+
+  const authorName = (id: string) => users.find((u) => u.id === id)?.name ?? id.slice(0, 6);
+  const initials = (id: string) =>
+    users.find((u) => u.id === id)?.initials ??
+    authorName(id)
       .split(" ")
       .map((x) => x[0])
       .slice(0, 2)
       .join("")
       .toUpperCase();
-  };
 
-  const send = async () => {
-    if (!draft.trim() || !active) return;
-    await sendMsg.mutateAsync(draft);
-    setDraft("");
-  };
+  if (conversations.length === 0) {
+    return (
+      <div className="saito-card p-0">
+        <EmptyState>{emptyLabel}</EmptyState>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <PageHeader
-        title={t("communication")}
-        actions={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button className="rounded-full">
-                <Plus className="mr-1 h-4 w-4" />
-                {t("new_circular")}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-lg">
-              <DialogHeader>
-                <DialogTitle>{t("new_circular")}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-3">
-                <div>
-                  <Label>Título</Label>
-                  <Input
-                    value={newC.title}
-                    onChange={(e) => setNewC({ ...newC, title: e.target.value })}
-                    placeholder="Asunto"
-                  />
-                </div>
-                <div>
-                  <Label>Mensaje</Label>
-                  <Input
-                    value={newC.body}
-                    onChange={(e) => setNewC({ ...newC, body: e.target.value })}
-                    placeholder="Contenido"
-                  />
+    <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
+      <div className="saito-card flex flex-col p-0">
+        <ul className="flex-1 overflow-y-auto">
+          {conversations.map((c) => {
+            const isActive = c.id === active?.id;
+            const last = c.messages[c.messages.length - 1];
+            return (
+              <li key={c.id} className="group/conv relative">
+                <button
+                  onClick={() => setActiveId(c.id)}
+                  className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 pr-10 text-left ${
+                    isActive ? "bg-primary/5" : "hover:bg-muted/40"
+                  }`}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate text-sm font-medium">{c.title}</span>
+                      {c.unreadCount > 0 && (
+                        <span className="rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground tabular-nums">
+                          {c.unreadCount}
+                        </span>
+                      )}
+                    </div>
+                    {last && (
+                      <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                        {last.content}
+                      </div>
+                    )}
+                    <div className="mt-0.5 text-[11px] text-muted-foreground tabular-nums">
+                      {last ? formatDateTime(last.createdAt) : "—"}
+                    </div>
+                  </div>
+                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-2 h-7 w-7 opacity-60 hover:opacity-100"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onArchive(c.id)}>
+                      <Archive className="mr-2 h-4 w-4" />
+                      Archivar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onHide(c.id)}>
+                      <Inbox className="mr-2 h-4 w-4" />
+                      Eliminar de mi bandeja
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      <div className="saito-card flex h-[600px] flex-col p-0">
+        {active ? (
+          <>
+            <div className="flex items-start justify-between gap-2 border-b border-border px-5 py-4">
+              <div>
+                <div className="text-base font-semibold">{active.title}</div>
+                <div className="text-xs text-muted-foreground">
+                  <Pill>{active.type}</Pill>{" "}
+                  <span className="ml-1">{active.participants.length} participantes</span>
                 </div>
               </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>
-                  {t("cancel")}
+              <div className="flex items-center gap-1">
+                <Button size="sm" variant="ghost" onClick={() => onArchive(active.id)}>
+                  <Archive className="mr-1 h-4 w-4" />
+                  Archivar
                 </Button>
-                <Button
-                  onClick={async () => {
-                    if (!newC.title || !newC.body) return;
-                    await newConv.mutateAsync(newC);
-                    setNewC({ title: "", body: "" });
-                    setOpen(false);
-                  }}
-                >
-                  {t("send")}
+                <Button size="sm" variant="ghost" onClick={() => onHide(active.id)}>
+                  <Inbox className="mr-1 h-4 w-4" />
+                  Quitar de mi bandeja
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        }
-      />
-
-      <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
-        <div className="saito-card flex flex-col p-0">
-          <div className="flex items-center justify-between border-b border-border px-4 py-3">
-            <span className="text-sm font-semibold">
-              {showArchived ? t("archived") || "Archivados" : t("inbox")}
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-xs"
-              onClick={() => setShowArchived((v) => !v)}
-            >
-              {showArchived ? t("inbox") : t("archived") || "Archivados"}
-            </Button>
-          </div>
-          <ul className="flex-1 overflow-y-auto">
-            {conversations.map((c) => {
-              const isActive = c.id === activeId;
-              const isArchived = archivedConvs.includes(c.id);
-              return (
-                <li key={c.id} className="group/conv relative">
-                  <button
-                    onClick={() => setActiveId(c.id)}
-                    className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 pr-10 text-left ${isActive ? "bg-primary/5" : "hover:bg-muted/40"}`}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium">{c.title}</div>
-                      <div className="mt-0.5 text-[11px] text-muted-foreground">
-                        <Pill>{c.type}</Pill>
-                      </div>
-                      <div className="mt-0.5 text-[11px] text-muted-foreground tabular-nums">
-                        {formatDateTime(c.created_at)}
-                      </div>
+              </div>
+            </div>
+            <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+              {active.messages.map((m: Message) => (
+                <div key={m.id} className="flex gap-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                    {initials(m.authorId)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
+                      <span className="font-medium text-foreground">
+                        {authorName(m.authorId)}
+                      </span>
+                      <span className="text-muted-foreground tabular-nums">
+                        · {formatDateTime(m.createdAt)}
+                      </span>
                     </div>
-                  </button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-2 top-2 h-7 w-7 opacity-60 hover:opacity-100"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {isArchived ? (
-                        <DropdownMenuItem onClick={() => unarchiveConv(c.id)}>
-                          <ArchiveRestore className="mr-2 h-4 w-4" />
-                          {t("unarchive") || "Desarchivar"}
-                        </DropdownMenuItem>
-                      ) : (
-                        <DropdownMenuItem onClick={() => archiveConv(c.id)}>
-                          <Archive className="mr-2 h-4 w-4" />
-                          {t("archive") || "Archivar"}
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem
-                        className="text-destructive focus:text-destructive"
-                        onClick={() => {
-                          if (!confirm(t("delete_confirm"))) return;
-                          delConv.mutate(c.id);
-                        }}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        {t("delete")}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </li>
-              );
-            })}
-            {conversations.length === 0 && (
-              <li className="px-4 py-6 text-center text-xs text-muted-foreground">—</li>
-            )}
-          </ul>
-        </div>
-
-        <div className="saito-card flex h-[600px] flex-col p-0">
-          {active ? (
-            <>
-              <div className="flex items-start justify-between gap-2 border-b border-border px-5 py-4">
-                <div>
-                  <div className="text-base font-semibold">{active.title}</div>
-                  <div className="text-xs text-muted-foreground">{active.type}</div>
+                    <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">
+                      {m.content}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  {archivedConvs.includes(active.id) ? (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => unarchiveConv(active.id)}
-                    >
-                      <ArchiveRestore className="mr-1 h-4 w-4" />
-                      {t("unarchive") || "Desarchivar"}
-                    </Button>
-                  ) : (
-                    <Button size="sm" variant="ghost" onClick={() => archiveConv(active.id)}>
-                      <Archive className="mr-1 h-4 w-4" />
-                      {t("archive") || "Archivar"}
-                    </Button>
+              ))}
+              {active.messages.length === 0 && (
+                <div className="py-8 text-center text-xs text-muted-foreground">—</div>
+              )}
+            </div>
+            <div className="flex items-center gap-2 border-t border-border px-4 py-3">
+              <Input
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && draft.trim()) {
+                    onSend(active.id, draft.trim());
+                    setDraft("");
+                  }
+                }}
+                placeholder="Escribe un mensaje…"
+                className="rounded-full"
+              />
+              <Button
+                onClick={() => {
+                  if (!draft.trim()) return;
+                  onSend(active.id, draft.trim());
+                  setDraft("");
+                }}
+                className="rounded-full"
+              >
+                <Send className="mr-1 h-4 w-4" />
+                Enviar
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+            Selecciona una conversación
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ────── Medical Requests Tab ──────
+
+function MedicalRequestsTab({
+  requests,
+  handled,
+  athletes,
+  users,
+  onCreateAppointment,
+  onArchive,
+}: {
+  requests: Conversation[];
+  handled: string[];
+  athletes: { id: string; firstName: string; lastName: string }[];
+  users: { id: string; name: string; role: string }[];
+  onCreateAppointment: (
+    req: Conversation,
+    payload: {
+      athleteId: string;
+      staffId: string;
+      date: string;
+      time: string;
+      reason: string;
+      status: "Scheduled";
+      notes: string;
+    },
+  ) => void;
+  onArchive: (id: string) => void;
+}) {
+  const [target, setTarget] = useState<Conversation | null>(null);
+  const medics = users.filter((u) => u.role === "medical");
+
+  if (requests.length === 0) {
+    return (
+      <div className="saito-card p-0">
+        <EmptyState>No hay solicitudes médicas pendientes.</EmptyState>
+      </div>
+    );
+  }
+
+  return (
+    <div className="saito-card p-0">
+      <ul className="divide-y divide-border">
+        {requests.map((r) => {
+          const isHandled = handled.includes(r.id);
+          const athleteName = guessAthleteName(r.title);
+          const last = r.messages[r.messages.length - 1];
+          return (
+            <li key={r.id} className="px-4 py-4 hover:bg-muted/30">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {isHandled ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+                        <CheckCircle2 className="h-3 w-3" /> Cita creada
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                        Pendiente
+                      </span>
+                    )}
+                    <span className="text-[11px] text-muted-foreground tabular-nums">
+                      {last ? formatDateTime(last.createdAt) : ""}
+                    </span>
+                  </div>
+                  <div className="mt-1 text-sm font-semibold text-foreground">
+                    {r.title}
+                  </div>
+                  {last && (
+                    <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                      {last.content}
+                    </div>
                   )}
+                  {athleteName && (
+                    <div className="mt-1 text-[11px] text-muted-foreground">
+                      Atleta: <strong>{athleteName}</strong>
+                    </div>
+                  )}
+                </div>
+                <div className="flex shrink-0 items-center gap-1">
                   <Button
                     size="sm"
-                    variant="ghost"
-                    className="text-destructive"
-                    onClick={() => {
-                      if (!confirm(t("delete_confirm"))) return;
-                      delConv.mutate(active.id);
-                    }}
+                    onClick={() => setTarget(r)}
+                    disabled={isHandled}
+                    className="rounded-full"
                   >
-                    <Trash2 className="mr-1 h-4 w-4" />
-                    {t("delete")}
+                    <CalendarPlus className="mr-1 h-4 w-4" />
+                    Crear cita médica
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => onArchive(r.id)}>
+                    <Archive className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
-              <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
-                {messages.map((m) => (
-                  <div key={m.id} className="group/msg flex gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-                      {initialsOf(m.author_id)}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2 text-xs">
-                        <span className="font-medium text-foreground">
-                          {authorName(m.author_id)}
-                        </span>
-                        <span className="text-muted-foreground tabular-nums">
-                          · {formatDateTime(m.created_at)}
-                        </span>
-                      </div>
-                      <div className="mt-1 flex items-start gap-1">
-                        <div className="flex-1 rounded-2xl bg-muted px-3 py-2 text-sm">
-                          {m.content}
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 shrink-0 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover/msg:opacity-100"
-                          onClick={() => {
-                            if (!confirm(t("delete_confirm"))) return;
-                            delMsg.mutate(m.id);
-                          }}
-                          aria-label={t("delete")}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <CreateAppointmentDialog
+        request={target}
+        athletes={athletes}
+        medics={medics}
+        onClose={() => setTarget(null)}
+        onCreate={(payload) => {
+          if (target) onCreateAppointment(target, payload);
+          setTarget(null);
+        }}
+      />
+    </div>
+  );
+}
+
+function CreateAppointmentDialog({
+  request,
+  athletes,
+  medics,
+  onClose,
+  onCreate,
+}: {
+  request: Conversation | null;
+  athletes: { id: string; firstName: string; lastName: string }[];
+  medics: { id: string; name: string }[];
+  onClose: () => void;
+  onCreate: (payload: {
+    athleteId: string;
+    staffId: string;
+    date: string;
+    time: string;
+    reason: string;
+    status: "Scheduled";
+    notes: string;
+  }) => void;
+}) {
+  const guessed = request ? guessAthleteName(request.title) : "";
+  const initialAthlete =
+    athletes.find(
+      (a) => `${a.firstName} ${a.lastName}`.toLowerCase() === (guessed || "").toLowerCase(),
+    )?.id ?? athletes[0]?.id ?? "";
+
+  const [athleteId, setAthleteId] = useState(initialAthlete);
+  const [staffId, setStaffId] = useState(medics[0]?.id ?? "");
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [time, setTime] = useState("10:00");
+  const [reason, setReason] = useState(
+    request?.messages[0]?.content?.slice(0, 80) ?? "Consulta inicial",
+  );
+  const [notes, setNotes] = useState("");
+
+  return (
+    <Dialog
+      open={!!request}
+      onOpenChange={(o) => {
+        if (!o) onClose();
+      }}
+    >
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Crear cita médica</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Atleta</Label>
+              <Select value={athleteId} onValueChange={setAthleteId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Atleta" />
+                </SelectTrigger>
+                <SelectContent>
+                  {athletes.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.firstName} {a.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Staff médico</Label>
+              <Select value={staffId} onValueChange={setStaffId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Médico" />
+                </SelectTrigger>
+                <SelectContent>
+                  {medics.map((m) => (
+                    <SelectItem key={m.id} value={m.id}>
+                      {m.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Fecha</Label>
+              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            </div>
+            <div>
+              <Label>Hora</Label>
+              <Input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+            </div>
+          </div>
+          <div>
+            <Label>Motivo</Label>
+            <Input value={reason} onChange={(e) => setReason(e.target.value)} />
+          </div>
+          <div>
+            <Label>Notas (opcional)</Label>
+            <Textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={3}
+              placeholder="Información adicional para la cita"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button
+            disabled={!athleteId || !staffId || !date || !time || !reason}
+            onClick={() =>
+              onCreate({
+                athleteId,
+                staffId,
+                date,
+                time,
+                reason,
+                status: "Scheduled",
+                notes,
+              })
+            }
+          >
+            <CalendarPlus className="mr-1 h-4 w-4" />
+            Crear cita
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ────── Archived Tab ──────
+
+function ArchivedTab({
+  conversations,
+  onUnarchive,
+  onHide,
+}: {
+  conversations: Conversation[];
+  onUnarchive: (id: string) => void;
+  onHide: (id: string) => void;
+}) {
+  if (conversations.length === 0) {
+    return (
+      <div className="saito-card p-0">
+        <EmptyState>No hay conversaciones archivadas.</EmptyState>
+      </div>
+    );
+  }
+  return (
+    <div className="saito-card p-0">
+      <ul className="divide-y divide-border">
+        {conversations.map((c) => {
+          const last = c.messages[c.messages.length - 1];
+          return (
+            <li key={c.id} className="flex items-start justify-between gap-3 px-4 py-3">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <Pill>{c.type}</Pill>
+                  <span className="truncate text-sm font-medium">{c.title}</span>
+                </div>
+                {last && (
+                  <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                    {last.content} · {formatDateTime(last.createdAt)}
                   </div>
-                ))}
-                {messages.length === 0 && (
-                  <div className="py-8 text-center text-xs text-muted-foreground">—</div>
                 )}
               </div>
-              <div className="flex items-center gap-2 border-t border-border px-4 py-3">
-                <Input
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") send();
-                  }}
-                  placeholder={t("type_message")}
-                  className="rounded-full"
-                />
-                <Button onClick={send} className="rounded-full">
-                  <Send className="mr-1 h-4 w-4" />
-                  {t("send")}
+              <div className="flex items-center gap-1">
+                <Button size="sm" variant="ghost" onClick={() => onUnarchive(c.id)}>
+                  <ArchiveRestore className="mr-1 h-4 w-4" />
+                  Restaurar
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => onHide(c.id)}>
+                  <Inbox className="mr-1 h-4 w-4" />
+                  Quitar de mi bandeja
                 </Button>
               </div>
-            </>
-          ) : (
-            <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-              —
-            </div>
-          )}
-        </div>
-      </div>
-    </>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
+}
+
+// ────── utils ──────
+
+function extractRecipientsCount(label: string): number | null {
+  const m = label.match(/(\d+)\s+destinatari/);
+  return m ? Number(m[1]) : null;
+}
+
+function guessAthleteName(title: string): string | null {
+  const m = title.match(/·\s*(.+)$/);
+  return m ? m[1].trim() : null;
 }
