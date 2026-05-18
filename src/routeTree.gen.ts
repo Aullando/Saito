@@ -39,6 +39,7 @@ import { Route as AppAthletesRouteImport } from './routes/_app.athletes'
 import { Route as PublicEnIndexRouteImport } from './routes/_public.en.index'
 import { Route as AppMobileIndexRouteImport } from './routes/_app.mobile.index'
 import { Route as DemoMobileCoachRouteImport } from './routes/demo.mobile.coach'
+import { Route as DemoMobileAthleteRouteImport } from './routes/demo.mobile.athlete'
 import { Route as PublicEnSeguridadRouteImport } from './routes/_public.en.seguridad'
 import { Route as PublicEnProductoRouteImport } from './routes/_public.en.producto'
 import { Route as PublicEnPrivacidadRouteImport } from './routes/_public.en.privacidad'
@@ -214,6 +215,11 @@ const AppMobileIndexRoute = AppMobileIndexRouteImport.update({
 const DemoMobileCoachRoute = DemoMobileCoachRouteImport.update({
   id: '/demo/mobile/coach',
   path: '/demo/mobile/coach',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoMobileAthleteRoute = DemoMobileAthleteRouteImport.update({
+  id: '/demo/mobile/athlete',
+  path: '/demo/mobile/athlete',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicEnSeguridadRoute = PublicEnSeguridadRouteImport.update({
@@ -412,6 +418,7 @@ export interface FileRoutesByFullPath {
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
   '/en/seguridad': typeof PublicEnSeguridadRoute
+  '/demo/mobile/athlete': typeof DemoMobileAthleteRoute
   '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/mobile/': typeof AppMobileIndexRoute
   '/en/': typeof PublicEnIndexRoute
@@ -469,6 +476,7 @@ export interface FileRoutesByTo {
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
   '/en/seguridad': typeof PublicEnSeguridadRoute
+  '/demo/mobile/athlete': typeof DemoMobileAthleteRoute
   '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/mobile': typeof AppMobileIndexRoute
 }
@@ -529,6 +537,7 @@ export interface FileRoutesById {
   '/_public/en/privacidad': typeof PublicEnPrivacidadRoute
   '/_public/en/producto': typeof PublicEnProductoRoute
   '/_public/en/seguridad': typeof PublicEnSeguridadRoute
+  '/demo/mobile/athlete': typeof DemoMobileAthleteRoute
   '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/_app/mobile/': typeof AppMobileIndexRoute
   '/_public/en/': typeof PublicEnIndexRoute
@@ -589,6 +598,7 @@ export interface FileRouteTypes {
     | '/en/privacidad'
     | '/en/producto'
     | '/en/seguridad'
+    | '/demo/mobile/athlete'
     | '/demo/mobile/coach'
     | '/mobile/'
     | '/en/'
@@ -646,6 +656,7 @@ export interface FileRouteTypes {
     | '/en/privacidad'
     | '/en/producto'
     | '/en/seguridad'
+    | '/demo/mobile/athlete'
     | '/demo/mobile/coach'
     | '/mobile'
   id:
@@ -705,6 +716,7 @@ export interface FileRouteTypes {
     | '/_public/en/privacidad'
     | '/_public/en/producto'
     | '/_public/en/seguridad'
+    | '/demo/mobile/athlete'
     | '/demo/mobile/coach'
     | '/_app/mobile/'
     | '/_public/en/'
@@ -716,6 +728,7 @@ export interface RootRouteChildren {
   EnRoute: typeof EnRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  DemoMobileAthleteRoute: typeof DemoMobileAthleteRoute
   DemoMobileCoachRoute: typeof DemoMobileCoachRoute
 }
 
@@ -929,6 +942,13 @@ declare module '@tanstack/react-router' {
       path: '/demo/mobile/coach'
       fullPath: '/demo/mobile/coach'
       preLoaderRoute: typeof DemoMobileCoachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/mobile/athlete': {
+      id: '/demo/mobile/athlete'
+      path: '/demo/mobile/athlete'
+      fullPath: '/demo/mobile/athlete'
+      preLoaderRoute: typeof DemoMobileAthleteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/en/seguridad': {
@@ -1267,6 +1287,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnRoute: EnRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  DemoMobileAthleteRoute: DemoMobileAthleteRoute,
   DemoMobileCoachRoute: DemoMobileCoachRoute,
 }
 export const routeTree = rootRouteImport
