@@ -1,9 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
-import { PageHeader, Card } from "@/components/ui-kit";
+import { PageHeader, Card, Pill } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,22 +14,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { supabase } from "@/integrations/supabase/client";
 import {
-  DEMO_SECTIONS_ROWS,
-  DEMO_CATEGORIES_ROWS,
-  DEMO_GROUPS_ROWS,
-  DEMO_FACILITIES_ROWS,
-  DEMO_ATHLETES_ROWS,
-  DEMO_ORG_USERS_ROWS,
-} from "@/lib/demoFallbacks";
-import { useAuth } from "@/lib/auth";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useData } from "@/lib/store";
-import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
-import { isDemoMode } from "@/lib/appMode";
-import { demoOrEmpty } from "@/lib/demoFallback";
 import {
   Plus,
   Building2,
@@ -41,7 +33,13 @@ import {
   MapPin,
   Trash2,
   FolderTree,
+  ShieldCheck,
+  Baby,
+  Clock,
+  UserCog,
+  Layers,
 } from "lucide-react";
+import type { Role } from "@/lib/types";
 
 export const Route = createFileRoute("/_app/club")({
   component: () => (
@@ -53,817 +51,628 @@ export const Route = createFileRoute("/_app/club")({
   ),
 });
 
+const DAY_NAMES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+
 function ClubPage() {
-  const t = useT();
-  const { profile } = useAuth();
-  const lang = (profile?.language ?? "es") as "es" | "en";
-  const orgId = profile?.organization_id ?? null;
-  const qc = useQueryClient();
-  const demoMode = isDemoMode();
-  const demoSections = useData((s) => s.sections);
-  const demoCategories = useData((s) => s.categories);
-  const demoGroups = useData((s) => s.groups);
-  const demoFacilities = useData((s) => s.facilities);
-  const demoAddSection = useData((s) => s.addSection);
-  const demoDeleteSection = useData((s) => s.deleteSection);
-  const demoAddCategory = useData((s) => s.addCategory);
-  const demoDeleteCategory = useData((s) => s.deleteCategory);
-  const demoAddGroup = useData((s) => s.addGroup);
-  const demoDeleteGroup = useData((s) => s.deleteGroup);
-  const demoAddFacility = useData((s) => s.addFacility);
-  const demoDeleteFacility = useData((s) => s.deleteFacility);
+  const sections = useData((s) => s.sections);
+  const categories = useData((s) => s.categories);
+  const groups = useData((s) => s.groups);
+  const facilities = useData((s) => s.facilities);
+  const athletes = useData((s) => s.athletes);
+  const users = useData((s) => s.users);
+  const events = useData((s) => s.events);
 
-  const sectionsQ = useQuery({
-    queryKey: ["sport_sections", orgId],
-    enabled: !!orgId && !demoMode,
-    queryFn: async () => {
-      const { data, error } = await supabase.from("sport_sections").select("id,name").order("name");
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
+  const addSection = useData((s) => s.addSection);
+  const deleteSection = useData((s) => s.deleteSection);
+  const addCategory = useData((s) => s.addCategory);
+  const deleteCategory = useData((s) => s.deleteCategory);
+  const addGroup = useData((s) => s.addGroup);
+  const deleteGroup = useData((s) => s.deleteGroup);
+  const addFacility = useData((s) => s.addFacility);
+  const deleteFacility = useData((s) => s.deleteFacility);
 
-  const categoriesQ = useQuery({
-    queryKey: ["categories", orgId],
-    enabled: !!orgId && !demoMode,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("categories")
-        .select("id,name,section_id")
-        .order("name");
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
+  // ───── Usuarios por rol ─────
+  const usersByRole = useMemo(() => {
+    const count = (r: Role) => users.filter((u) => u.role === r).length;
+    return {
+      managers: count("manager"),
+      admins: count("admin"),
+      medical: count("medical"),
+      technical: count("technical"),
+      athletes: athletes.length,
+      tutors: athletes.filter((a) => /Benjam|Alev|Infantil/i.test(categoryName(categories, a.categoryId))).length,
+    };
+  }, [users, athletes, categories]);
 
-  const groupsQ = useQuery({
-    queryKey: ["groups", orgId],
-    enabled: !!orgId && !demoMode,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("groups")
-        .select("id,name,section_id,category_id")
-        .order("name");
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
+  // ───── Horario semanal por grupo (derivado de events training) ─────
+  const groupSchedules = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    for (const e of events) {
+      if (e.type !== "training" || !e.groupId) continue;
+      const dow = new Date(e.date).getDay();
+      const slot = `${DAY_NAMES[dow]} ${e.startTime}`;
+      if (!map.has(e.groupId)) map.set(e.groupId, new Set());
+      map.get(e.groupId)!.add(slot);
+    }
+    const out = new Map<string, string[]>();
+    map.forEach((set, gid) => {
+      out.set(
+        gid,
+        Array.from(set).sort((a, b) => {
+          const da = DAY_NAMES.indexOf(a.slice(0, 3));
+          const db = DAY_NAMES.indexOf(b.slice(0, 3));
+          return da === db ? a.localeCompare(b) : da - db;
+        }),
+      );
+    });
+    return out;
+  }, [events]);
 
-  const facilitiesQ = useQuery({
-    queryKey: ["facilities", orgId],
-    enabled: !!orgId && !demoMode,
-    queryFn: async () => {
-      const { data, error } = await supabase.from("facilities").select("*").order("name");
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
+  // ───── Staff por grupo (heurística: técnicos repartidos por sección) ─────
+  const staffByGroup = useMemo(() => {
+    const techs = users.filter((u) => u.role === "technical");
+    const m = new Map<string, string[]>();
+    groups.forEach((g, idx) => {
+      const assigned = techs[idx % Math.max(techs.length, 1)];
+      m.set(g.id, assigned ? [assigned.name] : []);
+    });
+    return m;
+  }, [groups, users]);
 
-  const athletesCountQ = useQuery({
-    queryKey: ["athletes_count", orgId],
-    enabled: !!orgId && !demoMode,
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from("athletes")
-        .select("id", { count: "exact", head: true });
-      if (error) throw error;
-      return count ?? 0;
-    },
-  });
+  // ───── Counts por sección ─────
+  const sectionStats = useMemo(() => {
+    return sections.map((s) => ({
+      ...s,
+      groups: groups.filter((g) => g.sectionId === s.id).length,
+      athletes: athletes.filter((a) => a.sectionId === s.id).length,
+      staff: (s.staffCount ?? 0) + (s.managerCount ?? 0),
+    }));
+  }, [sections, groups, athletes]);
 
-  const usersQ = useQuery({
-    queryKey: ["org_users", orgId],
-    enabled: !!orgId && !demoMode,
-    queryFn: async () => {
-      const { data: profiles, error: e1 } = await supabase
-        .from("profiles")
-        .select("id,full_name,email")
-        .eq("organization_id", orgId!);
-      if (e1) throw e1;
-      const { data: rolesRows, error: e2 } = await supabase
-        .from("user_roles")
-        .select("user_id,role")
-        .eq("organization_id", orgId!);
-      if (e2) throw e2;
-      const byUser = new Map<string, string[]>();
-      (rolesRows ?? []).forEach((r) => {
-        const arr = byUser.get(r.user_id) ?? [];
-        arr.push(r.role as string);
-        byUser.set(r.user_id, arr);
-      });
-      return (profiles ?? []).map((p) => ({ ...p, roles: byUser.get(p.id) ?? [] }));
-    },
+  // ───── Form state ─────
+  const [newSection, setNewSection] = useState("");
+  const [newCatName, setNewCatName] = useState("");
+  const [newCatSection, setNewCatSection] = useState("");
+  const [newGroup, setNewGroup] = useState({ name: "", sectionId: "", categoryId: "" });
+  const [newFacility, setNewFacility] = useState({
+    name: "",
+    location: "",
+    capacity: "",
+    sectionId: "",
   });
-
-  const orgUsers = demoOrEmpty(usersQ.data, DEMO_ORG_USERS_ROWS);
-  const counts = {
-    managers: orgUsers.filter((u) => u.roles.includes("manager")).length,
-    medical: orgUsers.filter((u) => u.roles.includes("medical")).length,
-    technical: orgUsers.filter((u) => u.roles.includes("technical")).length,
-    athletes: athletesCountQ.data ?? (isDemoMode() ? DEMO_ATHLETES_ROWS.length : 0),
-  };
-
-  // Section CRUD
-  const [secOpen, setSecOpen] = useState(false);
-  const [newSec, setNewSec] = useState("");
-  const addSection = useMutation({
-    mutationFn: async (name: string) => {
-      if (demoMode) {
-        demoAddSection(name);
-        return;
-      }
-      const { error } = await supabase
-        .from("sport_sections")
-        .insert({ name, organization_id: orgId! });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success(lang === "es" ? "Sección creada" : "Section created");
-      qc.invalidateQueries({ queryKey: ["sport_sections"] });
-      setNewSec("");
-      setSecOpen(false);
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-  const delSection = useMutation({
-    mutationFn: async (id: string) => {
-      if (demoMode) {
-        demoDeleteSection(id);
-        return;
-      }
-      const { error } = await supabase.from("sport_sections").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["sport_sections"] }),
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  // Category CRUD
-  const [catOpen, setCatOpen] = useState(false);
-  const [newCat, setNewCat] = useState({ name: "", section_id: "" });
-  const addCategory = useMutation({
-    mutationFn: async (v: { name: string; section_id: string }) => {
-      if (demoMode) {
-        demoAddCategory({ name: v.name, sectionId: v.section_id });
-        return;
-      }
-      const { error } = await supabase
-        .from("categories")
-        .insert({ name: v.name, section_id: v.section_id, organization_id: orgId! });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success(lang === "es" ? "Categoría creada" : "Category created");
-      qc.invalidateQueries({ queryKey: ["categories"] });
-      setNewCat({ name: "", section_id: "" });
-      setCatOpen(false);
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-  const delCategory = useMutation({
-    mutationFn: async (id: string) => {
-      if (demoMode) {
-        demoDeleteCategory(id);
-        return;
-      }
-      const { error } = await supabase.from("categories").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  // Group CRUD
-  const [grpOpen, setGrpOpen] = useState(false);
-  const [newGrp, setNewGrp] = useState({ name: "", section_id: "", category_id: "" });
-  const addGroup = useMutation({
-    mutationFn: async (v: { name: string; section_id: string; category_id: string }) => {
-      if (demoMode) {
-        demoAddGroup({ name: v.name, sectionId: v.section_id, categoryId: v.category_id });
-        return;
-      }
-      const { error } = await supabase.from("groups").insert({
-        name: v.name,
-        section_id: v.section_id,
-        category_id: v.category_id,
-        organization_id: orgId!,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success(lang === "es" ? "Grupo creado" : "Group created");
-      qc.invalidateQueries({ queryKey: ["groups"] });
-      setNewGrp({ name: "", section_id: "", category_id: "" });
-      setGrpOpen(false);
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-  const delGroup = useMutation({
-    mutationFn: async (id: string) => {
-      if (demoMode) {
-        demoDeleteGroup(id);
-        return;
-      }
-      const { error } = await supabase.from("groups").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["groups"] }),
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  // Facility CRUD
-  const [facOpen, setFacOpen] = useState(false);
-  const [newFac, setNewFac] = useState({ name: "", address: "", capacity: "" });
-  const [activeFacility, setActiveFacility] = useState<string | null>(null);
-  const addFacility = useMutation({
-    mutationFn: async (v: { name: string; address: string; capacity: string }) => {
-      if (demoMode) {
-        demoAddFacility({
-          name: v.name,
-          address: v.address || undefined,
-          location: v.address || "—",
-          capacity: v.capacity ? Number(v.capacity) : undefined,
-          sportSections: [],
-          sports: [],
-          status: "Active",
-        });
-        return;
-      }
-      const { error } = await supabase.from("facilities").insert({
-        name: v.name,
-        address: v.address || null,
-        location: v.address || null,
-        capacity: v.capacity ? Number(v.capacity) : null,
-        organization_id: orgId!,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success(lang === "es" ? "Instalación creada" : "Facility created");
-      qc.invalidateQueries({ queryKey: ["facilities"] });
-      setNewFac({ name: "", address: "", capacity: "" });
-      setFacOpen(false);
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-  const delFacility = useMutation({
-    mutationFn: async (id: string) => {
-      if (demoMode) {
-        demoDeleteFacility(id);
-        return;
-      }
-      const { error } = await supabase.from("facilities").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["facilities"] }),
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  const sections = demoMode
-    ? demoSections.map((s) => ({ id: s.id, name: s.name }))
-    : demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
-  const categories = demoMode
-    ? demoCategories.map((c) => ({ id: c.id, name: c.name, section_id: c.sectionId }))
-    : demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
-  const groups = demoMode
-    ? demoGroups.map((g) => ({
-        id: g.id,
-        name: g.name,
-        section_id: g.sectionId,
-        category_id: g.categoryId,
-      }))
-    : demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
-  const facilities = demoMode
-    ? demoFacilities.map((f) => ({
-        id: f.id,
-        name: f.name,
-        address: f.address ?? null,
-        location: f.location ?? null,
-        capacity: f.capacity ?? null,
-        status: f.status,
-        sports: f.sports ?? [],
-        photo_url: f.photoUrl ?? null,
-      }))
-    : demoOrEmpty(facilitiesQ.data, DEMO_FACILITIES_ROWS as never);
 
   return (
     <>
       <PageHeader
-        title={t("club_organization")}
-        subtitle={
-          lang === "es"
-            ? "Vista general del club, instalaciones, secciones, categorías y grupos."
-            : "Overview of club, facilities and structure."
+        title="Club & Organización"
+        subtitle="Núcleo administrativo del club: usuarios, instalaciones, secciones, categorías y grupos."
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" asChild>
+              <a href="/athletes">
+                <Plus className="mr-2 h-4 w-4" />
+                Nueva alta
+              </a>
+            </Button>
+
+            {/* Añadir sección */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Añadir sección
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Nueva sección deportiva</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-2">
+                  <Label>Nombre</Label>
+                  <Input
+                    value={newSection}
+                    onChange={(e) => setNewSection(e.target.value)}
+                    placeholder="Ej: Voleibol"
+                  />
+                </div>
+                <DialogFooter>
+                  <Button
+                    onClick={() => {
+                      if (!newSection.trim()) return;
+                      addSection(newSection.trim());
+                      setNewSection("");
+                      toast.success("Sección añadida");
+                    }}
+                  >
+                    Crear
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            {/* Añadir categoría */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Añadir categoría
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Nueva categoría</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label>Sección</Label>
+                    <Select value={newCatSection} onValueChange={setNewCatSection}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona sección" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sections.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Nombre</Label>
+                    <Input
+                      value={newCatName}
+                      onChange={(e) => setNewCatName(e.target.value)}
+                      placeholder="Ej: Cadete"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    onClick={() => {
+                      if (!newCatName.trim() || !newCatSection) return;
+                      addCategory({ name: newCatName.trim(), sectionId: newCatSection });
+                      setNewCatName("");
+                      setNewCatSection("");
+                      toast.success("Categoría añadida");
+                    }}
+                  >
+                    Crear
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            {/* Añadir grupo */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Añadir grupo
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Nuevo grupo</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label>Sección</Label>
+                    <Select
+                      value={newGroup.sectionId}
+                      onValueChange={(v) => setNewGroup({ ...newGroup, sectionId: v, categoryId: "" })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona sección" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sections.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Categoría</Label>
+                    <Select
+                      value={newGroup.categoryId}
+                      onValueChange={(v) => setNewGroup({ ...newGroup, categoryId: v })}
+                      disabled={!newGroup.sectionId}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona categoría" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories
+                          .filter((c) => c.sectionId === newGroup.sectionId)
+                          .map((c) => (
+                            <SelectItem key={c.id} value={c.id}>
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Nombre</Label>
+                    <Input
+                      value={newGroup.name}
+                      onChange={(e) => setNewGroup({ ...newGroup, name: e.target.value })}
+                      placeholder="Ej: Tecnificación"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    onClick={() => {
+                      if (!newGroup.name.trim() || !newGroup.sectionId || !newGroup.categoryId) return;
+                      addGroup({
+                        name: newGroup.name.trim(),
+                        sectionId: newGroup.sectionId,
+                        categoryId: newGroup.categoryId,
+                      });
+                      setNewGroup({ name: "", sectionId: "", categoryId: "" });
+                      toast.success("Grupo añadido");
+                    }}
+                  >
+                    Crear
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            {/* Añadir instalación */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Añadir instalación
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Nueva instalación</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label>Nombre</Label>
+                    <Input
+                      value={newFacility.name}
+                      onChange={(e) => setNewFacility({ ...newFacility, name: e.target.value })}
+                      placeholder="Ej: Sala de musculación"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Ubicación</Label>
+                    <Input
+                      value={newFacility.location}
+                      onChange={(e) => setNewFacility({ ...newFacility, location: e.target.value })}
+                      placeholder="Ej: Madrid · Sede principal"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Capacidad</Label>
+                    <Input
+                      type="number"
+                      value={newFacility.capacity}
+                      onChange={(e) => setNewFacility({ ...newFacility, capacity: e.target.value })}
+                      placeholder="100"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Sección principal</Label>
+                    <Select
+                      value={newFacility.sectionId}
+                      onValueChange={(v) => setNewFacility({ ...newFacility, sectionId: v })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona sección" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sections.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    onClick={() => {
+                      if (!newFacility.name.trim()) return;
+                      addFacility({
+                        name: newFacility.name.trim(),
+                        location: newFacility.location || "—",
+                        sportSections: newFacility.sectionId ? [newFacility.sectionId] : [],
+                        status: "Active",
+                        capacity: newFacility.capacity ? Number(newFacility.capacity) : undefined,
+                      });
+                      setNewFacility({ name: "", location: "", capacity: "", sectionId: "" });
+                      toast.success("Instalación añadida");
+                    }}
+                  >
+                    Crear
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         }
       />
 
-      {/* Users summary */}
-      <Card className="mb-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{t("users_permissions")}</h2>
-          <p className="text-xs text-muted-foreground">
-            {lang === "es"
-              ? "Para invitar usuarios usa Configuración → Equipo (próximamente)."
-              : "Invite users via Settings → Team (coming soon)."}
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          <RoleCard icon={UserSquare2} label={t("managers")} value={counts.managers} />
-          <RoleCard icon={Stethoscope} label={t("medical_staff")} value={counts.medical} />
-          <RoleCard icon={Wrench} label={t("technical_staff")} value={counts.technical} />
-          <RoleCard icon={Users} label={t("athletes")} value={counts.athletes} />
-          <Link
-            to="/athletes"
-            className="flex items-center justify-center rounded-2xl border border-dashed border-primary/40 bg-primary/5 px-4 py-5 text-sm font-medium text-primary hover:bg-primary/10"
-          >
-            {t("view_all")} →
-          </Link>
-        </div>
-      </Card>
+      <div className="space-y-6">
+        {/* 1. Usuarios y permisos */}
+        <Section title="Usuarios y permisos" icon={ShieldCheck}>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            <RoleCard icon={UserCog} label="Gestores / Dirección" count={usersByRole.managers} tone="bg-indigo-50 text-indigo-700" />
+            <RoleCard icon={Building2} label="Administración" count={usersByRole.admins} tone="bg-blue-50 text-blue-700" />
+            <RoleCard icon={Stethoscope} label="Staff médico" count={usersByRole.medical} tone="bg-rose-50 text-rose-700" />
+            <RoleCard icon={Wrench} label="Staff técnico" count={usersByRole.technical} tone="bg-amber-50 text-amber-700" />
+            <RoleCard icon={Users} label="Deportistas" count={usersByRole.athletes} tone="bg-emerald-50 text-emerald-700" />
+            <RoleCard icon={Baby} label="Tutores" count={usersByRole.tutors} tone="bg-violet-50 text-violet-700" />
+          </div>
+        </Section>
 
-      {/* Facilities */}
-      <Card className="mb-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{t("facilities")}</h2>
-          <Dialog open={facOpen} onOpenChange={setFacOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="rounded-full">
-                <Plus className="mr-1 h-4 w-4" />
-                {lang === "es" ? "Nueva instalación" : "New facility"}
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{lang === "es" ? "Nueva instalación" : "New facility"}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-3">
-                <div>
-                  <Label>{t("name")}</Label>
-                  <Input
-                    value={newFac.name}
-                    onChange={(e) => setNewFac({ ...newFac, name: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>{lang === "es" ? "Dirección" : "Address"}</Label>
-                  <Input
-                    value={newFac.address}
-                    onChange={(e) => setNewFac({ ...newFac, address: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>{lang === "es" ? "Aforo" : "Capacity"}</Label>
-                  <Input
-                    type="number"
-                    value={newFac.capacity}
-                    onChange={(e) => setNewFac({ ...newFac, capacity: e.target.value })}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setFacOpen(false)}>
-                  {t("cancel")}
-                </Button>
-                <Button
-                  disabled={!newFac.name || addFacility.isPending}
-                  onClick={() => addFacility.mutate(newFac)}
-                >
-                  {t("save")}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-        {facilities.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
-            {lang === "es" ? "Aún no hay instalaciones." : "No facilities yet."}
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {facilities.map(
-              (f: {
-                id: string;
-                name: string;
-                photo_url?: string | null;
-                address?: string | null;
-                capacity?: number | null;
-                status?: string;
-                location?: string | null;
-                sports?: string[] | null;
-              }) => (
-                <div
-                  key={f.id}
-                  className="group relative overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-primary hover:shadow-sm"
-                >
-                  <button
-                    onClick={() => setActiveFacility(f.id)}
-                    className="block w-full text-left"
-                  >
-                    {f.photo_url && (
-                      <div className="relative h-28 w-full overflow-hidden bg-muted">
-                        <img
-                          src={f.photo_url}
-                          alt={f.name}
-                          className="h-full w-full object-cover transition group-hover:scale-[1.03]"
-                          loading="lazy"
-                        />
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <div className="flex items-center gap-2 text-sm font-semibold">
-                        <Building2 className="h-4 w-4 text-primary" />
-                        {f.name}
-                      </div>
-                      {(f.address || f.location) && (
-                        <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                          <MapPin className="h-3 w-3" />
-                          {f.address ?? f.location}
-                        </div>
-                      )}
-                      {f.capacity && (
-                        <div className="mt-2 text-[11px] text-muted-foreground">
-                          {lang === "es" ? "Aforo" : "Capacity"}: {f.capacity}
-                        </div>
-                      )}
+        {/* 2. Instalaciones */}
+        <Section title="Instalaciones" icon={MapPin}>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {facilities.map((f) => (
+              <Card key={f.id} className="space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="font-semibold text-slate-900">{f.name}</div>
+                    <div className="mt-0.5 flex items-center gap-1 text-xs text-slate-500">
+                      <MapPin className="h-3 w-3" /> {f.location}
                     </div>
-                  </button>
+                  </div>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (confirm(t("delete_confirm"))) delFacility.mutate(f.id);
+                    aria-label="Eliminar instalación"
+                    onClick={() => {
+                      deleteFacility(f.id);
+                      toast.success("Instalación eliminada");
                     }}
-                    className="absolute right-2 top-2 rounded-full bg-card/80 p-1.5 text-destructive opacity-0 backdrop-blur transition hover:bg-destructive hover:text-destructive-foreground group-hover:opacity-100"
-                    aria-label={t("delete")}
+                    className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-              ),
+
+                <div className="flex flex-wrap gap-1.5">
+                  {f.sportSections.map((sid) => {
+                    const s = sections.find((x) => x.id === sid);
+                    return s ? <Pill key={sid}>{s.name}</Pill> : null;
+                  })}
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <div className="text-slate-600">
+                    <span className="text-xs text-slate-400">Capacidad</span>
+                    <div className="font-medium">{f.capacity ?? "—"}</div>
+                  </div>
+                  <div className="text-right text-slate-600">
+                    <span className="text-xs text-slate-400">Próximo uso</span>
+                    <div className="font-medium">{f.nextActivity ?? "—"}</div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+            {facilities.length === 0 && (
+              <Card className="text-sm text-slate-500">Sin instalaciones todavía.</Card>
             )}
           </div>
-        )}
-      </Card>
+        </Section>
 
-      <FacilityDrawer
-        id={activeFacility}
-        facilities={facilities}
-        onClose={() => setActiveFacility(null)}
-      />
-
-      {/* Sections */}
-      <Card className="mb-6">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold">{t("sports_sections")}</h2>
-            <p className="text-xs text-muted-foreground">{t("organization_chart")}</p>
-          </div>
-          <Dialog open={secOpen} onOpenChange={setSecOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="rounded-full">
-                <Plus className="mr-1 h-4 w-4" />
-                {t("new_section")}
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("new_section")}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-3">
-                <Label>{t("name")}</Label>
-                <Input value={newSec} onChange={(e) => setNewSec(e.target.value)} />
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setSecOpen(false)}>
-                  {t("cancel")}
-                </Button>
-                <Button
-                  disabled={!newSec.trim() || addSection.isPending}
-                  onClick={() => addSection.mutate(newSec.trim())}
-                >
-                  {t("save")}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-        {sections.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
-            {lang === "es"
-              ? "Crea tu primera sección deportiva."
-              : "Create your first sport section."}
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {sections.map((s) => {
-              const catCount = categories.filter((c) => c.section_id === s.id).length;
-              const grpCount = groups.filter((g) => g.section_id === s.id).length;
-              return (
-                <div
-                  key={s.id}
-                  className="group relative rounded-2xl border border-border bg-card p-4 transition hover:border-primary hover:shadow-sm"
-                >
-                  <div className="text-sm font-semibold">{s.name}</div>
-                  <div className="mt-2 flex gap-3 text-[11px] text-muted-foreground">
-                    <span>
-                      {catCount} {lang === "es" ? "categorías" : "categories"}
-                    </span>
-                    <span>
-                      {grpCount} {lang === "es" ? "grupos" : "groups"}
-                    </span>
+        {/* 3. Organigrama deportivo */}
+        <Section title="Organigrama deportivo" icon={Layers}>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {sectionStats.map((s) => (
+              <Card key={s.id} className="space-y-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="font-semibold text-slate-900">{s.name}</div>
+                    <div className="text-xs text-slate-500">Sección deportiva</div>
                   </div>
                   <button
+                    aria-label="Eliminar sección"
                     onClick={() => {
-                      if (confirm(t("delete_confirm"))) delSection.mutate(s.id);
+                      if (confirm(`Eliminar la sección "${s.name}" y todos sus grupos?`)) {
+                        deleteSection(s.id);
+                        toast.success("Sección eliminada");
+                      }
                     }}
-                    className="absolute right-2 top-2 rounded-full p-1.5 text-destructive opacity-0 transition hover:bg-destructive hover:text-destructive-foreground group-hover:opacity-100"
-                    aria-label={t("delete")}
+                    className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <Stat label="Atletas" value={s.athletes} />
+                  <Stat label="Staff" value={s.staff} />
+                  <Stat label="Grupos" value={s.groups} />
+                </div>
+              </Card>
+            ))}
+          </div>
+        </Section>
+
+        {/* 4. Categorías por sección */}
+        <Section title="Categorías" icon={FolderTree}>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {sections.map((s) => {
+              const cats = categories.filter((c) => c.sectionId === s.id);
+              return (
+                <Card key={s.id} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold text-slate-900">{s.name}</div>
+                    <span className="text-xs text-slate-400">{cats.length} categorías</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {cats.length === 0 && (
+                      <span className="text-xs text-slate-400">Sin categorías.</span>
+                    )}
+                    {cats.map((c) => (
+                      <span
+                        key={c.id}
+                        className="group inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
+                      >
+                        {c.name}
+                        <button
+                          onClick={() => {
+                            if (confirm(`Eliminar la categoría "${c.name}"?`)) {
+                              deleteCategory(c.id);
+                              toast.success("Categoría eliminada");
+                            }
+                          }}
+                          className="ml-1 text-slate-400 opacity-0 group-hover:opacity-100 hover:text-rose-600"
+                          aria-label="Eliminar categoría"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </Card>
               );
             })}
           </div>
-        )}
-      </Card>
+        </Section>
 
-      {/* Categories */}
-      <Card className="mb-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{lang === "es" ? "Categorías" : "Categories"}</h2>
-          <Dialog open={catOpen} onOpenChange={setCatOpen}>
-            <DialogTrigger asChild>
-              <Button
-                size="sm"
-                variant="outline"
-                className="rounded-full"
-                disabled={sections.length === 0}
-              >
-                <Plus className="mr-1 h-4 w-4" />
-                {lang === "es" ? "Nueva categoría" : "New category"}
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{lang === "es" ? "Nueva categoría" : "New category"}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-3">
-                <div>
-                  <Label>{t("name")}</Label>
-                  <Input
-                    value={newCat.name}
-                    onChange={(e) => setNewCat({ ...newCat, name: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>{lang === "es" ? "Sección" : "Section"}</Label>
-                  <select
-                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    value={newCat.section_id}
-                    onChange={(e) => setNewCat({ ...newCat, section_id: e.target.value })}
-                  >
-                    <option value="">—</option>
-                    {sections.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setCatOpen(false)}>
-                  {t("cancel")}
-                </Button>
-                <Button
-                  disabled={!newCat.name || !newCat.section_id || addCategory.isPending}
-                  onClick={() => addCategory.mutate(newCat)}
-                >
-                  {t("save")}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-        {categories.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
-            {lang === "es" ? "Sin categorías todavía." : "No categories yet."}
-          </p>
-        ) : (
-          <ul className="divide-y divide-border">
-            {categories.map((c) => {
-              const sec = sections.find((s) => s.id === c.section_id);
-              return (
-                <li key={c.id} className="flex items-center justify-between py-2 text-sm">
-                  <div>
-                    <span className="font-medium">{c.name}</span>{" "}
-                    <span className="text-xs text-muted-foreground">· {sec?.name ?? "—"}</span>
-                  </div>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => {
-                      if (confirm(t("delete_confirm"))) delCategory.mutate(c.id);
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </Card>
-
-      {/* Groups */}
-      <Card>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            <FolderTree className="h-4 w-4" />
-            {lang === "es" ? "Grupos" : "Groups"}
-          </h2>
-          <Dialog open={grpOpen} onOpenChange={setGrpOpen}>
-            <DialogTrigger asChild>
-              <Button
-                size="sm"
-                variant="outline"
-                className="rounded-full"
-                disabled={categories.length === 0}
-              >
-                <Plus className="mr-1 h-4 w-4" />
-                {lang === "es" ? "Nuevo grupo" : "New group"}
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{lang === "es" ? "Nuevo grupo" : "New group"}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-3">
-                <div>
-                  <Label>{t("name")}</Label>
-                  <Input
-                    value={newGrp.name}
-                    onChange={(e) => setNewGrp({ ...newGrp, name: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>{lang === "es" ? "Sección" : "Section"}</Label>
-                  <select
-                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    value={newGrp.section_id}
-                    onChange={(e) =>
-                      setNewGrp({ ...newGrp, section_id: e.target.value, category_id: "" })
-                    }
-                  >
-                    <option value="">—</option>
-                    {sections.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <Label>{lang === "es" ? "Categoría" : "Category"}</Label>
-                  <select
-                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    value={newGrp.category_id}
-                    onChange={(e) => setNewGrp({ ...newGrp, category_id: e.target.value })}
-                  >
-                    <option value="">—</option>
-                    {categories
-                      .filter((c) => c.section_id === newGrp.section_id)
-                      .map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setGrpOpen(false)}>
-                  {t("cancel")}
-                </Button>
-                <Button
-                  disabled={
-                    !newGrp.name || !newGrp.section_id || !newGrp.category_id || addGroup.isPending
-                  }
-                  onClick={() => addGroup.mutate(newGrp)}
-                >
-                  {t("save")}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-        {groups.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
-            {lang === "es" ? "Sin grupos todavía." : "No groups yet."}
-          </p>
-        ) : (
-          <ul className="divide-y divide-border">
+        {/* 5. Grupos por categoría */}
+        <Section title="Grupos" icon={UserSquare2}>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {groups.map((g) => {
-              const sec = sections.find((s) => s.id === g.section_id);
-              const cat = categories.find((c) => c.id === g.category_id);
+              const sec = sections.find((s) => s.id === g.sectionId);
+              const cat = categories.find((c) => c.id === g.categoryId);
+              const groupAthletes = athletes.filter((a) => a.groupIds.includes(g.id));
+              const staff = staffByGroup.get(g.id) ?? [];
+              const schedule = groupSchedules.get(g.id) ?? [];
               return (
-                <li key={g.id} className="flex items-center justify-between py-2 text-sm">
-                  <div>
-                    <span className="font-medium">{g.name}</span>{" "}
-                    <span className="text-xs text-muted-foreground">
-                      · {sec?.name} / {cat?.name}
-                    </span>
+                <Card key={g.id} className="space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-semibold text-slate-900">{g.name}</div>
+                      <div className="text-xs text-slate-500">
+                        {sec?.name ?? "—"} · {cat?.name ?? "—"}
+                      </div>
+                    </div>
+                    <button
+                      aria-label="Eliminar grupo"
+                      onClick={() => {
+                        if (confirm(`Eliminar el grupo "${g.name}"?`)) {
+                          deleteGroup(g.id);
+                          toast.success("Grupo eliminado");
+                        }
+                      }}
+                      className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </div>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => {
-                      if (confirm(t("delete_confirm"))) delGroup.mutate(g.id);
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </li>
+
+                  <div className="grid grid-cols-2 gap-2 text-center">
+                    <Stat label="Atletas" value={groupAthletes.length} />
+                    <Stat label="Staff" value={staff.length} />
+                  </div>
+
+                  {staff.length > 0 && (
+                    <div className="text-xs text-slate-600">
+                      <span className="text-slate-400">Staff: </span>
+                      {staff.join(", ")}
+                    </div>
+                  )}
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1 text-xs font-medium text-slate-500">
+                      <Clock className="h-3 w-3" /> Horario semanal
+                    </div>
+                    {schedule.length === 0 ? (
+                      <div className="text-xs text-slate-400">Sin sesiones programadas.</div>
+                    ) : (
+                      <div className="flex flex-wrap gap-1.5">
+                        {schedule.map((slot) => (
+                          <span
+                            key={slot}
+                            className="rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700"
+                          >
+                            {slot}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Card>
               );
             })}
-          </ul>
-        )}
-      </Card>
+            {groups.length === 0 && (
+              <Card className="text-sm text-slate-500">Aún no hay grupos creados.</Card>
+            )}
+          </div>
+        </Section>
+      </div>
     </>
+  );
+}
+
+// ───── Helpers ─────
+function categoryName(categories: { id: string; name: string }[], id: string) {
+  return categories.find((c) => c.id === id)?.name ?? "";
+}
+
+function Section({
+  title,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  icon: typeof MapPin;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-3">
+      <div className="flex items-center gap-2">
+        <div className="rounded-lg bg-slate-100 p-1.5 text-slate-600">
+          <Icon className="h-4 w-4" />
+        </div>
+        <h2 className="text-base font-semibold text-slate-900">{title}</h2>
+      </div>
+      {children}
+    </section>
   );
 }
 
 function RoleCard({
   icon: Icon,
   label,
-  value,
+  count,
+  tone,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: typeof MapPin;
   label: string;
-  value: number;
+  count: number;
+  tone: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-4">
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
-        <Icon className="h-4 w-4" />
+    <Card className="flex items-center gap-3">
+      <div className={`rounded-lg p-2 ${tone}`}>
+        <Icon className="h-5 w-5" />
       </div>
-      <div className="mt-3 text-2xl font-bold">{value}</div>
-      <div className="text-xs text-muted-foreground">{label}</div>
-    </div>
+      <div className="min-w-0">
+        <div className="text-2xl font-semibold text-slate-900 leading-none">{count}</div>
+        <div className="mt-1 truncate text-xs text-slate-500">{label}</div>
+      </div>
+    </Card>
   );
 }
 
-function FacilityDrawer({
-  id,
-  facilities,
-  onClose,
-}: {
-  id: string | null;
-  facilities: Array<{
-    id: string;
-    name: string;
-    photo_url?: string | null;
-    address?: string | null;
-    capacity?: number | null;
-    status?: string;
-    location?: string | null;
-    sports?: string[] | null;
-  }>;
-  onClose: () => void;
-}) {
-  const f = facilities.find((x) => x.id === id) ?? null;
+function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <Sheet open={!!f} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
-        {f && (
-          <>
-            <SheetHeader>
-              <SheetTitle>{f.name}</SheetTitle>
-            </SheetHeader>
-            {f.photo_url && (
-              <img
-                src={f.photo_url}
-                alt={f.name}
-                className="mt-4 h-44 w-full rounded-2xl object-cover"
-              />
-            )}
-            <dl className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Dirección</dt>
-                <dd className="text-right">{f.address ?? f.location ?? "—"}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Aforo</dt>
-                <dd>{f.capacity ?? "—"}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Estado</dt>
-                <dd>{f.status}</dd>
-              </div>
-            </dl>
-          </>
-        )}
-      </SheetContent>
-    </Sheet>
+    <div className="rounded-lg bg-slate-50 px-2 py-2">
+      <div className="text-lg font-semibold text-slate-900 leading-none">{value}</div>
+      <div className="mt-1 text-[11px] uppercase tracking-wide text-slate-500">{label}</div>
+    </div>
   );
 }
