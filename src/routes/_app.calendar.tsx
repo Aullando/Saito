@@ -404,8 +404,13 @@ function CalendarPage() {
   const [catF, setCatF] = useState("all");
   const [grpF, setGrpF] = useState("all");
   const [typeF, setTypeF] = useState<string>("all");
+  const [roleF, setRoleF] = useState<string>("all");
+  const [view, setView] = useState<"month" | "day">("month");
+  const [dayCursor, setDayCursor] = useState(() => new Date());
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState<Occurrence | null>(null);
+  const [noteDraft, setNoteDraft] = useState("");
+  const [notesOpen, setNotesOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
   const [cancelNotify, setCancelNotify] = useState(true);
