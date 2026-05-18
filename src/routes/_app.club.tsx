@@ -168,6 +168,10 @@ function ClubPage() {
   const [newSec, setNewSec] = useState("");
   const addSection = useMutation({
     mutationFn: async (name: string) => {
+      if (demoMode) {
+        demoAddSection(name);
+        return;
+      }
       const { error } = await supabase
         .from("sport_sections")
         .insert({ name, organization_id: orgId! });
@@ -183,6 +187,10 @@ function ClubPage() {
   });
   const delSection = useMutation({
     mutationFn: async (id: string) => {
+      if (demoMode) {
+        demoDeleteSection(id);
+        return;
+      }
       const { error } = await supabase.from("sport_sections").delete().eq("id", id);
       if (error) throw error;
     },
@@ -195,6 +203,10 @@ function ClubPage() {
   const [newCat, setNewCat] = useState({ name: "", section_id: "" });
   const addCategory = useMutation({
     mutationFn: async (v: { name: string; section_id: string }) => {
+      if (demoMode) {
+        demoAddCategory({ name: v.name, sectionId: v.section_id });
+        return;
+      }
       const { error } = await supabase
         .from("categories")
         .insert({ name: v.name, section_id: v.section_id, organization_id: orgId! });
@@ -210,6 +222,10 @@ function ClubPage() {
   });
   const delCategory = useMutation({
     mutationFn: async (id: string) => {
+      if (demoMode) {
+        demoDeleteCategory(id);
+        return;
+      }
       const { error } = await supabase.from("categories").delete().eq("id", id);
       if (error) throw error;
     },
@@ -222,6 +238,10 @@ function ClubPage() {
   const [newGrp, setNewGrp] = useState({ name: "", section_id: "", category_id: "" });
   const addGroup = useMutation({
     mutationFn: async (v: { name: string; section_id: string; category_id: string }) => {
+      if (demoMode) {
+        demoAddGroup({ name: v.name, sectionId: v.section_id, categoryId: v.category_id });
+        return;
+      }
       const { error } = await supabase.from("groups").insert({
         name: v.name,
         section_id: v.section_id,
@@ -240,6 +260,10 @@ function ClubPage() {
   });
   const delGroup = useMutation({
     mutationFn: async (id: string) => {
+      if (demoMode) {
+        demoDeleteGroup(id);
+        return;
+      }
       const { error } = await supabase.from("groups").delete().eq("id", id);
       if (error) throw error;
     },
@@ -253,6 +277,18 @@ function ClubPage() {
   const [activeFacility, setActiveFacility] = useState<string | null>(null);
   const addFacility = useMutation({
     mutationFn: async (v: { name: string; address: string; capacity: string }) => {
+      if (demoMode) {
+        demoAddFacility({
+          name: v.name,
+          address: v.address || undefined,
+          location: v.address || "—",
+          capacity: v.capacity ? Number(v.capacity) : undefined,
+          sportSections: [],
+          sports: [],
+          status: "Active",
+        });
+        return;
+      }
       const { error } = await supabase.from("facilities").insert({
         name: v.name,
         address: v.address || null,
@@ -272,6 +308,10 @@ function ClubPage() {
   });
   const delFacility = useMutation({
     mutationFn: async (id: string) => {
+      if (demoMode) {
+        demoDeleteFacility(id);
+        return;
+      }
       const { error } = await supabase.from("facilities").delete().eq("id", id);
       if (error) throw error;
     },
@@ -279,10 +319,32 @@ function ClubPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const sections = demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
-  const categories = demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
-  const groups = demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
-  const facilities = demoOrEmpty(facilitiesQ.data, DEMO_FACILITIES_ROWS as never);
+  const sections = demoMode
+    ? demoSections.map((s) => ({ id: s.id, name: s.name }))
+    : demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
+  const categories = demoMode
+    ? demoCategories.map((c) => ({ id: c.id, name: c.name, section_id: c.sectionId }))
+    : demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
+  const groups = demoMode
+    ? demoGroups.map((g) => ({
+        id: g.id,
+        name: g.name,
+        section_id: g.sectionId,
+        category_id: g.categoryId,
+      }))
+    : demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
+  const facilities = demoMode
+    ? demoFacilities.map((f) => ({
+        id: f.id,
+        name: f.name,
+        address: f.address ?? null,
+        location: f.location ?? null,
+        capacity: f.capacity ?? null,
+        status: f.status,
+        sports: f.sports ?? [],
+        photo_url: f.photoUrl ?? null,
+      }))
+    : demoOrEmpty(facilitiesQ.data, DEMO_FACILITIES_ROWS as never);
 
   return (
     <>
