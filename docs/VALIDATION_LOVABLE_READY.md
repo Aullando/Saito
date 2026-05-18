@@ -28,11 +28,11 @@
 
 | # | Comprobación | Estado |
 |---|---|---|
-| 1 | No existe `.env` real versionado | ✅ `.env` está en `.gitignore` (entradas añadidas en este pase) |
+| 1 | No existe `.env` real versionado | ✅ Eliminado del repo. `.env` está en `.gitignore` |
 | 2 | Existe `.env.example` | ✅ Sí, con documentación completa |
 | 3 | No existe `bun.lock` | ✅ Eliminado |
 | 4 | Playwright no usa bun | ✅ `playwright.config.ts` usa `npm run dev` |
-| 5 | No hay contraseña hardcodeada | ⚠️ `PasswordGate.tsx` tiene fallback literal `"hola"` cuando `VITE_DEMO_PASSWORD` no está definida. **Es un fallback de demo**, no protege nada real, y solo se activa con `VITE_ENABLE_PASSWORD_GATE=true`. Recomendado quitarlo o cambiarlo antes de un despliegue privado serio. |
+| 5 | No hay contraseña hardcodeada | ✅ Fallback `"hola"` eliminado de `PasswordGate.tsx`. Si `VITE_ENABLE_PASSWORD_GATE=true` y no hay `VITE_DEMO_PASSWORD`, el gate bloquea acceso con error de configuración. |
 | 6 | Separación entre `VITE_DEMO_MODE=true/false` | ✅ Helpers en `src/lib/appMode.ts` |
 | 7 | Datos demo no aparecen como fallback en producción | ✅ `src/lib/demoFallback.ts` (`demoOr`, `demoOrEmpty`) y refactor de 7 rutas privadas. **Pendientes:** `_app.attendance.tsx`, `_app.medical.restrictions.tsx`, `_app.economic.fees.tsx` y rutas `_app.rgcc.*` usan seed como única fuente de datos (no como fallback) — aceptable mientras esos módulos sean exclusivamente demo. |
 | 8 | Badge visual demo/real | ✅ `src/components/DataSourceBadge.tsx` montado en `AppLayout`, controlado por `VITE_SHOW_DATA_SOURCE_BADGE` |
