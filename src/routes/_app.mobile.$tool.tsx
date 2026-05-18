@@ -276,7 +276,11 @@ function CallUp() {
       </ul>
       <button
         disabled={count === 0}
-        onClick={() => toast.success(`Convocatoria enviada a ${count} deportistas`)}
+        onClick={() => {
+          const ids = Object.entries(sel).filter(([, v]) => v).map(([k]) => k);
+          saveCallup(DEMO_SESSION_ID, ids);
+          toast.success(`Convocatoria enviada a ${count} deportistas`);
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
         <Send className="h-4 w-4" /> Enviar convocatoria
