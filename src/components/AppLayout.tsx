@@ -11,7 +11,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const collapsed = useAuth((s) => s.sidebarCollapsed);
   if (!user) return <Navigate to="/login" />;
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Topbar />
       <Sidebar />
       <div className="transition-[padding] duration-200" style={{ paddingLeft: 0 }}>
