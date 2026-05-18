@@ -117,20 +117,22 @@ function RestrictionsPage() {
   const counts = {
     activa: RESTRICTIONS.filter((r) => r.status === "Activa").length,
     recup: RESTRICTIONS.filter((r) => r.status === "En recuperación").length,
-    alta: RESTRICTIONS.filter((r) => r.status === "Alta médica").length,
+    alta: RESTRICTIONS.filter((r) => r.status === "Apto").length,
   };
 
   return (
     <>
       <PageHeader
-        title="Restricciones y lesiones"
-        subtitle="Vista médica con acceso limitado. SAITO no realiza diagnóstico — registro clínico-administrativo."
+        title="Salud deportiva · Restricciones operativas"
+        subtitle="Registro operativo bajo supervisión profesional. Estados apto / no apto introducidos por personal autorizado."
       />
+
+      <MedicalDisclaimer className="mb-4" />
 
       <div className="mb-4 flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 text-xs">
         <Lock className="h-4 w-4 shrink-0 text-primary" />
         <span>
-          Solo personal médico autorizado y dirección con permiso explícito ven el detalle clínico.
+          Solo personal médico autorizado y dirección con permiso explícito ven el detalle.
           Todos los accesos quedan registrados en{" "}
           <a className="font-semibold text-primary hover:underline" href="/settings/privacy">
             Privacidad y seguridad
@@ -161,7 +163,7 @@ function RestrictionsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Altas médicas (mes)
+              Apto (mes)
             </span>
             <Stethoscope className="h-4 w-4 text-emerald-600" />
           </div>
