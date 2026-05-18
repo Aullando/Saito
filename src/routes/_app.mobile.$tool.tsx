@@ -362,6 +362,7 @@ function Notes() {
 
 // ───────── VALORACIONES ─────────
 function Ratings() {
+  const saveRating = useSessionLocal((s) => s.saveRating);
   const [rpe, setRpe] = useState(6);
   const [rec, setRec] = useState(7);
   const [comment, setComment] = useState("");
