@@ -23,9 +23,9 @@ export const Route = createFileRoute("/_app/medical/restrictions")({
 type Restriction = {
   id: string;
   athleteId: string;
-  type: "Lesión" | "Restricción" | "Seguimiento";
+  type: "Registro de incidencia" | "Restricción operativa" | "Seguimiento";
   area: string;
-  status: "Activa" | "En recuperación" | "Alta médica";
+  status: "Activa" | "En recuperación" | "Apto";
   startDate: string;
   expectedReturn?: string;
   notes: string;
