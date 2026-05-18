@@ -427,6 +427,7 @@ function Ratings() {
 // ───────── IA SESIÓN ─────────
 type AIBlock = { title: string; items: string[] };
 function AISession() {
+  const acceptAIBlock = useSessionLocal((s) => s.acceptAIBlock);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [blocks, setBlocks] = useState<AIBlock[] | null>(null);
