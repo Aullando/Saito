@@ -411,21 +411,21 @@ function MedicalView({
         )}
       </Section>
 
-      <Section title="Planes de tratamiento" icon={ClipboardList}>
+      <Section title="Planes de tratamiento bajo supervisión" icon={ClipboardList}>
         <ul className="space-y-2 text-xs">
           <li className="rounded-lg bg-emerald-50 p-2">
             <div className="flex items-center justify-between">
               <span className="font-medium text-emerald-900">Readaptación aductor</span>
               <Pill tone="success">Activo</Pill>
             </div>
-            <div className="text-emerald-700">Fase 2 · 3 sesiones/semana · fisio. responsable: J. Romero</div>
+            <div className="text-emerald-700">Fase 2 · 3 sesiones/semana · fisio responsable: J. Romero</div>
           </li>
           <li className="rounded-lg bg-slate-100 p-2">
             <div className="flex items-center justify-between">
-              <span className="font-medium text-slate-700">Protocolo esguince tobillo</span>
+              <span className="font-medium text-slate-700">Protocolo tobillo</span>
               <Pill>Finalizado</Pill>
             </div>
-            <div className="text-slate-600">Alta el 26/03/2026.</div>
+            <div className="text-slate-600">Estado apto introducido por staff médico el 26/03/2026.</div>
           </li>
         </ul>
       </Section>
