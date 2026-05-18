@@ -41,7 +41,10 @@ export function Topbar() {
 
   if (!user) return null;
   return (
-    <header className="fixed top-0 right-0 left-0 z-30 flex h-14 md:h-16 items-center gap-1.5 sm:gap-2 md:gap-4 border-b border-border bg-background/90 px-2 backdrop-blur sm:px-3 md:px-6">
+    <header
+      className="fixed top-0 right-0 left-0 z-30 flex h-14 md:h-[72px] items-center gap-1.5 sm:gap-2 md:gap-4 px-2 sm:px-3 md:px-6"
+      style={{ background: "#F7F9FC", borderBottom: "1px solid #DDE6F0" }}
+    >
       <button
         onClick={() => setMobileNavOpen(true)}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted md:hidden"
@@ -50,8 +53,8 @@ export function Topbar() {
         <Menu className="h-5 w-5" />
       </button>
       <div
-        className="hidden md:flex shrink-0 items-center justify-start transition-[width] duration-200"
-        style={{ width: collapsed ? 64 : 224 }}
+        className="hidden md:flex shrink-0 items-center transition-[width] duration-200"
+        style={{ width: collapsed ? 72 : 264, paddingLeft: 24 }}
       >
         <Logo size={collapsed ? 32 : 40} withText={!collapsed} />
       </div>
