@@ -338,6 +338,24 @@ function Notes() {
       >
         <Check className="h-4 w-4" /> Guardar nota
       </button>
+      {notes.length > 0 && (
+        <div className="space-y-2 pt-2">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Notas guardadas
+          </div>
+          {notes.map((n) => (
+            <div key={n.id} className="rounded-2xl border border-border bg-card p-3 text-sm">
+              <div className="mb-1 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {n.privateNote && <Lock className="h-3 w-3" />}
+                {new Date(n.createdAt).toLocaleString("es", {
+                  day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+                })}
+              </div>
+              <div>{n.text}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
