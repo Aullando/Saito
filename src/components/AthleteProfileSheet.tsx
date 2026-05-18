@@ -265,8 +265,8 @@ function TechnicalView({
   groupNames: string[];
   events: { id: string; date: string; startTime: string; title: string; type: string }[];
 }) {
-  const restrictionTone =
-    athlete.medical_status === "Fit" ? "success" : athlete.medical_status === "Injured" ? "danger" : "warning";
+  const info = medicalStatusInfo(athlete.medical_status);
+  const restrictionTone = info.tone;
   const restrictionLabel =
     athlete.medical_status === "Fit"
       ? "Sin restricciones"
