@@ -349,6 +349,7 @@ function MedicalView({
 }) {
   return (
     <>
+      <MedicalDisclaimer className="mb-3" />
       <Section
         title="Acciones"
         icon={Stethoscope}
@@ -360,7 +361,7 @@ function MedicalView({
         }
       >
         <p className="text-xs text-muted-foreground">
-          Información clínica completa, restringida al staff médico.
+          Salud deportiva — información gestionada por staff médico autorizado.
         </p>
       </Section>
 
