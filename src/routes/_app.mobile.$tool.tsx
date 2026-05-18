@@ -560,6 +560,8 @@ function AISession() {
 // ───────── AUSENCIA ─────────
 const ABSENCE_REASONS = ["Enfermedad", "Lesión", "Estudios", "Trabajo", "Personal", "Otro"];
 function Absence() {
+  const user = useCurrentUser();
+  const notifyAbsence = useSessionLocal((s) => s.notifyAbsence);
   const [reason, setReason] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   return (
