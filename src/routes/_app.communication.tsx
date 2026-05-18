@@ -24,9 +24,16 @@ import {
   demoMessagesFor,
 } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
-import { Plus, Send } from "lucide-react";
+import { Plus, Send, Trash2, Archive, ArchiveRestore, MoreVertical } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
 import { demoOrEmpty } from "@/lib/demoFallback";
+import { useCommLocal } from "@/lib/commLocal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Route = createFileRoute("/_app/communication")({
   component: () => (
