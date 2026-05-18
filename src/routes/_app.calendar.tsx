@@ -437,6 +437,10 @@ function CalendarPage() {
     groupId: string;
     staffId: string;
     location: string;
+    origDate: string;
+    origStartTime: string;
+    origLocation: string;
+    notifyParticipants: boolean;
   } | null>(null);
 
   const year = cursor.getFullYear();
