@@ -74,55 +74,127 @@ function MobileHome() {
 }
 
 function CoachHome({ todays }: { todays: ReturnType<typeof useData.getState>["events"] }) {
+  const next = todays[0];
+  const absences = [
+    { id: "ab1", name: "Lucía García", reason: "Enfermedad" },
+    { id: "ab2", name: "Mario Pérez", reason: "Estudios" },
+  ];
+  const notFit = [
+    { id: "nf1", name: "Daniel Ruiz", status: "No apto" as const },
+    { id: "nf2", name: "Sara López", status: "En revisión" as const },
+  ];
+
   return (
     <>
-      <section>
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Hoy
-        </h2>
-        {todays.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border p-5 text-center text-sm text-muted-foreground">
-            Sin actividades programadas.
-          </div>
-        ) : (
-          <ul className="space-y-2">
-            {todays.map((e) => (
-              <li
-                key={e.id}
-                className="rounded-2xl border border-border bg-card p-3 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold">{e.title}</div>
-                    <div className="mt-1 flex items-center gap-3 text-[11px] text-muted-foreground">
-                      <span className="inline-flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {e.startTime}
-                      </span>
-                      {e.groupId && (
-                        <span className="inline-flex items-center gap-1">
-                          <Users className="h-3 w-3" />
-                          Grupo
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase text-primary">
-                    {e.type}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Tarjeta Hoy: Entrenamiento */}
+      <section
+        className="rounded-2xl p-4 text-white shadow-md"
+        style={{
+          background:
+            "linear-gradient(135deg, #064e3b 0%, #00a74d 100%)",
+        }}
+      >
+        <div className="text-[11px] font-semibold uppercase tracking-wider text-white/70">
+          Hoy · Entrenamiento
+        </div>
+        <div className="mt-1 text-lg font-bold leading-tight">
+          {next?.title ?? "Tecnificación Infantil"}
+        </div>
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/85">
+          <span className="inline-flex items-center gap-1">
+            <Clock className="h-3.5 w-3.5" />
+            {next?.startTime ?? "17:30 – 19:00"}
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <MapPin className="h-3.5 w-3.5" />
+            {next?.location ?? "Pista de Atletismo"}
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <Users className="h-3.5 w-3.5" />
+            Infantil A
+          </span>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-1.5">
+          <Link
+            to="/mobile/session"
+            className="flex items-center justify-center gap-1 rounded-lg bg-white px-2 py-2 text-[11px] font-semibold text-emerald-700 active:scale-95"
+          >
+            <Info className="h-3.5 w-3.5" /> Ver sesión
+          </Link>
+          <Link
+            to="/mobile/attendance"
+            className="flex items-center justify-center gap-1 rounded-lg bg-white/15 px-2 py-2 text-[11px] font-semibold text-white ring-1 ring-white/30 active:scale-95"
+          >
+            <ClipboardCheck className="h-3.5 w-3.5" /> Asistencia
+          </Link>
+          <Link
+            to="/mobile/callup"
+            className="flex items-center justify-center gap-1 rounded-lg bg-white/15 px-2 py-2 text-[11px] font-semibold text-white ring-1 ring-white/30 active:scale-95"
+          >
+            <Users className="h-3.5 w-3.5" /> Convocatoria
+          </Link>
+        </div>
       </section>
 
+      {/* Ausencias notificadas */}
       <section>
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Accesos rápidos
+          Ausencias notificadas
         </h2>
-        <div className="grid grid-cols-3 gap-2">
-          {COACH_ACTIONS.map((a) => {
+        <ul className="space-y-1.5">
+          {absences.map((a) => (
+            <li
+              key={a.id}
+              className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2.5"
+            >
+              <div className="flex items-center gap-2">
+                <CalendarX className="h-4 w-4 text-amber-600" />
+                <span className="text-sm font-medium text-foreground">{a.name}</span>
+              </div>
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+                {a.reason}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* No aptos / en revisión */}
+      <section>
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Deportistas no aptos o en revisión
+        </h2>
+        <ul className="space-y-1.5">
+          {notFit.map((a) => (
+            <li
+              key={a.id}
+              className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2.5"
+            >
+              <div className="flex items-center gap-2">
+                <HeartPulse className="h-4 w-4 text-rose-600" />
+                <span className="text-sm font-medium text-foreground">{a.name}</span>
+              </div>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                  a.status === "No apto"
+                    ? "bg-rose-100 text-rose-800"
+                    : "bg-orange-100 text-orange-800"
+                }`}
+              >
+                {a.status}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Accesos rápidos */}
+      <section>
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Accesos
+        </h2>
+        <div className="grid grid-cols-4 gap-2">
+          {COACH_ACTIONS.slice(4).map((a) => {
             const Icon = a.icon;
             return (
               <Link
