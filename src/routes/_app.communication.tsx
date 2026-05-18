@@ -477,9 +477,15 @@ function CircularsTab({
                       <span className="tabular-nums">
                         {c.recipientsCount} destinatarios
                       </span>
-                      {c.status !== "draft" && (
+                      {c.status !== "draft" && c.status !== "scheduled" && (
                         <span className="tabular-nums">
                           {c.reads} lecturas ({pct}%)
+                        </span>
+                      )}
+                      {c.status === "scheduled" && c.scheduledAt && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 font-medium text-sky-700">
+                          <CalendarPlus className="h-3 w-3" />
+                          Envío: {formatDateTime(c.scheduledAt)}
                         </span>
                       )}
                     </div>
