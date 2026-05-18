@@ -88,8 +88,6 @@ export const useCommLocal = create<CommLocalState>()(
         set((s) => ({ localCirculars: [item, ...s.localCirculars] }));
         return id;
       },
-      deleteLocalCircular: (id) =>
-        set((s) => ({ localCirculars: s.localCirculars.filter((c) => c.id !== id) })),
       updateLocalCircular: (id, patch) =>
         set((s) => ({
           localCirculars: s.localCirculars.map((c) =>
