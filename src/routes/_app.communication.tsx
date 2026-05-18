@@ -400,11 +400,11 @@ function CommunicationPage() {
               </div>
               <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
                 {messages.map((m) => (
-                  <div key={m.id} className="flex gap-3">
+                  <div key={m.id} className="group/msg flex gap-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                       {initialsOf(m.author_id)}
                     </div>
-                    <div className="flex-1">
+                    <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2 text-xs">
                         <span className="font-medium text-foreground">
                           {authorName(m.author_id)}
@@ -413,10 +413,29 @@ function CommunicationPage() {
                           · {formatDateTime(m.created_at)}
                         </span>
                       </div>
-                      <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{m.content}</div>
+                      <div className="mt-1 flex items-start gap-1">
+                        <div className="flex-1 rounded-2xl bg-muted px-3 py-2 text-sm">
+                          {m.content}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 shrink-0 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover/msg:opacity-100"
+                          onClick={() => {
+                            if (!confirm(t("delete_confirm"))) return;
+                            delMsg.mutate(m.id);
+                          }}
+                          aria-label={t("delete")}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
+                {messages.length === 0 && (
+                  <div className="py-8 text-center text-xs text-muted-foreground">—</div>
+                )}
               </div>
               <div className="flex items-center gap-2 border-t border-border px-4 py-3">
                 <Input
