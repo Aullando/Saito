@@ -540,7 +540,12 @@ function AISession() {
               Refinar
             </button>
             <button
-              onClick={() => toast.success("Incluido en la sesión")}
+              onClick={() => {
+                blocks?.forEach((b) =>
+                  acceptAIBlock(DEMO_SESSION_ID, b.title, b.items.join(" · ")),
+                );
+                toast.success("Incluido en la sesión");
+              }}
               className="rounded-xl bg-primary px-2 py-2 text-[11px] font-semibold text-primary-foreground active:scale-95"
             >
               Incluir
