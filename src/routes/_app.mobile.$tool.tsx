@@ -598,7 +598,17 @@ function Absence() {
       />
       <button
         disabled={!reason}
-        onClick={() => toast.success("Ausencia notificada al entrenador")}
+        onClick={() => {
+          if (!reason) return;
+          notifyAbsence({
+            sessionId: DEMO_SESSION_ID,
+            athleteId: user?.id ?? "u-ath",
+            athleteName: user?.name ?? "Atleta",
+            reason,
+            comment: comment.trim() || undefined,
+          });
+          toast.success("Ausencia notificada al entrenador");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
         <Check className="h-4 w-4" /> Confirmar ausencia
