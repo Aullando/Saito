@@ -105,17 +105,10 @@ export function AthleteProfileSheet({
             <div className="mt-2 flex flex-wrap gap-1.5">
               <Pill tone="info">{sectionName}</Pill>
               <Pill>{categoryName}</Pill>
-              <Pill
-                tone={
-                  athlete.medical_status === "Fit"
-                    ? "success"
-                    : athlete.medical_status === "Injured"
-                      ? "danger"
-                      : "warning"
-                }
-              >
-                {athlete.medical_status}
-              </Pill>
+              {(() => {
+                const info = medicalStatusInfo(athlete.medical_status);
+                return <Pill tone={info.tone}>{info.label}</Pill>;
+              })()}
             </div>
             <div
               className={`mt-3 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${ROLE_TONE[view]}`}
