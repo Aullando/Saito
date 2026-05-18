@@ -54,6 +54,19 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* SAITO module colors (Confluence + brand) */
+  --color-mod-admin: var(--mod-admin);
+  --color-mod-admin-foreground: var(--mod-admin-foreground);
+  --color-mod-admin-soft: var(--mod-admin-soft);
+  --color-mod-wellbeing: var(--mod-wellbeing);
+  --color-mod-wellbeing-foreground: var(--mod-wellbeing-foreground);
+  --color-mod-wellbeing-soft: var(--mod-wellbeing-soft);
+  --color-mod-coaching: var(--mod-coaching);
+  --color-mod-coaching-foreground: var(--mod-coaching-foreground);
+  --color-mod-coaching-soft: var(--mod-coaching-soft);
+  --color-mod-sportlife: var(--mod-sportlife);
+  --color-mod-sportlife-foreground: var(--mod-sportlife-foreground);
+  --color-mod-sportlife-soft: var(--mod-sportlife-soft);
 }
 
 :root {
@@ -98,6 +111,22 @@
   --sidebar-accent-foreground: var(--saito-navy);
   --sidebar-border: oklch(0.93 0.01 250);
   --sidebar-ring: var(--saito-blue);
+
+  /* Module identity (Administration=blue, Wellbeing=yellow/orange,
+     Coaching=green, Sport Life/Atleta=red). Used by sidebars, chips,
+     module headers and role-tinted cards. */
+  --mod-admin: var(--saito-blue);
+  --mod-admin-foreground: oklch(1 0 0);
+  --mod-admin-soft: oklch(0.95 0.04 252);
+  --mod-wellbeing: var(--saito-yellow);
+  --mod-wellbeing-foreground: var(--saito-navy);
+  --mod-wellbeing-soft: oklch(0.97 0.06 85);
+  --mod-coaching: var(--saito-green);
+  --mod-coaching-foreground: oklch(1 0 0);
+  --mod-coaching-soft: oklch(0.95 0.05 155);
+  --mod-sportlife: var(--saito-red);
+  --mod-sportlife-foreground: oklch(1 0 0);
+  --mod-sportlife-soft: oklch(0.96 0.04 20);
 }
 
 .dark {

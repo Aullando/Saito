@@ -4,7 +4,15 @@ import { Logo } from "@/components/Logo";
 import { useAuth as useLocalAuth } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { useActiveClubStore } from "@/clubs/activeClub";
-import { Briefcase, Wallet, Stethoscope, Dumbbell, User, Monitor, Smartphone } from "lucide-react";
+import {
+  Briefcase,
+  Wallet,
+  Stethoscope,
+  Dumbbell,
+  User,
+  Monitor,
+  Smartphone,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
@@ -12,57 +20,101 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+type ModuleKey = "admin" | "wellbeing" | "coaching" | "sportlife";
+
 type DemoProfile = {
   id: string;
   userId: string;
   title: string;
   subtitle: string;
   surface: "desktop" | "mobile";
+  module: ModuleKey;
   icon: LucideIcon;
 };
 
+/** Channel rule (Confluence):
+ *   - WebApp escritorio: Gestor/Dirección, Administración, Staff médico
+ *   - App móvil: Entrenador, Atleta
+ * Module color (brand):
+ *   admin=azul · wellbeing=amarillo · coaching=verde · sportlife=rojo
+ */
 const PROFILES: DemoProfile[] = [
   {
     id: "mgr",
     userId: "u-mgr",
     title: "Gestor / Dirección",
-    subtitle: "Visión global del club, KPIs y decisiones",
+    subtitle: "Dashboard de club, KPIs, secciones y decisiones",
     surface: "desktop",
+    module: "admin",
     icon: Briefcase,
   },
   {
     id: "adm",
     userId: "u-adm",
     title: "Administración",
-    subtitle: "Cuotas, pagos y gestión económica",
+    subtitle: "Usuarios, cuotas, pagos, calendario y circulares",
     surface: "desktop",
+    module: "admin",
     icon: Wallet,
   },
   {
     id: "med",
     userId: "u-med",
     title: "Staff médico",
-    subtitle: "Lesiones, restricciones y agenda clínica",
+    subtitle: "Ficha de salud, incidencias, restricciones y citas",
     surface: "desktop",
+    module: "wellbeing",
     icon: Stethoscope,
   },
   {
     id: "tec",
     userId: "u-tec",
     title: "Entrenador",
-    subtitle: "Tu día, asistencia y comunicación",
+    subtitle: "Sesión, asistencia, convocatoria, notas e IA",
     surface: "mobile",
+    module: "coaching",
     icon: Dumbbell,
   },
   {
     id: "ath",
     userId: "u-ath",
     title: "Atleta",
-    subtitle: "Calendario personal, avisos y perfil",
+    subtitle: "Calendario, ausencias, feedback, salud y notis",
     surface: "mobile",
+    module: "sportlife",
     icon: User,
   },
 ];
+
+const MODULE_STYLES: Record<
+  ModuleKey,
+  { icon: string; ring: string; chip: string; label: string }
+> = {
+  admin: {
+    icon: "bg-mod-admin text-mod-admin-foreground",
+    ring: "group-hover:border-mod-admin",
+    chip: "bg-mod-admin-soft text-mod-admin",
+    label: "Administration",
+  },
+  wellbeing: {
+    icon: "bg-mod-wellbeing text-mod-wellbeing-foreground",
+    ring: "group-hover:border-mod-wellbeing",
+    chip: "bg-mod-wellbeing-soft text-[color:var(--saito-navy)]",
+    label: "Wellbeing",
+  },
+  coaching: {
+    icon: "bg-mod-coaching text-mod-coaching-foreground",
+    ring: "group-hover:border-mod-coaching",
+    chip: "bg-mod-coaching-soft text-mod-coaching",
+    label: "Coaching",
+  },
+  sportlife: {
+    icon: "bg-mod-sportlife text-mod-sportlife-foreground",
+    ring: "group-hover:border-mod-sportlife",
+    chip: "bg-mod-sportlife-soft text-mod-sportlife",
+    label: "Sport Life",
+  },
+};
 
 function LoginPage() {
   const { session, roles } = useAuth();
@@ -90,42 +142,42 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background px-4 py-10">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-10 flex flex-col items-center gap-1 text-center">
+      <div className="mx-auto max-w-5xl">
+        <header className="mb-10 flex flex-col items-center gap-1 text-center">
           <Logo size={44} />
           <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
             powered by Gemini
           </span>
           <h1 className="mt-4 text-2xl font-bold tracking-tight">Demo SAITO</h1>
           <p className="text-sm text-muted-foreground">
-            Elige cómo quieres explorar la plataforma.
+            Elige tu rol. Cada rol entra al canal correcto: escritorio o móvil.
           </p>
-        </div>
+        </header>
 
-        <Section
+        <ChannelSection
           icon={Monitor}
-          title="WebApp — Escritorio"
-          description="Roles de gestión con panel completo."
+          title="WebApp · Escritorio"
+          description="Gestión y operaciones del club. Sidebar + topbar."
         >
           <div className="grid gap-3 sm:grid-cols-3">
             {desktop.map((p) => (
               <ProfileCard key={p.id} profile={p} onSelect={enter} />
             ))}
           </div>
-        </Section>
+        </ChannelSection>
 
-        <Section
+        <ChannelSection
           icon={Smartphone}
           title="App móvil"
-          description="Pensada para entrenadores y atletas."
-          className="mt-8"
+          description="Frame 390 px. Solo entrenador y atleta."
+          className="mt-10"
         >
           <div className="grid gap-3 sm:grid-cols-2">
             {mobile.map((p) => (
               <ProfileCard key={p.id} profile={p} onSelect={enter} />
             ))}
           </div>
-        </Section>
+        </ChannelSection>
 
         <div className="mt-10 text-center text-xs text-muted-foreground">
           ¿Buscas la demo del Real Grupo Covadonga?{" "}
@@ -146,7 +198,7 @@ function LoginPage() {
   );
 }
 
-function Section({
+function ChannelSection({
   icon: Icon,
   title,
   description,
@@ -183,14 +235,22 @@ function ProfileCard({
   onSelect: (p: DemoProfile) => void;
 }) {
   const Icon = profile.icon;
+  const s = MODULE_STYLES[profile.module];
   return (
     <button
       type="button"
       onClick={() => onSelect(profile)}
-      className="group flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-left transition hover:border-primary hover:shadow-md"
+      className={`group flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-left transition hover:shadow-md ${s.ring}`}
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-        <Icon className="h-5 w-5" />
+      <div className="flex w-full items-center justify-between">
+        <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${s.icon}`}>
+          <Icon className="h-5 w-5" />
+        </div>
+        <span
+          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${s.chip}`}
+        >
+          {s.label}
+        </span>
       </div>
       <div className="flex-1">
         <div className="text-base font-semibold">{profile.title}</div>
