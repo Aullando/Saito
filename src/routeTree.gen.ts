@@ -60,6 +60,7 @@ import { Route as AppMobileTeamRouteImport } from './routes/_app.mobile.team'
 import { Route as AppMobileProfileRouteImport } from './routes/_app.mobile.profile'
 import { Route as AppMobileMessagesRouteImport } from './routes/_app.mobile.messages'
 import { Route as AppMobileCalendarRouteImport } from './routes/_app.mobile.calendar'
+import { Route as AppMobileToolRouteImport } from './routes/_app.mobile.$tool'
 import { Route as AppMedicalRestrictionsRouteImport } from './routes/_app.medical.restrictions'
 import { Route as AppMedicalCalendarRouteImport } from './routes/_app.medical.calendar'
 import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.payments'
@@ -319,6 +320,11 @@ const AppMobileCalendarRoute = AppMobileCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => AppMobileRoute,
 } as any)
+const AppMobileToolRoute = AppMobileToolRouteImport.update({
+  id: '/$tool',
+  path: '/$tool',
+  getParentRoute: () => AppMobileRoute,
+} as any)
 const AppMedicalRestrictionsRoute = AppMedicalRestrictionsRouteImport.update({
   id: '/medical/restrictions',
   path: '/medical/restrictions',
@@ -370,6 +376,7 @@ export interface FileRoutesByFullPath {
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
   '/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/mobile/$tool': typeof AppMobileToolRoute
   '/mobile/calendar': typeof AppMobileCalendarRoute
   '/mobile/messages': typeof AppMobileMessagesRoute
   '/mobile/profile': typeof AppMobileProfileRoute
@@ -424,6 +431,7 @@ export interface FileRoutesByTo {
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
   '/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/mobile/$tool': typeof AppMobileToolRoute
   '/mobile/calendar': typeof AppMobileCalendarRoute
   '/mobile/messages': typeof AppMobileMessagesRoute
   '/mobile/profile': typeof AppMobileProfileRoute
@@ -481,6 +489,7 @@ export interface FileRoutesById {
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
   '/_app/medical/calendar': typeof AppMedicalCalendarRoute
   '/_app/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/_app/mobile/$tool': typeof AppMobileToolRoute
   '/_app/mobile/calendar': typeof AppMobileCalendarRoute
   '/_app/mobile/messages': typeof AppMobileMessagesRoute
   '/_app/mobile/profile': typeof AppMobileProfileRoute
@@ -538,6 +547,7 @@ export interface FileRouteTypes {
     | '/economic/payments'
     | '/medical/calendar'
     | '/medical/restrictions'
+    | '/mobile/$tool'
     | '/mobile/calendar'
     | '/mobile/messages'
     | '/mobile/profile'
@@ -592,6 +602,7 @@ export interface FileRouteTypes {
     | '/economic/payments'
     | '/medical/calendar'
     | '/medical/restrictions'
+    | '/mobile/$tool'
     | '/mobile/calendar'
     | '/mobile/messages'
     | '/mobile/profile'
@@ -648,6 +659,7 @@ export interface FileRouteTypes {
     | '/_app/economic/payments'
     | '/_app/medical/calendar'
     | '/_app/medical/restrictions'
+    | '/_app/mobile/$tool'
     | '/_app/mobile/calendar'
     | '/_app/mobile/messages'
     | '/_app/mobile/profile'
@@ -1041,6 +1053,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMobileCalendarRouteImport
       parentRoute: typeof AppMobileRoute
     }
+    '/_app/mobile/$tool': {
+      id: '/_app/mobile/$tool'
+      path: '/$tool'
+      fullPath: '/mobile/$tool'
+      preLoaderRoute: typeof AppMobileToolRouteImport
+      parentRoute: typeof AppMobileRoute
+    }
     '/_app/medical/restrictions': {
       id: '/_app/medical/restrictions'
       path: '/medical/restrictions'
@@ -1073,6 +1092,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppMobileRouteChildren {
+  AppMobileToolRoute: typeof AppMobileToolRoute
   AppMobileCalendarRoute: typeof AppMobileCalendarRoute
   AppMobileMessagesRoute: typeof AppMobileMessagesRoute
   AppMobileProfileRoute: typeof AppMobileProfileRoute
@@ -1081,6 +1101,7 @@ interface AppMobileRouteChildren {
 }
 
 const AppMobileRouteChildren: AppMobileRouteChildren = {
+  AppMobileToolRoute: AppMobileToolRoute,
   AppMobileCalendarRoute: AppMobileCalendarRoute,
   AppMobileMessagesRoute: AppMobileMessagesRoute,
   AppMobileProfileRoute: AppMobileProfileRoute,
