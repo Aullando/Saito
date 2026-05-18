@@ -22,7 +22,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { AthleteProfileSheet } from "@/components/AthleteProfileSheet";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -549,67 +550,15 @@ function AthletesPage() {
       <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
         <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
           {detail && (
-            <>
-              <SheetHeader>
-                <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-base font-bold text-primary">
-                    {detail.first_name[0]}
-                    {detail.last_name[0]}
-                  </div>
-                  <div>
-                    <SheetTitle className="text-xl">
-                      {detail.first_name} {detail.last_name.toUpperCase()}
-                    </SheetTitle>
-                    <div className="mt-1 flex flex-wrap gap-1.5">
-                      <Pill tone="info">
-                        {sections.find((s) => s.id === detail.section_id)?.name ?? "—"}
-                      </Pill>
-                      <Pill>
-                        {categories.find((c) => c.id === detail.category_id)?.name ?? "—"}
-                      </Pill>
-                      <Pill
-                        tone={
-                          detail.medical_status === "Fit"
-                            ? "success"
-                            : detail.medical_status === "Injured"
-                              ? "danger"
-                              : "warning"
-                        }
-                      >
-                        {detail.medical_status}
-                      </Pill>
-                    </div>
-                  </div>
-                </div>
-              </SheetHeader>
-
-              <div className="mt-6 space-y-5 text-sm">
-                <section className="rounded-2xl border border-border p-4">
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Detalles
-                  </h3>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <span className="text-muted-foreground">Estado:</span> {detail.status}
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Médico:</span> {detail.medical_status}
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Rendimiento:</span>{" "}
-                      {detail.performance_status}
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Grupos:</span>{" "}
-                      {groupsByAthlete(detail.id)
-                        .map((id) => groups.find((g) => g.id === id)?.name)
-                        .filter(Boolean)
-                        .join(", ") || "—"}
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </>
+            <AthleteProfileSheet
+              athlete={detail}
+              roles={roles}
+              sectionName={sections.find((s) => s.id === detail.section_id)?.name ?? "—"}
+              categoryName={categories.find((c) => c.id === detail.category_id)?.name ?? "—"}
+              groupNames={groupsByAthlete(detail.id)
+                .map((id) => groups.find((g) => g.id === id)?.name)
+                .filter((x): x is string => Boolean(x))}
+            />
           )}
         </SheetContent>
       </Sheet>
