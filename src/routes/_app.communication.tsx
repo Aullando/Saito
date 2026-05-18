@@ -430,7 +430,7 @@ function CircularsTab({
   return (
     <div className="saito-card p-0">
       <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
-        {(["all", "draft", "published", "archived", "withdrawn"] as const).map((s) => (
+        {(["all", "draft", "scheduled", "published", "archived", "withdrawn"] as const).map((s) => (
           <button
             key={s}
             onClick={() => setFilter(s)}
