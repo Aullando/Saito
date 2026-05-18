@@ -57,6 +57,7 @@ function buildItems(role: Role): Item[] {
         { to: "/economic/fees", label: "Pagos y cuotas", icon: Wallet },
         { to: "/communication", label: "Comunicación", icon: MessageSquare },
         { to: "/reports", label: "Informes", icon: BarChart3 },
+        { to: "/profile", label: "Notificaciones", icon: Megaphone },
         { to: "/settings/privacy", label: "Privacidad y seguridad", icon: ShieldCheck },
       ];
 
@@ -64,15 +65,19 @@ function buildItems(role: Role): Item[] {
     case "admin":
       return [
         { to: "/club", label: "Organización", icon: Building2 },
-        { to: "/settings/team", label: "Usuarios y permisos", icon: UserPlus },
+        { to: "/settings/team", label: "Usuarios", icon: UserPlus },
         { to: "/club", label: "Secciones", icon: Layers, indent: true },
         { to: "/club", label: "Categorías", icon: Layers, indent: true },
         { to: "/club", label: "Grupos", icon: Users, indent: true },
+        { to: "/calendar", label: "Horarios", icon: CalendarClock, indent: true },
+        { to: "/settings/team", label: "Tutores", icon: Users, indent: true },
         { to: "/economic/fees", label: "Cuotas y tasas", icon: Receipt },
+        { to: "/economic/fees", label: "Aplicar cuota", icon: Wallet, indent: true },
         { to: "/economic/payments", label: "Estado de pagos", icon: Wallet },
         { to: "/calendar", label: "Calendario de club", icon: CalendarDays },
         { to: "/communication", label: "Circulares", icon: Megaphone },
       ];
+
 
     // Staff médico
     case "medical":
