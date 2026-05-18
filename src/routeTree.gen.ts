@@ -28,6 +28,7 @@ import { Route as PublicAvisoLegalRouteImport } from './routes/_public.aviso-leg
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppOrganizationsRouteImport } from './routes/_app.organizations'
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
+import { Route as AppMobileRouteImport } from './routes/_app.mobile'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCommunicationRouteImport } from './routes/_app.communication'
 import { Route as AppClubRouteImport } from './routes/_app.club'
@@ -35,6 +36,7 @@ import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAttendanceRouteImport } from './routes/_app.attendance'
 import { Route as AppAthletesRouteImport } from './routes/_app.athletes'
 import { Route as PublicEnIndexRouteImport } from './routes/_public.en.index'
+import { Route as AppMobileIndexRouteImport } from './routes/_app.mobile.index'
 import { Route as PublicEnSeguridadRouteImport } from './routes/_public.en.seguridad'
 import { Route as PublicEnProductoRouteImport } from './routes/_public.en.producto'
 import { Route as PublicEnPrivacidadRouteImport } from './routes/_public.en.privacidad'
@@ -53,6 +55,10 @@ import { Route as AppRgccEntrenamientoPersonalRouteImport } from './routes/_app.
 import { Route as AppRgccClasesRouteImport } from './routes/_app.rgcc.clases'
 import { Route as AppRgccBibliotecaRouteImport } from './routes/_app.rgcc.biblioteca'
 import { Route as AppRgccSlugRouteImport } from './routes/_app.rgcc.$slug'
+import { Route as AppMobileTeamRouteImport } from './routes/_app.mobile.team'
+import { Route as AppMobileProfileRouteImport } from './routes/_app.mobile.profile'
+import { Route as AppMobileMessagesRouteImport } from './routes/_app.mobile.messages'
+import { Route as AppMobileCalendarRouteImport } from './routes/_app.mobile.calendar'
 import { Route as AppMedicalRestrictionsRouteImport } from './routes/_app.medical.restrictions'
 import { Route as AppMedicalCalendarRouteImport } from './routes/_app.medical.calendar'
 import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.payments'
@@ -151,6 +157,11 @@ const AppOnboardingRoute = AppOnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMobileRoute = AppMobileRouteImport.update({
+  id: '/mobile',
+  path: '/mobile',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -185,6 +196,11 @@ const PublicEnIndexRoute = PublicEnIndexRouteImport.update({
   id: '/en/',
   path: '/en/',
   getParentRoute: () => PublicRoute,
+} as any)
+const AppMobileIndexRoute = AppMobileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppMobileRoute,
 } as any)
 const PublicEnSeguridadRoute = PublicEnSeguridadRouteImport.update({
   id: '/en/seguridad',
@@ -277,6 +293,26 @@ const AppRgccSlugRoute = AppRgccSlugRouteImport.update({
   path: '/rgcc/$slug',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMobileTeamRoute = AppMobileTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AppMobileRoute,
+} as any)
+const AppMobileProfileRoute = AppMobileProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppMobileRoute,
+} as any)
+const AppMobileMessagesRoute = AppMobileMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AppMobileRoute,
+} as any)
+const AppMobileCalendarRoute = AppMobileCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AppMobileRoute,
+} as any)
 const AppMedicalRestrictionsRoute = AppMedicalRestrictionsRouteImport.update({
   id: '/medical/restrictions',
   path: '/medical/restrictions',
@@ -309,6 +345,7 @@ export interface FileRoutesByFullPath {
   '/club': typeof AppClubRoute
   '/communication': typeof AppCommunicationRoute
   '/dashboard': typeof AppDashboardRoute
+  '/mobile': typeof AppMobileRouteWithChildren
   '/onboarding': typeof AppOnboardingRoute
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
@@ -326,6 +363,10 @@ export interface FileRoutesByFullPath {
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
   '/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/mobile/calendar': typeof AppMobileCalendarRoute
+  '/mobile/messages': typeof AppMobileMessagesRoute
+  '/mobile/profile': typeof AppMobileProfileRoute
+  '/mobile/team': typeof AppMobileTeamRoute
   '/rgcc/$slug': typeof AppRgccSlugRoute
   '/rgcc/biblioteca': typeof AppRgccBibliotecaRoute
   '/rgcc/clases': typeof AppRgccClasesRoute
@@ -344,6 +385,7 @@ export interface FileRoutesByFullPath {
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
   '/en/seguridad': typeof PublicEnSeguridadRoute
+  '/mobile/': typeof AppMobileIndexRoute
   '/en/': typeof PublicEnIndexRoute
 }
 export interface FileRoutesByTo {
@@ -374,6 +416,10 @@ export interface FileRoutesByTo {
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
   '/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/mobile/calendar': typeof AppMobileCalendarRoute
+  '/mobile/messages': typeof AppMobileMessagesRoute
+  '/mobile/profile': typeof AppMobileProfileRoute
+  '/mobile/team': typeof AppMobileTeamRoute
   '/rgcc/$slug': typeof AppRgccSlugRoute
   '/rgcc/biblioteca': typeof AppRgccBibliotecaRoute
   '/rgcc/clases': typeof AppRgccClasesRoute
@@ -392,6 +438,7 @@ export interface FileRoutesByTo {
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
   '/en/seguridad': typeof PublicEnSeguridadRoute
+  '/mobile': typeof AppMobileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -406,6 +453,7 @@ export interface FileRoutesById {
   '/_app/club': typeof AppClubRoute
   '/_app/communication': typeof AppCommunicationRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/mobile': typeof AppMobileRouteWithChildren
   '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/organizations': typeof AppOrganizationsRoute
   '/_app/profile': typeof AppProfileRoute
@@ -424,6 +472,10 @@ export interface FileRoutesById {
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
   '/_app/medical/calendar': typeof AppMedicalCalendarRoute
   '/_app/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/_app/mobile/calendar': typeof AppMobileCalendarRoute
+  '/_app/mobile/messages': typeof AppMobileMessagesRoute
+  '/_app/mobile/profile': typeof AppMobileProfileRoute
+  '/_app/mobile/team': typeof AppMobileTeamRoute
   '/_app/rgcc/$slug': typeof AppRgccSlugRoute
   '/_app/rgcc/biblioteca': typeof AppRgccBibliotecaRoute
   '/_app/rgcc/clases': typeof AppRgccClasesRoute
@@ -442,6 +494,7 @@ export interface FileRoutesById {
   '/_public/en/privacidad': typeof PublicEnPrivacidadRoute
   '/_public/en/producto': typeof PublicEnProductoRoute
   '/_public/en/seguridad': typeof PublicEnSeguridadRoute
+  '/_app/mobile/': typeof AppMobileIndexRoute
   '/_public/en/': typeof PublicEnIndexRoute
 }
 export interface FileRouteTypes {
@@ -457,6 +510,7 @@ export interface FileRouteTypes {
     | '/club'
     | '/communication'
     | '/dashboard'
+    | '/mobile'
     | '/onboarding'
     | '/organizations'
     | '/profile'
@@ -474,6 +528,10 @@ export interface FileRouteTypes {
     | '/economic/payments'
     | '/medical/calendar'
     | '/medical/restrictions'
+    | '/mobile/calendar'
+    | '/mobile/messages'
+    | '/mobile/profile'
+    | '/mobile/team'
     | '/rgcc/$slug'
     | '/rgcc/biblioteca'
     | '/rgcc/clases'
@@ -492,6 +550,7 @@ export interface FileRouteTypes {
     | '/en/privacidad'
     | '/en/producto'
     | '/en/seguridad'
+    | '/mobile/'
     | '/en/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -522,6 +581,10 @@ export interface FileRouteTypes {
     | '/economic/payments'
     | '/medical/calendar'
     | '/medical/restrictions'
+    | '/mobile/calendar'
+    | '/mobile/messages'
+    | '/mobile/profile'
+    | '/mobile/team'
     | '/rgcc/$slug'
     | '/rgcc/biblioteca'
     | '/rgcc/clases'
@@ -540,6 +603,7 @@ export interface FileRouteTypes {
     | '/en/privacidad'
     | '/en/producto'
     | '/en/seguridad'
+    | '/mobile'
   id:
     | '__root__'
     | '/_app'
@@ -553,6 +617,7 @@ export interface FileRouteTypes {
     | '/_app/club'
     | '/_app/communication'
     | '/_app/dashboard'
+    | '/_app/mobile'
     | '/_app/onboarding'
     | '/_app/organizations'
     | '/_app/profile'
@@ -571,6 +636,10 @@ export interface FileRouteTypes {
     | '/_app/economic/payments'
     | '/_app/medical/calendar'
     | '/_app/medical/restrictions'
+    | '/_app/mobile/calendar'
+    | '/_app/mobile/messages'
+    | '/_app/mobile/profile'
+    | '/_app/mobile/team'
     | '/_app/rgcc/$slug'
     | '/_app/rgcc/biblioteca'
     | '/_app/rgcc/clases'
@@ -589,6 +658,7 @@ export interface FileRouteTypes {
     | '/_public/en/privacidad'
     | '/_public/en/producto'
     | '/_public/en/seguridad'
+    | '/_app/mobile/'
     | '/_public/en/'
   fileRoutesById: FileRoutesById
 }
@@ -735,6 +805,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppOnboardingRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/mobile': {
+      id: '/_app/mobile'
+      path: '/mobile'
+      fullPath: '/mobile'
+      preLoaderRoute: typeof AppMobileRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -783,6 +860,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/en/'
       preLoaderRoute: typeof PublicEnIndexRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/_app/mobile/': {
+      id: '/_app/mobile/'
+      path: '/'
+      fullPath: '/mobile/'
+      preLoaderRoute: typeof AppMobileIndexRouteImport
+      parentRoute: typeof AppMobileRoute
     }
     '/_public/en/seguridad': {
       id: '/_public/en/seguridad'
@@ -910,6 +994,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRgccSlugRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/mobile/team': {
+      id: '/_app/mobile/team'
+      path: '/team'
+      fullPath: '/mobile/team'
+      preLoaderRoute: typeof AppMobileTeamRouteImport
+      parentRoute: typeof AppMobileRoute
+    }
+    '/_app/mobile/profile': {
+      id: '/_app/mobile/profile'
+      path: '/profile'
+      fullPath: '/mobile/profile'
+      preLoaderRoute: typeof AppMobileProfileRouteImport
+      parentRoute: typeof AppMobileRoute
+    }
+    '/_app/mobile/messages': {
+      id: '/_app/mobile/messages'
+      path: '/messages'
+      fullPath: '/mobile/messages'
+      preLoaderRoute: typeof AppMobileMessagesRouteImport
+      parentRoute: typeof AppMobileRoute
+    }
+    '/_app/mobile/calendar': {
+      id: '/_app/mobile/calendar'
+      path: '/calendar'
+      fullPath: '/mobile/calendar'
+      preLoaderRoute: typeof AppMobileCalendarRouteImport
+      parentRoute: typeof AppMobileRoute
+    }
     '/_app/medical/restrictions': {
       id: '/_app/medical/restrictions'
       path: '/medical/restrictions'
@@ -941,6 +1053,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppMobileRouteChildren {
+  AppMobileCalendarRoute: typeof AppMobileCalendarRoute
+  AppMobileMessagesRoute: typeof AppMobileMessagesRoute
+  AppMobileProfileRoute: typeof AppMobileProfileRoute
+  AppMobileTeamRoute: typeof AppMobileTeamRoute
+  AppMobileIndexRoute: typeof AppMobileIndexRoute
+}
+
+const AppMobileRouteChildren: AppMobileRouteChildren = {
+  AppMobileCalendarRoute: AppMobileCalendarRoute,
+  AppMobileMessagesRoute: AppMobileMessagesRoute,
+  AppMobileProfileRoute: AppMobileProfileRoute,
+  AppMobileTeamRoute: AppMobileTeamRoute,
+  AppMobileIndexRoute: AppMobileIndexRoute,
+}
+
+const AppMobileRouteWithChildren = AppMobileRoute._addFileChildren(
+  AppMobileRouteChildren,
+)
+
 interface AppRouteChildren {
   AppAthletesRoute: typeof AppAthletesRoute
   AppAttendanceRoute: typeof AppAttendanceRoute
@@ -948,6 +1080,7 @@ interface AppRouteChildren {
   AppClubRoute: typeof AppClubRoute
   AppCommunicationRoute: typeof AppCommunicationRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppMobileRoute: typeof AppMobileRouteWithChildren
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppOrganizationsRoute: typeof AppOrganizationsRoute
   AppProfileRoute: typeof AppProfileRoute
@@ -972,6 +1105,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppClubRoute: AppClubRoute,
   AppCommunicationRoute: AppCommunicationRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppMobileRoute: AppMobileRouteWithChildren,
   AppOnboardingRoute: AppOnboardingRoute,
   AppOrganizationsRoute: AppOrganizationsRoute,
   AppProfileRoute: AppProfileRoute,
