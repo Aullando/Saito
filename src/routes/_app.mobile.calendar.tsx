@@ -256,11 +256,6 @@ function MobileCalendar() {
                       <span style={{ fontSize: 15, fontWeight: 700, lineHeight: "18px" }}>
                         {e.startTime}
                       </span>
-                      {e.endTime && (
-                        <span style={{ fontSize: 10, fontWeight: 500, opacity: 0.8, marginTop: 2 }}>
-                          {e.endTime}
-                        </span>
-                      )}
                     </div>
 
                     {/* Detalle */}
@@ -301,7 +296,6 @@ function MobileCalendar() {
                         )}
                         <span className="inline-flex items-center gap-1">
                           <Clock className="h-3 w-3" /> {e.startTime}
-                          {e.endTime ? `–${e.endTime}` : ""}
                         </span>
                       </div>
                     </div>
