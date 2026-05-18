@@ -63,12 +63,15 @@ function buildItems(role: Role): Item[] {
     // Administración
     case "admin":
       return [
-        { to: "/settings/team", label: "Altas y usuarios", icon: UserPlus },
-        { to: "/club", label: "Secciones / Categorías / Grupos", icon: Layers },
+        { to: "/club", label: "Organización", icon: Building2 },
+        { to: "/settings/team", label: "Usuarios y permisos", icon: UserPlus },
+        { to: "/club", label: "Secciones", icon: Layers, indent: true },
+        { to: "/club", label: "Categorías", icon: Layers, indent: true },
+        { to: "/club", label: "Grupos", icon: Users, indent: true },
         { to: "/economic/fees", label: "Cuotas y tasas", icon: Receipt },
         { to: "/economic/payments", label: "Estado de pagos", icon: Wallet },
-        { to: "/communication", label: "Circulares", icon: Megaphone },
         { to: "/calendar", label: "Calendario de club", icon: CalendarDays },
+        { to: "/communication", label: "Circulares", icon: Megaphone },
       ];
 
     // Staff médico
