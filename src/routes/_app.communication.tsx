@@ -284,16 +284,27 @@ function CommunicationPage() {
       <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
         <div className="saito-card flex flex-col p-0">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
-            <span className="text-sm font-semibold">{t("inbox")}</span>
+            <span className="text-sm font-semibold">
+              {showArchived ? t("archived") || "Archivados" : t("inbox")}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-xs"
+              onClick={() => setShowArchived((v) => !v)}
+            >
+              {showArchived ? t("inbox") : t("archived") || "Archivados"}
+            </Button>
           </div>
           <ul className="flex-1 overflow-y-auto">
             {conversations.map((c) => {
               const isActive = c.id === activeId;
+              const isArchived = archivedConvs.includes(c.id);
               return (
-                <li key={c.id}>
+                <li key={c.id} className="group/conv relative">
                   <button
                     onClick={() => setActiveId(c.id)}
-                    className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left ${isActive ? "bg-primary/5" : "hover:bg-muted/40"}`}
+                    className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 pr-10 text-left ${isActive ? "bg-primary/5" : "hover:bg-muted/40"}`}
                   >
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{c.title}</div>
@@ -305,6 +316,41 @@ function CommunicationPage() {
                       </div>
                     </div>
                   </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-2 top-2 h-7 w-7 opacity-60 hover:opacity-100"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {isArchived ? (
+                        <DropdownMenuItem onClick={() => unarchiveConv(c.id)}>
+                          <ArchiveRestore className="mr-2 h-4 w-4" />
+                          {t("unarchive") || "Desarchivar"}
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem onClick={() => archiveConv(c.id)}>
+                          <Archive className="mr-2 h-4 w-4" />
+                          {t("archive") || "Archivar"}
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={() => {
+                          if (!confirm(t("delete_confirm"))) return;
+                          delConv.mutate(c.id);
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        {t("delete")}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </li>
               );
             })}
@@ -322,17 +368,35 @@ function CommunicationPage() {
                   <div className="text-base font-semibold">{active.title}</div>
                   <div className="text-xs text-muted-foreground">{active.type}</div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-destructive"
-                  onClick={() => {
-                    if (!confirm(t("delete_confirm"))) return;
-                    delConv.mutate(active.id);
-                  }}
-                >
-                  {t("delete")}
-                </Button>
+                <div className="flex items-center gap-1">
+                  {archivedConvs.includes(active.id) ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => unarchiveConv(active.id)}
+                    >
+                      <ArchiveRestore className="mr-1 h-4 w-4" />
+                      {t("unarchive") || "Desarchivar"}
+                    </Button>
+                  ) : (
+                    <Button size="sm" variant="ghost" onClick={() => archiveConv(active.id)}>
+                      <Archive className="mr-1 h-4 w-4" />
+                      {t("archive") || "Archivar"}
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive"
+                    onClick={() => {
+                      if (!confirm(t("delete_confirm"))) return;
+                      delConv.mutate(active.id);
+                    }}
+                  >
+                    <Trash2 className="mr-1 h-4 w-4" />
+                    {t("delete")}
+                  </Button>
+                </div>
               </div>
               <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
                 {messages.map((m) => (
