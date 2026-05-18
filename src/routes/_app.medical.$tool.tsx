@@ -664,9 +664,10 @@ function RequestsView() {
                       {r.reason} · cita programada
                     </div>
                   </div>
-                  <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
-                    Gestionada
+                  <span className="shrink-0">
+                    <StatusChip>Gestionada</StatusChip>
                   </span>
+
                 </div>
               </li>
             ))}
