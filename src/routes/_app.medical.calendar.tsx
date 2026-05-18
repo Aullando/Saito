@@ -25,6 +25,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
+import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import { supabase } from "@/integrations/supabase/client";
 import { DEMO_ATHLETES_MIN_ROWS, DEMO_MEDICAL_APPOINTMENTS_ROWS } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
