@@ -176,6 +176,12 @@
   --state-danger-bg: #fff0f3;    --state-danger-text: #c71f36; --state-danger-border: #ffc9d1;
   --state-warn-bg: #fff5df;      --state-warn-text: #b56f00;   --state-warn-border: #ffe0a3;
   --state-neutral-bg: #eef3f8;   --state-neutral-text: #66758a;--state-neutral-border: #dde6f0;
+
+  /* Module aliases (direct names per spec) */
+  --admin-main: #0067c9;     --admin-bg: #eaf4ff;     --admin-border: #b7d9ff;     --admin-text: #0054a4;
+  --coaching-main: #00a74d;  --coaching-bg: #eaf8f0;  --coaching-border: #afe5c6;  --coaching-text: #00843d;
+  --wellbeing-main: #fdb113; --wellbeing-bg: #fff5df; --wellbeing-border: #ffe0a3; --wellbeing-text: #b56f00;
+  --sportlife-main: #f12f4a; --sportlife-bg: #fff0f3; --sportlife-border: #ffc9d1; --sportlife-text: #c71f36;
 }
 
 .dark {
@@ -269,6 +275,36 @@
   .saito-modal   { border-radius: var(--radius-modal); box-shadow: var(--shadow-modal); }
   .saito-drawer  { border-radius: var(--radius-drawer); box-shadow: var(--shadow-modal); }
   .saito-floating { box-shadow: var(--shadow-floating); }
+
+  /* Pill buttons */
+  .saito-button-primary {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-pill);
+    background: var(--saito-blue); color: #ffffff;
+    height: 44px; padding: 0 20px; font-weight: 600;
+    transition: filter 0.15s ease, box-shadow 0.15s ease;
+  }
+  .saito-button-primary:hover { filter: brightness(1.05); box-shadow: var(--shadow-card); }
+  .saito-button-secondary {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-pill);
+    background: var(--saito-surface-soft); color: var(--saito-text);
+    height: 44px; padding: 0 20px; font-weight: 600;
+    border: 1px solid var(--saito-border);
+    transition: background 0.15s ease;
+  }
+  .saito-button-secondary:hover { background: #e3ecf5; }
+
+  /* Generic SAITO chip (pair with chip-success/warning/danger/info/muted) */
+  .saito-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.02em; text-transform: uppercase;
+    border: 1px solid transparent;
+  }
+
 
   /* Uppercase status chip — PAGADO, PENDIENTE, APTO, NO APTO, EN REVISIÓN, … */
   .chip {
