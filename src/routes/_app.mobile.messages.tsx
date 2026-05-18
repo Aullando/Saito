@@ -39,7 +39,7 @@ function MobileMessages() {
     () => conversations.find((c) => c.id === openId) ?? null,
     [conversations, openId]
   );
-  const currentUser = users.find((u) => u.id === currentUserId);
+  
 
   useEffect(() => {
     if (openId) markRead(openId);
