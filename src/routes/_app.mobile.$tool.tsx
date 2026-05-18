@@ -330,6 +330,7 @@ function Notes() {
       <button
         disabled={!text.trim()}
         onClick={() => {
+          addNote(DEMO_SESSION_ID, text.trim(), priv);
           toast.success("Nota guardada");
           setText("");
         }}
