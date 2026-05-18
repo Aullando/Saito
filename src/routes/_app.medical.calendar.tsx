@@ -258,6 +258,8 @@ function MedicalCalendarPage() {
         }
       />
 
+      <MedicalDisclaimer className="mb-4" />
+
       <div className="saito-card p-3">
         <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
