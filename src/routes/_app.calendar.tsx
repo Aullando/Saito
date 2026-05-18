@@ -823,6 +823,18 @@ function CalendarPage() {
             ))}
           </SelectContent>
         </Select>
+        <Select value={roleF} onValueChange={setRoleF}>
+          <SelectTrigger className="w-48 rounded-full">
+            <SelectValue placeholder="Todos los roles" />
+          </SelectTrigger>
+          <SelectContent>
+            {ROLE_OPTIONS.map((o) => (
+              <SelectItem key={o.value} value={o.value}>
+                {o.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button
           variant="ghost"
           size="sm"
@@ -831,11 +843,79 @@ function CalendarPage() {
             setCatF("all");
             setGrpF("all");
             setTypeF("all");
+            setRoleF("all");
           }}
         >
           {t("clear_filters")}
         </Button>
+        <div className="ml-auto inline-flex rounded-full border border-border p-0.5">
+          <button
+            type="button"
+            onClick={() => setView("month")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+              view === "month"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Mes
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("day")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+              view === "day"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Día
+          </button>
+        </div>
       </div>
+
+      {view === "day" && (
+        <div className="mb-3 flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              const d = new Date(dayCursor);
+              d.setDate(d.getDate() - 1);
+              setDayCursor(d);
+            }}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="min-w-[200px] text-center text-sm font-medium capitalize">
+            {dayCursor.toLocaleDateString(undefined, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              const d = new Date(dayCursor);
+              d.setDate(d.getDate() + 1);
+              setDayCursor(d);
+            }}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full"
+            onClick={() => setDayCursor(new Date())}
+          >
+            {t("today")}
+          </Button>
+        </div>
+      )}
 
       <div className="saito-card p-3">
         <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
