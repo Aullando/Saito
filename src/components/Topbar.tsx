@@ -53,8 +53,8 @@ export function Topbar() {
         <Menu className="h-5 w-5" />
       </button>
       <div
-        className="hidden md:flex shrink-0 items-center justify-start transition-[width] duration-200"
-        style={{ width: collapsed ? 64 : 224 }}
+        className="hidden md:flex shrink-0 items-center transition-[width] duration-200"
+        style={{ width: collapsed ? 72 : 264, paddingLeft: 24 }}
       >
         <Logo size={collapsed ? 32 : 40} withText={!collapsed} />
       </div>
