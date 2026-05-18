@@ -387,12 +387,26 @@ function CircularsTab({
   items,
   onDeleteDraft,
   onPublish,
+  onSchedule,
+  onCancelSchedule,
+  onUpdate,
   onArchive,
   onWithdraw,
 }: {
   items: CircularItem[];
   onDeleteDraft: (id: string) => void;
   onPublish: (id: string) => void;
+  onSchedule: (id: string, when: string) => void;
+  onCancelSchedule: (id: string) => void;
+  onUpdate: (
+    id: string,
+    patch: Partial<{
+      title: string;
+      body: string;
+      recipientsLabel: string;
+      recipientsCount: number;
+    }>,
+  ) => void;
   onArchive: (id: string) => void;
   onWithdraw: (id: string, reason: string) => void;
 }) {
@@ -401,6 +415,7 @@ function CircularsTab({
   const counts: Record<CircularStatus | "all", number> = {
     all: items.length,
     draft: items.filter((c) => c.status === "draft").length,
+    scheduled: items.filter((c) => c.status === "scheduled").length,
     published: items.filter((c) => c.status === "published").length,
     archived: items.filter((c) => c.status === "archived").length,
     withdrawn: items.filter((c) => c.status === "withdrawn").length,
@@ -408,6 +423,9 @@ function CircularsTab({
 
   const [withdrawTarget, setWithdrawTarget] = useState<CircularItem | null>(null);
   const [withdrawReason, setWithdrawReason] = useState("");
+  const [editTarget, setEditTarget] = useState<CircularItem | null>(null);
+  const [scheduleTarget, setScheduleTarget] = useState<CircularItem | null>(null);
+  const [scheduleAt, setScheduleAt] = useState("");
 
   return (
     <div className="saito-card p-0">
