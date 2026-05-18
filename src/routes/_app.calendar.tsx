@@ -149,7 +149,17 @@ function CalendarPage() {
   const t = useT();
   const { profile, roles } = useAuth();
   const orgId = profile?.organization_id;
-  const canEdit = roles.some((r) => ["admin", "manager", "technical"].includes(r));
+  // Permisos explícitos (no mezclar roles operativos con técnicos)
+  const canManageCalendarEvents = roles.some((r) => ["admin", "manager"].includes(r));
+  const canManageMedicalAppointments = roles.some((r) =>
+    ["admin", "manager", "medical"].includes(r),
+  );
+  // canEditSessionContent existe para futuras acciones de sesión (notas, valoración…)
+  // y aplica al entrenador. No habilita edición de eventos generales.
+  const canEditSessionContent = roles.some((r) => ["technical", "admin", "manager"].includes(r));
+  void canEditSessionContent;
+  // Alias de compatibilidad para gates UI que no dependen del tipo de evento.
+  const canEdit = canManageCalendarEvents;
   const qc = useQueryClient();
   const demoMode = isDemoMode();
   const demoEvents = useData((s) => s.events);
@@ -1046,7 +1056,10 @@ function CalendarPage() {
             const status = computeStatus(ev, detail.date);
             const cancelInfo = cancellations[ev.id];
             const isFuture = detail.date >= todayStr;
-            const canEditEvent = canEdit && isFuture && !a.cancelled;
+            // Permiso efectivo según tipo de evento
+            const canEditThis =
+              ev.type === "medical" ? canManageMedicalAppointments : canManageCalendarEvents;
+            const canEditEvent = canEditThis && isFuture && !a.cancelled;
             const blockers = [
               a.hasAttn && "asistencia registrada",
               a.hasNotes && "notas",
@@ -1054,8 +1067,8 @@ function CalendarPage() {
               a.hasComm && "comunicación enviada",
               a.hasParticipants && a.isPast && "participantes históricos",
             ].filter(Boolean) as string[];
-            const canDelete = canEdit && !a.cancelled && blockers.length === 0;
-            const shouldCancel = canEdit && !a.cancelled && !canDelete && isFuture;
+            const canDelete = canEditThis && !a.cancelled && blockers.length === 0;
+            const shouldCancel = canEditThis && !a.cancelled && !canDelete && isFuture;
             const group = lookupGroup(ev.group_id);
             const staff = lookupStaff(ev.staff_id ?? null);
             const facility = facilityFor(ev);
@@ -1203,7 +1216,7 @@ function CalendarPage() {
 
 
 
-                  {canEdit && (
+                  {canEditThis && (
                     <div className="flex flex-col gap-2 pt-2">
                       {canEditEvent && (
                         <Button

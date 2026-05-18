@@ -99,10 +99,22 @@ Helpers en `src/lib/appMode.ts` y `src/lib/demoFallback.ts`.
 
 El componente `src/components/PasswordGate.tsx`:
 
-- Si `VITE_ENABLE_PASSWORD_GATE=false`, queda totalmente desactivado (no bloquea
-  la preview ni los tests E2E).
-- Si está activo, lee la contraseña de `VITE_DEMO_PASSWORD` (fallback `"hola"`).
+- Está **desactivado por defecto**. Solo se activa con
+  `VITE_ENABLE_PASSWORD_GATE=true`.
+- Si está activo, lee la contraseña **exclusivamente** de `VITE_DEMO_PASSWORD`.
+  **No existe contraseña por defecto** (`"hola"` ha sido eliminado): si
+  `VITE_DEMO_PASSWORD` no está definida, el gate bloquea el acceso y muestra
+  un error de configuración explícito.
 - **No es seguridad real**, solo gating de demo. La contraseña viaja al cliente.
+
+## Rutas de la App móvil
+
+- `/mobile` es la **única App móvil oficial** (frame 390px, sin sidebar,
+  navegación inferior). Entrenador en verde Coaching (#00A74D), Atleta en rojo
+  Sport Life (#F12F4A).
+- `/demo/mobile/coach` y `/demo/mobile/athlete` están **deprecadas** y
+  redirigen a `/mobile` fijando el rol correspondiente. No mantener
+  experiencias alternativas en esas rutas.
 
 ---
 

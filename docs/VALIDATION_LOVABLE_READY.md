@@ -28,11 +28,11 @@
 
 | # | Comprobación | Estado |
 |---|---|---|
-| 1 | No existe `.env` real versionado | ✅ `.env` está en `.gitignore` (entradas añadidas en este pase) |
+| 1 | No existe `.env` real versionado | ✅ Eliminado del repo. `.env` está en `.gitignore` |
 | 2 | Existe `.env.example` | ✅ Sí, con documentación completa |
 | 3 | No existe `bun.lock` | ✅ Eliminado |
 | 4 | Playwright no usa bun | ✅ `playwright.config.ts` usa `npm run dev` |
-| 5 | No hay contraseña hardcodeada | ⚠️ `PasswordGate.tsx` tiene fallback literal `"hola"` cuando `VITE_DEMO_PASSWORD` no está definida. **Es un fallback de demo**, no protege nada real, y solo se activa con `VITE_ENABLE_PASSWORD_GATE=true`. Recomendado quitarlo o cambiarlo antes de un despliegue privado serio. |
+| 5 | No hay contraseña hardcodeada | ✅ Fallback `"hola"` eliminado de `PasswordGate.tsx`. Si `VITE_ENABLE_PASSWORD_GATE=true` y no hay `VITE_DEMO_PASSWORD`, el gate bloquea acceso con error de configuración. |
 | 6 | Separación entre `VITE_DEMO_MODE=true/false` | ✅ Helpers en `src/lib/appMode.ts` |
 | 7 | Datos demo no aparecen como fallback en producción | ✅ `src/lib/demoFallback.ts` (`demoOr`, `demoOrEmpty`) y refactor de 7 rutas privadas. **Pendientes:** `_app.attendance.tsx`, `_app.medical.restrictions.tsx`, `_app.economic.fees.tsx` y rutas `_app.rgcc.*` usan seed como única fuente de datos (no como fallback) — aceptable mientras esos módulos sean exclusivamente demo. |
 | 8 | Badge visual demo/real | ✅ `src/components/DataSourceBadge.tsx` montado en `AppLayout`, controlado por `VITE_SHOW_DATA_SOURCE_BADGE` |
@@ -97,7 +97,7 @@ SUPABASE_SERVICE_ROLE_KEY=...   # NUNCA en una variable VITE_*
 
 ## 5. Pendientes de seguridad antes de producción real
 
-1. **Cambiar el fallback `"hola"` del PasswordGate** o eliminar el fallback completamente, para que el gate falle de forma explícita si no hay `VITE_DEMO_PASSWORD`.
+1. ~~Cambiar el fallback `"hola"` del PasswordGate~~ ✅ **Resuelto**: fallback eliminado. El gate falla de forma explícita si `VITE_ENABLE_PASSWORD_GATE=true` sin `VITE_DEMO_PASSWORD`.
 2. **Auditar las rutas seed-only** (`_app.attendance.tsx`, `_app.medical.restrictions.tsx`, `_app.economic.fees.tsx`, todas las `_app.rgcc.*`): hoy leen exclusivamente de `seed/`. Cuando se conecte backend real, reemplazar por queries Supabase con `demoOr/demoOrEmpty`.
 3. **RLS de Supabase:** verificar que toda tabla expuesta vía cliente tenga políticas RLS activas y restrictivas. Ejecutar el escáner de seguridad de Lovable Cloud antes de publish.
 4. **Service role key:** confirmar que `SUPABASE_SERVICE_ROLE_KEY` solo está en secretos de edge functions, nunca con prefijo `VITE_*`.

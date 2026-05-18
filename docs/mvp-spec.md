@@ -40,11 +40,41 @@ Circulares · Notificaciones.
 - **Dirección** ve datos agregados (KPIs, reporting). No PII clínica detallada.
 
 ## Reglas de dominio
-- **Circulares** tienen estados: `borrador`, `programada`, `publicada`,
-  `archivada`, `retirada`.
-- Solo se puede **eliminar** una circular si está en `borrador` o no publicada.
-- **Chats** se pueden archivar o eliminar de mi bandeja.
-- **Eventos** se pueden editar, cancelar o eliminar según reglas del rol.
+- **Circulares (MVP)**: listar, enviar, consultar canal de solo lectura para
+  destinatarios. Estados avanzados (borrador, programada, archivada, retirada)
+  son **Mejora propuesta V1.1**.
+- **Chats (MVP)**: listar, abrir, enviar mensajes, adjuntar, tiempo real
+  simulado, no leídos, marcar como leído. Archivar/eliminar son **Mejora
+  propuesta V1.1**.
+- **Eventos** se editan/cancelan/eliminan según permisos:
+  - `canManageCalendarEvents` (admin, manager): crear, editar, cancelar,
+    eliminar eventos generales (eliminar solo si no hay actividad asociada:
+    asistencia, notas, pagos, convocatoria, comunicación, participantes).
+  - `canManageMedicalAppointments` (admin, manager, medical): gestionar
+    citas y solicitudes médicas.
+  - `canEditSessionContent` (technical, admin, manager): contenido operativo
+    de sesión (título, descripción, convocatoria, asistencia, notas,
+    valoración, feedback, IA de sesión). **No** habilita editar eventos
+    generales del calendario.
+  - Atleta: solo consulta calendario, notifica ausencia, envía feedback.
+- Al editar fecha, hora o ubicación: checkbox **Notificar a participantes**.
+
+## Wellbeing / Salud deportiva
+- Conceptos permitidos: salud deportiva, restricción operativa, plan de
+  tratamiento bajo supervisión profesional, estado apto/no apto introducido
+  por profesional, solicitud de cita médica, seguimiento, incidencia, cita
+  médica.
+- Banner obligatorio en pantallas sensibles:
+  *"Información gestionada por personal autorizado. SAITO no sustituye el
+  criterio profesional."*
+
+## IA de sesión
+- Solo uso deportivo/entrenamiento (calentamiento, bloque técnico, ejercicio
+  principal, vuelta a la calma, variantes, material, tip de coach).
+- Banner: *"Contenido generado por IA. Requiere validación humana antes de
+  comunicar decisiones sensibles."*
+- La IA **no** genera diagnóstico, tratamiento clínico, retorno al juego,
+  alta médica ni recomendaciones médicas.
 
 ## Fuera de scope del MVP (no construir)
 - WFC completo.
@@ -54,4 +84,13 @@ Circulares · Notificaciones.
 - Panel DPO.
 - Eventos recurrentes complejos.
 - **Diagnóstico automático, IA médica, alta médica automática, retorno al
-  juego (RTP) automático.**
+  juego (RTP) automático, predicción clínica, historia clínica certificada.**
+
+## Mejoras propuestas V1.1 (no MVP)
+- Archivar / eliminar chats.
+- Archivar / retirar / eliminar circulares.
+- Estados avanzados de circular (borrador, programada).
+- Restaurar archivados.
+- Auditoría avanzada.
+- Retención legal configurable.
+
