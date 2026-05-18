@@ -93,12 +93,17 @@ const STATUS_STYLES: Record<CircularStatus, string> = {
   withdrawn: "bg-rose-50 text-rose-700 border-rose-200",
 };
 
+const NON_MVP_STATUSES: CircularStatus[] = ["draft", "scheduled", "archived", "withdrawn"];
+
 function StatusBadge({ status }: { status: CircularStatus }) {
   return (
-    <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLES[status]}`}
-    >
-      {STATUS_LABELS[status]}
+    <span className="inline-flex items-center gap-1">
+      <span
+        className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLES[status]}`}
+      >
+        {STATUS_LABELS[status]}
+      </span>
+      {NON_MVP_STATUSES.includes(status) && <ProposalBadge />}
     </span>
   );
 }
