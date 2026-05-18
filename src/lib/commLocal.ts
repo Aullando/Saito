@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type CircularStatus = "draft" | "published" | "archived" | "withdrawn";
+export type CircularStatus = "draft" | "scheduled" | "published" | "archived" | "withdrawn";
 
 export interface LocalCircular {
   id: string;
@@ -12,6 +12,7 @@ export interface LocalCircular {
   reads: number;
   createdAt: string;
   status: CircularStatus;
+  scheduledAt?: string;
   withdrawReason?: string;
 }
 
