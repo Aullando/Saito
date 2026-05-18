@@ -570,6 +570,9 @@ function RequestAppointment() {
 
 // ───────── SESSION INFO / FEEDBACK / HEALTH / TREATMENT / PERFORMANCE / NOTIFICATIONS ─────────
 function SessionInfo() {
+  const athletes = useData((s) => s.athletes).slice(0, 8);
+  const user = useData.getState; // not used, but keep store ref pattern
+  void user;
   return (
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-4">
@@ -577,29 +580,60 @@ function SessionInfo() {
           Atletismo · Tecnificación Infantil
         </div>
         <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Users className="h-3.5 w-3.5" /> Infantil A · 14 atletas
+        </div>
+        <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
           <Clock className="h-3.5 w-3.5" /> 17:30 – 19:00
         </div>
         <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
           <MapPin className="h-3.5 w-3.5" /> Pista de Atletismo · Sede principal
         </div>
       </div>
+
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Objetivo
+          Objetivo de la sesión
         </div>
         <p className="rounded-2xl border border-border bg-card p-3 text-sm">
           Velocidad lactácida — series 5×200 m al 90% con recuperación amplia.
         </p>
       </div>
+
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Descripción
+          Atletas convocados ({athletes.length})
         </div>
-        <p className="rounded-2xl border border-border bg-card p-3 text-sm text-foreground">
-          Sesión orientada a mejora de tolerancia al lactato. Calienta bien antes de empezar y
-          mantén la técnica en cada serie.
-        </p>
+        <ul className="space-y-1">
+          {athletes.map((a) => (
+            <li
+              key={a.id}
+              className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2 text-sm"
+            >
+              <span className="truncate">{a.firstName} {a.lastName}</span>
+              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">
+                Convocado
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      <div>
+        <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Restricciones operativas
+        </div>
+        <ul className="space-y-1.5">
+          <li className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            <span><b>Daniel Ruiz</b> — sin sprints máximos esta semana (molestia isquios).</span>
+          </li>
+          <li className="flex items-start gap-2 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2 text-xs text-orange-900">
+            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            <span><b>Sara López</b> — carga reducida 50% (en revisión médica).</span>
+          </li>
+        </ul>
+      </div>
+
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           Adjuntos
@@ -615,6 +649,29 @@ function SessionInfo() {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div>
+        <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Acciones
+        </div>
+        <div className="grid grid-cols-3 gap-1.5">
+          <Link to="/mobile/attendance" className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95">
+            <ClipboardCheck className="h-4 w-4 text-primary" /> Asistencia
+          </Link>
+          <Link to="/mobile/notes" className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95">
+            <StickyNote className="h-4 w-4 text-primary" /> Notas
+          </Link>
+          <Link to="/mobile/ratings" className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95">
+            <Star className="h-4 w-4 text-primary" /> Valoración
+          </Link>
+          <Link to="/mobile/feedback" className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95">
+            <MessageSquareHeart className="h-4 w-4 text-primary" /> Feedback
+          </Link>
+          <Link to="/mobile/ai" className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl bg-primary px-2 py-2.5 text-[11px] font-semibold text-primary-foreground active:scale-95">
+            <Sparkles className="h-4 w-4" /> IA de sesión
+          </Link>
+        </div>
       </div>
     </div>
   );
