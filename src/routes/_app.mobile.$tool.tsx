@@ -26,7 +26,10 @@ import {
   Loader2,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useData } from "@/lib/store";
+import { useData, useCurrentUser } from "@/lib/store";
+import { useSessionLocal } from "@/lib/sessionLocal";
+
+const DEMO_SESSION_ID = "session-today";
 
 export const Route = createFileRoute("/_app/mobile/$tool")({
   component: MobileTool,
