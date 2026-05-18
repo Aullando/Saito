@@ -72,7 +72,7 @@ export function Header() {
           <LangSwitcher />
           {session ? (
             <Button asChild variant="outline" className="rounded-full px-5">
-              <Link to="/dashboard">{panelLabel}</Link>
+              <Link to="/login">{panelLabel}</Link>
             </Button>
           ) : (
             <Button asChild variant="ghost" className="rounded-full px-4">
