@@ -78,6 +78,7 @@ function MedicalToolPage() {
           <p className="text-sm text-muted-foreground">{info.desc}</p>
         </div>
       </header>
+      <MedicalDisclaimer />
       <ul className="space-y-2">
         {info.rows.map((r, i) => (
           <li
