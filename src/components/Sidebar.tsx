@@ -123,7 +123,7 @@ export function Sidebar() {
         .filter((n) => !n.allowedRoles || n.allowedRoles.includes(user.role))
         .map(navItemToItem)
     : buildItems(user.role);
-  const width = collapsed ? 72 : 240;
+  const width = collapsed ? 72 : 264;
   const notifCount = user.role === "sysadmin" ? 25 : user.role === "medical" ? 13 : 0;
 
   const isActive = (to: string) => path === to || path.startsWith(to + "/");
