@@ -3,7 +3,7 @@ import { Moon, Sun, Search, Menu, ChevronDown, X } from "lucide-react";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
-import saitoMark from "@/assets/brand/saito-iso.svg";
+import saitoLogo from "@/assets/brand/saito-logo.png";
 import { NotificationsBell } from "./NotificationsBell";
 import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
