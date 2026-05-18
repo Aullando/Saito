@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { ArrowLeft, Send, Trash2 } from "lucide-react";
-import { useData, useUI } from "@/lib/store";
+import { useData, useCurrentUser } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
