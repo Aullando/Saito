@@ -292,7 +292,11 @@ function CallUp() {
 // ───────── NOTAS ─────────
 function Notes() {
   const addNote = useSessionLocal((s) => s.addNote);
-  const notes = useSessionLocal((s) => s.notes.filter((n) => n.sessionId === DEMO_SESSION_ID));
+  const allNotes = useSessionLocal((s) => s.notes);
+  const notes = useMemo(
+    () => allNotes.filter((n) => n.sessionId === DEMO_SESSION_ID),
+    [allNotes],
+  );
   const [text, setText] = useState("");
   const [priv, setPriv] = useState(true);
   return (
@@ -695,11 +699,15 @@ function RequestAppointment() {
 // ───────── SESSION INFO / FEEDBACK / HEALTH / TREATMENT / PERFORMANCE / NOTIFICATIONS ─────────
 function SessionInfo() {
   const athletes = useData((s) => s.athletes).slice(0, 8);
-  const aiBlocks = useSessionLocal((s) =>
-    s.aiBlocks.filter((b) => b.sessionId === DEMO_SESSION_ID),
+  const allAiBlocks = useSessionLocal((s) => s.aiBlocks);
+  const allFeedbacks = useSessionLocal((s) => s.feedbacks);
+  const aiBlocks = useMemo(
+    () => allAiBlocks.filter((b) => b.sessionId === DEMO_SESSION_ID),
+    [allAiBlocks],
   );
-  const feedbacks = useSessionLocal((s) =>
-    s.feedbacks.filter((f) => f.sessionId === DEMO_SESSION_ID),
+  const feedbacks = useMemo(
+    () => allFeedbacks.filter((f) => f.sessionId === DEMO_SESSION_ID),
+    [allFeedbacks],
   );
   return (
     <div className="space-y-3">
