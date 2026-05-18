@@ -103,6 +103,17 @@ function StatusBadge({ status }: { status: CircularStatus }) {
   );
 }
 
+function ProposalBadge({ className = "" }: { className?: string }) {
+  return (
+    <span
+      title="Mejora propuesta (no incluida en el MVP)"
+      className={`inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-wide text-violet-700 ${className}`}
+    >
+      Mejora propuesta
+    </span>
+  );
+}
+
 function isMedicalRequest(c: Conversation): boolean {
   return /solicitud de cita médica/i.test(c.title);
 }
