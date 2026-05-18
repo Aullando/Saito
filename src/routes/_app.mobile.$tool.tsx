@@ -800,6 +800,8 @@ function SessionInfo() {
 }
 
 function Feedback() {
+  const user = useCurrentUser();
+  const sendFeedback = useSessionLocal((s) => s.sendFeedback);
   const [rpe, setRpe] = useState(6);
   const [text, setText] = useState("");
   return (
