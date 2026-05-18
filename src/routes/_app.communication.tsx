@@ -642,7 +642,121 @@ function CircularsTab({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Editar borrador / programada */}
+      <Dialog open={!!editTarget} onOpenChange={(o) => { if (!o) setEditTarget(null); }}>
+        {editTarget && (
+          <EditCircularDialog
+            initial={editTarget}
+            onClose={() => setEditTarget(null)}
+            onSave={(patch) => {
+              onUpdate(editTarget.id, patch);
+              setEditTarget(null);
+            }}
+          />
+        )}
+      </Dialog>
+
+      {/* Programar envío */}
+      <Dialog open={!!scheduleTarget} onOpenChange={(o) => { if (!o) setScheduleTarget(null); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Programar circular</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              Indica la fecha y hora de envío. Hasta entonces, la circular permanecerá como
+              programada y podrás editarla o cancelar el envío.
+            </p>
+            <Label>Fecha y hora de envío</Label>
+            <Input
+              type="datetime-local"
+              value={scheduleAt}
+              onChange={(e) => setScheduleAt(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setScheduleTarget(null)}>
+              Cancelar
+            </Button>
+            <Button
+              disabled={!scheduleAt}
+              onClick={() => {
+                if (scheduleTarget && scheduleAt) {
+                  onSchedule(scheduleTarget.id, new Date(scheduleAt).toISOString());
+                }
+                setScheduleTarget(null);
+              }}
+            >
+              <CalendarPlus className="mr-1 h-4 w-4" />
+              Programar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
+  );
+}
+
+function EditCircularDialog({
+  initial,
+  onClose,
+  onSave,
+}: {
+  initial: CircularItem;
+  onClose: () => void;
+  onSave: (patch: {
+    title: string;
+    body: string;
+    recipientsLabel: string;
+    recipientsCount: number;
+  }) => void;
+}) {
+  const [title, setTitle] = useState(initial.title);
+  const [body, setBody] = useState(initial.body);
+  const [recipients, setRecipients] = useState(initial.recipientsLabel);
+  const [count, setCount] = useState(initial.recipientsCount);
+  return (
+    <DialogContent className="max-w-lg">
+      <DialogHeader>
+        <DialogTitle>Editar circular</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-3">
+        <div>
+          <Label>Título</Label>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </div>
+        <div>
+          <Label>Mensaje</Label>
+          <Textarea value={body} onChange={(e) => setBody(e.target.value)} rows={5} />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label>Destinatarios</Label>
+            <Input value={recipients} onChange={(e) => setRecipients(e.target.value)} />
+          </div>
+          <div>
+            <Label>Nº destinatarios</Label>
+            <Input
+              type="number"
+              value={count}
+              onChange={(e) => setCount(Number(e.target.value) || 0)}
+            />
+          </div>
+        </div>
+      </div>
+      <DialogFooter>
+        <Button variant="outline" onClick={onClose}>Cancelar</Button>
+        <Button
+          disabled={!title || !body}
+          onClick={() =>
+            onSave({ title, body, recipientsLabel: recipients, recipientsCount: count })
+          }
+        >
+          Guardar cambios
+        </Button>
+      </DialogFooter>
+    </DialogContent>
   );
 }
 
