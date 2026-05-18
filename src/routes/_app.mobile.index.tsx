@@ -8,13 +8,11 @@ import {
   TriangleAlert,
   Activity,
   CalendarPlus,
-  ChevronRight,
   ChevronDown,
   X,
   Check,
   Star,
   Sparkles,
-  HeartPulse,
   Trophy,
 } from "lucide-react";
 import { useCurrentUser, useData } from "@/lib/store";
@@ -361,22 +359,7 @@ function CoachHome({ event }: { event: Ev }) {
   return (
     <div className="space-y-4">
       {/* Selector de grupo */}
-      <button
-        className="flex w-full items-center justify-between"
-        style={{
-          background: "#FFFFFF",
-          border: `1px solid ${CARD_BORDER}`,
-          borderRadius: 14,
-          padding: "12px 16px",
-          color: INK,
-          fontSize: 14,
-          fontWeight: 600,
-        }}
-      >
-        {group}
-        <ChevronDown className="h-4 w-4" style={{ color: MUTED }} />
-        <span style={{ display: "none" }}>{setGroup(group) as unknown as string}</span>
-      </button>
+      <GroupSelector value={group} onChange={setGroup} />
 
       <TodayCard
         event={event}
