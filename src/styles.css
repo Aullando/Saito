@@ -219,7 +219,6 @@
   html, body { font-family: var(--font-sans); }
   html {
     scroll-behavior: smooth;
-    /* Sticky header is 4rem; offset anchor scroll so titles aren't hidden */
     scroll-padding-top: 5rem;
     -webkit-text-size-adjust: 100%;
   }
@@ -227,14 +226,23 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-size: 14px;
-    line-height: 1.45;
+    line-height: 22px;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
-  /* Avoid iOS auto-zoom on focus by keeping form inputs ≥16px */
+  /* SAITO type scale (desktop) */
+  h1 { font-size: 32px; line-height: 40px; font-weight: 700; letter-spacing: -0.01em; }
+  h2 { font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.01em; }
+  h3 { font-size: 18px; line-height: 26px; font-weight: 700; letter-spacing: -0.01em; }
+  small, .text-small { font-size: 12px; line-height: 18px; font-weight: 500; }
+  /* Mobile type scale */
   @media (max-width: 640px) {
+    h1 { font-size: 24px; line-height: 32px; }
+    h2 { font-size: 20px; line-height: 28px; }
+    body { font-size: 15px; line-height: 22px; }
     input, select, textarea { font-size: 16px; }
   }
+
   /* Larger range thumb on touch devices for the impact calculator */
   .impact-range { height: 1.75rem; }
   .impact-range::-webkit-slider-thumb {
