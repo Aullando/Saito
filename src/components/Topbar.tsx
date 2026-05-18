@@ -3,6 +3,7 @@ import { Moon, Sun, Search, Menu, ChevronDown, X } from "lucide-react";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
+import saitoMark from "@/assets/brand/saito-iso.svg";
 import { NotificationsBell } from "./NotificationsBell";
 import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
@@ -55,7 +56,12 @@ export function Topbar() {
         <Logo size={28} />
       </div>
       <div className="flex md:hidden items-center shrink-0">
-        <LogoMark size={52} />
+        <img
+          src={saitoMark}
+          alt="SAITO"
+          style={{ width: 52, height: 52 }}
+          className="shrink-0 object-contain"
+        />
       </div>
 
       {/* Desktop / tablet search */}
