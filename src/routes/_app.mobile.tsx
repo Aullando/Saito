@@ -6,8 +6,7 @@ import {
   Dumbbell,
   Users,
   HeartPulse,
-  Bell,
-  User as UserIcon,
+  TrendingUp,
 } from "lucide-react";
 import { MobileShell, type MobileTab } from "@/components/MobileShell";
 import { useCurrentUser } from "@/lib/store";
