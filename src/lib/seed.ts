@@ -58,6 +58,14 @@ export const DEMO_USERS: User[] = [
     licenseNumber: "LIC-PROF-2808XW",
     area: "Gestor Deportivo",
   },
+  {
+    id: "u-ath",
+    name: "Lucía MARTÍN",
+    email: "athlete@saito.app",
+    role: "athlete",
+    language: "es",
+    initials: "LM",
+  },
   // Extra cast for messages
   {
     id: "u-ath-nadia",
