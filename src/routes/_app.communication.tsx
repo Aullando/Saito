@@ -72,12 +72,14 @@ interface CircularItem {
   reads: number;
   createdAt: string;
   status: CircularStatus;
+  scheduledAt?: string;
   withdrawReason?: string;
   source: "seed" | "local";
 }
 
 const STATUS_LABELS: Record<CircularStatus, string> = {
   draft: "Borrador",
+  scheduled: "Programada",
   published: "Publicada",
   archived: "Archivada",
   withdrawn: "Retirada",
@@ -85,6 +87,7 @@ const STATUS_LABELS: Record<CircularStatus, string> = {
 
 const STATUS_STYLES: Record<CircularStatus, string> = {
   draft: "bg-amber-50 text-amber-700 border-amber-200",
+  scheduled: "bg-sky-50 text-sky-700 border-sky-200",
   published: "bg-emerald-50 text-emerald-700 border-emerald-200",
   archived: "bg-slate-100 text-slate-600 border-slate-200",
   withdrawn: "bg-rose-50 text-rose-700 border-rose-200",
@@ -122,8 +125,11 @@ function CommunicationPage() {
     circularStatus,
     withdrawReasons,
     addLocalCircular,
+    updateLocalCircular,
     deleteLocalCircular,
     publishCircular,
+    scheduleCircular,
+    cancelScheduledCircular,
     archiveCircular,
     withdrawCircular,
     handledRequests,
@@ -177,6 +183,7 @@ function CommunicationPage() {
       reads: c.reads,
       createdAt: c.createdAt,
       status: c.status,
+      scheduledAt: c.scheduledAt,
       withdrawReason: c.withdrawReason,
       source: "local",
     }));
@@ -266,6 +273,18 @@ function CommunicationPage() {
             onPublish={(id) => {
               publishCircular(id);
               toast.success("Circular publicada");
+            }}
+            onSchedule={(id, when) => {
+              scheduleCircular(id, when);
+              toast.success("Circular programada");
+            }}
+            onCancelSchedule={(id) => {
+              cancelScheduledCircular(id);
+              toast.success("Programación cancelada");
+            }}
+            onUpdate={(id, patch) => {
+              updateLocalCircular(id, patch);
+              toast.success("Circular actualizada");
             }}
             onArchive={(id) => {
               archiveCircular(id);
@@ -368,12 +387,26 @@ function CircularsTab({
   items,
   onDeleteDraft,
   onPublish,
+  onSchedule,
+  onCancelSchedule,
+  onUpdate,
   onArchive,
   onWithdraw,
 }: {
   items: CircularItem[];
   onDeleteDraft: (id: string) => void;
   onPublish: (id: string) => void;
+  onSchedule: (id: string, when: string) => void;
+  onCancelSchedule: (id: string) => void;
+  onUpdate: (
+    id: string,
+    patch: Partial<{
+      title: string;
+      body: string;
+      recipientsLabel: string;
+      recipientsCount: number;
+    }>,
+  ) => void;
   onArchive: (id: string) => void;
   onWithdraw: (id: string, reason: string) => void;
 }) {
@@ -382,6 +415,7 @@ function CircularsTab({
   const counts: Record<CircularStatus | "all", number> = {
     all: items.length,
     draft: items.filter((c) => c.status === "draft").length,
+    scheduled: items.filter((c) => c.status === "scheduled").length,
     published: items.filter((c) => c.status === "published").length,
     archived: items.filter((c) => c.status === "archived").length,
     withdrawn: items.filter((c) => c.status === "withdrawn").length,
@@ -389,11 +423,14 @@ function CircularsTab({
 
   const [withdrawTarget, setWithdrawTarget] = useState<CircularItem | null>(null);
   const [withdrawReason, setWithdrawReason] = useState("");
+  const [editTarget, setEditTarget] = useState<CircularItem | null>(null);
+  const [scheduleTarget, setScheduleTarget] = useState<CircularItem | null>(null);
+  const [scheduleAt, setScheduleAt] = useState("");
 
   return (
     <div className="saito-card p-0">
       <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
-        {(["all", "draft", "published", "archived", "withdrawn"] as const).map((s) => (
+        {(["all", "draft", "scheduled", "published", "archived", "withdrawn"] as const).map((s) => (
           <button
             key={s}
             onClick={() => setFilter(s)}
@@ -440,9 +477,15 @@ function CircularsTab({
                       <span className="tabular-nums">
                         {c.recipientsCount} destinatarios
                       </span>
-                      {c.status !== "draft" && (
+                      {c.status !== "draft" && c.status !== "scheduled" && (
                         <span className="tabular-nums">
                           {c.reads} lecturas ({pct}%)
+                        </span>
+                      )}
+                      {c.status === "scheduled" && c.scheduledAt && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 font-medium text-sky-700">
+                          <CalendarPlus className="h-3 w-3" />
+                          Envío: {formatDateTime(c.scheduledAt)}
                         </span>
                       )}
                     </div>
@@ -459,12 +502,27 @@ function CircularsTab({
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-52">
+                    <DropdownMenuContent align="end" className="w-56">
                       {c.status === "draft" && (
                         <>
+                          {c.source === "local" && (
+                            <DropdownMenuItem onClick={() => setEditTarget(c)}>
+                              <MoreVertical className="mr-2 h-4 w-4" />
+                              Editar
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem onClick={() => onPublish(c.id)}>
                             <Send className="mr-2 h-4 w-4" />
-                            Publicar
+                            Publicar ahora
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setScheduleTarget(c);
+                              setScheduleAt("");
+                            }}
+                          >
+                            <CalendarPlus className="mr-2 h-4 w-4" />
+                            Programar…
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -475,7 +533,32 @@ function CircularsTab({
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar borrador
+                            Eliminar
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      {c.status === "scheduled" && (
+                        <>
+                          {c.source === "local" && (
+                            <DropdownMenuItem onClick={() => setEditTarget(c)}>
+                              <MoreVertical className="mr-2 h-4 w-4" />
+                              Editar
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem onClick={() => onCancelSchedule(c.id)}>
+                            <Undo2 className="mr-2 h-4 w-4" />
+                            Cancelar programación
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-destructive focus:text-destructive"
+                            onClick={() => {
+                              if (!confirm("¿Eliminar esta circular programada?")) return;
+                              onDeleteDraft(c.id);
+                            }}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Eliminar
                           </DropdownMenuItem>
                         </>
                       )}
@@ -500,13 +583,13 @@ function CircularsTab({
                       {c.status === "archived" && (
                         <DropdownMenuItem disabled>
                           <Archive className="mr-2 h-4 w-4" />
-                          Sólo lectura
+                          Sólo consulta
                         </DropdownMenuItem>
                       )}
                       {c.status === "withdrawn" && (
                         <DropdownMenuItem disabled>
                           <Undo2 className="mr-2 h-4 w-4" />
-                          Retirada
+                          Consultar motivo
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>
@@ -559,7 +642,121 @@ function CircularsTab({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Editar borrador / programada */}
+      <Dialog open={!!editTarget} onOpenChange={(o) => { if (!o) setEditTarget(null); }}>
+        {editTarget && (
+          <EditCircularDialog
+            initial={editTarget}
+            onClose={() => setEditTarget(null)}
+            onSave={(patch) => {
+              onUpdate(editTarget.id, patch);
+              setEditTarget(null);
+            }}
+          />
+        )}
+      </Dialog>
+
+      {/* Programar envío */}
+      <Dialog open={!!scheduleTarget} onOpenChange={(o) => { if (!o) setScheduleTarget(null); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Programar circular</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              Indica la fecha y hora de envío. Hasta entonces, la circular permanecerá como
+              programada y podrás editarla o cancelar el envío.
+            </p>
+            <Label>Fecha y hora de envío</Label>
+            <Input
+              type="datetime-local"
+              value={scheduleAt}
+              onChange={(e) => setScheduleAt(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setScheduleTarget(null)}>
+              Cancelar
+            </Button>
+            <Button
+              disabled={!scheduleAt}
+              onClick={() => {
+                if (scheduleTarget && scheduleAt) {
+                  onSchedule(scheduleTarget.id, new Date(scheduleAt).toISOString());
+                }
+                setScheduleTarget(null);
+              }}
+            >
+              <CalendarPlus className="mr-1 h-4 w-4" />
+              Programar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
+  );
+}
+
+function EditCircularDialog({
+  initial,
+  onClose,
+  onSave,
+}: {
+  initial: CircularItem;
+  onClose: () => void;
+  onSave: (patch: {
+    title: string;
+    body: string;
+    recipientsLabel: string;
+    recipientsCount: number;
+  }) => void;
+}) {
+  const [title, setTitle] = useState(initial.title);
+  const [body, setBody] = useState(initial.body);
+  const [recipients, setRecipients] = useState(initial.recipientsLabel);
+  const [count, setCount] = useState(initial.recipientsCount);
+  return (
+    <DialogContent className="max-w-lg">
+      <DialogHeader>
+        <DialogTitle>Editar circular</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-3">
+        <div>
+          <Label>Título</Label>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </div>
+        <div>
+          <Label>Mensaje</Label>
+          <Textarea value={body} onChange={(e) => setBody(e.target.value)} rows={5} />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label>Destinatarios</Label>
+            <Input value={recipients} onChange={(e) => setRecipients(e.target.value)} />
+          </div>
+          <div>
+            <Label>Nº destinatarios</Label>
+            <Input
+              type="number"
+              value={count}
+              onChange={(e) => setCount(Number(e.target.value) || 0)}
+            />
+          </div>
+        </div>
+      </div>
+      <DialogFooter>
+        <Button variant="outline" onClick={onClose}>Cancelar</Button>
+        <Button
+          disabled={!title || !body}
+          onClick={() =>
+            onSave({ title, body, recipientsLabel: recipients, recipientsCount: count })
+          }
+        >
+          Guardar cambios
+        </Button>
+      </DialogFooter>
+    </DialogContent>
   );
 }
 

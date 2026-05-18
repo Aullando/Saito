@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type CircularStatus = "draft" | "published" | "archived" | "withdrawn";
+export type CircularStatus = "draft" | "scheduled" | "published" | "archived" | "withdrawn";
 
 export interface LocalCircular {
   id: string;
@@ -12,6 +12,7 @@ export interface LocalCircular {
   reads: number;
   createdAt: string;
   status: CircularStatus;
+  scheduledAt?: string;
   withdrawReason?: string;
 }
 
@@ -33,8 +34,11 @@ interface CommLocalState {
   hideMsg: (id: string) => void;
 
   addLocalCircular: (c: Omit<LocalCircular, "id" | "createdAt" | "status" | "reads">) => string;
+  updateLocalCircular: (id: string, patch: Partial<Omit<LocalCircular, "id" | "createdAt">>) => void;
   deleteLocalCircular: (id: string) => void;
   publishCircular: (id: string) => void;
+  scheduleCircular: (id: string, scheduledAt: string) => void;
+  cancelScheduledCircular: (id: string) => void;
   archiveCircular: (id: string) => void;
   withdrawCircular: (id: string, reason: string) => void;
 
@@ -84,14 +88,34 @@ export const useCommLocal = create<CommLocalState>()(
         set((s) => ({ localCirculars: [item, ...s.localCirculars] }));
         return id;
       },
+      updateLocalCircular: (id, patch) =>
+        set((s) => ({
+          localCirculars: s.localCirculars.map((c) =>
+            c.id === id ? { ...c, ...patch } : c,
+          ),
+        })),
       deleteLocalCircular: (id) =>
         set((s) => ({ localCirculars: s.localCirculars.filter((c) => c.id !== id) })),
       publishCircular: (id) =>
         set((s) => ({
           localCirculars: s.localCirculars.map((c) =>
-            c.id === id ? { ...c, status: "published" as const } : c,
+            c.id === id ? { ...c, status: "published" as const, scheduledAt: undefined } : c,
           ),
           circularStatus: { ...s.circularStatus, [id]: "published" },
+        })),
+      scheduleCircular: (id, scheduledAt) =>
+        set((s) => ({
+          localCirculars: s.localCirculars.map((c) =>
+            c.id === id ? { ...c, status: "scheduled" as const, scheduledAt } : c,
+          ),
+          circularStatus: { ...s.circularStatus, [id]: "scheduled" },
+        })),
+      cancelScheduledCircular: (id) =>
+        set((s) => ({
+          localCirculars: s.localCirculars.map((c) =>
+            c.id === id ? { ...c, status: "draft" as const, scheduledAt: undefined } : c,
+          ),
+          circularStatus: { ...s.circularStatus, [id]: "draft" },
         })),
       archiveCircular: (id) =>
         set((s) => ({
