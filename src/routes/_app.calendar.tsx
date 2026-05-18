@@ -91,19 +91,19 @@ interface Occurrence {
 
 const TYPE_OPTIONS: { value: CalendarEventType; label: string }[] = [
   { value: "training", label: "Entrenamiento" },
-  { value: "match", label: "Partido" },
+  { value: "match", label: "Competición" },
   { value: "medical", label: "Cita médica" },
   { value: "club", label: "Evento de club" },
-  { value: "payment", label: "Pago / Cuota" },
+  { value: "payment", label: "Vencimiento de pago" },
 ];
 
 const TYPE_LABEL: Record<string, string> = {
   training: "Entrenamiento",
-  match: "Partido",
+  match: "Competición",
   medical: "Cita médica",
   meeting: "Reunión",
   club: "Evento de club",
-  payment: "Pago / Cuota",
+  payment: "Vencimiento de pago",
 };
 
 const TYPE_STYLE: Record<string, string> = {
@@ -114,6 +114,24 @@ const TYPE_STYLE: Record<string, string> = {
   club: "bg-emerald-50 text-emerald-700 border-emerald-200",
   payment: "bg-sky-50 text-sky-700 border-sky-200",
 };
+
+// Which event types each role typically sees in their calendar
+const ROLE_TYPE_FILTER: Record<string, CalendarEventType[]> = {
+  manager: ["training", "match", "medical", "club", "payment"],
+  admin: ["club", "payment", "training", "match"],
+  medical: ["medical"],
+  technical: ["training", "match", "club"],
+  athlete: ["training", "match", "medical", "club"],
+};
+
+const ROLE_OPTIONS: { value: string; label: string }[] = [
+  { value: "all", label: "Todos los roles" },
+  { value: "manager", label: "Gestor / Dirección" },
+  { value: "admin", label: "Administración" },
+  { value: "medical", label: "Staff médico" },
+  { value: "technical", label: "Entrenador" },
+  { value: "athlete", label: "Atleta" },
+];
 
 function TypeBadge({ type }: { type: string }) {
   return (
