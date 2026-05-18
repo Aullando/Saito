@@ -21,6 +21,9 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useCurrentUser, useData } from "@/lib/store";
+import { useSessionLocal } from "@/lib/sessionLocal";
+
+const DEMO_SESSION_ID = "session-today";
 
 export const Route = createFileRoute("/_app/mobile/")({
   component: MobileHome,
@@ -76,10 +79,15 @@ function MobileHome() {
 
 function CoachHome({ todays }: { todays: ReturnType<typeof useData.getState>["events"] }) {
   const next = todays[0];
-  const absences = [
+  const storeAbsences = useSessionLocal((s) => s.absences);
+  const seedAbsences = [
     { id: "ab1", name: "Lucía García", reason: "Enfermedad" },
     { id: "ab2", name: "Mario Pérez", reason: "Estudios" },
   ];
+  const liveAbsences = storeAbsences
+    .filter((a) => a.sessionId === DEMO_SESSION_ID)
+    .map((a) => ({ id: a.id, name: a.athleteName, reason: a.reason }));
+  const absences = [...liveAbsences, ...seedAbsences].slice(0, 5);
   const notFit = [
     { id: "nf1", name: "Daniel Ruiz", status: "No apto" as const },
     { id: "nf2", name: "Sara López", status: "En revisión" as const },
