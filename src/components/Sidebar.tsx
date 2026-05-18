@@ -196,14 +196,18 @@ export function Sidebar() {
                     params={it.params as never}
                     onClick={() => setMobileOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-full px-3 py-2 text-[13px] font-medium transition-colors",
-                      active
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                      "flex items-center gap-3 px-3 text-[13px] font-medium transition-colors",
+                      active ? "" : "hover:bg-[#EEF3F8]",
                       it.indent && !collapsed && "ml-4 text-[12px]",
                     )}
+                    style={{
+                      height: 44,
+                      borderRadius: 14,
+                      background: active ? "#EAF4FF" : undefined,
+                      color: active ? "#0067C9" : "#66758A",
+                    }}
                   >
-                    <Icon className="h-[18px] w-[18px] shrink-0" />
+                    <Icon className="shrink-0" style={{ width: 20, height: 20 }} />
                     {!collapsed && <span className="truncate">{it.label}</span>}
                   </Link>
                 </li>
