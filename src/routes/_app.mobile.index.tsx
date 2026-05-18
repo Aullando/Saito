@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { X, Check, Stethoscope, CalendarPlus, Activity } from "lucide-react";
 import {
   Clock,
   Users,
