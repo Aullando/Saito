@@ -50,19 +50,20 @@ export function Topbar() {
         <Menu className="h-5 w-5" />
       </button>
       <div
-        className="hidden md:flex shrink-0 items-center transition-[width] duration-200"
-        style={{ width: collapsed ? 56 : 208 }}
+        className="hidden md:flex shrink-0 items-center justify-start transition-[width] duration-200"
+        style={{ width: collapsed ? 64 : 224 }}
       >
-        <Logo size={28} />
+        <Logo size={collapsed ? 32 : 40} withText={!collapsed} />
       </div>
       <div className="flex md:hidden items-center shrink-0">
         <img
           src={saitoLogo}
           alt="SAITO"
-          style={{ height: 36 }}
+          style={{ height: 40 }}
           className="shrink-0 object-contain"
         />
       </div>
+
 
       {/* Desktop / tablet search */}
       <div className="hidden sm:flex flex-1 justify-center min-w-0">
