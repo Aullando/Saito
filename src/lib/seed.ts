@@ -71,7 +71,7 @@ export const DEMO_USERS: User[] = [
     id: "u-ath-nadia",
     name: "Nadia ABAD",
     email: "athlete1@saito.app",
-    role: "technical",
+    role: "athlete",
     language: "es",
     initials: "NA",
   },
