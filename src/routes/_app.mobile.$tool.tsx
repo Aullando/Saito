@@ -616,8 +616,6 @@ function RequestAppointment() {
 // ───────── SESSION INFO / FEEDBACK / HEALTH / TREATMENT / PERFORMANCE / NOTIFICATIONS ─────────
 function SessionInfo() {
   const athletes = useData((s) => s.athletes).slice(0, 8);
-  const user = useData.getState; // not used, but keep store ref pattern
-  void user;
   return (
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-4">
