@@ -1,16 +1,11 @@
 import type { ClubBrand } from "../types";
-import logoFull from "./assets/logo-rgcc.svg";
-import logoMark from "./assets/logo-rgcc.svg";
-import aiAvatar from "./assets/rgcc-ai.png";
 
+// RGCC se presenta como CLUB PARTICIPANTE en SAITO.
+// Sin overrides de logo/colores/avatar IA: hereda toda la identidad visual de SAITO
+// (logo SAITO, paleta SAITO por rol, avatar IA SAITO). Solo se conserva el nombre
+// del club para etiquetado en la UI (selector de club, breadcrumb, fixtures).
 export const rgccBrand: ClubBrand = {
   name: "Real Grupo de Cultura Covadonga",
   shortName: "RGCC",
-  // Covadonga's traditional colors: deep blue + gold.
-  primary: "oklch(0.42 0.15 255)",
-  accent: "oklch(0.78 0.14 85)",
   defaultLanguage: "es",
-  logoFull,
-  logoMark,
-  aiAvatar,
 };
