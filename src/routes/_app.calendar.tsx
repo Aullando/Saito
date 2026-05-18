@@ -1216,7 +1216,7 @@ function CalendarPage() {
 
 
 
-                  {canEdit && (
+                  {canEditThis && (
                     <div className="flex flex-col gap-2 pt-2">
                       {canEditEvent && (
                         <Button
