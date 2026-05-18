@@ -207,7 +207,7 @@ export function Sidebar() {
                       color: active ? "#0067C9" : "#66758A",
                     }}
                   >
-                    <Icon className="shrink-0" style={{ width: 20, height: 20 }} />
+                    <Icon className="shrink-0 h-5 w-5" />
                     {!collapsed && <span className="truncate">{it.label}</span>}
                   </Link>
                 </li>
