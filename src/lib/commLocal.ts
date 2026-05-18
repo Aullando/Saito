@@ -90,12 +90,34 @@ export const useCommLocal = create<CommLocalState>()(
       },
       deleteLocalCircular: (id) =>
         set((s) => ({ localCirculars: s.localCirculars.filter((c) => c.id !== id) })),
+      updateLocalCircular: (id, patch) =>
+        set((s) => ({
+          localCirculars: s.localCirculars.map((c) =>
+            c.id === id ? { ...c, ...patch } : c,
+          ),
+        })),
+      deleteLocalCircular: (id) =>
+        set((s) => ({ localCirculars: s.localCirculars.filter((c) => c.id !== id) })),
       publishCircular: (id) =>
         set((s) => ({
           localCirculars: s.localCirculars.map((c) =>
-            c.id === id ? { ...c, status: "published" as const } : c,
+            c.id === id ? { ...c, status: "published" as const, scheduledAt: undefined } : c,
           ),
           circularStatus: { ...s.circularStatus, [id]: "published" },
+        })),
+      scheduleCircular: (id, scheduledAt) =>
+        set((s) => ({
+          localCirculars: s.localCirculars.map((c) =>
+            c.id === id ? { ...c, status: "scheduled" as const, scheduledAt } : c,
+          ),
+          circularStatus: { ...s.circularStatus, [id]: "scheduled" },
+        })),
+      cancelScheduledCircular: (id) =>
+        set((s) => ({
+          localCirculars: s.localCirculars.map((c) =>
+            c.id === id ? { ...c, status: "draft" as const, scheduledAt: undefined } : c,
+          ),
+          circularStatus: { ...s.circularStatus, [id]: "draft" },
         })),
       archiveCircular: (id) =>
         set((s) => ({
