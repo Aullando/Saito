@@ -3,13 +3,14 @@ import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card, Pill } from "@/components/ui-kit";
+import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ATHLETES } from "@/lib/seed";
 import { ShieldAlert, Stethoscope, Lock, Activity, Filter } from "lucide-react";
 
 export const Route = createFileRoute("/_app/medical/restrictions")({
-  head: () => ({ meta: [{ title: "Restricciones y lesiones — SAITO" }] }),
+  head: () => ({ meta: [{ title: "Salud deportiva · Restricciones operativas — SAITO" }] }),
   component: () => (
     <RoleGate roles={["medical", "admin"]}>
       <AppLayout>
@@ -22,9 +23,9 @@ export const Route = createFileRoute("/_app/medical/restrictions")({
 type Restriction = {
   id: string;
   athleteId: string;
-  type: "Lesión" | "Restricción" | "Seguimiento";
+  type: "Registro de incidencia" | "Restricción operativa" | "Seguimiento";
   area: string;
-  status: "Activa" | "En recuperación" | "Alta médica";
+  status: "Activa" | "En recuperación" | "Apto";
   startDate: string;
   expectedReturn?: string;
   notes: string;
@@ -33,7 +34,7 @@ type Restriction = {
 
 const POOL: Omit<Restriction, "athleteId" | "id">[] = [
   {
-    type: "Lesión",
+    type: "Registro de incidencia",
     area: "Isquiotibial derecho",
     status: "Activa",
     startDate: "2026-04-30",
@@ -42,7 +43,7 @@ const POOL: Omit<Restriction, "athleteId" | "id">[] = [
     visibility: "Médico + entrenador",
   },
   {
-    type: "Restricción",
+    type: "Restricción operativa",
     area: "Hombro izquierdo",
     status: "En recuperación",
     startDate: "2026-04-12",
@@ -59,16 +60,16 @@ const POOL: Omit<Restriction, "athleteId" | "id">[] = [
     visibility: "Solo médico",
   },
   {
-    type: "Lesión",
+    type: "Registro de incidencia",
     area: "Tobillo derecho",
-    status: "Alta médica",
+    status: "Apto",
     startDate: "2026-03-20",
     expectedReturn: "2026-04-15",
     notes: "Apto. Mantener vendaje funcional 2 semanas.",
     visibility: "Médico + dirección",
   },
   {
-    type: "Restricción",
+    type: "Restricción operativa",
     area: "Cervical",
     status: "En recuperación",
     startDate: "2026-04-28",
@@ -76,7 +77,7 @@ const POOL: Omit<Restriction, "athleteId" | "id">[] = [
     visibility: "Médico + entrenador",
   },
   {
-    type: "Lesión",
+    type: "Registro de incidencia",
     area: "Cuádriceps",
     status: "Activa",
     startDate: "2026-05-02",
@@ -116,20 +117,22 @@ function RestrictionsPage() {
   const counts = {
     activa: RESTRICTIONS.filter((r) => r.status === "Activa").length,
     recup: RESTRICTIONS.filter((r) => r.status === "En recuperación").length,
-    alta: RESTRICTIONS.filter((r) => r.status === "Alta médica").length,
+    alta: RESTRICTIONS.filter((r) => r.status === "Apto").length,
   };
 
   return (
     <>
       <PageHeader
-        title="Restricciones y lesiones"
-        subtitle="Vista médica con acceso limitado. SAITO no realiza diagnóstico — registro clínico-administrativo."
+        title="Salud deportiva · Restricciones operativas"
+        subtitle="Registro operativo bajo supervisión profesional. Estados apto / no apto introducidos por personal autorizado."
       />
+
+      <MedicalDisclaimer className="mb-4" />
 
       <div className="mb-4 flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 text-xs">
         <Lock className="h-4 w-4 shrink-0 text-primary" />
         <span>
-          Solo personal médico autorizado y dirección con permiso explícito ven el detalle clínico.
+          Solo personal médico autorizado y dirección con permiso explícito ven el detalle.
           Todos los accesos quedan registrados en{" "}
           <a className="font-semibold text-primary hover:underline" href="/settings/privacy">
             Privacidad y seguridad
@@ -160,7 +163,7 @@ function RestrictionsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Altas médicas (mes)
+              Apto (mes)
             </span>
             <Stethoscope className="h-4 w-4 text-emerald-600" />
           </div>
@@ -178,7 +181,7 @@ function RestrictionsPage() {
             onChange={(e) => setQ(e.target.value)}
           />
         </div>
-        {(["all", "Activa", "En recuperación", "Alta médica"] as const).map((s) => (
+        {(["all", "Activa", "En recuperación", "Apto"] as const).map((s) => (
           <Button
             key={s}
             variant={statusF === s ? "default" : "outline"}
@@ -218,9 +221,9 @@ function RestrictionsPage() {
                     <td className="px-3 py-3">
                       <Pill
                         tone={
-                          r.type === "Lesión"
+                          r.type === "Registro de incidencia"
                             ? "danger"
-                            : r.type === "Restricción"
+                            : r.type === "Restricción operativa"
                               ? "warning"
                               : "info"
                         }

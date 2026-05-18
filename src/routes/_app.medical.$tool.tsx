@@ -6,6 +6,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 
 export const Route = createFileRoute("/_app/medical/$tool")({
   component: MedicalToolPage,
@@ -20,32 +21,32 @@ type ToolInfo = {
 
 const TOOLS: Record<string, ToolInfo> = {
   incidents: {
-    title: "Incidencias",
-    desc: "Lesiones, molestias y partes médicos",
+    title: "Registro de incidencias",
+    desc: "Registro operativo de molestias y partes — bajo supervisión profesional",
     icon: AlertTriangle,
     rows: [
-      { title: "Alejandro RUIZ — Esguince tobillo grado I", subtitle: "Abierta hace 3 días", status: "Activa" },
+      { title: "Alejandro RUIZ — Molestia tobillo (registro)", subtitle: "Abierta hace 3 días", status: "Activa" },
       { title: "Marta DOMÍNGUEZ — Sobrecarga isquiotibial", subtitle: "Seguimiento semanal", status: "En revisión" },
       { title: "Hugo LÓPEZ — Contusión rodilla", subtitle: "Cerrada el lunes", status: "Resuelta" },
     ],
   },
   treatments: {
-    title: "Planes de tratamiento",
-    desc: "Pautas activas de fisioterapia y rehabilitación",
+    title: "Planes de tratamiento bajo supervisión",
+    desc: "Pautas activas registradas y supervisadas por profesional sanitario",
     icon: ClipboardList,
     rows: [
-      { title: "Alejandro RUIZ — Protocolo tobillo 4 semanas", subtitle: "Sesión 5 de 12", status: "En curso" },
-      { title: "Marta DOMÍNGUEZ — Readaptación isquios", subtitle: "Sesión 2 de 8", status: "En curso" },
+      { title: "Alejandro RUIZ — Protocolo tobillo 4 semanas", subtitle: "Sesión 5 de 12 · responsable: fisio", status: "En curso" },
+      { title: "Marta DOMÍNGUEZ — Readaptación isquios", subtitle: "Sesión 2 de 8 · responsable: fisio", status: "En curso" },
     ],
   },
   requests: {
-    title: "Solicitudes de cita",
-    desc: "Peticiones pendientes de validación",
+    title: "Solicitudes de cita médica",
+    desc: "Peticiones pendientes de validación por staff médico",
     icon: CalendarPlus,
     rows: [
       { title: "Lucía MARTÍN — Reconocimiento anual", subtitle: "Solicitada hoy 09:12", status: "Pendiente" },
       { title: "Pablo SÁNCHEZ — Molestia aductor", subtitle: "Solicitada ayer", status: "Pendiente" },
-      { title: "Nadia ABAD — Revisión post-lesión", subtitle: "Confirmada para el viernes", status: "Confirmada" },
+      { title: "Nadia ABAD — Revisión post-incidencia", subtitle: "Confirmada para el viernes", status: "Confirmada" },
     ],
   },
 };
@@ -77,6 +78,7 @@ function MedicalToolPage() {
           <p className="text-sm text-muted-foreground">{info.desc}</p>
         </div>
       </header>
+      <MedicalDisclaimer />
       <ul className="space-y-2">
         {info.rows.map((r, i) => (
           <li

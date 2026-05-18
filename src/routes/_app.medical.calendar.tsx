@@ -25,6 +25,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
+import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import { supabase } from "@/integrations/supabase/client";
 import { DEMO_ATHLETES_MIN_ROWS, DEMO_MEDICAL_APPOINTMENTS_ROWS } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
@@ -256,6 +257,8 @@ function MedicalCalendarPage() {
           </>
         }
       />
+
+      <MedicalDisclaimer className="mb-4" />
 
       <div className="saito-card p-3">
         <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
