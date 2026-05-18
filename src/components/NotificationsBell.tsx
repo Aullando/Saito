@@ -3,6 +3,7 @@ import { Bell, Check, CheckCheck, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { isDemoMode } from "@/lib/appMode";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 
@@ -33,6 +34,7 @@ export function NotificationsBell() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const demoMode = isDemoMode();
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -44,7 +46,7 @@ export function NotificationsBell() {
 
   const q = useQuery({
     queryKey: ["notifications", user?.id],
-    enabled: !!user,
+    enabled: !!user && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("notifications")
@@ -58,7 +60,7 @@ export function NotificationsBell() {
   });
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || demoMode) return;
     const ch = supabase
       .channel("notifications:" + user.id)
       .on(
@@ -70,7 +72,7 @@ export function NotificationsBell() {
     return () => {
       supabase.removeChannel(ch);
     };
-  }, [user, qc]);
+  }, [user, qc, demoMode]);
 
   const markRead = useMutation({
     mutationFn: async (id: string) => {
