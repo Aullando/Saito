@@ -72,12 +72,14 @@ interface CircularItem {
   reads: number;
   createdAt: string;
   status: CircularStatus;
+  scheduledAt?: string;
   withdrawReason?: string;
   source: "seed" | "local";
 }
 
 const STATUS_LABELS: Record<CircularStatus, string> = {
   draft: "Borrador",
+  scheduled: "Programada",
   published: "Publicada",
   archived: "Archivada",
   withdrawn: "Retirada",
@@ -85,6 +87,7 @@ const STATUS_LABELS: Record<CircularStatus, string> = {
 
 const STATUS_STYLES: Record<CircularStatus, string> = {
   draft: "bg-amber-50 text-amber-700 border-amber-200",
+  scheduled: "bg-sky-50 text-sky-700 border-sky-200",
   published: "bg-emerald-50 text-emerald-700 border-emerald-200",
   archived: "bg-slate-100 text-slate-600 border-slate-200",
   withdrawn: "bg-rose-50 text-rose-700 border-rose-200",
