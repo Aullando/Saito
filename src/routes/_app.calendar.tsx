@@ -36,7 +36,7 @@ import {
   DEMO_GROUPS_ROWS,
 } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { demoOrEmpty } from "@/lib/demoFallback";
 
 export const Route = createFileRoute("/_app/calendar")({
