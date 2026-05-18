@@ -126,6 +126,7 @@ interface DataState {
   addAthlete: (a: Omit<Athlete, "id">) => void;
   deleteAthlete: (id: string) => void;
   addEvent: (e: Omit<CalendarEvent, "id">) => void;
+  updateEvent: (id: string, patch: Partial<Omit<CalendarEvent, "id">>) => void;
   deleteEvent: (id: string) => void;
   addEventException: (id: string, date: string) => void;
   addFee: (f: Omit<Fee, "id">) => void;
