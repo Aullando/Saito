@@ -646,5 +646,66 @@ function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onConfirm: 
   );
 }
 
-// keep helper refs used to avoid TS unused warnings (sparkline removed)
-void HeartPulse;
+function GroupSelector({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const options = ["Cadete - Grupo A", "Cadete - Grupo B", "Juvenil A", "Infantil A"];
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between"
+        style={{
+          background: "#FFFFFF",
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 14,
+          padding: "12px 16px",
+          color: INK,
+          fontSize: 14,
+          fontWeight: 600,
+        }}
+      >
+        {value}
+        <ChevronDown
+          className="h-4 w-4"
+          style={{
+            color: MUTED,
+            transform: open ? "rotate(180deg)" : "none",
+            transition: "transform 0.2s",
+          }}
+        />
+      </button>
+      {open && (
+        <ul
+          className="absolute left-0 right-0 z-20 mt-1 overflow-hidden"
+          style={{
+            background: "#FFFFFF",
+            border: `1px solid ${CARD_BORDER}`,
+            borderRadius: 14,
+            boxShadow: SHADOW,
+          }}
+        >
+          {options.map((opt) => (
+            <li key={opt}>
+              <button
+                onClick={() => {
+                  onChange(opt);
+                  setOpen(false);
+                }}
+                className="flex w-full items-center justify-between px-4 py-2.5 text-left"
+                style={{
+                  fontSize: 13,
+                  color: opt === value ? COACH : INK,
+                  fontWeight: opt === value ? 700 : 500,
+                  background: opt === value ? "#EAF8F0" : "transparent",
+                }}
+              >
+                {opt}
+                {opt === value && <Check className="h-3.5 w-3.5" />}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
