@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card, Pill } from "@/components/ui-kit";
+import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ATHLETES } from "@/lib/seed";
