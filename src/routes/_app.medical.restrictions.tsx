@@ -181,7 +181,7 @@ function RestrictionsPage() {
             onChange={(e) => setQ(e.target.value)}
           />
         </div>
-        {(["all", "Activa", "En recuperación", "Alta médica"] as const).map((s) => (
+        {(["all", "Activa", "En recuperación", "Apto"] as const).map((s) => (
           <Button
             key={s}
             variant={statusF === s ? "default" : "outline"}
@@ -221,9 +221,9 @@ function RestrictionsPage() {
                     <td className="px-3 py-3">
                       <Pill
                         tone={
-                          r.type === "Lesión"
+                          r.type === "Registro de incidencia"
                             ? "danger"
-                            : r.type === "Restricción"
+                            : r.type === "Restricción operativa"
                               ? "warning"
                               : "info"
                         }
