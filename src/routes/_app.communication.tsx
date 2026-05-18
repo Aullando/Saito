@@ -24,9 +24,16 @@ import {
   demoMessagesFor,
 } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
-import { Plus, Send } from "lucide-react";
+import { Plus, Send, Trash2, Archive, ArchiveRestore, MoreVertical } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
 import { demoOrEmpty } from "@/lib/demoFallback";
+import { useCommLocal } from "@/lib/commLocal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Route = createFileRoute("/_app/communication")({
   component: () => (
@@ -80,10 +87,21 @@ function CommunicationPage() {
     },
   });
 
-  const conversations = demoOrEmpty(convsQ.data, DEMO_CONVERSATIONS_ROWS) as DBConv[];
+  const allConversations = demoOrEmpty(convsQ.data, DEMO_CONVERSATIONS_ROWS) as DBConv[];
+  const { hiddenConvs, archivedConvs, hiddenMsgs, hideConv, archiveConv, unarchiveConv, hideMsg } =
+    useCommLocal();
+  const [showArchived, setShowArchived] = useState(false);
+  const conversations = allConversations.filter((c) => {
+    if (hiddenConvs.includes(c.id)) return false;
+    const archived = archivedConvs.includes(c.id);
+    return showArchived ? archived : !archived;
+  });
   const [activeId, setActiveId] = useState<string | null>(null);
   useEffect(() => {
     if (!activeId && conversations.length) setActiveId(conversations[0].id);
+    if (activeId && !conversations.find((c) => c.id === activeId)) {
+      setActiveId(conversations[0]?.id ?? null);
+    }
   }, [conversations, activeId]);
 
   const msgsQ = useQuery({
@@ -111,7 +129,8 @@ function CommunicationPage() {
   });
 
   const profiles = demoOrEmpty(profilesQ.data, DEMO_PROFILES_MIN_ROWS);
-  const messages = (msgsQ.data ?? (activeId ? demoMessagesFor(activeId) : [])) as DBMsg[];
+  const allMessages = (msgsQ.data ?? (activeId ? demoMessagesFor(activeId) : [])) as DBMsg[];
+  const messages = allMessages.filter((m) => !hiddenMsgs.includes(m.id));
 
   const sendMsg = useMutation({
     mutationFn: async (content: string) => {
@@ -164,14 +183,23 @@ function CommunicationPage() {
 
   const delConv = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("conversations").delete().eq("id", id);
-      if (error) throw error;
+      hideConv(id);
+      await supabase.from("conversations").delete().eq("id", id);
     },
     onSuccess: () => {
-      setActiveId(null);
       qc.invalidateQueries({ queryKey: ["conversations", orgId, user?.id] });
+      toast.success(t("delete"));
     },
-    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const delMsg = useMutation({
+    mutationFn: async (id: string) => {
+      hideMsg(id);
+      await supabase.from("messages").delete().eq("id", id);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["messages", activeId] });
+    },
   });
 
   const [draft, setDraft] = useState("");
@@ -256,16 +284,27 @@ function CommunicationPage() {
       <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
         <div className="saito-card flex flex-col p-0">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
-            <span className="text-sm font-semibold">{t("inbox")}</span>
+            <span className="text-sm font-semibold">
+              {showArchived ? t("archived") || "Archivados" : t("inbox")}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-xs"
+              onClick={() => setShowArchived((v) => !v)}
+            >
+              {showArchived ? t("inbox") : t("archived") || "Archivados"}
+            </Button>
           </div>
           <ul className="flex-1 overflow-y-auto">
             {conversations.map((c) => {
               const isActive = c.id === activeId;
+              const isArchived = archivedConvs.includes(c.id);
               return (
-                <li key={c.id}>
+                <li key={c.id} className="group/conv relative">
                   <button
                     onClick={() => setActiveId(c.id)}
-                    className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left ${isActive ? "bg-primary/5" : "hover:bg-muted/40"}`}
+                    className={`flex w-full items-start gap-3 border-b border-border px-4 py-3 pr-10 text-left ${isActive ? "bg-primary/5" : "hover:bg-muted/40"}`}
                   >
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{c.title}</div>
@@ -277,6 +316,41 @@ function CommunicationPage() {
                       </div>
                     </div>
                   </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-2 top-2 h-7 w-7 opacity-60 hover:opacity-100"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {isArchived ? (
+                        <DropdownMenuItem onClick={() => unarchiveConv(c.id)}>
+                          <ArchiveRestore className="mr-2 h-4 w-4" />
+                          {t("unarchive") || "Desarchivar"}
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem onClick={() => archiveConv(c.id)}>
+                          <Archive className="mr-2 h-4 w-4" />
+                          {t("archive") || "Archivar"}
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={() => {
+                          if (!confirm(t("delete_confirm"))) return;
+                          delConv.mutate(c.id);
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        {t("delete")}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </li>
               );
             })}
@@ -294,25 +368,43 @@ function CommunicationPage() {
                   <div className="text-base font-semibold">{active.title}</div>
                   <div className="text-xs text-muted-foreground">{active.type}</div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-destructive"
-                  onClick={() => {
-                    if (!confirm(t("delete_confirm"))) return;
-                    delConv.mutate(active.id);
-                  }}
-                >
-                  {t("delete")}
-                </Button>
+                <div className="flex items-center gap-1">
+                  {archivedConvs.includes(active.id) ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => unarchiveConv(active.id)}
+                    >
+                      <ArchiveRestore className="mr-1 h-4 w-4" />
+                      {t("unarchive") || "Desarchivar"}
+                    </Button>
+                  ) : (
+                    <Button size="sm" variant="ghost" onClick={() => archiveConv(active.id)}>
+                      <Archive className="mr-1 h-4 w-4" />
+                      {t("archive") || "Archivar"}
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive"
+                    onClick={() => {
+                      if (!confirm(t("delete_confirm"))) return;
+                      delConv.mutate(active.id);
+                    }}
+                  >
+                    <Trash2 className="mr-1 h-4 w-4" />
+                    {t("delete")}
+                  </Button>
+                </div>
               </div>
               <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
                 {messages.map((m) => (
-                  <div key={m.id} className="flex gap-3">
+                  <div key={m.id} className="group/msg flex gap-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                       {initialsOf(m.author_id)}
                     </div>
-                    <div className="flex-1">
+                    <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2 text-xs">
                         <span className="font-medium text-foreground">
                           {authorName(m.author_id)}
@@ -321,10 +413,29 @@ function CommunicationPage() {
                           · {formatDateTime(m.created_at)}
                         </span>
                       </div>
-                      <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{m.content}</div>
+                      <div className="mt-1 flex items-start gap-1">
+                        <div className="flex-1 rounded-2xl bg-muted px-3 py-2 text-sm">
+                          {m.content}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 shrink-0 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover/msg:opacity-100"
+                          onClick={() => {
+                            if (!confirm(t("delete_confirm"))) return;
+                            delMsg.mutate(m.id);
+                          }}
+                          aria-label={t("delete")}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
+                {messages.length === 0 && (
+                  <div className="py-8 text-center text-xs text-muted-foreground">—</div>
+                )}
               </div>
               <div className="flex items-center gap-2 border-t border-border px-4 py-3">
                 <Input

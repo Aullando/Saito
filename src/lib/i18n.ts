@@ -15,6 +15,10 @@ export const STR: Dict = {
   payment_status: { en: "Payment Status", es: "Estado de pagos" },
   communication: { en: "Communication", es: "Comunicación" },
   logout: { en: "Log out", es: "Cerrar sesión" },
+  archive: { en: "Archive", es: "Archivar" },
+  unarchive: { en: "Unarchive", es: "Desarchivar" },
+  archived: { en: "Archived", es: "Archivados" },
+  edit: { en: "Edit", es: "Editar" },
 
   // common
   search: { en: "Search", es: "Buscar" },

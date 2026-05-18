@@ -126,6 +126,7 @@ interface DataState {
   addAthlete: (a: Omit<Athlete, "id">) => void;
   deleteAthlete: (id: string) => void;
   addEvent: (e: Omit<CalendarEvent, "id">) => void;
+  updateEvent: (id: string, patch: Partial<Omit<CalendarEvent, "id">>) => void;
   deleteEvent: (id: string) => void;
   addEventException: (id: string, date: string) => void;
   addFee: (f: Omit<Fee, "id">) => void;
@@ -264,6 +265,10 @@ export const useData = create<DataState>()(
           };
         }),
       addEvent: (e) => set((s) => ({ events: [...s.events, { ...e, id: uid("ev") }] })),
+      updateEvent: (id, patch) =>
+        set((s) => ({
+          events: s.events.map((e) => (e.id === id ? { ...e, ...patch } : e)),
+        })),
       deleteEvent: (id) => set((s) => ({ events: s.events.filter((e) => e.id !== id) })),
       addEventException: (id, date) =>
         set((s) => ({

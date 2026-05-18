@@ -36,7 +36,7 @@ import {
   DEMO_GROUPS_ROWS,
 } from "@/lib/demoFallbacks";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { demoOrEmpty } from "@/lib/demoFallback";
 
 export const Route = createFileRoute("/_app/calendar")({
@@ -78,6 +78,7 @@ function CalendarPage() {
   const demoCategories = useData((s) => s.categories);
   const demoGroups = useData((s) => s.groups);
   const demoAddEvent = useData((s) => s.addEvent);
+  const demoUpdateEvent = useData((s) => s.updateEvent);
   const demoDeleteEvent = useData((s) => s.deleteEvent);
   const demoAddEventException = useData((s) => s.addEventException);
 
@@ -221,6 +222,47 @@ function CalendarPage() {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const updateEvent = useMutation({
+    mutationFn: async (e: {
+      id: string;
+      title: string;
+      event_date: string;
+      start_time: string;
+      group_id: string | null;
+      section_id: string | null;
+      category_id: string | null;
+    }) => {
+      if (demoMode) {
+        demoUpdateEvent(e.id, {
+          title: e.title,
+          date: e.event_date,
+          startTime: e.start_time,
+          groupId: e.group_id ?? undefined,
+          sectionId: e.section_id ?? undefined,
+          categoryId: e.category_id ?? undefined,
+        });
+        return;
+      }
+      const { error } = await supabase
+        .from("calendar_events")
+        .update({
+          title: e.title,
+          event_date: e.event_date,
+          start_time: e.start_time,
+          group_id: e.group_id,
+          section_id: e.section_id,
+          category_id: e.category_id,
+        })
+        .eq("id", e.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success(t("save"));
+      qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
   const addException = useMutation({
     mutationFn: async ({ ev, date }: { ev: DBEvent; date: string }) => {
       const rec = ev.recurrence;
@@ -254,6 +296,13 @@ function CalendarPage() {
     recurring: false,
     until: "",
   });
+  const [editEv, setEditEv] = useState<{
+    id: string;
+    title: string;
+    date: string;
+    startTime: string;
+    groupId: string;
+  } | null>(null);
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
@@ -589,6 +638,23 @@ function CalendarPage() {
                 )}
                 {canEdit && (
                   <div className="flex flex-col gap-2 pt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditEv({
+                          id: detail.event.id,
+                          title: detail.event.title,
+                          date: detail.event.event_date,
+                          startTime: detail.event.start_time ?? "10:00",
+                          groupId: detail.event.group_id ?? "",
+                        });
+                        setDetail(null);
+                      }}
+                    >
+                      <Pencil className="mr-1 h-4 w-4" />
+                      {t("edit") || "Editar"}
+                    </Button>
                     {detail.event.recurrence ? (
                       <>
                         <Button
@@ -636,6 +702,84 @@ function CalendarPage() {
           )}
         </SheetContent>
       </Sheet>
+
+      <Dialog open={!!editEv} onOpenChange={(o) => !o && setEditEv(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("edit") || "Editar"}</DialogTitle>
+          </DialogHeader>
+          {editEv && (
+            <div className="space-y-3">
+              <div>
+                <Label>{t("name")}</Label>
+                <Input
+                  value={editEv.title}
+                  onChange={(e) => setEditEv({ ...editEv, title: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>{t("date")}</Label>
+                  <Input
+                    type="date"
+                    value={editEv.date}
+                    onChange={(e) => setEditEv({ ...editEv, date: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Hora</Label>
+                  <Input
+                    type="time"
+                    value={editEv.startTime}
+                    onChange={(e) => setEditEv({ ...editEv, startTime: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label>{t("group")}</Label>
+                <Select
+                  value={editEv.groupId}
+                  onValueChange={(v) => setEditEv({ ...editEv, groupId: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="—" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {groups.map((g) => (
+                      <SelectItem key={g.id} value={g.id}>
+                        {g.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditEv(null)}>
+              {t("cancel")}
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!editEv || !editEv.title) return;
+                const g = groups.find((g) => g.id === editEv.groupId);
+                await updateEvent.mutateAsync({
+                  id: editEv.id,
+                  title: editEv.title,
+                  event_date: editEv.date,
+                  start_time: editEv.startTime,
+                  group_id: editEv.groupId || null,
+                  section_id: g?.section_id ?? null,
+                  category_id: g?.category_id ?? null,
+                });
+                setEditEv(null);
+              }}
+            >
+              {t("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
