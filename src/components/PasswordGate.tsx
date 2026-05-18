@@ -1,8 +1,10 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 
 const STORAGE_KEY = "site-password-ok";
-const PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "hola";
-const ENABLED = import.meta.env.VITE_ENABLE_PASSWORD_GATE !== "false";
+const PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "";
+// Por defecto el gate está DESACTIVADO. Solo se activa si VITE_ENABLE_PASSWORD_GATE=true.
+const ENABLED = import.meta.env.VITE_ENABLE_PASSWORD_GATE === "true";
+const MISCONFIGURED = ENABLED && !PASSWORD;
 
 export function PasswordGate({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
