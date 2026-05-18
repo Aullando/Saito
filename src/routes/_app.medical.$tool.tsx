@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
+import { StatusChip } from "@/components/StatusChip";
 import {
   Dialog,
   DialogContent,
