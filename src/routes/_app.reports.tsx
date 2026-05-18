@@ -1,9 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BarChart3, TrendingUp, Users, Wallet } from "lucide-react";
+import { AppLayout } from "@/components/AppLayout";
+import { RoleGate } from "@/components/RoleGate";
+import { PageHeader } from "@/components/ui-kit";
 
 export const Route = createFileRoute("/_app/reports")({
   head: () => ({ meta: [{ title: "Informes — SAITO" }] }),
-  component: ReportsPage,
+  component: () => (
+    <RoleGate roles={["admin", "manager"]}>
+      <AppLayout>
+        <ReportsPage />
+      </AppLayout>
+    </RoleGate>
+  ),
 });
 
 const reports = [
@@ -15,13 +24,11 @@ const reports = [
 
 function ReportsPage() {
   return (
-    <div className="container mx-auto max-w-5xl space-y-6 p-4 md:p-6">
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight">Informes</h1>
-        <p className="text-sm text-muted-foreground">
-          Resumen ejecutivo del club. Selecciona un informe para ver el detalle.
-        </p>
-      </header>
+    <>
+      <PageHeader
+        title="Informes"
+        subtitle="Resumen ejecutivo del club. Selecciona un informe para ver el detalle."
+      />
       <div className="grid gap-3 sm:grid-cols-2">
         {reports.map((r) => (
           <div
@@ -38,9 +45,9 @@ function ReportsPage() {
           </div>
         ))}
       </div>
-      <div className="rounded-2xl border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
+      <div className="mt-6 rounded-2xl border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
         Próximamente: exportación a PDF/Excel y programación de envíos.
       </div>
-    </div>
+    </>
   );
 }
