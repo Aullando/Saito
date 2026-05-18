@@ -140,6 +140,7 @@ function RootComponent() {
       <PasswordGate>
         <AuthProvider>
           <ClubProvider>
+            <SportInnovationBanner />
             <Outlet />
           </ClubProvider>
         </AuthProvider>
