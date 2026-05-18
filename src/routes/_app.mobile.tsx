@@ -1,5 +1,13 @@
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
-import { Home, CalendarDays, MessageSquare, User as UserIcon, Users } from "lucide-react";
+import {
+  Home,
+  CalendarDays,
+  MessageSquare,
+  User as UserIcon,
+  ClipboardCheck,
+  HeartPulse,
+  Bell,
+} from "lucide-react";
 import { MobileShell, type MobileTab } from "@/components/MobileShell";
 import { useCurrentUser } from "@/lib/store";
 
@@ -16,14 +24,15 @@ function MobileLayout() {
     ? [
         { id: "home", label: "Hoy", icon: Home, to: "/mobile" },
         { id: "cal", label: "Calendario", icon: CalendarDays, to: "/mobile/calendar" },
-        { id: "ath", label: "Equipo", icon: Users, to: "/mobile/team" },
-        { id: "msg", label: "Mensajes", icon: MessageSquare, to: "/mobile/messages" },
+        { id: "att", label: "Asistencia", icon: ClipboardCheck, to: "/mobile/attendance" },
+        { id: "msg", label: "Comunicación", icon: MessageSquare, to: "/mobile/messages" },
         { id: "me", label: "Perfil", icon: UserIcon, to: "/mobile/profile" },
       ]
     : [
         { id: "home", label: "Hoy", icon: Home, to: "/mobile" },
         { id: "cal", label: "Calendario", icon: CalendarDays, to: "/mobile/calendar" },
-        { id: "msg", label: "Mensajes", icon: MessageSquare, to: "/mobile/messages" },
+        { id: "hea", label: "Salud", icon: HeartPulse, to: "/mobile/health" },
+        { id: "not", label: "Avisos", icon: Bell, to: "/mobile/notifications" },
         { id: "me", label: "Perfil", icon: UserIcon, to: "/mobile/profile" },
       ];
 

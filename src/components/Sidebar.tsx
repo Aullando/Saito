@@ -14,9 +14,15 @@ import {
   LogOut,
   X,
   ShieldCheck,
-  ClipboardCheck,
   Activity,
-  ListChecks,
+  BarChart3,
+  UserPlus,
+  Layers,
+  Megaphone,
+  CalendarClock,
+  AlertTriangle,
+  ClipboardList,
+  CalendarPlus,
 } from "lucide-react";
 
 import { useCurrentUser, useAuth } from "@/lib/store";
@@ -35,109 +41,51 @@ type Item = {
   params?: Record<string, string>;
 };
 
-function buildItems(role: Role, t: (k: string) => string): Item[] {
+function buildItems(role: Role): Item[] {
   switch (role) {
     case "sysadmin":
-      return [{ to: "/organizations", label: t("organizations"), icon: Building2 }];
-    case "admin":
+      return [{ to: "/organizations", label: "Organizaciones", icon: Building2 }];
+
+    // Gestor / Dirección
     case "manager":
       return [
-        {
-          to: "/dashboard",
-          label: t("dashboard") || "Dashboard",
-          icon: LayoutGrid,
-          module: "dashboard",
-        },
-        { to: "/club", label: t("club_organization"), icon: Building2, module: "club" },
-        { to: "/calendar", label: t("calendar"), icon: CalendarDays, module: "calendar" },
-        { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
-        { to: "/attendance", label: "Asistencia", icon: ClipboardCheck, module: "calendar" },
-        { to: "/economic/fees", label: t("economic_management"), icon: Wallet, module: "economic" },
-        {
-          to: "/economic/fees",
-          label: t("fees_rates"),
-          icon: Receipt,
-          indent: true,
-          module: "economic",
-        },
-        {
-          to: "/economic/payments",
-          label: t("payment_status"),
-          icon: Receipt,
-          indent: true,
-          module: "economic",
-        },
-        {
-          to: "/communication",
-          label: t("communication"),
-          icon: MessageSquare,
-          module: "communication",
-        },
-        ...(role === "admin"
-          ? [
-              {
-                to: "/medical/restrictions",
-                label: "Restricciones médicas",
-                icon: Activity,
-                module: "medical" as ClubModuleId,
-              },
-              {
-                to: "/settings/team",
-                label: t("users_permissions"),
-                icon: Users,
-                module: "settings" as ClubModuleId,
-              },
-              {
-                to: "/settings/privacy",
-                label: t("privacy_security") || "Privacidad y seguridad",
-                icon: ShieldCheck,
-                module: "settings" as ClubModuleId,
-              },
-              {
-                to: "/settings/qa",
-                label: "Checklist piloto",
-                icon: ListChecks,
-                module: "settings" as ClubModuleId,
-              },
-            ]
-          : []),
+        { to: "/dashboard", label: "Dashboard", icon: LayoutGrid },
+        { to: "/club", label: "Club & Organización", icon: Building2 },
+        { to: "/settings/team", label: "Usuarios y permisos", icon: Users },
+        { to: "/calendar", label: "Calendario", icon: CalendarDays },
+        { to: "/athletes", label: "Deportistas", icon: Users },
+        { to: "/economic/fees", label: "Pagos y cuotas", icon: Wallet },
+        { to: "/communication", label: "Comunicación", icon: MessageSquare },
+        { to: "/reports", label: "Informes", icon: BarChart3 },
+        { to: "/settings/privacy", label: "Privacidad y seguridad", icon: ShieldCheck },
       ];
-    case "technical":
+
+    // Administración
+    case "admin":
       return [
-        { to: "/calendar", label: t("calendar"), icon: CalendarDays, module: "calendar" },
-        { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
-        { to: "/attendance", label: "Asistencia", icon: ClipboardCheck, module: "calendar" },
-        {
-          to: "/communication",
-          label: t("communication"),
-          icon: MessageSquare,
-          module: "communication",
-        },
+        { to: "/settings/team", label: "Altas y usuarios", icon: UserPlus },
+        { to: "/club", label: "Secciones / Categorías / Grupos", icon: Layers },
+        { to: "/economic/fees", label: "Cuotas y tasas", icon: Receipt },
+        { to: "/economic/payments", label: "Estado de pagos", icon: Wallet },
+        { to: "/communication", label: "Circulares", icon: Megaphone },
+        { to: "/calendar", label: "Calendario de club", icon: CalendarDays },
       ];
+
+    // Staff médico
     case "medical":
       return [
-        {
-          to: "/medical/calendar",
-          label: t("medical_calendar"),
-          icon: Stethoscope,
-          module: "medical",
-        },
-        {
-          to: "/medical/restrictions",
-          label: "Restricciones y lesiones",
-          icon: Activity,
-          module: "medical",
-        },
-        { to: "/athletes", label: t("athletes"), icon: Users, module: "athletes" },
-        {
-          to: "/communication",
-          label: t("communication"),
-          icon: MessageSquare,
-          module: "communication",
-        },
+        { to: "/medical/calendar", label: "Agenda médica", icon: Stethoscope },
+        { to: "/athletes", label: "Atletas", icon: Users },
+        { to: "/medical/restrictions", label: "Restricciones", icon: Activity },
+        { to: "/medical/incidents", label: "Incidencias", icon: AlertTriangle },
+        { to: "/medical/treatments", label: "Planes de tratamiento", icon: ClipboardList },
+        { to: "/medical/requests", label: "Solicitudes de cita", icon: CalendarPlus },
+        { to: "/communication", label: "Comunicación médica", icon: MessageSquare },
       ];
+
+    case "technical":
     case "athlete":
-      return [];
+      return []; // Mobile-only roles
   }
 }
 
@@ -171,8 +119,8 @@ export function Sidebar() {
         .filter((n) => isModuleEnabled(n.module))
         .filter((n) => !n.allowedRoles || n.allowedRoles.includes(user.role))
         .map(navItemToItem)
-    : buildItems(user.role, t).filter((i) => !i.module || isModuleEnabled(i.module));
-  const width = collapsed ? 72 : 224;
+    : buildItems(user.role);
+  const width = collapsed ? 72 : 240;
   const notifCount = user.role === "sysadmin" ? 25 : user.role === "medical" ? 13 : 0;
 
   const isActive = (to: string) => path === to || path.startsWith(to + "/");
@@ -229,12 +177,9 @@ export function Sidebar() {
               const resolvedPath = it.params
                 ? Object.entries(it.params).reduce((acc, [k, v]) => acc.replace(`$${k}`, v), it.to)
                 : it.to;
-              const economicHeader = it.label === t("economic_management");
-              const active = economicHeader
-                ? path.startsWith("/economic")
-                : it.indent
-                  ? path === resolvedPath
-                  : path === resolvedPath || path.startsWith(resolvedPath + "/");
+              const active = it.indent
+                ? path === resolvedPath
+                : path === resolvedPath || path.startsWith(resolvedPath + "/");
               const Icon = it.icon;
               return (
                 <li key={idx}>
@@ -285,4 +230,4 @@ export function Sidebar() {
   );
 }
 
-export const SIDEBAR_WIDTH = 224;
+export const SIDEBAR_WIDTH = 240;

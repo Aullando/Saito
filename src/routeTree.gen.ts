@@ -25,6 +25,7 @@ import { Route as PublicCookiesRouteImport } from './routes/_public.cookies'
 import { Route as PublicContactoRouteImport } from './routes/_public.contacto'
 import { Route as PublicClientesRouteImport } from './routes/_public.clientes'
 import { Route as PublicAvisoLegalRouteImport } from './routes/_public.aviso-legal'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppOrganizationsRouteImport } from './routes/_app.organizations'
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
@@ -59,8 +60,10 @@ import { Route as AppMobileTeamRouteImport } from './routes/_app.mobile.team'
 import { Route as AppMobileProfileRouteImport } from './routes/_app.mobile.profile'
 import { Route as AppMobileMessagesRouteImport } from './routes/_app.mobile.messages'
 import { Route as AppMobileCalendarRouteImport } from './routes/_app.mobile.calendar'
+import { Route as AppMobileToolRouteImport } from './routes/_app.mobile.$tool'
 import { Route as AppMedicalRestrictionsRouteImport } from './routes/_app.medical.restrictions'
 import { Route as AppMedicalCalendarRouteImport } from './routes/_app.medical.calendar'
+import { Route as AppMedicalToolRouteImport } from './routes/_app.medical.$tool'
 import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.payments'
 import { Route as AppEconomicFeesRouteImport } from './routes/_app.economic.fees'
 
@@ -141,6 +144,11 @@ const PublicAvisoLegalRoute = PublicAvisoLegalRouteImport.update({
   id: '/aviso-legal',
   path: '/aviso-legal',
   getParentRoute: () => PublicRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppProfileRoute = AppProfileRouteImport.update({
   id: '/profile',
@@ -313,6 +321,11 @@ const AppMobileCalendarRoute = AppMobileCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => AppMobileRoute,
 } as any)
+const AppMobileToolRoute = AppMobileToolRouteImport.update({
+  id: '/$tool',
+  path: '/$tool',
+  getParentRoute: () => AppMobileRoute,
+} as any)
 const AppMedicalRestrictionsRoute = AppMedicalRestrictionsRouteImport.update({
   id: '/medical/restrictions',
   path: '/medical/restrictions',
@@ -321,6 +334,11 @@ const AppMedicalRestrictionsRoute = AppMedicalRestrictionsRouteImport.update({
 const AppMedicalCalendarRoute = AppMedicalCalendarRouteImport.update({
   id: '/medical/calendar',
   path: '/medical/calendar',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMedicalToolRoute = AppMedicalToolRouteImport.update({
+  id: '/medical/$tool',
+  path: '/medical/$tool',
   getParentRoute: () => AppRoute,
 } as any)
 const AppEconomicPaymentsRoute = AppEconomicPaymentsRouteImport.update({
@@ -349,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof AppOnboardingRoute
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
+  '/reports': typeof AppReportsRoute
   '/aviso-legal': typeof PublicAvisoLegalRoute
   '/clientes': typeof PublicClientesRoute
   '/contacto': typeof PublicContactoRoute
@@ -361,8 +380,10 @@ export interface FileRoutesByFullPath {
   '/seguridad': typeof PublicSeguridadRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
+  '/medical/$tool': typeof AppMedicalToolRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
   '/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/mobile/$tool': typeof AppMobileToolRoute
   '/mobile/calendar': typeof AppMobileCalendarRoute
   '/mobile/messages': typeof AppMobileMessagesRoute
   '/mobile/profile': typeof AppMobileProfileRoute
@@ -402,6 +423,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof AppOnboardingRoute
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
+  '/reports': typeof AppReportsRoute
   '/aviso-legal': typeof PublicAvisoLegalRoute
   '/clientes': typeof PublicClientesRoute
   '/contacto': typeof PublicContactoRoute
@@ -414,8 +436,10 @@ export interface FileRoutesByTo {
   '/seguridad': typeof PublicSeguridadRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
+  '/medical/$tool': typeof AppMedicalToolRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
   '/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/mobile/$tool': typeof AppMobileToolRoute
   '/mobile/calendar': typeof AppMobileCalendarRoute
   '/mobile/messages': typeof AppMobileMessagesRoute
   '/mobile/profile': typeof AppMobileProfileRoute
@@ -457,6 +481,7 @@ export interface FileRoutesById {
   '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/organizations': typeof AppOrganizationsRoute
   '/_app/profile': typeof AppProfileRoute
+  '/_app/reports': typeof AppReportsRoute
   '/_public/aviso-legal': typeof PublicAvisoLegalRoute
   '/_public/clientes': typeof PublicClientesRoute
   '/_public/contacto': typeof PublicContactoRoute
@@ -470,8 +495,10 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_app/economic/fees': typeof AppEconomicFeesRoute
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
+  '/_app/medical/$tool': typeof AppMedicalToolRoute
   '/_app/medical/calendar': typeof AppMedicalCalendarRoute
   '/_app/medical/restrictions': typeof AppMedicalRestrictionsRoute
+  '/_app/mobile/$tool': typeof AppMobileToolRoute
   '/_app/mobile/calendar': typeof AppMobileCalendarRoute
   '/_app/mobile/messages': typeof AppMobileMessagesRoute
   '/_app/mobile/profile': typeof AppMobileProfileRoute
@@ -514,6 +541,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/organizations'
     | '/profile'
+    | '/reports'
     | '/aviso-legal'
     | '/clientes'
     | '/contacto'
@@ -526,8 +554,10 @@ export interface FileRouteTypes {
     | '/seguridad'
     | '/economic/fees'
     | '/economic/payments'
+    | '/medical/$tool'
     | '/medical/calendar'
     | '/medical/restrictions'
+    | '/mobile/$tool'
     | '/mobile/calendar'
     | '/mobile/messages'
     | '/mobile/profile'
@@ -567,6 +597,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/organizations'
     | '/profile'
+    | '/reports'
     | '/aviso-legal'
     | '/clientes'
     | '/contacto'
@@ -579,8 +610,10 @@ export interface FileRouteTypes {
     | '/seguridad'
     | '/economic/fees'
     | '/economic/payments'
+    | '/medical/$tool'
     | '/medical/calendar'
     | '/medical/restrictions'
+    | '/mobile/$tool'
     | '/mobile/calendar'
     | '/mobile/messages'
     | '/mobile/profile'
@@ -621,6 +654,7 @@ export interface FileRouteTypes {
     | '/_app/onboarding'
     | '/_app/organizations'
     | '/_app/profile'
+    | '/_app/reports'
     | '/_public/aviso-legal'
     | '/_public/clientes'
     | '/_public/contacto'
@@ -634,8 +668,10 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_app/economic/fees'
     | '/_app/economic/payments'
+    | '/_app/medical/$tool'
     | '/_app/medical/calendar'
     | '/_app/medical/restrictions'
+    | '/_app/mobile/$tool'
     | '/_app/mobile/calendar'
     | '/_app/mobile/messages'
     | '/_app/mobile/profile'
@@ -783,6 +819,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/aviso-legal'
       preLoaderRoute: typeof PublicAvisoLegalRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/profile': {
       id: '/_app/profile'
@@ -1022,6 +1065,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMobileCalendarRouteImport
       parentRoute: typeof AppMobileRoute
     }
+    '/_app/mobile/$tool': {
+      id: '/_app/mobile/$tool'
+      path: '/$tool'
+      fullPath: '/mobile/$tool'
+      preLoaderRoute: typeof AppMobileToolRouteImport
+      parentRoute: typeof AppMobileRoute
+    }
     '/_app/medical/restrictions': {
       id: '/_app/medical/restrictions'
       path: '/medical/restrictions'
@@ -1034,6 +1084,13 @@ declare module '@tanstack/react-router' {
       path: '/medical/calendar'
       fullPath: '/medical/calendar'
       preLoaderRoute: typeof AppMedicalCalendarRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/medical/$tool': {
+      id: '/_app/medical/$tool'
+      path: '/medical/$tool'
+      fullPath: '/medical/$tool'
+      preLoaderRoute: typeof AppMedicalToolRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/economic/payments': {
@@ -1054,6 +1111,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppMobileRouteChildren {
+  AppMobileToolRoute: typeof AppMobileToolRoute
   AppMobileCalendarRoute: typeof AppMobileCalendarRoute
   AppMobileMessagesRoute: typeof AppMobileMessagesRoute
   AppMobileProfileRoute: typeof AppMobileProfileRoute
@@ -1062,6 +1120,7 @@ interface AppMobileRouteChildren {
 }
 
 const AppMobileRouteChildren: AppMobileRouteChildren = {
+  AppMobileToolRoute: AppMobileToolRoute,
   AppMobileCalendarRoute: AppMobileCalendarRoute,
   AppMobileMessagesRoute: AppMobileMessagesRoute,
   AppMobileProfileRoute: AppMobileProfileRoute,
@@ -1084,8 +1143,10 @@ interface AppRouteChildren {
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppOrganizationsRoute: typeof AppOrganizationsRoute
   AppProfileRoute: typeof AppProfileRoute
+  AppReportsRoute: typeof AppReportsRoute
   AppEconomicFeesRoute: typeof AppEconomicFeesRoute
   AppEconomicPaymentsRoute: typeof AppEconomicPaymentsRoute
+  AppMedicalToolRoute: typeof AppMedicalToolRoute
   AppMedicalCalendarRoute: typeof AppMedicalCalendarRoute
   AppMedicalRestrictionsRoute: typeof AppMedicalRestrictionsRoute
   AppRgccSlugRoute: typeof AppRgccSlugRoute
@@ -1109,8 +1170,10 @@ const AppRouteChildren: AppRouteChildren = {
   AppOnboardingRoute: AppOnboardingRoute,
   AppOrganizationsRoute: AppOrganizationsRoute,
   AppProfileRoute: AppProfileRoute,
+  AppReportsRoute: AppReportsRoute,
   AppEconomicFeesRoute: AppEconomicFeesRoute,
   AppEconomicPaymentsRoute: AppEconomicPaymentsRoute,
+  AppMedicalToolRoute: AppMedicalToolRoute,
   AppMedicalCalendarRoute: AppMedicalCalendarRoute,
   AppMedicalRestrictionsRoute: AppMedicalRestrictionsRoute,
   AppRgccSlugRoute: AppRgccSlugRoute,
