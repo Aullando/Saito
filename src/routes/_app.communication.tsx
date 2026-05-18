@@ -539,7 +539,7 @@ function CircularsTab({
                             }}
                           >
                             <CalendarPlus className="mr-2 h-4 w-4" />
-                            Programar…
+                            Programar… <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -564,7 +564,7 @@ function CircularsTab({
                           )}
                           <DropdownMenuItem onClick={() => onCancelSchedule(c.id)}>
                             <Undo2 className="mr-2 h-4 w-4" />
-                            Cancelar programación
+                            Cancelar programación <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -583,7 +583,7 @@ function CircularsTab({
                         <>
                           <DropdownMenuItem onClick={() => onArchive(c.id)}>
                             <Archive className="mr-2 h-4 w-4" />
-                            Archivar
+                            Archivar <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-rose-600 focus:text-rose-600"
@@ -593,7 +593,7 @@ function CircularsTab({
                             }}
                           >
                             <Undo2 className="mr-2 h-4 w-4" />
-                            Retirar circular…
+                            Retirar circular… <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                         </>
                       )}
