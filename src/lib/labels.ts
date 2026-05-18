@@ -13,6 +13,8 @@ export const roleLabel = (role: Role, lang: Lang): string => {
       return STR.recipient_role_medical[lang];
     case "sysadmin":
       return "SysAdmin";
+    case "athlete":
+      return lang === "en" ? "Athlete" : "Atleta";
   }
 };
 
