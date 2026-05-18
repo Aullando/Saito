@@ -24,7 +24,8 @@ export const Route = createFileRoute("/_app/mobile/messages")({
 function MobileMessages() {
   const conversations = useData((s) => s.conversations);
   const users = useData((s) => s.users);
-  const currentUserId = useUI((s) => s.currentUserId);
+  const currentUser = useCurrentUser();
+  const currentUserId = currentUser?.id ?? null;
   const sendMessage = useData((s) => s.sendMessage);
   const markRead = useData((s) => s.markConversationRead);
   const deleteConversation = useData((s) => s.deleteConversation);
