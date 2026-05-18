@@ -695,6 +695,12 @@ function RequestAppointment() {
 // ───────── SESSION INFO / FEEDBACK / HEALTH / TREATMENT / PERFORMANCE / NOTIFICATIONS ─────────
 function SessionInfo() {
   const athletes = useData((s) => s.athletes).slice(0, 8);
+  const aiBlocks = useSessionLocal((s) =>
+    s.aiBlocks.filter((b) => b.sessionId === DEMO_SESSION_ID),
+  );
+  const feedbacks = useSessionLocal((s) =>
+    s.feedbacks.filter((f) => f.sessionId === DEMO_SESSION_ID),
+  );
   return (
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-4">
