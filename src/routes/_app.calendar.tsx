@@ -1017,6 +1017,10 @@ function CalendarPage() {
                               groupId: ev.group_id ?? "",
                               staffId: ev.staff_id ?? "",
                               location: ev.location ?? "",
+                              origDate: ev.event_date,
+                              origStartTime: ev.start_time ?? "10:00",
+                              origLocation: ev.location ?? "",
+                              notifyParticipants: true,
                             });
                             setDetail(null);
                           }}
