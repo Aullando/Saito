@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
+import { StatusChip } from "@/components/StatusChip";
 import {
   Dialog,
   DialogContent,
@@ -205,14 +206,9 @@ function IncidentsView() {
                 <td className="px-3 py-2.5 text-muted-foreground">{r.date}</td>
                 <td className="px-3 py-2.5">{r.type}</td>
                 <td className="px-3 py-2.5">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${fitnessClass(
-                      r.fitness,
-                    )}`}
-                  >
-                    {r.fitness}
-                  </span>
+                  <StatusChip>{r.fitness}</StatusChip>
                 </td>
+
                 <td className="px-3 py-2.5 text-muted-foreground">{r.responsible}</td>
               </tr>
             ))}
@@ -230,13 +226,10 @@ function IncidentsView() {
                   {r.date} · {r.type}
                 </div>
               </div>
-              <span
-                className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${fitnessClass(
-                  r.fitness,
-                )}`}
-              >
-                {r.fitness}
+              <span className="shrink-0">
+                <StatusChip>{r.fitness}</StatusChip>
               </span>
+
             </div>
             <div className="mt-1 text-[11px] text-muted-foreground">
               Responsable: {r.responsible}
@@ -495,15 +488,10 @@ function TreatmentCard({ t, onFinish }: { t: Treatment; onFinish?: () => void })
           <div className="text-sm font-semibold">{t.athlete}</div>
           <div className="text-xs text-muted-foreground">{t.title}</div>
         </div>
-        <span
-          className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-            finished
-              ? "bg-muted text-muted-foreground"
-              : "bg-emerald-100 text-emerald-800"
-          }`}
-        >
-          {finished ? "Finalizado" : "Activo"}
+        <span className="shrink-0">
+          <StatusChip>{finished ? "Finalizado" : "Activo"}</StatusChip>
         </span>
+
       </div>
 
       <div className="mt-3">
@@ -631,9 +619,10 @@ function RequestsView() {
                       Fecha preferida: {r.preferred} · solicitada {r.requestedAt}
                     </div>
                   </div>
-                  <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
-                    Pendiente
+                  <span className="shrink-0">
+                    <StatusChip>Pendiente</StatusChip>
                   </span>
+
                 </div>
                 <div className="mt-3 flex justify-end">
                   <Button
@@ -675,9 +664,10 @@ function RequestsView() {
                       {r.reason} · cita programada
                     </div>
                   </div>
-                  <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
-                    Gestionada
+                  <span className="shrink-0">
+                    <StatusChip>Gestionada</StatusChip>
                   </span>
+
                 </div>
               </li>
             ))}

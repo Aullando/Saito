@@ -141,7 +141,12 @@ export function Sidebar() {
         )}
         style={{ width }}
       >
-        <div className="flex h-12 items-center justify-between px-3">
+        <div className="flex h-12 items-center justify-between px-4">
+          {!collapsed && (
+            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              Navegación
+            </span>
+          )}
           <button
             onClick={() => setMobileOpen(false)}
             className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:hidden"
@@ -161,7 +166,7 @@ export function Sidebar() {
         </div>
 
         {!collapsed && (
-          <div className="mx-3 mb-2 flex items-center gap-2 rounded-2xl bg-sidebar-accent px-3 py-2 text-xs">
+          <div className="mx-3 mb-3 flex items-center gap-2 rounded-2xl bg-sidebar-accent/60 px-3 py-2 text-xs">
             {notifCount > 0 && (
               <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground">
                 {notifCount}
@@ -171,8 +176,8 @@ export function Sidebar() {
           </div>
         )}
 
-        <nav className="flex-1 overflow-y-auto px-3 py-2">
-          <ul className="space-y-1">
+        <nav className="flex-1 overflow-y-auto px-2 py-1">
+          <ul className="space-y-0.5">
             {items.map((it, idx) => {
               const resolvedPath = it.params
                 ? Object.entries(it.params).reduce((acc, [k, v]) => acc.replace(`$${k}`, v), it.to)
@@ -188,11 +193,11 @@ export function Sidebar() {
                     params={it.params as never}
                     onClick={() => setMobileOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-full px-3 py-2 text-[13px] font-medium transition-colors",
                       active
                         ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent",
-                      it.indent && !collapsed && "ml-4 text-[13px]",
+                        : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                      it.indent && !collapsed && "ml-4 text-[12px]",
                     )}
                   >
                     <Icon className="h-[18px] w-[18px] shrink-0" />
@@ -203,6 +208,7 @@ export function Sidebar() {
             })}
           </ul>
         </nav>
+
 
         <div className="border-t border-sidebar-border p-3">
           <Link

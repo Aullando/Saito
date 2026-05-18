@@ -42,7 +42,7 @@ export function Pill({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.04em] leading-[1.4]",
         tones[tone],
       )}
     >
@@ -50,6 +50,7 @@ export function Pill({
     </span>
   );
 }
+
 
 export function EmptyState({ children }: { children: ReactNode }) {
   return (

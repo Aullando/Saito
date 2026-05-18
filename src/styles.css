@@ -176,9 +176,30 @@
   .saito-card {
     background-color: var(--color-card);
     border: 1px solid var(--color-border);
-    border-radius: 25px;
-    box-shadow: 0 1px 2px 0 rgb(26 32 44 / 0.04), 0 4px 16px -4px rgb(26 32 44 / 0.06);
+    border-radius: 22px;
+    box-shadow: 0 1px 2px 0 rgb(26 32 44 / 0.03), 0 8px 24px -16px rgb(26 32 44 / 0.08);
   }
+
+  /* Uppercase status chip — PAGADO, PENDIENTE, APTO, NO APTO, EN REVISIÓN, … */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .chip-success { background: color-mix(in oklab, var(--color-success) 15%, transparent); color: color-mix(in oklab, var(--color-success) 70%, var(--color-foreground)); }
+  .chip-warning { background: color-mix(in oklab, var(--color-warning) 22%, transparent); color: color-mix(in oklab, var(--color-warning) 60%, var(--color-foreground)); }
+  .chip-danger  { background: color-mix(in oklab, var(--color-destructive) 14%, transparent); color: color-mix(in oklab, var(--color-destructive) 75%, var(--color-foreground)); }
+  .chip-info    { background: color-mix(in oklab, var(--color-info) 14%, transparent); color: color-mix(in oklab, var(--color-info) 75%, var(--color-foreground)); }
+  .chip-muted   { background: var(--color-muted); color: var(--color-muted-foreground); }
+
 
   /* Animated underline for nav links */
   .story-link { position: relative; display: inline-block; }
