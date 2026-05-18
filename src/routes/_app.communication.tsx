@@ -183,14 +183,23 @@ function CommunicationPage() {
 
   const delConv = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("conversations").delete().eq("id", id);
-      if (error) throw error;
+      hideConv(id);
+      await supabase.from("conversations").delete().eq("id", id);
     },
     onSuccess: () => {
-      setActiveId(null);
       qc.invalidateQueries({ queryKey: ["conversations", orgId, user?.id] });
+      toast.success(t("delete"));
     },
-    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const delMsg = useMutation({
+    mutationFn: async (id: string) => {
+      hideMsg(id);
+      await supabase.from("messages").delete().eq("id", id);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["messages", activeId] });
+    },
   });
 
   const [draft, setDraft] = useState("");
