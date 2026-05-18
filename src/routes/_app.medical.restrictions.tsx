@@ -10,7 +10,7 @@ import { ATHLETES } from "@/lib/seed";
 import { ShieldAlert, Stethoscope, Lock, Activity, Filter } from "lucide-react";
 
 export const Route = createFileRoute("/_app/medical/restrictions")({
-  head: () => ({ meta: [{ title: "Restricciones y lesiones — SAITO" }] }),
+  head: () => ({ meta: [{ title: "Salud deportiva · Restricciones operativas — SAITO" }] }),
   component: () => (
     <RoleGate roles={["medical", "admin"]}>
       <AppLayout>
