@@ -999,7 +999,69 @@ function CalendarPage() {
                       No se puede eliminar: el evento tiene {blockers.join(", ")}.
                       {isFuture ? " Usa Cancelar para mantener el historial." : ""}
                     </div>
+
+                  {/* Session quick actions (training events) */}
+                  {ev.type === "training" && !a.cancelled && (
+                    <div>
+                      <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Acciones de sesión
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            toast.info("Detalle de la sesión");
+                          }}
+                        >
+                          <Eye className="mr-1 h-4 w-4" />
+                          Ver detalle
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            markCommunication(ev.id, true);
+                            toast.success("Convocatoria generada");
+                            navigate({ to: "/communication" });
+                          }}
+                        >
+                          <Send className="mr-1 h-4 w-4" />
+                          Convocatoria
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            markAttendance(ev.id, true);
+                            navigate({ to: "/attendance" });
+                          }}
+                        >
+                          <ClipboardCheck className="mr-1 h-4 w-4" />
+                          Asistencia
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setNoteDraft(notes[ev.id] ?? "");
+                            setNotesOpen(true);
+                          }}
+                        >
+                          <StickyNote className="mr-1 h-4 w-4" />
+                          Notas
+                        </Button>
+                      </div>
+                      {notes[ev.id] && (
+                        <div className="mt-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+                          <span className="font-semibold text-foreground">Nota: </span>
+                          {notes[ev.id]}
+                        </div>
+                      )}
+                    </div>
                   )}
+
+
 
                   {canEdit && (
                     <div className="flex flex-col gap-2 pt-2">
