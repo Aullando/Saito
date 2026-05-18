@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { LogOut, Bell } from "lucide-react";
 import { Logo } from "@/components/Logo";
-import { useAuth as useLocalAuth, useCurrentUser } from "@/lib/store";
-import { cn } from "@/lib/utils";
+import { useAuth as useLocalAuth } from "@/lib/store";
+
 
 export interface MobileTab {
   id: string;
