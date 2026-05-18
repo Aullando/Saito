@@ -15,7 +15,6 @@ import {
   Info,
   HeartPulse,
   TrendingUp,
-  Bell,
   MessageSquare,
   MapPin,
   ChevronRight,
