@@ -375,41 +375,61 @@ function Ratings() {
 }
 
 // ───────── IA SESIÓN ─────────
+type AIBlock = { title: string; items: string[] };
 function AISession() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [answer, setAnswer] = useState<string | null>(null);
-  const samples = [
-    "Sesión de fuerza 60 min para juveniles",
-    "Microciclo de velocidad 4 sesiones",
-    "Calentamiento dinámico 15 min",
-  ];
+  const [blocks, setBlocks] = useState<AIBlock[] | null>(null);
 
   const run = () => {
     if (!input.trim()) return;
     setLoading(true);
-    setAnswer(null);
+    setBlocks(null);
     setTimeout(() => {
-      setAnswer(
-        `Propuesta SAITO para: "${input}"\n\n` +
-          "• Calentamiento (10 min): movilidad articular + activación.\n" +
-          "• Bloque principal (35 min): trabajo específico con progresión por series.\n" +
-          "• Trabajo complementario (10 min): core y estabilidad.\n" +
-          "• Vuelta a la calma (5 min): estiramientos y respiración.\n\n" +
-          "Carga estimada: media-alta · RPE objetivo 7/10."
-      );
+      setBlocks([
+        {
+          title: "Calentamiento",
+          items: [
+            "10 min movilidad articular dinámica",
+            "Activación glúteos y core (mini-band)",
+            "3 series de skipping progresivo",
+          ],
+        },
+        {
+          title: "Bloque técnico",
+          items: [
+            "Técnica de carrera: A-skip, B-skip, talones",
+            "Salidas reactivas 4×20 m al 80%",
+          ],
+        },
+        {
+          title: "Ejercicio principal",
+          items: [
+            "5×200 m al 90% RPE 7",
+            "Recuperación 3 min entre series",
+            "Mantener técnica en últimas dos series",
+          ],
+        },
+        {
+          title: "Variantes",
+          items: [
+            "Atletas en revisión: reducir a 3×200 m al 80%",
+            "Si lluvia: sustituir por 5×30 s en cuesta",
+          ],
+        },
+      ]);
       setLoading(false);
     }, 900);
   };
 
   return (
     <div className="space-y-3">
-      <div className="rounded-2xl border border-border bg-gradient-to-br from-primary/10 to-transparent p-3">
+      <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-transparent p-3">
         <div className="flex items-center gap-2 text-xs font-semibold text-primary">
-          <Sparkles className="h-3.5 w-3.5" /> Create with SAITO
+          <Sparkles className="h-3.5 w-3.5" /> Crear con SAITO
         </div>
         <p className="mt-1 text-xs text-muted-foreground">
-          Describe lo que necesitas y SAITO te propone una estructura de sesión.
+          IA de sesión: estructura tu entrenamiento por bloques.
         </p>
       </div>
 
@@ -417,20 +437,10 @@ function AISession() {
         value={input}
         onChange={(e) => setInput(e.target.value.slice(0, 300))}
         rows={3}
-        placeholder="Ej: sesión técnica de 45 min para grupo infantil…"
+        placeholder="¿Por dónde empiezo? Escribe qué tipo de entrenamiento o tarea buscas realizar…"
         className="w-full resize-none rounded-2xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
       />
-      <div className="flex flex-wrap gap-1.5">
-        {samples.map((s) => (
-          <button
-            key={s}
-            onClick={() => setInput(s)}
-            className="rounded-full border border-border bg-card px-2.5 py-1 text-[10px] text-muted-foreground"
-          >
-            {s}
-          </button>
-        ))}
-      </div>
+
       <button
         onClick={run}
         disabled={!input.trim() || loading}
@@ -442,14 +452,49 @@ function AISession() {
           </>
         ) : (
           <>
-            <Sparkles className="h-4 w-4" /> Generar propuesta
+            <Sparkles className="h-4 w-4" /> Crear con SAITO
           </>
         )}
       </button>
 
-      {answer && (
-        <div className="whitespace-pre-line rounded-2xl border border-primary/20 bg-primary/5 p-3 text-sm text-foreground">
-          {answer}
+      {blocks && (
+        <div className="space-y-2">
+          {blocks.map((b) => (
+            <div key={b.title} className="rounded-2xl border border-primary/20 bg-primary/5 p-3">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                {b.title}
+              </div>
+              <ul className="mt-1.5 space-y-1 text-sm text-foreground">
+                {b.items.map((it) => (
+                  <li key={it} className="flex gap-1.5">
+                    <span className="text-primary">•</span>
+                    <span>{it}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+          <div className="grid grid-cols-3 gap-1.5 pt-1">
+            <button
+              onClick={run}
+              className="rounded-xl border border-border bg-card px-2 py-2 text-[11px] font-semibold text-foreground active:scale-95"
+            >
+              Recrear
+            </button>
+            <button
+              onClick={() => toast.message("Refinando propuesta…")}
+              className="rounded-xl border border-border bg-card px-2 py-2 text-[11px] font-semibold text-foreground active:scale-95"
+            >
+              Refinar
+            </button>
+            <button
+              onClick={() => toast.success("Incluido en la sesión")}
+              className="rounded-xl bg-primary px-2 py-2 text-[11px] font-semibold text-primary-foreground active:scale-95"
+            >
+              Incluir
+            </button>
+          </div>
         </div>
       )}
     </div>
