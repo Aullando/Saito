@@ -148,7 +148,7 @@ function LoginPage() {
           <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
             powered by Gemini
           </span>
-          <h1 className="mt-4 text-2xl font-bold tracking-tight">Demo SAITO</h1>
+          <h1 className="mt-4 text-2xl font-bold tracking-tight">Ver SAITO como…</h1>
           <p className="text-sm text-muted-foreground">
             Elige tu rol. Cada rol entra al canal correcto: escritorio o móvil.
           </p>
