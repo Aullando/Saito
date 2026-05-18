@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { useAuth as useLocalAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
+import { isDemoMode } from "@/lib/appMode";
 
 type Role = "sysadmin" | "admin" | "manager" | "technical" | "medical";
 
@@ -49,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user: { id: demo.id, email: demo.email },
       profile: {
         id: demo.id,
-        organization_id: "org-3",
+        organization_id: isDemoMode() ? null : "org-3",
         email: demo.email,
         full_name: demo.name,
         avatar_url: null,

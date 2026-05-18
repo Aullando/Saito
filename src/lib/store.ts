@@ -119,6 +119,10 @@ interface DataState {
   deleteFacility: (id: string) => void;
   addSection: (name: string) => void;
   deleteSection: (id: string) => void;
+  addCategory: (c: Omit<Category, "id">) => void;
+  deleteCategory: (id: string) => void;
+  addGroup: (g: Omit<Group, "id">) => void;
+  deleteGroup: (id: string) => void;
   addAthlete: (a: Omit<Athlete, "id">) => void;
   deleteAthlete: (id: string) => void;
   addEvent: (e: Omit<CalendarEvent, "id">) => void;
@@ -216,6 +220,22 @@ export const useData = create<DataState>()(
           categories: s.categories.filter((c) => c.sectionId !== id),
           groups: s.groups.filter((g) => g.sectionId !== id),
           athletes: s.athletes.filter((a) => a.sectionId !== id),
+        })),
+      addCategory: (c) => set((s) => ({ categories: [...s.categories, { ...c, id: uid("cat") }] })),
+      deleteCategory: (id) =>
+        set((s) => ({
+          categories: s.categories.filter((c) => c.id !== id),
+          groups: s.groups.filter((g) => g.categoryId !== id),
+          athletes: s.athletes.filter((a) => a.categoryId !== id),
+        })),
+      addGroup: (g) => set((s) => ({ groups: [...s.groups, { ...g, id: uid("grp") }] })),
+      deleteGroup: (id) =>
+        set((s) => ({
+          groups: s.groups.filter((g) => g.id !== id),
+          athletes: s.athletes.map((a) => ({
+            ...a,
+            groupIds: a.groupIds.filter((groupId) => groupId !== id),
+          })),
         })),
       addAthlete: (a) =>
         set((s) => {
