@@ -321,6 +321,6 @@ export const useData = create<DataState>()(
 
       reset: () => set(initial()),
     }),
-    { name: "saito-data", version: 8 },
+    { name: "saito-data", version: 9 },
   ),
 );

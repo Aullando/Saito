@@ -79,204 +79,163 @@ export const DEMO_USERS: User[] = [
 
 const today = new Date();
 const iso = (d: Date) => d.toISOString().slice(0, 10);
-const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
 
-const dt = (day: number, hour: number, minute: number) => {
-  const d = new Date(2026, 3, day, hour, minute); // April 2026
-  return d.toISOString();
-};
+const isoAt = (y: number, m: number, d: number, h = 12, min = 0) =>
+  new Date(y, m, d, h, min).toISOString();
 
+// ───────── Organizaciones ─────────
+// Organización principal: Real Club Deportivo Demo (org-3, mantenida para retrocompatibilidad).
 export const ORGANIZATIONS: Organization[] = [
   {
-    name: "European Commission",
-    createdAt: dt(29, 12, 42),
-    updatedAt: dt(29, 12, 42),
+    name: "Real Club Deportivo Demo",
+    createdAt: isoAt(2024, 8, 1, 9, 0),
+    updatedAt: isoAt(2026, 3, 15, 9, 0),
     aiEnabled: true,
   },
   {
-    name: "Sport Innovation Hub SL",
-    createdAt: dt(29, 12, 32),
-    updatedAt: dt(29, 12, 32),
+    name: "Club Atletismo Sant Cugat",
+    createdAt: isoAt(2024, 9, 5, 9, 0),
+    updatedAt: isoAt(2026, 3, 1, 9, 0),
     aiEnabled: true,
   },
   {
-    name: "Saito Club",
-    createdAt: new Date(2026, 2, 27, 14, 36).toISOString(),
-    updatedAt: new Date(2026, 2, 27, 14, 36).toISOString(),
+    name: "Club Polideportivo Hortaleza",
+    createdAt: isoAt(2024, 10, 12, 9, 0),
+    updatedAt: isoAt(2026, 3, 1, 9, 0),
     aiEnabled: true,
   },
   {
-    name: "Athletic Club Bilbao",
-    createdAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    aiEnabled: true,
-  },
-  {
-    name: "FC Barcelona",
-    createdAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    aiEnabled: true,
-  },
-  {
-    name: "Real Madrid CF",
-    createdAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    aiEnabled: true,
-  },
-  {
-    name: "Federación de Voleibol",
-    createdAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(),
+    name: "Club Natación Triana",
+    createdAt: isoAt(2024, 11, 20, 9, 0),
+    updatedAt: isoAt(2026, 2, 28, 9, 0),
     aiEnabled: false,
   },
   {
-    name: "Federación de Baloncesto",
-    createdAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    aiEnabled: false,
-  },
-  {
-    name: "Federación de Atletismo",
-    createdAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    aiEnabled: false,
-  },
-  {
-    name: "Federación de Natación",
-    createdAt: new Date(2026, 2, 24, 12, 25).toISOString(),
-    updatedAt: new Date(2026, 2, 24, 12, 25).toISOString(),
+    name: "Federación Española de Atletismo",
+    createdAt: isoAt(2023, 5, 10, 9, 0),
+    updatedAt: isoAt(2026, 1, 15, 9, 0),
     aiEnabled: false,
   },
 ].map((o, i) => ({ ...o, id: `org-${i + 1}`, status: "Active" as const }));
 
+// ───────── Secciones ─────────
+export const SECTIONS: SportSection[] = [
+  { id: "sec-atletismo", name: "Atletismo", athleteCount: 0, managerCount: 2, staffCount: 4 },
+  { id: "sec-futbol", name: "Fútbol", athleteCount: 0, managerCount: 2, staffCount: 5 },
+  { id: "sec-natacion", name: "Natación", athleteCount: 0, managerCount: 2, staffCount: 3 },
+  { id: "sec-baloncesto", name: "Baloncesto", athleteCount: 0, managerCount: 2, staffCount: 4 },
+  { id: "sec-gimnasia", name: "Gimnasia", athleteCount: 0, managerCount: 1, staffCount: 3 },
+];
+
+// ───────── Instalaciones ─────────
 export const FACILITIES: Facility[] = [
   {
-    id: "f-1",
-    name: "Instalación Deportiva Valencia",
-    location: "Valencia",
-    sportSections: ["sec-prueba", "sec-multi"],
-    status: "Active",
-    photoUrl: "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?w=800&q=70",
-    address: "Av. del Puerto 312, 46023 Valencia",
-    capacity: 1200,
-    sports: ["Atletismo", "Boxeo", "Esgrima"],
-    nextActivity: "Hoy 18:00 · Grupo A",
-  },
-  {
-    id: "f-2",
-    name: "Complejo Deportivo Barcelona",
-    location: "Barcelona",
-    sportSections: ["sec-shared", "sec-boxeo"],
-    status: "Active",
-    photoUrl: "https://images.unsplash.com/photo-1554290712-e640351074bd?w=800&q=70",
-    address: "C/ Marina 17, 08005 Barcelona",
-    capacity: 850,
-    sports: ["Natación", "Gimnasia"],
-    nextActivity: "Mañana 07:00 · Grupo B",
-  },
-  {
-    id: "f-3",
-    name: "Centro Olímpico Madrid",
-    location: "Madrid",
-    sportSections: ["sec-atletismo", "sec-natacion"],
+    id: "f-pista",
+    name: "Pista de Atletismo",
+    location: "Madrid · Sede principal",
+    sportSections: ["sec-atletismo"],
     status: "Active",
     photoUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=70",
-    address: "Av. de Arcentales 28, 28022 Madrid",
-    capacity: 2400,
-    sports: ["Atletismo", "Natación", "Esgrima"],
-    nextActivity: "Hoy 09:00 · AAA",
+    address: "Av. del Deporte 24, 28042 Madrid",
+    capacity: 1200,
+    sports: ["Atletismo"],
+    nextActivity: "Hoy 17:30 · Tecnificación Infantil",
   },
   {
-    id: "f-4",
-    name: "Piscina Principal",
-    location: "Valencia",
+    id: "f-campo",
+    name: "Campo de Fútbol Anexo",
+    location: "Madrid · Sede principal",
+    sportSections: ["sec-futbol"],
+    status: "Active",
+    photoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=70",
+    address: "Av. del Deporte 24, 28042 Madrid",
+    capacity: 800,
+    sports: ["Fútbol"],
+    nextActivity: "Sábado 11:00 · Partido Juvenil",
+  },
+  {
+    id: "f-piscina",
+    name: "Piscina Cubierta",
+    location: "Madrid · Sede principal",
     sportSections: ["sec-natacion"],
     status: "Active",
     photoUrl: "https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&q=70",
-    address: "C/ Pintor Maella 36, 46023 Valencia",
-    capacity: 320,
+    address: "Av. del Deporte 24, 28042 Madrid",
+    capacity: 200,
     sports: ["Natación"],
-    nextActivity: "Hoy 11:00 · Senior",
+    nextActivity: "Hoy 18:00 · Grupo Competición",
   },
   {
-    id: "f-5",
-    name: "Sala Fitness",
-    location: "Barcelona",
-    sportSections: ["sec-prueba"],
+    id: "f-pabellon",
+    name: "Pabellón Polideportivo",
+    location: "Madrid · Sede principal",
+    sportSections: ["sec-baloncesto", "sec-gimnasia"],
     status: "Active",
-    photoUrl: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=70",
-    address: "Pg. de Gràcia 88, 08008 Barcelona",
-    capacity: 80,
-    sports: ["Acondicionamiento físico"],
-    nextActivity: "Hoy 19:30 · Open",
+    photoUrl: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=70",
+    address: "Av. del Deporte 24, 28042 Madrid",
+    capacity: 600,
+    sports: ["Baloncesto", "Gimnasia"],
+    nextActivity: "Mañana 10:00 · Escuela Benjamín",
   },
 ];
 
-export const SECTIONS: SportSection[] = [
-  { id: "sec-prueba", name: "Deporte prueba", athleteCount: 6, managerCount: 3, staffCount: 2 },
-  {
-    id: "sec-shared",
-    name: "Test Section - Shared Staff",
-    athleteCount: 3,
-    managerCount: 7,
-    staffCount: 9,
-  },
-  {
-    id: "sec-multi",
-    name: "Test Section - Multi Role",
-    athleteCount: 5,
-    managerCount: 6,
-    staffCount: 8,
-  },
-  { id: "sec-boxeo", name: "Boxeo (Test)", athleteCount: 8, managerCount: 9, staffCount: 8 },
-  { id: "sec-esgrima", name: "Esgrima", athleteCount: 0, managerCount: 8, staffCount: 8 },
-  { id: "sec-gimnasia", name: "Gimnasia", athleteCount: 0, managerCount: 9, staffCount: 8 },
-  { id: "sec-natacion", name: "Natación", athleteCount: 0, managerCount: 9, staffCount: 9 },
-  { id: "sec-atletismo", name: "Atletismo", athleteCount: 0, managerCount: 11, staffCount: 9 },
-];
+// ───────── Categorías ─────────
+// Helper para construir categorías por sección.
+const CAT_NAMES = ["Benjamín", "Alevín", "Infantil", "Cadete", "Juvenil", "Absoluto"] as const;
 
-export const CATEGORIES: Category[] = [
-  { id: "cat-prueba-inf", name: "Infantil", sectionId: "sec-prueba" },
-  { id: "cat-shared", name: "Test Shared Staff", sectionId: "sec-shared" },
-  {
-    id: "cat-shared-inf",
-    name: "Deporte prueba Test Shared Staff Infantil",
-    sectionId: "sec-shared",
-  },
-  { id: "cat-multi", name: "Test Multi-Role", sectionId: "sec-multi" },
-  { id: "cat-boxeo", name: "Deporte prueba 70lbs (Test) Infantil", sectionId: "sec-boxeo" },
-  { id: "cat-esgrima", name: "Senior", sectionId: "sec-esgrima" },
-  { id: "cat-gimnasia", name: "Senior", sectionId: "sec-gimnasia" },
-  { id: "cat-natacion", name: "Senior", sectionId: "sec-natacion" },
-  { id: "cat-atletismo", name: "Senior", sectionId: "sec-atletismo" },
-];
+type CatKey = (typeof CAT_NAMES)[number];
+const catId = (sec: string, cat: CatKey) =>
+  `cat-${sec.replace("sec-", "")}-${cat
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")}`;
 
-export const GROUPS: Group[] = [
-  { id: "g-prueba-1", name: "Grupo 1", sectionId: "sec-prueba", categoryId: "cat-prueba-inf" },
-  {
-    id: "g-prueba-A",
-    name: "Grupo A - Titular",
-    sectionId: "sec-prueba",
-    categoryId: "cat-prueba-inf",
-  },
-  {
-    id: "g-prueba-B",
-    name: "Grupo B - Reserva",
-    sectionId: "sec-prueba",
-    categoryId: "cat-prueba-inf",
-  },
-  { id: "g-prueba-aaa", name: "AAA", sectionId: "sec-prueba", categoryId: "cat-prueba-inf" },
-  { id: "g-shared-A", name: "Grupo A", sectionId: "sec-shared", categoryId: "cat-shared" },
-  { id: "g-shared-B", name: "Grupo B", sectionId: "sec-shared", categoryId: "cat-shared" },
-  { id: "g-multi-A", name: "Grupo A", sectionId: "sec-multi", categoryId: "cat-multi" },
-  { id: "g-multi-At", name: "Grupo A - Titular", sectionId: "sec-multi", categoryId: "cat-multi" },
-  { id: "g-multi-Br", name: "Grupo B - Reserva", sectionId: "sec-multi", categoryId: "cat-multi" },
-  { id: "g-boxeo-1", name: "Grupo 1", sectionId: "sec-boxeo", categoryId: "cat-boxeo" },
-  { id: "g-boxeo-At", name: "Grupo A - Titular", sectionId: "sec-boxeo", categoryId: "cat-boxeo" },
-  { id: "g-boxeo-Br", name: "Grupo B - Reserva", sectionId: "sec-boxeo", categoryId: "cat-boxeo" },
-  { id: "g-boxeo-senior", name: "Grupo Senior", sectionId: "sec-boxeo", categoryId: "cat-boxeo" },
-];
+const SECTION_CATEGORIES: Record<string, CatKey[]> = {
+  "sec-atletismo": ["Benjamín", "Alevín", "Infantil", "Absoluto"],
+  "sec-futbol": ["Alevín", "Infantil", "Cadete", "Juvenil"],
+  "sec-natacion": ["Benjamín", "Alevín", "Infantil", "Absoluto"],
+  "sec-baloncesto": ["Infantil", "Cadete", "Juvenil"],
+  "sec-gimnasia": ["Benjamín", "Alevín", "Infantil"],
+};
 
+export const CATEGORIES: Category[] = Object.entries(SECTION_CATEGORIES).flatMap(([sec, cats]) =>
+  cats.map((c) => ({ id: catId(sec, c), name: c, sectionId: sec })),
+);
+
+// ───────── Grupos ─────────
+// Cada categoría tiene 1-2 grupos: Escuela (Benjamín), Grupo A/B (alevín/infantil),
+// Tecnificación (infantil), Competición (cadete/juvenil/absoluto).
+const GROUP_TEMPLATE: Record<CatKey, string[]> = {
+  Benjamín: ["Escuela"],
+  Alevín: ["Grupo A"],
+  Infantil: ["Grupo A", "Tecnificación"],
+  Cadete: ["Competición"],
+  Juvenil: ["Competición"],
+  Absoluto: ["Competición"],
+};
+
+const groupId = (sec: string, cat: CatKey, group: string) =>
+  `grp-${sec.replace("sec-", "")}-${cat
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")}-${group
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "")}`;
+
+export const GROUPS: Group[] = Object.entries(SECTION_CATEGORIES).flatMap(([sec, cats]) =>
+  cats.flatMap((cat) =>
+    GROUP_TEMPLATE[cat].map((g) => ({
+      id: groupId(sec, cat, g),
+      name: g,
+      sectionId: sec,
+      categoryId: catId(sec, cat),
+    })),
+  ),
+);
+
+// ───────── Deportistas ─────────
 type AthleteSeed = {
   firstName: string;
   lastName: string;
@@ -287,549 +246,514 @@ type AthleteSeed = {
   performanceStatus: Athlete["performanceStatus"];
 };
 
+const A = (
+  firstName: string,
+  lastName: string,
+  sec: string,
+  cat: CatKey,
+  groups: string[],
+  medical: Athlete["medicalStatus"] = "Fit",
+  perf: Athlete["performanceStatus"] = "Medium",
+): AthleteSeed => ({
+  firstName,
+  lastName,
+  sectionId: sec,
+  categoryId: catId(sec, cat),
+  groupIds: groups.map((g) => groupId(sec, cat, g)),
+  medicalStatus: medical,
+  performanceStatus: perf,
+});
+
 const ATHLETE_SEEDS: AthleteSeed[] = [
-  {
-    firstName: "raul4",
-    lastName: "GARC",
-    sectionId: "sec-prueba",
-    categoryId: "cat-prueba-inf",
-    groupIds: ["g-prueba-1"],
-    medicalStatus: "Unknown",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Athlete2",
-    lastName: "MULTIROLTEST",
-    sectionId: "sec-multi",
-    categoryId: "cat-multi",
-    groupIds: ["g-multi-A"],
-    medicalStatus: "Unknown",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Athlete1",
-    lastName: "MULTIROLTEST",
-    sectionId: "sec-multi",
-    categoryId: "cat-multi",
-    groupIds: ["g-multi-A"],
-    medicalStatus: "Unknown",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Héctor",
-    lastName: "Cabello",
-    sectionId: "sec-shared",
-    categoryId: "cat-shared-inf",
-    groupIds: ["g-prueba-A", "g-prueba-1"],
-    medicalStatus: "Fit",
-    performanceStatus: "High",
-  },
-  {
-    firstName: "Miguel",
-    lastName: "Ochoa",
-    sectionId: "sec-multi",
-    categoryId: "cat-multi",
-    groupIds: ["g-multi-Br"],
-    medicalStatus: "Fit",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Eric",
-    lastName: "Navarro",
-    sectionId: "sec-multi",
-    categoryId: "cat-multi",
-    groupIds: ["g-multi-At"],
-    medicalStatus: "Fit",
-    performanceStatus: "High",
-  },
-  {
-    firstName: "Jordi",
-    lastName: "Guardado",
-    sectionId: "sec-boxeo",
-    categoryId: "cat-boxeo",
-    groupIds: ["g-boxeo-Br", "g-boxeo-1"],
-    medicalStatus: "Fit",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Juan",
-    lastName: "Granados",
-    sectionId: "sec-boxeo",
-    categoryId: "cat-boxeo",
-    groupIds: ["g-boxeo-At", "g-boxeo-1"],
-    medicalStatus: "Fit",
-    performanceStatus: "High",
-  },
-  {
-    firstName: "Lorena",
-    lastName: "Tamayo",
-    sectionId: "sec-shared",
-    categoryId: "cat-shared",
-    groupIds: ["g-shared-B"],
-    medicalStatus: "Under review",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Erik",
-    lastName: "Llorente",
-    sectionId: "sec-shared",
-    categoryId: "cat-shared",
-    groupIds: ["g-shared-A"],
-    medicalStatus: "Fit",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "María Dolores",
-    lastName: "Garza",
-    sectionId: "sec-boxeo",
-    categoryId: "cat-boxeo",
-    groupIds: ["g-boxeo-senior", "g-boxeo-1"],
-    medicalStatus: "Unknown",
-    performanceStatus: "Low",
-  },
-  {
-    firstName: "Nadia",
-    lastName: "Abad",
-    sectionId: "sec-boxeo",
-    categoryId: "cat-boxeo",
-    groupIds: ["g-prueba-aaa", "g-boxeo-1"],
-    medicalStatus: "Unknown",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Marc",
-    lastName: "Vidal",
-    sectionId: "sec-prueba",
-    categoryId: "cat-prueba-inf",
-    groupIds: ["g-prueba-A"],
-    medicalStatus: "Injured",
-    performanceStatus: "Low",
-  },
-  {
-    firstName: "Sofía",
-    lastName: "Ramos",
-    sectionId: "sec-prueba",
-    categoryId: "cat-prueba-inf",
-    groupIds: ["g-prueba-B"],
-    medicalStatus: "Fit",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Iván",
-    lastName: "Castro",
-    sectionId: "sec-shared",
-    categoryId: "cat-shared",
-    groupIds: ["g-shared-A"],
-    medicalStatus: "Under review",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Elena",
-    lastName: "Romero",
-    sectionId: "sec-multi",
-    categoryId: "cat-multi",
-    groupIds: ["g-multi-A"],
-    medicalStatus: "Fit",
-    performanceStatus: "High",
-  },
-  {
-    firstName: "Hugo",
-    lastName: "Molina",
-    sectionId: "sec-boxeo",
-    categoryId: "cat-boxeo",
-    groupIds: ["g-boxeo-1"],
-    medicalStatus: "Fit",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Marta",
-    lastName: "Sánchez",
-    sectionId: "sec-prueba",
-    categoryId: "cat-prueba-inf",
-    groupIds: ["g-prueba-1"],
-    medicalStatus: "Fit",
-    performanceStatus: "Medium",
-  },
-  {
-    firstName: "Adrián",
-    lastName: "Pérez",
-    sectionId: "sec-multi",
-    categoryId: "cat-multi",
-    groupIds: ["g-multi-At"],
-    medicalStatus: "Injured",
-    performanceStatus: "Low",
-  },
-  {
-    firstName: "Laura",
-    lastName: "Torres",
-    sectionId: "sec-shared",
-    categoryId: "cat-shared",
-    groupIds: ["g-shared-B"],
-    medicalStatus: "Fit",
-    performanceStatus: "High",
-  },
-  {
-    firstName: "Iker",
-    lastName: "Gómez",
-    sectionId: "sec-boxeo",
-    categoryId: "cat-boxeo",
-    groupIds: ["g-boxeo-At"],
-    medicalStatus: "Fit",
-    performanceStatus: "High",
-  },
-  {
-    firstName: "Vega",
-    lastName: "Fernández",
-    sectionId: "sec-prueba",
-    categoryId: "cat-prueba-inf",
-    groupIds: ["g-prueba-aaa"],
-    medicalStatus: "Unknown",
-    performanceStatus: "Medium",
-  },
+  // Atletismo
+  A("Lucía", "Martín García", "sec-atletismo", "Benjamín", ["Escuela"], "Fit", "Medium"),
+  A("Hugo", "Sánchez López", "sec-atletismo", "Benjamín", ["Escuela"], "Fit", "Medium"),
+  A("Martina", "Rodríguez Ruiz", "sec-atletismo", "Alevín", ["Grupo A"], "Fit", "Medium"),
+  A("Pablo", "Gómez Fernández", "sec-atletismo", "Alevín", ["Grupo A"], "Under review", "Medium"),
+  A("Carla", "Jiménez Moreno", "sec-atletismo", "Infantil", ["Tecnificación"], "Fit", "High"),
+  A("Diego", "Hernández Castro", "sec-atletismo", "Infantil", ["Grupo A"], "Fit", "Medium"),
+  A("Andrea", "Romero Díaz", "sec-atletismo", "Absoluto", ["Competición"], "Fit", "High"),
+  A("Javier", "Iglesias Vega", "sec-atletismo", "Absoluto", ["Competición"], "Injured", "Low"),
+
+  // Fútbol
+  A("Mateo", "Álvarez Soler", "sec-futbol", "Alevín", ["Grupo A"], "Fit", "Medium"),
+  A("Nicolás", "Torres Reyes", "sec-futbol", "Infantil", ["Grupo A"], "Fit", "High"),
+  A("Adrián", "Navarro Gil", "sec-futbol", "Infantil", ["Grupo B"], "Fit", "Medium"),
+  A("Marcos", "Vázquez Pardo", "sec-futbol", "Infantil", ["Grupo B"], "Under review", "Medium"),
+  A("Iván", "Molina Cano", "sec-futbol", "Cadete", ["Competición"], "Fit", "High"),
+  A("Álex", "Ortega Bravo", "sec-futbol", "Cadete", ["Competición"], "Injured", "Medium"),
+  A("Daniel", "Serrano Marín", "sec-futbol", "Juvenil", ["Competición"], "Fit", "High"),
+  A("Pol", "Cortés Lara", "sec-futbol", "Juvenil", ["Competición"], "Fit", "Medium"),
+
+  // Natación
+  A("Emma", "Domínguez Crespo", "sec-natacion", "Benjamín", ["Escuela"], "Fit", "Medium"),
+  A("Leo", "Ramos Aguilar", "sec-natacion", "Benjamín", ["Escuela"], "Fit", "Medium"),
+  A("Valeria", "Prieto Núñez", "sec-natacion", "Alevín", ["Grupo A"], "Fit", "High"),
+  A("Sergio", "Calvo Herrero", "sec-natacion", "Infantil", ["Tecnificación"], "Fit", "High"),
+  A("Noa", "Méndez Salas", "sec-natacion", "Infantil", ["Grupo A"], "Under review", "Medium"),
+  A("Marta", "Blanco Ibáñez", "sec-natacion", "Absoluto", ["Competición"], "Fit", "High"),
+  A("Raúl", "Aguirre Pascual", "sec-natacion", "Absoluto", ["Competición"], "Fit", "Medium"),
+
+  // Baloncesto
+  A("Daniela", "Ferrer Bosch", "sec-baloncesto", "Infantil", ["Grupo A"], "Fit", "Medium"),
+  A("Bruno", "Riera Massana", "sec-baloncesto", "Infantil", ["Grupo A"], "Fit", "High"),
+  A("Sara", "Vidal Esteve", "sec-baloncesto", "Cadete", ["Competición"], "Fit", "High"),
+  A("Óscar", "Pons Bauzá", "sec-baloncesto", "Cadete", ["Competición"], "Injured", "Low"),
+  A("Aitana", "Carmona Salvador", "sec-baloncesto", "Juvenil", ["Competición"], "Fit", "Medium"),
+  A("Guillermo", "Reyes Cabrera", "sec-baloncesto", "Juvenil", ["Competición"], "Fit", "High"),
+
+  // Gimnasia
+  A("Julia", "Pastor León", "sec-gimnasia", "Benjamín", ["Escuela"], "Fit", "Medium"),
+  A("Olivia", "Ferrer Tovar", "sec-gimnasia", "Alevín", ["Grupo A"], "Fit", "Medium"),
+  A("Inés", "Cordero Plaza", "sec-gimnasia", "Infantil", ["Tecnificación"], "Fit", "High"),
+  A("Vega", "Salgado Lorenzo", "sec-gimnasia", "Infantil", ["Grupo A"], "Under review", "Medium"),
 ];
 
 export const ATHLETES: Athlete[] = ATHLETE_SEEDS.map((a, i) => ({
   id: `ath-${i + 1}`,
   ...a,
-  status: i % 11 === 0 ? "Pending" : i === 7 ? "Inactive" : "Active",
+  status: i % 13 === 0 ? "Pending" : i % 17 === 0 ? "Inactive" : "Active",
 }));
 
-// Recompute athleteCount from real data
+// Recalcular conteo de deportistas por sección.
 SECTIONS.forEach((s) => {
-  s.athleteCount = ATHLETES.filter((a) => a.sectionId === s.id).length || s.athleteCount;
+  s.athleteCount = ATHLETES.filter((a) => a.sectionId === s.id).length;
 });
 
-// Generate dense calendar events for current month: per weekday a few events
+// ───────── Calendario ─────────
+// 2-4 eventos por día de semana, 0-2 fin de semana. Mezcla entrenamientos, partidos,
+// citas médicas y reuniones. Cubre el mes actual completo.
 export const EVENTS: CalendarEvent[] = (() => {
   const evs: CalendarEvent[] = [];
-  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
   let id = 1;
-  const groupCycle = [
-    { gid: "g-prueba-aaa", title: "AAA", role: "" },
-    { gid: "g-prueba-B", title: "Grupo B", role: "" },
-    { gid: "g-prueba-A", title: "Grupo A - Titular", role: "Titular" },
-    { gid: "g-multi-At", title: "Grupo A - Titular", role: "Titular" },
-    { gid: "g-multi-Br", title: "Grupo B - Reserva", role: "Reserva" },
-    { gid: "g-boxeo-At", title: "Grupo A - Titular", role: "Titular" },
-    { gid: "g-shared-A", title: "Grupo A", role: "" },
-  ];
+
+  // Plantilla de sesiones por día de semana.
+  // Lunes/Miércoles/Viernes: atletismo + natación + gimnasia
+  // Martes/Jueves: fútbol + baloncesto
+  // Sábado: partidos
+  // Domingo: descanso (1 evento opcional)
+  const trainings: Record<number, Array<{ time: string; gid: string; title: string }>> = {
+    1: [
+      // Lunes
+      {
+        time: "17:00",
+        gid: groupId("sec-atletismo", "Benjamín", "Escuela"),
+        title: "Atletismo · Escuela Benjamín",
+      },
+      {
+        time: "18:00",
+        gid: groupId("sec-natacion", "Infantil", "Tecnificación"),
+        title: "Natación · Tecnificación Infantil",
+      },
+      {
+        time: "19:00",
+        gid: groupId("sec-gimnasia", "Infantil", "Tecnificación"),
+        title: "Gimnasia · Tecnificación Infantil",
+      },
+    ],
+    2: [
+      // Martes
+      {
+        time: "17:30",
+        gid: groupId("sec-futbol", "Alevín", "Grupo A"),
+        title: "Fútbol · Alevín Grupo A",
+      },
+      {
+        time: "18:30",
+        gid: groupId("sec-baloncesto", "Cadete", "Competición"),
+        title: "Baloncesto · Cadete Competición",
+      },
+      {
+        time: "20:00",
+        gid: groupId("sec-futbol", "Juvenil", "Competición"),
+        title: "Fútbol · Juvenil Competición",
+      },
+    ],
+    3: [
+      // Miércoles
+      {
+        time: "17:00",
+        gid: groupId("sec-atletismo", "Alevín", "Grupo A"),
+        title: "Atletismo · Alevín Grupo A",
+      },
+      {
+        time: "18:00",
+        gid: groupId("sec-natacion", "Absoluto", "Competición"),
+        title: "Natación · Absoluto Competición",
+      },
+      {
+        time: "19:30",
+        gid: groupId("sec-gimnasia", "Alevín", "Grupo A"),
+        title: "Gimnasia · Alevín Grupo A",
+      },
+    ],
+    4: [
+      // Jueves
+      {
+        time: "17:30",
+        gid: groupId("sec-futbol", "Infantil", "Grupo A"),
+        title: "Fútbol · Infantil Grupo A",
+      },
+      {
+        time: "18:30",
+        gid: groupId("sec-baloncesto", "Infantil", "Grupo A"),
+        title: "Baloncesto · Infantil Grupo A",
+      },
+      {
+        time: "20:00",
+        gid: groupId("sec-baloncesto", "Juvenil", "Competición"),
+        title: "Baloncesto · Juvenil Competición",
+      },
+    ],
+    5: [
+      // Viernes
+      {
+        time: "17:00",
+        gid: groupId("sec-atletismo", "Infantil", "Tecnificación"),
+        title: "Atletismo · Tecnificación Infantil",
+      },
+      {
+        time: "18:00",
+        gid: groupId("sec-natacion", "Benjamín", "Escuela"),
+        title: "Natación · Escuela Benjamín",
+      },
+      {
+        time: "19:30",
+        gid: groupId("sec-atletismo", "Absoluto", "Competición"),
+        title: "Atletismo · Absoluto Competición",
+      },
+    ],
+    6: [
+      // Sábado · partidos
+      {
+        time: "11:00",
+        gid: groupId("sec-futbol", "Juvenil", "Competición"),
+        title: "Partido · Fútbol Juvenil",
+      },
+      {
+        time: "12:30",
+        gid: groupId("sec-baloncesto", "Cadete", "Competición"),
+        title: "Partido · Baloncesto Cadete",
+      },
+    ],
+    0: [], // Domingo descanso
+  };
+
   for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(today.getFullYear(), today.getMonth(), day);
-    const dow = date.getDay(); // 0 sun
-    // weekend lighter
-    const count = dow === 0 || dow === 6 ? 2 : 8 + (day % 5) * 3; // up to ~20
-    for (let i = 0; i < count; i++) {
-      const hour = 6 + (i % 12);
-      const g = groupCycle[i % groupCycle.length];
-      const grp = GROUPS.find((x) => x.id === g.gid)!;
+    const date = new Date(year, month, day);
+    const dow = date.getDay();
+    const items = trainings[dow] ?? [];
+
+    items.forEach((item) => {
+      const grp = GROUPS.find((g) => g.id === item.gid);
+      if (!grp) return;
+      const isMatch = item.title.startsWith("Partido");
       evs.push({
         id: `ev-${id++}`,
         date: iso(date),
-        startTime: `${String(hour).padStart(2, "0")}:00`,
-        title: g.title,
+        startTime: item.time,
+        title: item.title,
         sectionId: grp.sectionId,
         categoryId: grp.categoryId,
         groupId: grp.id,
-        roleInGroup: g.role || undefined,
-        type: "training",
+        type: isMatch ? "match" : "training",
+      });
+    });
+
+    // Reunión técnica un lunes al mes
+    if (dow === 1 && day <= 7) {
+      evs.push({
+        id: `ev-${id++}`,
+        date: iso(date),
+        startTime: "20:30",
+        title: "Reunión de coordinación técnica",
+        type: "meeting",
       });
     }
   }
+
+  // Algunas citas médicas dispersas
+  const medDays = [5, 12, 19, 26].filter((d) => d <= daysInMonth);
+  medDays.forEach((d) => {
+    const date = new Date(year, month, d);
+    const ath = ATHLETES[d % ATHLETES.length];
+    evs.push({
+      id: `ev-${id++}`,
+      date: iso(date),
+      startTime: "10:00",
+      title: `Revisión médica · ${ath.firstName} ${ath.lastName}`,
+      sectionId: ath.sectionId,
+      athleteId: ath.id,
+      staffId: "u-med",
+      type: "medical",
+    });
+  });
+
   return evs;
 })();
 
+// ───────── Cuotas y tasas ─────────
 export const FEES: Fee[] = [
   {
-    id: "fee-1",
-    name: "huhuhuhuhu",
-    amount: 234,
-    frequency: "Daily" as Fee["frequency"],
-    appliesToGroupIds: ["g-prueba-1"],
-    sectionId: "sec-prueba",
-    kind: "fee",
-  },
-  {
-    id: "fee-2",
-    name: "nueva cuota",
-    amount: 234,
+    id: "fee-mensual",
+    name: "Cuota mensual",
+    amount: 45,
     frequency: "Monthly",
-    periodStart: "2026-04-24",
-    periodEnd: "2026-04-24",
-    appliesToGroupIds: ["g-prueba-1"],
-    sectionId: "sec-prueba",
+    appliesToGroupIds: GROUPS.map((g) => g.id),
+    sectionId: "sec-atletismo",
     kind: "fee",
   },
   {
-    id: "fee-3",
-    name: "para Granados",
-    amount: 1,
-    frequency: "Monthly",
-    appliesToGroupIds: ["g-prueba-1"],
-    sectionId: "sec-prueba",
+    id: "fee-licencia",
+    name: "Licencia federativa",
+    amount: 65,
+    frequency: "Annual",
+    periodStart: `${today.getFullYear()}-09-01`,
+    periodEnd: `${today.getFullYear() + 1}-06-30`,
+    appliesToGroupIds: GROUPS.filter((g) => g.name === "Competición").map((g) => g.id),
+    sectionId: "sec-atletismo",
     kind: "fee",
   },
   {
-    id: "fee-4",
-    name: "cuota 2",
-    amount: 190,
-    frequency: "Monthly",
-    appliesToGroupIds: [],
-    sectionId: "sec-prueba",
-    kind: "fee",
-  },
-  {
-    id: "fee-5",
-    name: "Grupo 1",
-    amount: 120,
-    frequency: "Daily" as Fee["frequency"],
-    appliesToGroupIds: ["g-prueba-1"],
-    sectionId: "sec-prueba",
-    kind: "fee",
-  },
-  {
-    id: "rate-1",
-    name: "uuuu",
-    amount: 345,
+    id: "fee-equipacion",
+    name: "Equipación oficial",
+    amount: 75,
     frequency: "One-time",
-    paymentDate: "2026-04-24",
-    appliesToGroupIds: ["g-prueba-1"],
-    sectionId: "sec-prueba",
+    paymentDate: `${today.getFullYear()}-09-15`,
+    appliesToGroupIds: GROUPS.map((g) => g.id),
+    sectionId: "sec-futbol",
+    kind: "fee",
+  },
+  {
+    id: "fee-campus",
+    name: "Campus de verano",
+    amount: 220,
+    frequency: "One-time",
+    paymentDate: `${today.getFullYear()}-07-01`,
+    appliesToGroupIds: GROUPS.filter((g) => g.name === "Escuela" || g.name === "Grupo A").map(
+      (g) => g.id,
+    ),
+    sectionId: "sec-natacion",
+    kind: "fee",
+  },
+  {
+    id: "rate-inscripcion",
+    name: "Inscripción competición",
+    amount: 25,
+    frequency: "One-time",
+    paymentDate: iso(new Date(today.getFullYear(), today.getMonth(), 15)),
+    appliesToGroupIds: GROUPS.filter((g) => g.name === "Competición").map((g) => g.id),
+    sectionId: "sec-atletismo",
     kind: "rate",
   },
   {
-    id: "rate-2",
-    name: "Granados",
-    amount: 10,
-    frequency: "One-time",
-    paymentDate: "2026-04-23",
-    appliesToGroupIds: ["g-prueba-1"],
-    sectionId: "sec-prueba",
-    kind: "rate",
-  },
-  {
-    id: "rate-3",
-    name: "tasa 2",
-    amount: 148,
-    frequency: "One-time",
-    paymentDate: "2026-04-23",
-    appliesToGroupIds: [],
-    sectionId: "sec-prueba",
-    kind: "rate",
-  },
-  {
-    id: "rate-4",
-    name: "Tasa 1",
-    amount: 110,
-    frequency: "One-time",
-    appliesToGroupIds: ["g-prueba-1"],
-    sectionId: "sec-prueba",
+    id: "rate-matricula",
+    name: "Matrícula anual",
+    amount: 50,
+    frequency: "Annual",
+    periodStart: `${today.getFullYear()}-09-01`,
+    periodEnd: `${today.getFullYear() + 1}-06-30`,
+    appliesToGroupIds: GROUPS.map((g) => g.id),
+    sectionId: "sec-atletismo",
     kind: "rate",
   },
 ];
 
-// 113 payments alternating between Juan GRANADOS (3 entries/day) and raul4 GARC (1 entry/day), 28 days
+// ───────── Pagos ─────────
+// Un registro por deportista activo, distribuido en los últimos 30 días.
 export const PAYMENTS: Payment[] = (() => {
   const result: Payment[] = [];
-  const granados = ATHLETES.find((a) => a.firstName === "Juan" && a.lastName === "Granados")!;
-  const raul = ATHLETES.find((a) => a.firstName === "raul4")!;
-  const month = today.getMonth();
-  const year = today.getFullYear();
+  const statuses: Payment["status"][] = ["Paid", "Paid", "Paid", "Active", "Pending", "Failed"];
   let id = 1;
-  for (let day = 7; day >= 1 && result.length < 113; day--) {
-    const date = iso(new Date(year, month, day));
-    const isToday = day === 7;
-    // raul Fallida 0€
+  ATHLETES.forEach((a, i) => {
+    // Cuota mensual
+    const dayOffset = (i * 3) % 28;
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - dayOffset);
     result.push({
       id: `pay-${id++}`,
-      athleteId: raul.id,
-      subscription: "Grupo 1",
-      sectionId: "sec-prueba",
-      categoryId: "cat-prueba-inf",
-      amount: 0,
-      status: "Failed",
-      date,
+      athleteId: a.id,
+      subscription: "Cuota mensual",
+      sectionId: a.sectionId,
+      categoryId: a.categoryId,
+      amount: 45,
+      status: statuses[i % statuses.length],
+      date: iso(date),
     });
-    // granados huhuhuhuhu 234
-    result.push({
-      id: `pay-${id++}`,
-      athleteId: granados.id,
-      subscription: "huhuhuhuhu",
-      sectionId: "sec-prueba",
-      categoryId: "cat-prueba-inf",
-      amount: 234,
-      status: isToday ? "Paid" : "Active",
-      date,
-    });
-    // granados Grupo 1 120
-    result.push({
-      id: `pay-${id++}`,
-      athleteId: granados.id,
-      subscription: "Grupo 1",
-      sectionId: "sec-prueba",
-      categoryId: "cat-prueba-inf",
-      amount: 120,
-      status: isToday ? "Paid" : "Active",
-      date,
-    });
-  }
-  // Fill remainder up to 113 with older entries
-  let extraDay = 8;
-  while (result.length < 113) {
-    const date = iso(new Date(year, month - (extraDay > 28 ? 1 : 0), ((extraDay - 1) % 28) + 1));
-    result.push({
-      id: `pay-${id++}`,
-      athleteId: granados.id,
-      subscription: "huhuhuhuhu",
-      sectionId: "sec-prueba",
-      categoryId: "cat-prueba-inf",
-      amount: 234,
-      status: ["Active", "Pending", "Failed"][result.length % 3] as Payment["status"],
-      date,
-    });
-    extraDay++;
-  }
+    // Licencia para deportistas de competición
+    if (a.groupIds.some((g) => g.includes("competicion"))) {
+      result.push({
+        id: `pay-${id++}`,
+        athleteId: a.id,
+        subscription: "Licencia federativa",
+        sectionId: a.sectionId,
+        categoryId: a.categoryId,
+        amount: 65,
+        status: i % 5 === 0 ? "Pending" : "Paid",
+        date: iso(new Date(today.getFullYear(), today.getMonth() - 1, 5)),
+      });
+    }
+  });
   return result;
 })();
 
+// ───────── Conversaciones ─────────
 const carlos = "u-adm";
 const carla = "u-mgr";
 const pol = "u-tec";
-const nadia = "u-ath-nadia";
+const polMed = "u-med";
 
 export const CONVERSATIONS: Conversation[] = [
-  // Whole-club circular (45 participants)
   {
-    id: "conv-circ-1",
+    id: "conv-circ-bienvenida",
     title: "Circulares",
     type: "circular",
-    participants: Array.from({ length: 45 }, (_, i) => `p-${i}`),
+    participants: Array.from({ length: 32 }, (_, i) => `p-${i}`),
     unreadCount: 0,
     messages: [
       {
         id: "m-1",
         authorId: carlos,
         authorRole: "admin",
-        targetLabel: "Todo el club (3 destinatarios)",
+        targetLabel: "Todo el club (32 destinatarios)",
         content:
-          "Bienvenida a la temporada — Les damos la bienvenida a la nueva temporada. Encontraréis en el tablón de anuncios toda la información relevante.",
-        createdAt: new Date(2026, 4, 7, 12, 34).toISOString(),
+          "Bienvenida a la nueva temporada 2025/26. Encontraréis el calendario y las cuotas actualizadas en el portal del socio.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), 1, 9, 0),
       },
       {
         id: "m-2",
-        authorId: carlos,
-        authorRole: "admin",
-        targetLabel: "Sección Atletismo (2 destinatarios)",
+        authorId: carla,
+        authorRole: "manager",
+        targetLabel: "Sección Atletismo (12 destinatarios)",
         content:
-          "Reunión de padres - Sección Atletismo: el próximo viernes 20 a las 18:00 en el salón de actos del club.",
-        createdAt: new Date(2026, 4, 7, 12, 34).toISOString(),
+          "Reunión de familias del grupo de Tecnificación el próximo viernes a las 18:30 en la sala de juntas.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), 3, 11, 30),
       },
       {
         id: "m-3",
-        authorId: pol,
-        authorRole: "technical",
-        targetLabel: "Sección Atletismo (2 destinatarios)",
-        content:
-          "Convocatoria especial de entrenamiento — recordamos a todos que mañana hay entrenamiento especial a las 09:00. Confirmar asistencia.",
-        createdAt: new Date(2026, 4, 7, 12, 34).toISOString(),
-      },
-      {
-        id: "m-4",
-        authorId: carla,
-        authorRole: "manager",
-        targetLabel: "Sección Deporte prueba > Infantil > Grupo Grupo 1 (11 destinatarios)",
-        content: "Recordatorio: control de asistencia esta semana.",
-        createdAt: new Date(2026, 4, 7, 11, 49).toISOString(),
-      },
-    ],
-  },
-  // Solo participante
-  {
-    id: "conv-circ-solo",
-    title: "Circulares",
-    type: "circular",
-    participants: [carlos],
-    unreadCount: 0,
-    messages: [
-      {
-        id: "m-solo-1",
         authorId: carlos,
         authorRole: "admin",
-        targetLabel: "Todo el club (1 recipients)",
-        content: "Mensaje interno de prueba.",
-        createdAt: new Date(2026, 4, 7, 9, 29).toISOString(),
+        targetLabel: "Familias en competición (18 destinatarios)",
+        content:
+          "Recordamos que el plazo para abonar la licencia federativa finaliza el día 30 de este mes.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), 5, 10, 0),
       },
     ],
   },
-  // Group 1 Infantil chat
   {
-    id: "conv-g1",
-    title: "Grupo 1 Infantil",
+    id: "conv-tec-infantil",
+    title: "Atletismo · Tecnificación Infantil",
     type: "group",
-    participants: Array.from({ length: 10 }, (_, i) => `g-p-${i}`),
-    unreadCount: 0,
+    participants: ["u-tec", "p-fam-1", "p-fam-2", "p-fam-3", "p-fam-4"],
+    unreadCount: 2,
     messages: [
       {
         id: "g-m1",
         authorId: pol,
         authorRole: "technical",
-        targetLabel: "Sección Deporte prueba > Infantil > Grupo Grupo 1 (10 destinatarios)",
-        content: "Buenos días equipo, recordatorio del entrenamiento de mañana.",
-        createdAt: new Date(2026, 4, 6, 21, 53).toISOString(),
+        targetLabel: "Tecnificación Infantil (5 destinatarios)",
+        content: "Mañana entrenamos en la pista 2. Llegada 15 minutos antes para calentamiento.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 1, 19, 0),
       },
       {
         id: "g-m2",
         authorId: pol,
         authorRole: "technical",
-        targetLabel: "Sección Deporte prueba > Infantil > Grupo Grupo 1 (10 destinatarios)",
-        content: "Llevad equipación completa.",
-        createdAt: new Date(2026, 4, 7, 9, 28).toISOString(),
+        targetLabel: "Tecnificación Infantil (5 destinatarios)",
+        content: "Recordatorio: lleváis bidón y muda de recambio.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate(), 8, 30),
+      },
+    ],
+  },
+  {
+    id: "conv-medico-1",
+    title: "Solicitud de cita médica · Álex Ortega",
+    type: "direct",
+    participants: ["u-tec", "u-med", "p-fam-alex"],
+    unreadCount: 1,
+    messages: [
+      {
+        id: "med-1",
+        authorId: pol,
+        authorRole: "technical",
+        targetLabel: "Staff médico (1 destinatario)",
+        content: "Álex notó molestias en el aductor en el partido del sábado. ¿Hueco esta semana?",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 2, 17, 45),
       },
       {
-        id: "g-m3",
-        authorId: nadia,
-        authorRole: "technical",
-        targetLabel: "Sección Deporte prueba > Infantil > Grupo Grupo 1 (10 destinatarios)",
-        content: "Buenas, confirmo asistencia.",
-        createdAt: new Date(2026, 4, 7, 7, 56).toISOString(),
+        id: "med-2",
+        authorId: polMed,
+        authorRole: "medical",
+        targetLabel: "Cuerpo técnico (1 destinatario)",
+        content: "Le veo el miércoles a las 10:00. Que venga con la equipación de entrenamiento.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 1, 9, 15),
+      },
+    ],
+  },
+  {
+    id: "conv-direccion",
+    title: "Coordinación Dirección",
+    type: "direct",
+    participants: [carlos, carla],
+    unreadCount: 0,
+    messages: [
+      {
+        id: "d-1",
+        authorId: carla,
+        authorRole: "manager",
+        targetLabel: "Dirección",
+        content: "Revisamos cierre de cuotas del mes el viernes después de la reunión técnica.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 1, 16, 0),
       },
     ],
   },
 ];
 
-// Medical inbox: 21 medical-request convos
-const medicalConvos: Conversation[] = Array.from({ length: 21 }, (_, i) => ({
-  id: `conv-med-${i + 1}`,
-  title: "Solicitud de cita médica",
-  type: "direct",
-  participants: ["u-tec", "u-med", `parent-${i}`, `athlete-${i}`],
-  unreadCount: i === 0 ? 3 : 1,
-  messages: [
-    {
-      id: `med-m-${i}`,
-      authorId: pol,
-      authorRole: "technical",
-      targetLabel: "Staff médico (4 destinatarios)",
-      content: "Solicitamos cita para evaluación. Detalles en el grupo.",
-      createdAt: new Date(2026, 4, 7, 10, 38 - i).toISOString(),
-    },
-  ],
-}));
-
-CONVERSATIONS.push(...medicalConvos);
-
-const apptDate = new Date(today.getFullYear(), today.getMonth(), 19);
-
+// ───────── Citas médicas ─────────
 export const MEDICAL_APPOINTMENTS: MedicalAppointment[] = [
   {
     id: "apt-1",
-    athleteId: ATHLETES.find((a) => a.firstName === "Miguel" && a.lastName === "Ochoa")!.id,
+    athleteId: ATHLETES.find((a) => a.firstName === "Álex")!.id,
     staffId: "u-med",
-    date: iso(apptDate),
-    time: "09:00",
-    reason: "Revisión rutinaria",
+    date: iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2)),
+    time: "10:00",
+    reason: "Molestias en aductor derecho",
+    status: "Scheduled",
+    notes: "Revisión post-partido.",
+  },
+  {
+    id: "apt-2",
+    athleteId: ATHLETES.find((a) => a.firstName === "Javier")!.id,
+    staffId: "u-med",
+    date: iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5)),
+    time: "11:30",
+    reason: "Seguimiento lesión isquiotibiales",
+    status: "Scheduled",
+    notes: "",
+  },
+  {
+    id: "apt-3",
+    athleteId: ATHLETES.find((a) => a.firstName === "Óscar")!.id,
+    staffId: "u-med",
+    date: iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3)),
+    time: "09:30",
+    reason: "Revisión esguince tobillo",
+    status: "Completed",
+    notes: "Buena evolución. Reincorporación progresiva la próxima semana.",
+  },
+  {
+    id: "apt-4",
+    athleteId: ATHLETES.find((a) => a.firstName === "Noa")!.id,
+    staffId: "u-med",
+    date: iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7)),
+    time: "12:00",
+    reason: "Reconocimiento médico anual",
     status: "Scheduled",
     notes: "",
   },
 ];
 
 export const ALL_USERS: User[] = DEMO_USERS;
+
