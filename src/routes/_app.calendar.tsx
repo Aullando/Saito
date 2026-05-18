@@ -1056,7 +1056,10 @@ function CalendarPage() {
             const status = computeStatus(ev, detail.date);
             const cancelInfo = cancellations[ev.id];
             const isFuture = detail.date >= todayStr;
-            const canEditEvent = canEdit && isFuture && !a.cancelled;
+            // Permiso efectivo según tipo de evento
+            const canEditThis =
+              ev.type === "medical" ? canManageMedicalAppointments : canManageCalendarEvents;
+            const canEditEvent = canEditThis && isFuture && !a.cancelled;
             const blockers = [
               a.hasAttn && "asistencia registrada",
               a.hasNotes && "notas",
@@ -1064,8 +1067,8 @@ function CalendarPage() {
               a.hasComm && "comunicación enviada",
               a.hasParticipants && a.isPast && "participantes históricos",
             ].filter(Boolean) as string[];
-            const canDelete = canEdit && !a.cancelled && blockers.length === 0;
-            const shouldCancel = canEdit && !a.cancelled && !canDelete && isFuture;
+            const canDelete = canEditThis && !a.cancelled && blockers.length === 0;
+            const shouldCancel = canEditThis && !a.cancelled && !canDelete && isFuture;
             const group = lookupGroup(ev.group_id);
             const staff = lookupStaff(ev.staff_id ?? null);
             const facility = facilityFor(ev);
