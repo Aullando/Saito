@@ -222,6 +222,47 @@ function CalendarPage() {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const updateEvent = useMutation({
+    mutationFn: async (e: {
+      id: string;
+      title: string;
+      event_date: string;
+      start_time: string;
+      group_id: string | null;
+      section_id: string | null;
+      category_id: string | null;
+    }) => {
+      if (demoMode) {
+        demoUpdateEvent(e.id, {
+          title: e.title,
+          date: e.event_date,
+          startTime: e.start_time,
+          groupId: e.group_id ?? undefined,
+          sectionId: e.section_id ?? undefined,
+          categoryId: e.category_id ?? undefined,
+        });
+        return;
+      }
+      const { error } = await supabase
+        .from("calendar_events")
+        .update({
+          title: e.title,
+          event_date: e.event_date,
+          start_time: e.start_time,
+          group_id: e.group_id,
+          section_id: e.section_id,
+          category_id: e.category_id,
+        })
+        .eq("id", e.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success(t("save"));
+      qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
   const addException = useMutation({
     mutationFn: async ({ ev, date }: { ev: DBEvent; date: string }) => {
       const rec = ev.recurrence;
