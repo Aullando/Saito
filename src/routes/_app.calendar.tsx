@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppLayout } from "@/components/AppLayout";
@@ -52,6 +52,10 @@ import {
   CalendarDays,
   Clock,
   CircleSlash,
+  ClipboardCheck,
+  Send,
+  StickyNote,
+  Eye,
 } from "lucide-react";
 import { demoOrEmpty } from "@/lib/demoFallback";
 import type { CalendarEventType } from "@/lib/types";
@@ -87,19 +91,19 @@ interface Occurrence {
 
 const TYPE_OPTIONS: { value: CalendarEventType; label: string }[] = [
   { value: "training", label: "Entrenamiento" },
-  { value: "match", label: "Partido" },
+  { value: "match", label: "Competición" },
   { value: "medical", label: "Cita médica" },
   { value: "club", label: "Evento de club" },
-  { value: "payment", label: "Pago / Cuota" },
+  { value: "payment", label: "Vencimiento de pago" },
 ];
 
 const TYPE_LABEL: Record<string, string> = {
   training: "Entrenamiento",
-  match: "Partido",
+  match: "Competición",
   medical: "Cita médica",
   meeting: "Reunión",
   club: "Evento de club",
-  payment: "Pago / Cuota",
+  payment: "Vencimiento de pago",
 };
 
 const TYPE_STYLE: Record<string, string> = {
@@ -110,6 +114,24 @@ const TYPE_STYLE: Record<string, string> = {
   club: "bg-emerald-50 text-emerald-700 border-emerald-200",
   payment: "bg-sky-50 text-sky-700 border-sky-200",
 };
+
+// Which event types each role typically sees in their calendar
+const ROLE_TYPE_FILTER: Record<string, CalendarEventType[]> = {
+  manager: ["training", "match", "medical", "club", "payment"],
+  admin: ["club", "payment", "training", "match"],
+  medical: ["medical"],
+  technical: ["training", "match", "club"],
+  athlete: ["training", "match", "medical", "club"],
+};
+
+const ROLE_OPTIONS: { value: string; label: string }[] = [
+  { value: "all", label: "Todos los roles" },
+  { value: "manager", label: "Gestor / Dirección" },
+  { value: "admin", label: "Administración" },
+  { value: "medical", label: "Staff médico" },
+  { value: "technical", label: "Entrenador" },
+  { value: "athlete", label: "Atleta" },
+];
 
 function TypeBadge({ type }: { type: string }) {
   return (
@@ -150,7 +172,11 @@ function CalendarPage() {
     hasCommunication,
     cancelEvent,
     uncancelEvent,
+    setNote,
+    markAttendance,
+    markCommunication,
   } = useCalendarLocal();
+  const navigate = useNavigate();
 
   const eventsQ = useQuery({
     queryKey: ["calendar_events", orgId],
@@ -378,8 +404,13 @@ function CalendarPage() {
   const [catF, setCatF] = useState("all");
   const [grpF, setGrpF] = useState("all");
   const [typeF, setTypeF] = useState<string>("all");
+  const [roleF, setRoleF] = useState<string>("all");
+  const [view, setView] = useState<"month" | "day">("month");
+  const [dayCursor, setDayCursor] = useState(() => new Date());
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState<Occurrence | null>(null);
+  const [noteDraft, setNoteDraft] = useState("");
+  const [notesOpen, setNotesOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
   const [cancelNotify, setCancelNotify] = useState(true);
@@ -406,6 +437,10 @@ function CalendarPage() {
     groupId: string;
     staffId: string;
     location: string;
+    origDate: string;
+    origStartTime: string;
+    origLocation: string;
+    notifyParticipants: boolean;
   } | null>(null);
 
   const year = cursor.getFullYear();
@@ -419,6 +454,10 @@ function CalendarPage() {
     if (catF !== "all" && e.category_id !== catF) return false;
     if (grpF !== "all" && e.group_id !== grpF) return false;
     if (typeF !== "all" && e.type !== typeF) return false;
+    if (roleF !== "all") {
+      const allowed = ROLE_TYPE_FILTER[roleF] ?? [];
+      if (!allowed.includes(e.type as CalendarEventType)) return false;
+    }
     return true;
   };
 
@@ -784,6 +823,18 @@ function CalendarPage() {
             ))}
           </SelectContent>
         </Select>
+        <Select value={roleF} onValueChange={setRoleF}>
+          <SelectTrigger className="w-48 rounded-full">
+            <SelectValue placeholder="Todos los roles" />
+          </SelectTrigger>
+          <SelectContent>
+            {ROLE_OPTIONS.map((o) => (
+              <SelectItem key={o.value} value={o.value}>
+                {o.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button
           variant="ghost"
           size="sm"
@@ -792,12 +843,81 @@ function CalendarPage() {
             setCatF("all");
             setGrpF("all");
             setTypeF("all");
+            setRoleF("all");
           }}
         >
           {t("clear_filters")}
         </Button>
+        <div className="ml-auto inline-flex rounded-full border border-border p-0.5">
+          <button
+            type="button"
+            onClick={() => setView("month")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+              view === "month"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Mes
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("day")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+              view === "day"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Día
+          </button>
+        </div>
       </div>
 
+      {view === "day" && (
+        <div className="mb-3 flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              const d = new Date(dayCursor);
+              d.setDate(d.getDate() - 1);
+              setDayCursor(d);
+            }}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="min-w-[200px] text-center text-sm font-medium capitalize">
+            {dayCursor.toLocaleDateString(undefined, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              const d = new Date(dayCursor);
+              d.setDate(d.getDate() + 1);
+              setDayCursor(d);
+            }}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full"
+            onClick={() => setDayCursor(new Date())}
+          >
+            {t("today")}
+          </Button>
+        </div>
+      )}
+
+      {view === "month" && (
       <div className="saito-card p-3">
         <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
@@ -860,6 +980,62 @@ function CalendarPage() {
           })}
         </div>
       </div>
+      )}
+
+      {view === "day" && (() => {
+        const dayStr = dayCursor.toISOString().slice(0, 10);
+        const dayOcc = occurrencesForDay(dayStr).sort((a, b) =>
+          (a.event.start_time ?? "").localeCompare(b.event.start_time ?? ""),
+        );
+        return (
+          <div className="saito-card p-4">
+            {dayOcc.length === 0 ? (
+              <div className="py-12 text-center text-sm text-muted-foreground">
+                No hay eventos programados.
+              </div>
+            ) : (
+              <ul className="divide-y divide-border">
+                {dayOcc.map((o, idx) => {
+                  const isCancelled = !!cancellations[o.event.id];
+                  const group = lookupGroup(o.event.group_id);
+                  return (
+                    <li key={o.event.id + idx}>
+                      <button
+                        onClick={() => setDetail(o)}
+                        className={`flex w-full items-center gap-4 px-2 py-3 text-left transition hover:bg-muted/40 ${
+                          isCancelled ? "opacity-60" : ""
+                        }`}
+                      >
+                        <div className="w-16 text-sm font-semibold tabular-nums text-foreground">
+                          {fmtTime(o.event.start_time) || "—"}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div
+                            className={`truncate text-sm font-medium ${
+                              isCancelled ? "line-through" : ""
+                            }`}
+                          >
+                            {o.event.title}
+                          </div>
+                          <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                            <TypeBadge type={o.event.type} />
+                            {group && <span>· {group.name}</span>}
+                            {facilityFor(o.event) && (
+                              <span>· {facilityFor(o.event)}</span>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        );
+      })()}
+
+
 
       {/* ────── Detail Sheet ────── */}
       <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
@@ -962,6 +1138,71 @@ function CalendarPage() {
                     </div>
                   )}
 
+
+
+                  {/* Session quick actions (training events) */}
+                  {ev.type === "training" && !a.cancelled && (
+                    <div>
+                      <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Acciones de sesión
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            toast.info("Detalle de la sesión");
+                          }}
+                        >
+                          <Eye className="mr-1 h-4 w-4" />
+                          Ver detalle
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            markCommunication(ev.id, true);
+                            toast.success("Convocatoria generada");
+                            navigate({ to: "/communication" });
+                          }}
+                        >
+                          <Send className="mr-1 h-4 w-4" />
+                          Convocatoria
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            markAttendance(ev.id, true);
+                            navigate({ to: "/attendance" });
+                          }}
+                        >
+                          <ClipboardCheck className="mr-1 h-4 w-4" />
+                          Asistencia
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setNoteDraft(notes[ev.id] ?? "");
+                            setNotesOpen(true);
+                          }}
+                        >
+                          <StickyNote className="mr-1 h-4 w-4" />
+                          Notas
+                        </Button>
+                      </div>
+                      {notes[ev.id] && (
+                        <div className="mt-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+                          <span className="font-semibold text-foreground">Nota: </span>
+                          {notes[ev.id]}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+
+
                   {canEdit && (
                     <div className="flex flex-col gap-2 pt-2">
                       {canEditEvent && (
@@ -978,6 +1219,10 @@ function CalendarPage() {
                               groupId: ev.group_id ?? "",
                               staffId: ev.staff_id ?? "",
                               location: ev.location ?? "",
+                              origDate: ev.event_date,
+                              origStartTime: ev.start_time ?? "10:00",
+                              origLocation: ev.location ?? "",
+                              notifyParticipants: true,
                             });
                             setDetail(null);
                           }}
@@ -1211,6 +1456,21 @@ function CalendarPage() {
                   </Select>
                 </div>
               </div>
+              {(editEv.date !== editEv.origDate ||
+                editEv.startTime !== editEv.origStartTime ||
+                editEv.location !== editEv.origLocation) && (
+                <label className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-sm text-amber-900">
+                  <Checkbox
+                    checked={editEv.notifyParticipants}
+                    onCheckedChange={(v) =>
+                      setEditEv({ ...editEv, notifyParticipants: !!v })
+                    }
+                  />
+                  <span>
+                    Has cambiado fecha, hora o ubicación. Notificar a participantes.
+                  </span>
+                </label>
+              )}
             </div>
           )}
           <DialogFooter>
@@ -1221,6 +1481,10 @@ function CalendarPage() {
               onClick={async () => {
                 if (!editEv || !editEv.title) return;
                 const g = groups.find((g) => g.id === editEv.groupId);
+                const changed =
+                  editEv.date !== editEv.origDate ||
+                  editEv.startTime !== editEv.origStartTime ||
+                  editEv.location !== editEv.origLocation;
                 await updateEvent.mutateAsync({
                   id: editEv.id,
                   title: editEv.title,
@@ -1233,6 +1497,10 @@ function CalendarPage() {
                   staff_id: editEv.staffId || null,
                   location: editEv.location || null,
                 });
+                if (changed && editEv.notifyParticipants) {
+                  markCommunication(editEv.id, true);
+                  toast.success("Participantes notificados del cambio");
+                }
                 setEditEv(null);
               }}
             >
@@ -1241,9 +1509,44 @@ function CalendarPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* ────── Notes dialog ────── */}
+      <Dialog open={notesOpen} onOpenChange={setNotesOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Notas de la sesión</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 text-sm">
+            <Textarea
+              value={noteDraft}
+              onChange={(e) => setNoteDraft(e.target.value)}
+              rows={5}
+              placeholder="Observaciones, ajustes, incidencias…"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNotesOpen(false)}>
+              {t("cancel")}
+            </Button>
+            <Button
+              onClick={() => {
+                if (detail) {
+                  setNote(detail.event.id, noteDraft);
+                  toast.success("Nota guardada");
+                }
+                setNotesOpen(false);
+              }}
+            >
+              Guardar nota
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
+
+
 
 function Row({
   icon,
