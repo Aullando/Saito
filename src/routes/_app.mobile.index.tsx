@@ -1,25 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { X, Check, Stethoscope, CalendarPlus, Activity } from "lucide-react";
 import {
   Clock,
-  Users,
-  CalendarDays,
-  Dumbbell,
-  ClipboardCheck,
-  StickyNote,
+  MapPin,
+  ArrowRight,
+  TriangleAlert,
+  Activity,
+  CalendarPlus,
+  ChevronDown,
+  X,
+  Check,
   Star,
   Sparkles,
-  CalendarX,
-  Info,
-  HeartPulse,
-  TrendingUp,
-  MessageSquare,
-  MapPin,
-  ChevronRight,
+  Trophy,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useSessionLocal } from "@/lib/sessionLocal";
 
@@ -29,18 +24,13 @@ export const Route = createFileRoute("/_app/mobile/")({
   component: MobileHome,
 });
 
-type Action = { label: string; icon: LucideIcon; to: string };
-
-const COACH_ACTIONS: Action[] = [
-  { label: "Calendario", icon: CalendarDays, to: "/mobile/calendar" },
-  { label: "Sesión", icon: Dumbbell, to: "/mobile/session" },
-  { label: "Asistencia", icon: ClipboardCheck, to: "/mobile/attendance" },
-  { label: "Convocatoria", icon: Users, to: "/mobile/callup" },
-  { label: "Notas", icon: StickyNote, to: "/mobile/notes" },
-  { label: "Valoraciones", icon: Star, to: "/mobile/ratings" },
-  { label: "Comunicación", icon: MessageSquare, to: "/mobile/messages" },
-  { label: "IA de sesión", icon: Sparkles, to: "/mobile/ai" },
-];
+const INK = "#21324A";
+const MUTED = "#66758A";
+const SOFT_BG = "#EEF3F8";
+const CARD_BORDER = "#DDE6F0";
+const ATHL = "#F12F4A";
+const COACH = "#00A74D";
+const SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
 
 function MobileHome() {
   const user = useCurrentUser();
@@ -48,478 +38,281 @@ function MobileHome() {
   const today = new Date().toISOString().slice(0, 10);
   const isCoach = user?.role === "technical";
 
-  const todays = useMemo(
-    () => events.filter((e) => e.date === today).slice(0, 3),
+  const todayEvent = useMemo(
+    () => events.find((e) => e.date === today),
     [events, today],
   );
 
-  return (
-    <div className="space-y-5">
-      <header>
-        <h1 className="text-xl font-bold tracking-tight">
-          Hola, {user?.name.split(" ")[0]}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {new Date().toLocaleDateString("es-ES", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })}
-        </p>
-      </header>
-
-      {isCoach ? (
-        <CoachHome todays={todays} />
-      ) : (
-        <AthleteHome todays={todays} />
-      )}
-    </div>
-  );
+  return isCoach ? <CoachHome event={todayEvent} /> : <AthleteHome event={todayEvent} />;
 }
 
-function CoachHome({ todays }: { todays: ReturnType<typeof useData.getState>["events"] }) {
-  const next = todays[0];
-  const storeAbsences = useSessionLocal((s) => s.absences);
-  const seedAbsences = [
-    { id: "ab1", name: "Lucía García", reason: "Enfermedad" },
-    { id: "ab2", name: "Mario Pérez", reason: "Estudios" },
-  ];
-  const liveAbsences = storeAbsences
-    .filter((a) => a.sessionId === DEMO_SESSION_ID)
-    .map((a) => ({ id: a.id, name: a.athleteName, reason: a.reason }));
-  const absences = [...liveAbsences, ...seedAbsences].slice(0, 5);
-  const notFit = [
-    { id: "nf1", name: "Daniel Ruiz", status: "No apto" as const },
-    { id: "nf2", name: "Sara López", status: "En revisión" as const },
-  ];
+type Ev = ReturnType<typeof useData.getState>["events"][number] | undefined;
 
-  const CARD_SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
-
+/* ─────────────── Card de "Hoy" compartida ─────────────── */
+function TodayCard({
+  event,
+  ctaLabel,
+  ctaTo,
+  accent,
+}: {
+  event: Ev;
+  ctaLabel: string;
+  ctaTo: string;
+  accent: string;
+}) {
+  const title = event ? event.title || "Entrenamiento" : "Sin sesión hoy";
   return (
-    <>
-      {/* Tarjeta principal — Próxima sesión */}
-      <section
-        style={{
-          background: "#FFFFFF",
-          border: "1px solid #AFE5C6",
-          borderRadius: 24,
-          padding: 20,
-          boxShadow: CARD_SHADOW,
-        }}
-      >
-        <span
-          className="inline-flex items-center"
-          style={{
-            background: "#EAF8F0",
-            color: "#00843D",
-            borderRadius: 999,
-            padding: "4px 10px",
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-          }}
-        >
-          Próxima sesión
-        </span>
-        <h2
-          style={{
-            color: "#21324A",
-            fontSize: 22,
-            fontWeight: 700,
-            lineHeight: "28px",
-            marginTop: 10,
-          }}
-        >
-          {next?.title ?? "Entrenamiento"}
-        </h2>
-        <div
-          className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"
-          style={{ color: "#66758A", fontSize: 13 }}
-        >
-          <span className="inline-flex items-center gap-1.5">
-            <Clock className="h-4 w-4" /> {next?.startTime ?? "17:30 – 19:00"}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <MapPin className="h-4 w-4" /> {next?.location ?? "Pista de Atletismo"}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Users className="h-4 w-4" /> Infantil A
-          </span>
-        </div>
-
-        <div className="mt-4 grid gap-2">
-          <Link
-            to="/mobile/session"
-            className="flex w-full items-center justify-center active:scale-[0.98]"
-            style={{
-              height: 52,
-              borderRadius: 999,
-              background: "#00A74D",
-              color: "#FFFFFF",
-              fontSize: 15,
-              fontWeight: 700,
-            }}
-          >
-            Ver sesión
-          </Link>
-          <Link
-            to="/mobile/attendance"
-            className="flex w-full items-center justify-center active:scale-[0.98]"
-            style={{
-              height: 52,
-              borderRadius: 999,
-              background: "#EEF3F8",
-              color: "#21324A",
-              fontSize: 15,
-              fontWeight: 700,
-            }}
-          >
-            Registrar asistencia
-          </Link>
-          <Link
-            to="/mobile/callup"
-            className="flex w-full items-center justify-center active:scale-[0.98]"
-            style={{
-              height: 52,
-              borderRadius: 999,
-              background: "#EEF3F8",
-              color: "#21324A",
-              fontSize: 15,
-              fontWeight: 700,
-            }}
-          >
-            Generar convocatoria
-          </Link>
-        </div>
-      </section>
-
-      {/* Bloque Ausencias notificadas */}
-      <section
-        style={{
-          background: "#FFF5DF",
-          border: "1px solid #FFE0A3",
-          borderRadius: 24,
-          padding: 18,
-          boxShadow: CARD_SHADOW,
-        }}
-      >
-        <div
-          className="flex items-center gap-2"
-          style={{
-            color: "#B56F00",
-            fontSize: 13,
-            fontWeight: 700,
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-          }}
-        >
-          <CalendarX className="h-4 w-4" /> Ausencias notificadas
-        </div>
-        <ul className="mt-3 space-y-2">
-          {absences.map((a) => (
-            <li
-              key={a.id}
-              className="flex items-center justify-between"
-              style={{
-                background: "#FFFFFF",
-                border: "1px solid #FFE0A3",
-                borderRadius: 16,
-                padding: "10px 12px",
-              }}
-            >
-              <span style={{ color: "#21324A", fontSize: 14, fontWeight: 600 }}>{a.name}</span>
-              <span
-                style={{
-                  background: "#FFF5DF",
-                  color: "#B56F00",
-                  border: "1px solid #FFE0A3",
-                  borderRadius: 999,
-                  padding: "2px 10px",
-                  fontSize: 10,
-                  fontWeight: 700,
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {a.reason}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Bloque No aptos / En revisión */}
-      <section
-        style={{
-          background: "#FFFFFF",
-          border: "1px solid #DDE6F0",
-          borderRadius: 24,
-          padding: 18,
-          boxShadow: CARD_SHADOW,
-        }}
-      >
-        <div
-          style={{
-            color: "#66758A",
-            fontSize: 13,
-            fontWeight: 700,
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-          }}
-        >
-          No aptos / En revisión
-        </div>
-        <ul className="mt-3 space-y-2">
-          {notFit.map((a) => {
-            const danger = a.status === "No apto";
-            return (
-              <li
-                key={a.id}
-                className="flex items-center justify-between"
-                style={{
-                  background: "#FFFFFF",
-                  border: "1px solid #DDE6F0",
-                  borderRadius: 16,
-                  padding: "10px 12px",
-                }}
-              >
-                <span style={{ color: "#21324A", fontSize: 14, fontWeight: 600 }}>{a.name}</span>
-                <span
-                  style={{
-                    background: danger ? "#FFF0F3" : "#FFF5DF",
-                    color: danger ? "#C71F36" : "#B56F00",
-                    border: `1px solid ${danger ? "#FFC9D1" : "#FFE0A3"}`,
-                    borderRadius: 999,
-                    padding: "2px 10px",
-                    fontSize: 10,
-                    fontWeight: 700,
-                    letterSpacing: "0.04em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {danger ? "No apto" : "En revisión"}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-    </>
-  );
-}
-
-
-function AthleteHome({ todays }: { todays: ReturnType<typeof useData.getState>["events"] }) {
-  const next = todays[0];
-  const [absenceOpen, setAbsenceOpen] = useState(false);
-  const [absenceNotified, setAbsenceNotified] = useState(false);
-
-  const CARD_SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
-
-  return (
-    <>
-      {/* Tarjeta principal — Hoy: Entrenamiento */}
-      <section
-        style={{
-          background: "#FFFFFF",
-          border: "1px solid #FFC9D1",
-          borderRadius: 24,
-          padding: 20,
-          boxShadow: CARD_SHADOW,
-        }}
-      >
-        <span
-          className="inline-flex items-center"
-          style={{
-            background: "#FFF0F3",
-            color: "#C71F36",
-            borderRadius: 999,
-            padding: "4px 10px",
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-          }}
-        >
-          Hoy
-        </span>
-        <h2
-          style={{
-            color: "#21324A",
-            fontSize: 22,
-            fontWeight: 700,
-            lineHeight: "28px",
-            marginTop: 10,
-          }}
-        >
-          {next ? "Entrenamiento" : "Sin sesión hoy"}
-        </h2>
-        {next && (
-          <div
-            className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"
-            style={{ color: "#66758A", fontSize: 13 }}
-          >
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="h-4 w-4" /> {next.startTime}
-            </span>
-            {next.location && (
-              <span className="inline-flex items-center gap-1.5">
-                <MapPin className="h-4 w-4" /> {next.location}
-              </span>
-            )}
+    <section
+      style={{
+        background: SOFT_BG,
+        borderRadius: 18,
+        padding: 18,
+      }}
+    >
+      <h2 style={{ color: INK, fontSize: 20, fontWeight: 700 }}>
+        Hoy: <span style={{ fontWeight: 700 }}>{title}</span>
+      </h2>
+      {event && (
+        <div className="mt-1.5 space-y-1" style={{ color: MUTED, fontSize: 13 }}>
+          <div className="inline-flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" /> {event.startTime}
           </div>
-        )}
-
-        <div className="mt-4 grid gap-2">
-          <Link
-            to="/mobile/session-info"
-            className="flex w-full items-center justify-center active:scale-[0.98]"
-            style={{
-              height: 52,
-              borderRadius: 999,
-              background: "#F12F4A",
-              color: "#FFFFFF",
-              fontSize: 15,
-              fontWeight: 700,
-            }}
-          >
-            Información de la sesión
-          </Link>
-          {absenceNotified ? (
-            <div
-              className="flex w-full items-center justify-between px-4"
-              style={{
-                height: 52,
-                borderRadius: 999,
-                background: "#EAF8F0",
-                color: "#00843D",
-                border: "1px solid #AFE5C6",
-                fontSize: 14,
-                fontWeight: 700,
-              }}
-            >
-              <span className="inline-flex items-center gap-2">
-                <Check className="h-4 w-4" /> Ausencia notificada
-              </span>
-              <button
-                onClick={() => setAbsenceNotified(false)}
-                className="text-[12px] font-semibold underline"
-              >
-                Deshacer
-              </button>
+          {event.location && (
+            <div className="inline-flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5" /> {event.location}
             </div>
-          ) : (
-            <button
-              onClick={() => setAbsenceOpen(true)}
-              className="flex w-full items-center justify-center active:scale-[0.98]"
-              style={{
-                height: 52,
-                borderRadius: 999,
-                background: "#EEF3F8",
-                color: "#21324A",
-                fontSize: 15,
-                fontWeight: 700,
-              }}
-            >
-              Notificar ausencia
-            </button>
           )}
         </div>
-      </section>
-
-      {/* Bloque Salud (wellbeing) */}
-      <section
+      )}
+      <Link
+        to={ctaTo}
+        className="mt-4 flex items-center justify-between active:scale-[0.98]"
         style={{
-          background: "#FFF5DF",
-          border: "1px solid #FFE0A3",
-          borderRadius: 24,
-          padding: 18,
-          boxShadow: CARD_SHADOW,
+          height: 52,
+          borderRadius: 999,
+          background: accent,
+          color: "#FFFFFF",
+          padding: "0 8px 0 22px",
+          fontSize: 15,
+          fontWeight: 700,
         }}
       >
-        <div
-          className="flex items-center gap-2"
-          style={{ color: "#B56F00", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}
+        <span>{ctaLabel}</span>
+        <span
+          className="flex items-center justify-center"
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 999,
+            background: "#FFFFFF",
+            color: accent,
+          }}
         >
-          <HeartPulse className="h-4 w-4" /> Salud
-        </div>
-        <div className="mt-3 space-y-2">
-          <WellRow
-            to="/mobile/health"
-            icon={HeartPulse}
-            title="Estado"
-            value="Apto"
-          />
-          <WellRow
-            to="/mobile/treatment"
-            icon={Stethoscope}
-            title="Plan de tratamiento"
-            value="Sin plan activo"
-          />
-          <WellRow
-            to="/mobile/request-appointment"
-            icon={CalendarPlus}
-            title="Cita médica"
-            value="Solicitar cita"
-          />
-        </div>
-      </section>
+          <ArrowRight className="h-4 w-4" />
+        </span>
+      </Link>
+    </section>
+  );
+}
 
-      {/* Bloque Mi rendimiento */}
-      <section
-        style={{
-          background: "#FFFFFF",
-          border: "1px solid #DDE6F0",
-          borderRadius: 24,
-          padding: 18,
-          boxShadow: CARD_SHADOW,
-        }}
-      >
+/* ─────────────── ATHLETE HOME ─────────────── */
+function AthleteHome({ event }: { event: Ev }) {
+  const [absenceOpen, setAbsenceOpen] = useState(false);
+  const [absenceNotified, setAbsenceNotified] = useState(false);
+  const [improveOpen, setImproveOpen] = useState(false);
+
+  return (
+    <div className="space-y-4">
+      <TodayCard
+        event={event}
+        ctaLabel="Información de la sesión"
+        ctaTo="/mobile/session-info"
+        accent={ATHL}
+      />
+
+      {/* Notificar ausencia */}
+      {absenceNotified ? (
         <div
-          className="flex items-center justify-between"
-          style={{ color: "#66758A", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}
+          className="flex w-full items-center justify-between px-5"
+          style={{
+            height: 52,
+            borderRadius: 999,
+            background: "#EAF8F0",
+            color: "#00843D",
+            border: "1px solid #AFE5C6",
+            fontSize: 14,
+            fontWeight: 700,
+          }}
         >
           <span className="inline-flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" /> Mi rendimiento
+            <Check className="h-4 w-4" /> Ausencia notificada
           </span>
+          <button
+            onClick={() => setAbsenceNotified(false)}
+            className="text-[12px] font-semibold underline"
+          >
+            Deshacer
+          </button>
         </div>
-        <Link to="/mobile/performance" className="mt-3 block">
-          <div className="flex items-end justify-between">
-            <div>
-              <div style={{ color: "#8A98AA", fontSize: 11, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-                Última valoración
-              </div>
-              <div style={{ color: "#21324A", fontSize: 22, fontWeight: 700, lineHeight: "28px" }}>
-                8.2 <span style={{ color: "#8A98AA", fontSize: 13, fontWeight: 500 }}>/ 10</span>
-              </div>
-            </div>
-            <ChevronRight className="h-4 w-4" style={{ color: "#8A98AA" }} />
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <Stat label="Esfuerzo percibido" value="7.0" />
-            <Stat label="Recuperación" value="8.5" />
-          </div>
-          <div
-            className="mt-3"
+      ) : (
+        <button
+          onClick={() => setAbsenceOpen(true)}
+          className="flex w-full items-center justify-center gap-2 active:scale-[0.98]"
+          style={{
+            height: 52,
+            borderRadius: 999,
+            background: "#8A98AA",
+            color: "#FFFFFF",
+            fontSize: 15,
+            fontWeight: 700,
+          }}
+        >
+          <TriangleAlert className="h-4 w-4" /> Notificar ausencia
+        </button>
+      )}
+
+      {/* Salud */}
+      <section className="space-y-2">
+        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+          <Activity className="h-4 w-4" /> Salud
+        </div>
+        <div
+          style={{
+            background: SOFT_BG,
+            borderRadius: 18,
+            padding: 14,
+          }}
+          className="space-y-2"
+        >
+          <Link
+            to="/mobile/treatment"
+            className="flex items-center justify-between"
             style={{
-              background: "#EEF3F8",
+              background: "#FFFFFF",
+              border: `1px solid ${CARD_BORDER}`,
               borderRadius: 14,
-              padding: "8px 10px",
+              padding: "12px 16px",
+              color: INK,
+              fontSize: 14,
+              fontWeight: 600,
             }}
           >
-            <div
-              className="flex items-center justify-between"
-              style={{ color: "#66758A", fontSize: 10, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}
+            Plan de tratamiento
+            <span
+              className="flex items-center justify-center"
+              style={{ width: 28, height: 28, borderRadius: 999, background: SOFT_BG, color: MUTED }}
             >
-              <span className="inline-flex items-center gap-1">
-                <Activity className="h-3 w-3" /> Evolución 30 días
-              </span>
-              <span style={{ color: "#00843D" }}>+6%</span>
-            </div>
-            <Sparkline values={[6.5, 7, 6.8, 7.4, 7.2, 7.8, 8.0, 7.9, 8.2, 8.4, 8.2, 8.6]} />
+              <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+          <Link
+            to="/mobile/request-appointment"
+            className="flex w-full items-center justify-center gap-2 active:scale-[0.98]"
+            style={{
+              height: 48,
+              borderRadius: 999,
+              background: "#8A98AA",
+              color: "#FFFFFF",
+              fontSize: 14,
+              fontWeight: 600,
+            }}
+          >
+            <CalendarPlus className="h-4 w-4" /> Solicitar cita médica
+          </Link>
+        </div>
+      </section>
+
+      {/* Mi rendimiento */}
+      <section className="space-y-2">
+        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+          <Trophy className="h-4 w-4" /> Mi rendimiento
+        </div>
+
+        <div
+          style={{
+            background: "#FFFFFF",
+            border: `1px solid ${CARD_BORDER}`,
+            borderRadius: 16,
+            padding: 14,
+            boxShadow: SHADOW,
+          }}
+        >
+          <button
+            className="flex w-full items-center gap-2"
+            onClick={() => setImproveOpen((v) => !v)}
+          >
+            <Sparkles className="h-4 w-4" style={{ color: ATHL }} />
+            <span style={{ color: ATHL, fontSize: 14, fontWeight: 700 }}>
+              Mejora tu rendimiento:
+            </span>
+          </button>
+          <p className="mt-2" style={{ color: INK, fontSize: 13, lineHeight: "20px" }}>
+            Trabaja la transición tras pérdida. Reduces 0,8 s de reacción defensiva si activas
+            presión inmediata los primeros 6 segundos.
+            {improveOpen && (
+              <>
+                {" "}Suma 2 sprints cortos al calentamiento y termina con 5 min de respiración 4-7-8.
+              </>
+            )}
+          </p>
+          <div
+            className="mt-3 flex items-center justify-center"
+            style={{
+              background: "#FFE7EC",
+              borderRadius: 999,
+              height: 28,
+              color: ATHL,
+            }}
+          >
+            <button onClick={() => setImproveOpen((v) => !v)} aria-label="Toggle">
+              <ChevronDown
+                className="h-4 w-4"
+                style={{ transform: improveOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+              />
+            </button>
           </div>
-        </Link>
+        </div>
+
+        <div
+          style={{
+            background: "#FFFFFF",
+            border: `1px solid ${CARD_BORDER}`,
+            borderRadius: 16,
+            padding: 14,
+            boxShadow: SHADOW,
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <span style={{ color: MUTED, fontSize: 13 }}>Última valoración</span>
+            <span style={{ color: MUTED, fontSize: 12 }}>22/10/25</span>
+          </div>
+          <div className="mt-1.5">
+            <Stars value={3} color={ATHL} />
+          </div>
+          <p className="mt-2" style={{ color: INK, fontSize: 13, lineHeight: "19px" }}>
+            Están funcionando muy bien los pases largos cruzados. Aunque puedes mejorar las
+            combinaciones rápidas con el extremo.
+          </p>
+        </div>
+
+        <div
+          style={{
+            background: "#FFFFFF",
+            border: `1px solid ${CARD_BORDER}`,
+            borderRadius: 16,
+            padding: 14,
+            boxShadow: SHADOW,
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <span style={{ color: MUTED, fontSize: 13 }}>Valoración media</span>
+            <span style={{ color: MUTED, fontSize: 12 }}>(últimos 30 días)</span>
+          </div>
+          <div className="mt-2 flex items-center gap-2">
+            <Star className="h-5 w-5" style={{ color: ATHL, fill: ATHL }} />
+            <span style={{ color: INK, fontSize: 22, fontWeight: 700 }}>3,45</span>
+          </div>
+        </div>
       </section>
 
       {absenceOpen && (
@@ -532,72 +325,256 @@ function AthleteHome({ todays }: { todays: ReturnType<typeof useData.getState>["
           }}
         />
       )}
-    </>
+    </div>
   );
 }
 
-function WellRow({
-  to,
-  icon: Icon,
-  title,
-  value,
-}: {
-  to: string;
-  icon: LucideIcon;
-  title: string;
-  value: string;
-}) {
+/* ─────────────── COACH HOME ─────────────── */
+function CoachHome({ event }: { event: Ev }) {
+  const [group, setGroup] = useState("Cadete - Grupo A");
+  const [absencesOpen, setAbsencesOpen] = useState(true);
+  const storeAbsences = useSessionLocal((s) => s.absences);
+  const saveRating = useSessionLocal((s) => s.saveRating);
+
+  const seedAbsences = [
+    { id: "ab1", name: "Lucía García", reason: "Enfermedad" },
+    { id: "ab2", name: "Mario Pérez", reason: "Estudios" },
+  ];
+  const liveAbsences = storeAbsences
+    .filter((a) => a.sessionId === DEMO_SESSION_ID)
+    .map((a) => ({ id: a.id, name: a.athleteName, reason: a.reason }));
+  const absences = [...liveAbsences, ...seedAbsences];
+
+  const notFit = [
+    { id: "nf1", name: "Pablo Torres Domínguez" },
+    { id: "nf2", name: "Héctor Navarro Gómez" },
+  ];
+
+  const ratingAthletes = [
+    { id: "r1", name: "Alejandro Ruiz Fernández" },
+    { id: "r2", name: "Andrés Vega Romero" },
+    { id: "r3", name: "Luca Hernández Soto" },
+  ];
+
   return (
-    <Link
-      to={to}
-      className="flex items-center justify-between active:scale-[0.99]"
+    <div className="space-y-4">
+      {/* Selector de grupo */}
+      <GroupSelector value={group} onChange={setGroup} />
+
+      <TodayCard
+        event={event}
+        ctaLabel="Información de la sesión"
+        ctaTo="/mobile/session"
+        accent={COACH}
+      />
+
+      {/* Ausencias notificadas */}
+      <section>
+        <button
+          onClick={() => setAbsencesOpen((v) => !v)}
+          className="flex w-full items-center justify-between"
+          style={{
+            background: SOFT_BG,
+            borderRadius: 14,
+            padding: "12px 16px",
+            color: INK,
+            fontSize: 14,
+            fontWeight: 600,
+          }}
+        >
+          <span className="inline-flex items-center gap-2">
+            <TriangleAlert className="h-4 w-4" style={{ color: MUTED }} />
+            Ausencias notificadas
+            {absences.length > 0 && (
+              <span
+                style={{
+                  background: COACH,
+                  color: "#FFFFFF",
+                  borderRadius: 999,
+                  padding: "1px 8px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                }}
+              >
+                {absences.length}
+              </span>
+            )}
+          </span>
+          <ChevronDown
+            className="h-4 w-4"
+            style={{
+              color: MUTED,
+              transform: absencesOpen ? "rotate(180deg)" : "none",
+              transition: "transform 0.2s",
+            }}
+          />
+        </button>
+        {absencesOpen && (
+          <ul className="mt-2 space-y-1.5">
+            {absences.map((a) => (
+              <li
+                key={a.id}
+                className="flex items-center justify-between"
+                style={{
+                  background: "#FFFFFF",
+                  border: `1px solid ${CARD_BORDER}`,
+                  borderRadius: 12,
+                  padding: "10px 14px",
+                  fontSize: 13,
+                  color: INK,
+                }}
+              >
+                <span className="font-medium">{a.name}</span>
+                <span style={{ color: MUTED, fontSize: 12 }}>{a.reason}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      {/* No aptos */}
+      <section
+        style={{
+          background: "#FFFFFF",
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 14,
+          padding: "12px 16px",
+        }}
+      >
+        <div className="flex items-center gap-2" style={{ color: INK, fontSize: 14, fontWeight: 700 }}>
+          <X className="h-4 w-4" /> No aptos
+        </div>
+        <ul className="mt-2 space-y-0.5">
+          {notFit.map((a) => (
+            <li key={a.id} style={{ color: INK, fontSize: 14 }}>
+              {a.name}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Valoración de rendimiento */}
+      <section className="space-y-2">
+        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+          <Star className="h-4 w-4" /> Valoración de rendimiento
+        </div>
+        <div
+          className="flex gap-3 overflow-x-auto pb-2"
+          style={{ scrollbarWidth: "none", marginInline: -4 }}
+        >
+          {ratingAthletes.map((a) => (
+            <RatingCard
+              key={a.id}
+              athleteName={a.name}
+              onSubmit={(value, text) => {
+                saveRating(DEMO_SESSION_ID, value * 2, 7, text || undefined);
+                toast.success(`Valoración enviada a ${a.name.split(" ")[0]}`);
+              }}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/* ─────────────── Helpers ─────────────── */
+
+function Stars({ value, color }: { value: number; color: string }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((i) => {
+        const filled = i <= value;
+        return (
+          <Star
+            key={i}
+            className="h-5 w-5"
+            style={{
+              color,
+              fill: filled ? color : "transparent",
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function RatingCard({
+  athleteName,
+  onSubmit,
+}: {
+  athleteName: string;
+  onSubmit: (value: number, text: string) => void;
+}) {
+  const [value, setValue] = useState(3);
+  const [text, setText] = useState("");
+  const [sent, setSent] = useState(false);
+  return (
+    <div
       style={{
         background: "#FFFFFF",
-        border: "1px solid #FFE0A3",
+        border: `1px solid ${CARD_BORDER}`,
         borderRadius: 16,
-        padding: "10px 12px",
+        padding: 14,
+        minWidth: 270,
+        flexShrink: 0,
+        boxShadow: SHADOW,
       }}
     >
-      <div className="flex items-center gap-3">
-        <div
-          className="flex items-center justify-center"
-          style={{ width: 36, height: 36, borderRadius: 12, background: "#FFF5DF", color: "#B56F00" }}
-        >
-          <Icon className="h-4 w-4" />
-        </div>
-        <div>
-          <div style={{ color: "#B56F00", fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-            {title}
-          </div>
-          <div style={{ color: "#21324A", fontSize: 14, fontWeight: 700 }}>{value}</div>
-        </div>
+      <div style={{ color: INK, fontSize: 14, fontWeight: 700 }}>{athleteName}</div>
+      <div className="mt-2 flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((i) => {
+          const filled = i <= value;
+          return (
+            <button key={i} onClick={() => setValue(i)} aria-label={`${i} estrellas`}>
+              <Star
+                className="h-6 w-6"
+                style={{
+                  color: COACH,
+                  fill: filled ? COACH : "transparent",
+                }}
+              />
+            </button>
+          );
+        })}
       </div>
-      <ChevronRight className="h-4 w-4" style={{ color: "#B56F00" }} />
-    </Link>
-  );
-}
-
-
-function Sparkline({ values }: { values: number[] }) {
-  const max = Math.max(...values);
-  const min = Math.min(...values);
-  const range = max - min || 1;
-  const w = 100;
-  const h = 28;
-  const step = w / (values.length - 1);
-  const points = values
-    .map((v, i) => `${i * step},${h - ((v - min) / range) * h}`)
-    .join(" ");
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="mt-1 h-7 w-full" preserveAspectRatio="none">
-      <polyline
-        points={points}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        className="text-primary"
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value.slice(0, 240))}
+        rows={2}
+        placeholder={`Escribe feedback sobre el rendimiento de ${athleteName.split(" ")[0]}...`}
+        className="mt-3 w-full resize-none outline-none"
+        style={{
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 12,
+          padding: "10px 12px",
+          fontSize: 13,
+          color: INK,
+        }}
       />
-    </svg>
+      <button
+        disabled={sent}
+        onClick={() => {
+          onSubmit(value, text);
+          setSent(true);
+          setTimeout(() => setSent(false), 1800);
+          setText("");
+        }}
+        className="mt-2 w-full active:scale-[0.98]"
+        style={{
+          background: COACH,
+          color: "#FFFFFF",
+          height: 40,
+          borderRadius: 999,
+          fontSize: 13,
+          fontWeight: 700,
+          opacity: sent ? 0.7 : 1,
+        }}
+      >
+        {sent ? "Enviada ✓" : "Enviar valoración"}
+      </button>
+    </div>
   );
 }
 
@@ -669,13 +646,66 @@ function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onConfirm: 
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function GroupSelector({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const options = ["Cadete - Grupo A", "Cadete - Grupo B", "Juvenil A", "Infantil A"];
   return (
-    <div className="rounded-lg bg-muted px-2 py-2">
-      <div className="text-base font-bold leading-none text-foreground">{value}</div>
-      <div className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-        {label}
-      </div>
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between"
+        style={{
+          background: "#FFFFFF",
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 14,
+          padding: "12px 16px",
+          color: INK,
+          fontSize: 14,
+          fontWeight: 600,
+        }}
+      >
+        {value}
+        <ChevronDown
+          className="h-4 w-4"
+          style={{
+            color: MUTED,
+            transform: open ? "rotate(180deg)" : "none",
+            transition: "transform 0.2s",
+          }}
+        />
+      </button>
+      {open && (
+        <ul
+          className="absolute left-0 right-0 z-20 mt-1 overflow-hidden"
+          style={{
+            background: "#FFFFFF",
+            border: `1px solid ${CARD_BORDER}`,
+            borderRadius: 14,
+            boxShadow: SHADOW,
+          }}
+        >
+          {options.map((opt) => (
+            <li key={opt}>
+              <button
+                onClick={() => {
+                  onChange(opt);
+                  setOpen(false);
+                }}
+                className="flex w-full items-center justify-between px-4 py-2.5 text-left"
+                style={{
+                  fontSize: 13,
+                  color: opt === value ? COACH : INK,
+                  fontWeight: opt === value ? 700 : 500,
+                  background: opt === value ? "#EAF8F0" : "transparent",
+                }}
+              >
+                {opt}
+                {opt === value && <Check className="h-3.5 w-3.5" />}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
