@@ -1319,6 +1319,21 @@ function CalendarPage() {
                   </Select>
                 </div>
               </div>
+              {(editEv.date !== editEv.origDate ||
+                editEv.startTime !== editEv.origStartTime ||
+                editEv.location !== editEv.origLocation) && (
+                <label className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-sm text-amber-900">
+                  <Checkbox
+                    checked={editEv.notifyParticipants}
+                    onCheckedChange={(v) =>
+                      setEditEv({ ...editEv, notifyParticipants: !!v })
+                    }
+                  />
+                  <span>
+                    Has cambiado fecha, hora o ubicación. Notificar a participantes.
+                  </span>
+                </label>
+              )}
             </div>
           )}
           <DialogFooter>
@@ -1329,6 +1344,10 @@ function CalendarPage() {
               onClick={async () => {
                 if (!editEv || !editEv.title) return;
                 const g = groups.find((g) => g.id === editEv.groupId);
+                const changed =
+                  editEv.date !== editEv.origDate ||
+                  editEv.startTime !== editEv.origStartTime ||
+                  editEv.location !== editEv.origLocation;
                 await updateEvent.mutateAsync({
                   id: editEv.id,
                   title: editEv.title,
@@ -1341,6 +1360,10 @@ function CalendarPage() {
                   staff_id: editEv.staffId || null,
                   location: editEv.location || null,
                 });
+                if (changed && editEv.notifyParticipants) {
+                  markCommunication(editEv.id, true);
+                  toast.success("Participantes notificados del cambio");
+                }
                 setEditEv(null);
               }}
             >
@@ -1349,6 +1372,43 @@ function CalendarPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* ────── Notes dialog ────── */}
+      <Dialog open={notesOpen} onOpenChange={setNotesOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Notas de la sesión</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 text-sm">
+            <Textarea
+              value={noteDraft}
+              onChange={(e) => setNoteDraft(e.target.value)}
+              rows={5}
+              placeholder="Observaciones, ajustes, incidencias…"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNotesOpen(false)}>
+              {t("cancel")}
+            </Button>
+            <Button
+              onClick={() => {
+                if (detail) {
+                  setNote(detail.event.id, noteDraft);
+                  toast.success("Nota guardada");
+                }
+                setNotesOpen(false);
+              }}
+            >
+              Guardar nota
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
     </>
   );
 }
