@@ -116,7 +116,7 @@ export function Header() {
               <LangSwitcher />
               {session && (
                 <Button asChild variant="outline" size="sm" className="rounded-full">
-                  <Link to="/dashboard" onClick={() => setOpen(false)}>
+                  <Link to="/login" onClick={() => setOpen(false)}>
                     {panelLabel}
                   </Link>
                 </Button>
