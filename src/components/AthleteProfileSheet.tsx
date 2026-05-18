@@ -365,20 +365,20 @@ function MedicalView({
         </p>
       </Section>
 
-      <Section title="Historial de incidencias" icon={HeartPulse}>
+      <Section title="Registro de incidencias" icon={HeartPulse}>
         <ul className="space-y-2 text-xs">
           <li className="rounded-lg border border-rose-200 bg-rose-50 p-2">
             <div className="font-medium text-rose-900">Molestias aductor derecho · 02/05/2026</div>
             <div className="text-rose-700">Retirado de sesión. Hielo + descarga.</div>
           </li>
           <li className="rounded-lg border border-amber-200 bg-amber-50 p-2">
-            <div className="font-medium text-amber-900">Esguince tobillo grado I · 12/03/2026</div>
-            <div className="text-amber-700">Alta tras 14 días. Recomienda vendaje funcional.</div>
+            <div className="font-medium text-amber-900">Molestia tobillo · 12/03/2026</div>
+            <div className="text-amber-700">Estado apto introducido por staff médico tras 14 días.</div>
           </li>
         </ul>
       </Section>
 
-      <Section title="Restricciones activas" icon={ShieldCheck}>
+      <Section title="Restricciones operativas" icon={ShieldCheck}>
         <Pill tone={athlete.medical_status === "Fit" ? "success" : "warning"}>
           {athlete.medical_status === "Fit" ? "Sin restricciones activas" : "Con restricciones"}
         </Pill>
