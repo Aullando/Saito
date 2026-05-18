@@ -25,6 +25,7 @@ import { Route as PublicCookiesRouteImport } from './routes/_public.cookies'
 import { Route as PublicContactoRouteImport } from './routes/_public.contacto'
 import { Route as PublicClientesRouteImport } from './routes/_public.clientes'
 import { Route as PublicAvisoLegalRouteImport } from './routes/_public.aviso-legal'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppOrganizationsRouteImport } from './routes/_app.organizations'
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
@@ -141,6 +142,11 @@ const PublicAvisoLegalRoute = PublicAvisoLegalRouteImport.update({
   id: '/aviso-legal',
   path: '/aviso-legal',
   getParentRoute: () => PublicRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppProfileRoute = AppProfileRouteImport.update({
   id: '/profile',
@@ -349,6 +355,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof AppOnboardingRoute
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
+  '/reports': typeof AppReportsRoute
   '/aviso-legal': typeof PublicAvisoLegalRoute
   '/clientes': typeof PublicClientesRoute
   '/contacto': typeof PublicContactoRoute
@@ -402,6 +409,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof AppOnboardingRoute
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
+  '/reports': typeof AppReportsRoute
   '/aviso-legal': typeof PublicAvisoLegalRoute
   '/clientes': typeof PublicClientesRoute
   '/contacto': typeof PublicContactoRoute
@@ -457,6 +465,7 @@ export interface FileRoutesById {
   '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/organizations': typeof AppOrganizationsRoute
   '/_app/profile': typeof AppProfileRoute
+  '/_app/reports': typeof AppReportsRoute
   '/_public/aviso-legal': typeof PublicAvisoLegalRoute
   '/_public/clientes': typeof PublicClientesRoute
   '/_public/contacto': typeof PublicContactoRoute
@@ -514,6 +523,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/organizations'
     | '/profile'
+    | '/reports'
     | '/aviso-legal'
     | '/clientes'
     | '/contacto'
@@ -567,6 +577,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/organizations'
     | '/profile'
+    | '/reports'
     | '/aviso-legal'
     | '/clientes'
     | '/contacto'
@@ -621,6 +632,7 @@ export interface FileRouteTypes {
     | '/_app/onboarding'
     | '/_app/organizations'
     | '/_app/profile'
+    | '/_app/reports'
     | '/_public/aviso-legal'
     | '/_public/clientes'
     | '/_public/contacto'
@@ -783,6 +795,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/aviso-legal'
       preLoaderRoute: typeof PublicAvisoLegalRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/profile': {
       id: '/_app/profile'
@@ -1084,6 +1103,7 @@ interface AppRouteChildren {
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppOrganizationsRoute: typeof AppOrganizationsRoute
   AppProfileRoute: typeof AppProfileRoute
+  AppReportsRoute: typeof AppReportsRoute
   AppEconomicFeesRoute: typeof AppEconomicFeesRoute
   AppEconomicPaymentsRoute: typeof AppEconomicPaymentsRoute
   AppMedicalCalendarRoute: typeof AppMedicalCalendarRoute
@@ -1109,6 +1129,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppOnboardingRoute: AppOnboardingRoute,
   AppOrganizationsRoute: AppOrganizationsRoute,
   AppProfileRoute: AppProfileRoute,
+  AppReportsRoute: AppReportsRoute,
   AppEconomicFeesRoute: AppEconomicFeesRoute,
   AppEconomicPaymentsRoute: AppEconomicPaymentsRoute,
   AppMedicalCalendarRoute: AppMedicalCalendarRoute,
