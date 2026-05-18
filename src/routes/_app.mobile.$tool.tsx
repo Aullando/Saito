@@ -292,7 +292,11 @@ function CallUp() {
 // ───────── NOTAS ─────────
 function Notes() {
   const addNote = useSessionLocal((s) => s.addNote);
-  const notes = useSessionLocal((s) => s.notes.filter((n) => n.sessionId === DEMO_SESSION_ID));
+  const allNotes = useSessionLocal((s) => s.notes);
+  const notes = useMemo(
+    () => allNotes.filter((n) => n.sessionId === DEMO_SESSION_ID),
+    [allNotes],
+  );
   const [text, setText] = useState("");
   const [priv, setPriv] = useState(true);
   return (
