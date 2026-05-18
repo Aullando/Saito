@@ -1,96 +1,76 @@
-# Ajustes de precisión SAITO BO
+# MVP funcional SAITO — plan de alineación
 
-Aplicar los design tokens exactos extraídos del backoffice real y refinar pantallas clave para que coincidan visualmente con las capturas.
+La demo ya cubre la mayor parte del MVP. Esta tarea no es rehacer nada: es **cerrar los huecos exactos** frente a la spec y dejarla escrita como contrato para que futuras pantallas no se desvíen.
 
-## 1. Tokens exactos (`src/styles.css`)
+## Estado actual vs spec
 
-Reemplazar los tokens actuales por los valores RGB exactos:
+### Selector inicial (`/login`)
+Ya existe con los 5 perfiles correctos (Gestor, Administración, Staff médico, Entrenador, Atleta) y canal desktop/mobile.
+**OK** — sin cambios.
 
-- `--background`: `rgb(247, 249, 252)` → oklch equivalente
-- `--foreground`: `rgb(26, 32, 44)` (texto principal)
-- `--muted-foreground`: `rgb(113, 125, 150)` (links sidebar)
-- `--input`: bg `rgb(255,255,255)`, color `rgb(45,54,72)`, **radius 10px**, **height 40px**
-- `--card`: bg blanco, **radius 25px** (no 1.25rem actual)
-- Tabla: header 46px, fila 57px
-- Sidebar item activo: `203x42`, fondo sutil
-- Tipografía: Inter 14/400 base, headings 700
+### WebApp Gestor / Dirección
+| Spec | Estado |
+|---|---|
+| Dashboard global | ✅ `/dashboard` |
+| Organización | ✅ `/club` |
+| Calendario | ✅ `/calendar` |
+| Pagos | ✅ `/economic/fees` |
+| Comunicación | ✅ `/communication` |
+| Deportistas | ✅ `/athletes` |
+| Reporting básico | ✅ `/reports` |
+| Notificaciones | ⚠️ campana existe, falta entrada de menú visible |
+| IA resumen operativo | ⚠️ falta widget en Dashboard |
 
-Añadir utilidades:
-- `.saito-card` → `border-radius: 25px`
-- `.saito-input` → `height: 40px; border-radius: 10px`
-- `.saito-table-row` → `height: 57px`
-- `.saito-table-head` → `height: 46px`
+### WebApp Administración
+| Spec | Estado |
+|---|---|
+| Usuarios | ✅ `/settings/team` |
+| Secciones / Categorías / Grupos | ⚠️ hoy apuntan todos a `/club` (placeholders) |
+| Horarios | ❌ falta |
+| Tutores | ❌ falta |
+| Cuotas y tasas | ✅ `/economic/fees` |
+| Aplicar cuota | ❌ falta (acción) |
+| Estado pagos | ✅ `/economic/payments` |
+| Circulares | ✅ `/communication` (faltan estados) |
+| Calendario de club | ✅ `/calendar` |
 
-Cargar Inter desde Google Fonts en `__root.tsx`.
+### WebApp Staff médico
+| Spec | Estado |
+|---|---|
+| Listado / Ficha deportista | ✅ `/athletes` + sheet |
+| Incidencias / Restricciones / Tratamientos / Solicitudes | ✅ `/medical/*` |
+| Citas médicas | ✅ `/medical/calendar` |
+| Comunicación médica | ✅ `/communication` |
 
-## 2. Sidebar (`src/components/Sidebar.tsx`)
+### App Entrenador (móvil)
+Home, Calendario, Detalle sesión, Asistencia, Convocatoria, Notas, Valoración, Feedback, Chats, Notificaciones, IA "Create with SAITO" → **todos presentes** en `_app.mobile.*` y `mobile/$tool`.
+**OK.**
 
-- Items 175x45, color inactivo `rgb(113,125,150)` weight 500
-- Item activo: 203x42, fondo `bg-primary/10`, color `rgb(26,32,44)`, radius pill
-- Fondo sidebar más claro (casi blanco)
-- Logo SAITO arriba, sin texto extra
+### App Atleta (móvil)
+Home, Calendario, Detalle sesión, Notificar ausencia, Feedback, Salud, Tratamiento, Solicitar cita, Rendimiento, Chats, Notificaciones → **todos presentes**.
+⚠️ Falta entrada explícita a **Circulares** del club en móvil atleta.
 
-## 3. Tabla genérica
+## Cambios a aplicar
 
-Crear `DataTable` reutilizable en `ui-kit.tsx`:
-- Header 46px, texto sm semibold
-- Filas 57px, hover sutil
-- Paginación textual: "Mostrando X a Y de Z" + números de página
-- Page-size selector
-
-Aplicar a: organizations, athletes, fees, payments.
-
-## 4. Inputs y selects
-
-Todos los `<Input>` y `<Select>` del proyecto → 40px alto, radius 10px, bg blanco, borde sutil. Override en `src/components/ui/input.tsx` y `select.tsx` para alinear con el spec.
-
-## 5. Cards (Club & Organización)
-
-- Card 745x156 (instalaciones), radius 25px
-- Sección "Usuarios y permisos" con 3 sub-cards (Staff médico / técnico / Deportistas) + "Nueva alta"
-- Sección "Organigrama" con cards de secciones deportivas mostrando "X deportistas" y dos contadores pequeños (staff/managers)
-
-## 6. Calendario
-
-- Header: "Hoy" + "Mayo 2026" + flechas + filtros (secciones, categorías, grupos) + "Limpiar filtros" + "Añadir"
-- Grid 7 columnas, día number arriba-izq
-- Eventos: "HH:mm - Nombre" en chip pequeño azul; "+N más" cuando hay overflow
-- Calendario médico: chips naranjas, filtro "Seleccionar atleta"
-
-## 7. Ficha atleta (drawer/route)
-
-Layout exacto:
-- Header: "Nombre APELLIDO" + botón "Añadir a staff técnico"
-- Bloque info: Sección / Categoría / Grupos / Nº Licencia / Nº Seguro médico / Altura / Peso / Estado Médico
-- Bloque "Cuotas Aplicables al Atleta" con tabla y botón "Suscribir"
-- Vista médica: añadir "Historial de incidencias", "Registrar Incidencia", "Planes de tratamiento activos/finalizados"
-- Vista técnica: añadir "Notas de Sesión" con calendario mensual
-
-## 8. Pagos y Cuotas
-
-- Cuotas: tabs por sección, dos tablas (Cuotas / Otras tasas), formulario inline "Añadir cuota"
-- Pagos: filtros (sección/categoría/estado/cuota), tabla con StatusPill (Pagada=success, Activa=primary, Fallida=danger, Pendiente=warning), formato `0,00 €` y `DD/MM/YYYY`
-
-## 9. Comunicación
-
-- Layout 2 columnas: lista conversaciones (izq) + detalle (der)
-- Conversación: avatar circular con iniciales, título, "X participantes", hora, badge unread
-- Mensaje: avatar + nombre + rol pequeño + título + "(X destinatarios)" + cuerpo + hora
-- Inbox médico: 21 sin leer, conversaciones "Solicitud de cita médica"
-
-## 10. Perfil
-
-- Card avatar grande con iniciales en círculo de color
-- Nombre, email, (médico) Nº colegiado / especialidad / área
-- Card Ajustes: Notificaciones (switch), Idioma (texto), Cambiar contraseña (link/btn), Reset demo
-
-## 11. Login
-
-- Card centrada radius 25, logo SAITO, título "Log In", inputs email/password (40px), "Forgot your password?", botón "Continue", selector demo de 5 roles abajo
+1. **Sidebar Administración** — convertir Secciones/Categorías/Grupos/Horarios/Tutores/Aplicar cuota en entradas reales que abran vistas placeholder dentro de `/club` con tabs, en vez de 4 enlaces al mismo sitio.
+2. **Sidebar Gestor** — añadir entrada "Notificaciones" (`/profile` o vista dedicada) e incrustar widget "IA — Resumen operativo" en `/dashboard` (texto generado, sin lógica real).
+3. **Circulares (estados)** — en `/communication`, añadir badge de estado por circular: `borrador | programada | publicada | archivada | retirada`. Eliminar solo habilitado en `borrador` / no publicada. Pura UI sobre fixtures.
+4. **App Atleta — Circulares** — añadir tile "Circulares del club" en `_app.mobile.index.tsx` (atleta) que enlace a una vista `mobile/$tool` = `circulars` reutilizando los datos de `/communication`.
+5. **RoleGate de visibilidad** — añadir checklist en `src/lib/permissions.ts` (o equivalente) que codifique las reglas:
+   - entrenador: ve restricciones operativas, **no** diagnóstico clínico
+   - atleta: solo sus datos
+   - médico: ve datos sensibles
+   - dirección: solo datos agregados en `/reports` y `/dashboard`
+   Aplicar a las pantallas afectadas (médica y dashboard).
+6. **Documento de spec** — guardar este MVP como `docs/mvp-spec.md` y como memoria de proyecto (`mem://features/mvp-scope.md`) para que futuras tareas no introduzcan lo excluido (WFC, Stripe real, billing SaaS, reporting avanzado, DPO, IA médica, alta médica/RTP automáticos, recurrencias complejas).
 
 ## Detalles técnicos
 
-- Convertir RGB exactos a oklch con `culori` mental o aproximación
-- No tocar lógica de store/seed salvo que falte data para reflejar pantallas
-- Mantener i18n existente
-- AIChat sigue presente en AppLayout
+- Sin migraciones, sin backend nuevo. Todo UI + fixtures.
+- `Sidebar.tsx` → ampliar arrays `admin` y `manager`.
+- `_app.communication.tsx` → añadir `status` en el modelo de circular + filtros + regla de borrado.
+- Nueva ruta: `src/routes/_app.mobile.$tool.tsx` ya soporta `switch (tool)`; añadir `case "circulars"`.
+- Memoria: escribir `mem://index.md` (Core: "Respetar scope MVP — ver memoria mvp-scope") + `mem://features/mvp-scope.md` con la lista de lo incluido/excluido y reglas de rol.
+
+## Fuera de scope (no se construye)
+WFC completo, Stripe real, billing SaaS, reporting avanzado, auditoría legal avanzada, panel DPO, eventos recurrentes complejos, diagnóstico/IA médica, alta médica y retorno al juego automáticos.
