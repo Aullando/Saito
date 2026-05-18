@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LogOut } from "lucide-react";
+import { LogOut, Bell } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useAuth as useLocalAuth, useCurrentUser } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -65,13 +65,23 @@ export function MobileShell({
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => setUser(null)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-accent"
-              aria-label="Salir"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-1">
+              <Link
+                to="/mobile/notifications"
+                className="relative flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-accent"
+                aria-label="Notificaciones"
+              >
+                <Bell className="h-4 w-4" />
+                <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-[color:var(--primary)]" />
+              </Link>
+              <button
+                onClick={() => setUser(null)}
+                className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-accent"
+                aria-label="Salir"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Scrollable content */}

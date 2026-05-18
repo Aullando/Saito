@@ -3,10 +3,11 @@ import {
   Home,
   CalendarDays,
   MessageSquare,
-  User as UserIcon,
-  ClipboardCheck,
+  Dumbbell,
+  Users,
   HeartPulse,
   Bell,
+  User as UserIcon,
 } from "lucide-react";
 import { MobileShell, type MobileTab } from "@/components/MobileShell";
 import { useCurrentUser } from "@/lib/store";
@@ -24,9 +25,9 @@ function MobileLayout() {
     ? [
         { id: "home", label: "Hoy", icon: Home, to: "/mobile" },
         { id: "cal", label: "Calendario", icon: CalendarDays, to: "/mobile/calendar" },
-        { id: "att", label: "Asistencia", icon: ClipboardCheck, to: "/mobile/attendance" },
-        { id: "msg", label: "Comunicación", icon: MessageSquare, to: "/mobile/messages" },
-        { id: "me", label: "Perfil", icon: UserIcon, to: "/mobile/profile" },
+        { id: "ses", label: "Sesión", icon: Dumbbell, to: "/mobile/session" },
+        { id: "team", label: "Equipo", icon: Users, to: "/mobile/team" },
+        { id: "msg", label: "Mensajes", icon: MessageSquare, to: "/mobile/messages" },
       ]
     : [
         { id: "home", label: "Hoy", icon: Home, to: "/mobile" },
