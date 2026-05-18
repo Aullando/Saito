@@ -85,74 +85,155 @@ function CoachHome({ todays }: { todays: ReturnType<typeof useData.getState>["ev
     { id: "nf2", name: "Sara López", status: "En revisión" as const },
   ];
 
+  const CARD_SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
+
   return (
     <>
-      {/* Tarjeta Hoy: Entrenamiento */}
+      {/* Tarjeta principal — Próxima sesión */}
       <section
-        className="rounded-2xl p-4 text-white shadow-md"
         style={{
-          background:
-            "linear-gradient(135deg, #064e3b 0%, #00a74d 100%)",
+          background: "#FFFFFF",
+          border: "1px solid #AFE5C6",
+          borderRadius: 24,
+          padding: 20,
+          boxShadow: CARD_SHADOW,
         }}
       >
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-white/70">
-          Hoy · Entrenamiento
-        </div>
-        <div className="mt-1 text-lg font-bold leading-tight">
-          {next?.title ?? "Tecnificación Infantil"}
-        </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/85">
-          <span className="inline-flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" />
-            {next?.startTime ?? "17:30 – 19:00"}
+        <span
+          className="inline-flex items-center"
+          style={{
+            background: "#EAF8F0",
+            color: "#00843D",
+            borderRadius: 999,
+            padding: "4px 10px",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+          }}
+        >
+          Próxima sesión
+        </span>
+        <h2
+          style={{
+            color: "#21324A",
+            fontSize: 22,
+            fontWeight: 700,
+            lineHeight: "28px",
+            marginTop: 10,
+          }}
+        >
+          {next?.title ?? "Entrenamiento"}
+        </h2>
+        <div
+          className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"
+          style={{ color: "#66758A", fontSize: 13 }}
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <Clock className="h-4 w-4" /> {next?.startTime ?? "17:30 – 19:00"}
           </span>
-          <span className="inline-flex items-center gap-1">
-            <MapPin className="h-3.5 w-3.5" />
-            {next?.location ?? "Pista de Atletismo"}
+          <span className="inline-flex items-center gap-1.5">
+            <MapPin className="h-4 w-4" /> {next?.location ?? "Pista de Atletismo"}
           </span>
-          <span className="inline-flex items-center gap-1">
-            <Users className="h-3.5 w-3.5" />
-            Infantil A
+          <span className="inline-flex items-center gap-1.5">
+            <Users className="h-4 w-4" /> Infantil A
           </span>
         </div>
-        <div className="mt-3 grid grid-cols-3 gap-1.5">
+
+        <div className="mt-4 grid gap-2">
           <Link
             to="/mobile/session"
-            className="flex items-center justify-center gap-1 rounded-lg bg-white px-2 py-2 text-[11px] font-semibold text-emerald-700 active:scale-95"
+            className="flex w-full items-center justify-center active:scale-[0.98]"
+            style={{
+              height: 52,
+              borderRadius: 999,
+              background: "#00A74D",
+              color: "#FFFFFF",
+              fontSize: 15,
+              fontWeight: 700,
+            }}
           >
-            <Info className="h-3.5 w-3.5" /> Ver sesión
+            Ver sesión
           </Link>
           <Link
             to="/mobile/attendance"
-            className="flex items-center justify-center gap-1 rounded-lg bg-white/15 px-2 py-2 text-[11px] font-semibold text-white ring-1 ring-white/30 active:scale-95"
+            className="flex w-full items-center justify-center active:scale-[0.98]"
+            style={{
+              height: 52,
+              borderRadius: 999,
+              background: "#EEF3F8",
+              color: "#21324A",
+              fontSize: 15,
+              fontWeight: 700,
+            }}
           >
-            <ClipboardCheck className="h-3.5 w-3.5" /> Asistencia
+            Registrar asistencia
           </Link>
           <Link
             to="/mobile/callup"
-            className="flex items-center justify-center gap-1 rounded-lg bg-white/15 px-2 py-2 text-[11px] font-semibold text-white ring-1 ring-white/30 active:scale-95"
+            className="flex w-full items-center justify-center active:scale-[0.98]"
+            style={{
+              height: 52,
+              borderRadius: 999,
+              background: "#EEF3F8",
+              color: "#21324A",
+              fontSize: 15,
+              fontWeight: 700,
+            }}
           >
-            <Users className="h-3.5 w-3.5" /> Convocatoria
+            Generar convocatoria
           </Link>
         </div>
       </section>
 
-      {/* Ausencias notificadas */}
-      <section>
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Ausencias notificadas
-        </h2>
-        <ul className="space-y-1.5">
+      {/* Bloque Ausencias notificadas */}
+      <section
+        style={{
+          background: "#FFF5DF",
+          border: "1px solid #FFE0A3",
+          borderRadius: 24,
+          padding: 18,
+          boxShadow: CARD_SHADOW,
+        }}
+      >
+        <div
+          className="flex items-center gap-2"
+          style={{
+            color: "#B56F00",
+            fontSize: 13,
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+          }}
+        >
+          <CalendarX className="h-4 w-4" /> Ausencias notificadas
+        </div>
+        <ul className="mt-3 space-y-2">
           {absences.map((a) => (
             <li
               key={a.id}
-              className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2.5"
+              className="flex items-center justify-between"
+              style={{
+                background: "#FFFFFF",
+                border: "1px solid #FFE0A3",
+                borderRadius: 16,
+                padding: "10px 12px",
+              }}
             >
-              <div className="flex items-center gap-2">
-                <CalendarX className="h-4 w-4 text-amber-600" />
-                <span className="text-sm font-medium text-foreground">{a.name}</span>
-              </div>
-              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+              <span style={{ color: "#21324A", fontSize: 14, fontWeight: 600 }}>{a.name}</span>
+              <span
+                style={{
+                  background: "#FFF5DF",
+                  color: "#B56F00",
+                  border: "1px solid #FFE0A3",
+                  borderRadius: 999,
+                  padding: "2px 10px",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                }}
+              >
                 {a.reason}
               </span>
             </li>
@@ -160,63 +241,66 @@ function CoachHome({ todays }: { todays: ReturnType<typeof useData.getState>["ev
         </ul>
       </section>
 
-      {/* No aptos / en revisión */}
-      <section>
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Deportistas no aptos o en revisión
-        </h2>
-        <ul className="space-y-1.5">
-          {notFit.map((a) => (
-            <li
-              key={a.id}
-              className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2.5"
-            >
-              <div className="flex items-center gap-2">
-                <HeartPulse className="h-4 w-4 text-rose-600" />
-                <span className="text-sm font-medium text-foreground">{a.name}</span>
-              </div>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                  a.status === "No apto"
-                    ? "bg-rose-100 text-rose-800"
-                    : "bg-orange-100 text-orange-800"
-                }`}
-              >
-                {a.status}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Accesos rápidos */}
-      <section>
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Accesos
-        </h2>
-        <div className="grid grid-cols-4 gap-2">
-          {COACH_ACTIONS.slice(4).map((a) => {
-            const Icon = a.icon;
+      {/* Bloque No aptos / En revisión */}
+      <section
+        style={{
+          background: "#FFFFFF",
+          border: "1px solid #DDE6F0",
+          borderRadius: 24,
+          padding: 18,
+          boxShadow: CARD_SHADOW,
+        }}
+      >
+        <div
+          style={{
+            color: "#66758A",
+            fontSize: 13,
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+          }}
+        >
+          No aptos / En revisión
+        </div>
+        <ul className="mt-3 space-y-2">
+          {notFit.map((a) => {
+            const danger = a.status === "No apto";
             return (
-              <Link
-                key={a.to}
-                to={a.to}
-                className="flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card p-3 text-center transition active:scale-95"
+              <li
+                key={a.id}
+                className="flex items-center justify-between"
+                style={{
+                  background: "#FFFFFF",
+                  border: "1px solid #DDE6F0",
+                  borderRadius: 16,
+                  padding: "10px 12px",
+                }}
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Icon className="h-4 w-4" />
-                </div>
-                <span className="text-[10px] font-medium leading-tight text-foreground">
-                  {a.label}
+                <span style={{ color: "#21324A", fontSize: 14, fontWeight: 600 }}>{a.name}</span>
+                <span
+                  style={{
+                    background: danger ? "#FFF0F3" : "#FFF5DF",
+                    color: danger ? "#C71F36" : "#B56F00",
+                    border: `1px solid ${danger ? "#FFC9D1" : "#FFE0A3"}`,
+                    borderRadius: 999,
+                    padding: "2px 10px",
+                    fontSize: 10,
+                    fontWeight: 700,
+                    letterSpacing: "0.04em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {danger ? "No apto" : "En revisión"}
                 </span>
-              </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </section>
     </>
   );
 }
+
 
 function AthleteHome({ todays }: { todays: ReturnType<typeof useData.getState>["events"] }) {
   const next = todays[0];
