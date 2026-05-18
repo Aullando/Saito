@@ -172,7 +172,11 @@ function CalendarPage() {
     hasCommunication,
     cancelEvent,
     uncancelEvent,
+    setNote,
+    markAttendance,
+    markCommunication,
   } = useCalendarLocal();
+  const navigate = useNavigate();
 
   const eventsQ = useQuery({
     queryKey: ["calendar_events", orgId],
