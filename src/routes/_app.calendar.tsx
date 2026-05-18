@@ -78,6 +78,7 @@ function CalendarPage() {
   const demoCategories = useData((s) => s.categories);
   const demoGroups = useData((s) => s.groups);
   const demoAddEvent = useData((s) => s.addEvent);
+  const demoUpdateEvent = useData((s) => s.updateEvent);
   const demoDeleteEvent = useData((s) => s.deleteEvent);
   const demoAddEventException = useData((s) => s.addEventException);
 
