@@ -34,8 +34,11 @@ interface CommLocalState {
   hideMsg: (id: string) => void;
 
   addLocalCircular: (c: Omit<LocalCircular, "id" | "createdAt" | "status" | "reads">) => string;
+  updateLocalCircular: (id: string, patch: Partial<Omit<LocalCircular, "id" | "createdAt">>) => void;
   deleteLocalCircular: (id: string) => void;
   publishCircular: (id: string) => void;
+  scheduleCircular: (id: string, scheduledAt: string) => void;
+  cancelScheduledCircular: (id: string) => void;
   archiveCircular: (id: string) => void;
   withdrawCircular: (id: string, reason: string) => void;
 
