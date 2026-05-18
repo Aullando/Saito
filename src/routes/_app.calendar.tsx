@@ -454,6 +454,10 @@ function CalendarPage() {
     if (catF !== "all" && e.category_id !== catF) return false;
     if (grpF !== "all" && e.group_id !== grpF) return false;
     if (typeF !== "all" && e.type !== typeF) return false;
+    if (roleF !== "all") {
+      const allowed = ROLE_TYPE_FILTER[roleF] ?? [];
+      if (!allowed.includes(e.type as CalendarEventType)) return false;
+    }
     return true;
   };
 
