@@ -999,6 +999,9 @@ function CalendarPage() {
                       No se puede eliminar: el evento tiene {blockers.join(", ")}.
                       {isFuture ? " Usa Cancelar para mantener el historial." : ""}
                     </div>
+                  )}
+
+
 
                   {/* Session quick actions (training events) */}
                   {ev.type === "training" && !a.cancelled && (
