@@ -38,6 +38,7 @@ import { Route as AppAttendanceRouteImport } from './routes/_app.attendance'
 import { Route as AppAthletesRouteImport } from './routes/_app.athletes'
 import { Route as PublicEnIndexRouteImport } from './routes/_public.en.index'
 import { Route as AppMobileIndexRouteImport } from './routes/_app.mobile.index'
+import { Route as DemoMobileCoachRouteImport } from './routes/demo.mobile.coach'
 import { Route as PublicEnSeguridadRouteImport } from './routes/_public.en.seguridad'
 import { Route as PublicEnProductoRouteImport } from './routes/_public.en.producto'
 import { Route as PublicEnPrivacidadRouteImport } from './routes/_public.en.privacidad'
@@ -209,6 +210,11 @@ const AppMobileIndexRoute = AppMobileIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppMobileRoute,
+} as any)
+const DemoMobileCoachRoute = DemoMobileCoachRouteImport.update({
+  id: '/demo/mobile/coach',
+  path: '/demo/mobile/coach',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PublicEnSeguridadRoute = PublicEnSeguridadRouteImport.update({
   id: '/en/seguridad',
@@ -406,6 +412,7 @@ export interface FileRoutesByFullPath {
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
   '/en/seguridad': typeof PublicEnSeguridadRoute
+  '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/mobile/': typeof AppMobileIndexRoute
   '/en/': typeof PublicEnIndexRoute
 }
@@ -462,6 +469,7 @@ export interface FileRoutesByTo {
   '/en/privacidad': typeof PublicEnPrivacidadRoute
   '/en/producto': typeof PublicEnProductoRoute
   '/en/seguridad': typeof PublicEnSeguridadRoute
+  '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/mobile': typeof AppMobileIndexRoute
 }
 export interface FileRoutesById {
@@ -521,6 +529,7 @@ export interface FileRoutesById {
   '/_public/en/privacidad': typeof PublicEnPrivacidadRoute
   '/_public/en/producto': typeof PublicEnProductoRoute
   '/_public/en/seguridad': typeof PublicEnSeguridadRoute
+  '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/_app/mobile/': typeof AppMobileIndexRoute
   '/_public/en/': typeof PublicEnIndexRoute
 }
@@ -580,6 +589,7 @@ export interface FileRouteTypes {
     | '/en/privacidad'
     | '/en/producto'
     | '/en/seguridad'
+    | '/demo/mobile/coach'
     | '/mobile/'
     | '/en/'
   fileRoutesByTo: FileRoutesByTo
@@ -636,6 +646,7 @@ export interface FileRouteTypes {
     | '/en/privacidad'
     | '/en/producto'
     | '/en/seguridad'
+    | '/demo/mobile/coach'
     | '/mobile'
   id:
     | '__root__'
@@ -694,6 +705,7 @@ export interface FileRouteTypes {
     | '/_public/en/privacidad'
     | '/_public/en/producto'
     | '/_public/en/seguridad'
+    | '/demo/mobile/coach'
     | '/_app/mobile/'
     | '/_public/en/'
   fileRoutesById: FileRoutesById
@@ -704,6 +716,7 @@ export interface RootRouteChildren {
   EnRoute: typeof EnRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  DemoMobileCoachRoute: typeof DemoMobileCoachRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -910,6 +923,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/mobile/'
       preLoaderRoute: typeof AppMobileIndexRouteImport
       parentRoute: typeof AppMobileRoute
+    }
+    '/demo/mobile/coach': {
+      id: '/demo/mobile/coach'
+      path: '/demo/mobile/coach'
+      fullPath: '/demo/mobile/coach'
+      preLoaderRoute: typeof DemoMobileCoachRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/en/seguridad': {
       id: '/_public/en/seguridad'
@@ -1247,6 +1267,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnRoute: EnRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  DemoMobileCoachRoute: DemoMobileCoachRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
