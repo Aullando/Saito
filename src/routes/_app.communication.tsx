@@ -502,12 +502,27 @@ function CircularsTab({
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-52">
+                    <DropdownMenuContent align="end" className="w-56">
                       {c.status === "draft" && (
                         <>
+                          {c.source === "local" && (
+                            <DropdownMenuItem onClick={() => setEditTarget(c)}>
+                              <MoreVertical className="mr-2 h-4 w-4" />
+                              Editar
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem onClick={() => onPublish(c.id)}>
                             <Send className="mr-2 h-4 w-4" />
-                            Publicar
+                            Publicar ahora
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setScheduleTarget(c);
+                              setScheduleAt("");
+                            }}
+                          >
+                            <CalendarPlus className="mr-2 h-4 w-4" />
+                            Programar…
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -518,7 +533,32 @@ function CircularsTab({
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar borrador
+                            Eliminar
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      {c.status === "scheduled" && (
+                        <>
+                          {c.source === "local" && (
+                            <DropdownMenuItem onClick={() => setEditTarget(c)}>
+                              <MoreVertical className="mr-2 h-4 w-4" />
+                              Editar
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem onClick={() => onCancelSchedule(c.id)}>
+                            <Undo2 className="mr-2 h-4 w-4" />
+                            Cancelar programación
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-destructive focus:text-destructive"
+                            onClick={() => {
+                              if (!confirm("¿Eliminar esta circular programada?")) return;
+                              onDeleteDraft(c.id);
+                            }}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Eliminar
                           </DropdownMenuItem>
                         </>
                       )}
@@ -543,13 +583,13 @@ function CircularsTab({
                       {c.status === "archived" && (
                         <DropdownMenuItem disabled>
                           <Archive className="mr-2 h-4 w-4" />
-                          Sólo lectura
+                          Sólo consulta
                         </DropdownMenuItem>
                       )}
                       {c.status === "withdrawn" && (
                         <DropdownMenuItem disabled>
                           <Undo2 className="mr-2 h-4 w-4" />
-                          Retirada
+                          Consultar motivo
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>
