@@ -223,169 +223,207 @@ function AthleteHome({ todays }: { todays: ReturnType<typeof useData.getState>["
   const [absenceOpen, setAbsenceOpen] = useState(false);
   const [absenceNotified, setAbsenceNotified] = useState(false);
 
+  const CARD_SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
+
   return (
     <>
-      {/* Tarjeta Hoy: Entrenamiento (rojo Sport Life) */}
+      {/* Tarjeta principal — Hoy: Entrenamiento */}
       <section
-        className="rounded-2xl p-4 text-white shadow-md"
         style={{
-          background:
-            "linear-gradient(135deg, #7f1020 0%, #f12f4a 100%)",
+          background: "#FFFFFF",
+          border: "1px solid #FFC9D1",
+          borderRadius: 24,
+          padding: 20,
+          boxShadow: CARD_SHADOW,
         }}
       >
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-white/75">
-          {next ? "Hoy · Entrenamiento" : "Sin sesión hoy"}
-        </div>
-        <div className="mt-1 text-lg font-bold leading-tight">
-          {next?.title ?? "Disfruta del descanso"}
-        </div>
+        <span
+          className="inline-flex items-center"
+          style={{
+            background: "#FFF0F3",
+            color: "#C71F36",
+            borderRadius: 999,
+            padding: "4px 10px",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+          }}
+        >
+          Hoy
+        </span>
+        <h2
+          style={{
+            color: "#21324A",
+            fontSize: 22,
+            fontWeight: 700,
+            lineHeight: "28px",
+            marginTop: 10,
+          }}
+        >
+          {next ? "Entrenamiento" : "Sin sesión hoy"}
+        </h2>
         {next && (
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/85">
-            <span className="inline-flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" /> {next.startTime}
+          <div
+            className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"
+            style={{ color: "#66758A", fontSize: 13 }}
+          >
+            <span className="inline-flex items-center gap-1.5">
+              <Clock className="h-4 w-4" /> {next.startTime}
             </span>
             {next.location && (
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5" /> {next.location}
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-4 w-4" /> {next.location}
               </span>
             )}
           </div>
         )}
-      </section>
 
-      {/* CTA principal y secundario */}
-      <section className="grid gap-2">
-        <Link
-          to="/mobile/session-info"
-          className="flex w-full items-center justify-between rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-md active:scale-[0.98]"
-        >
-          <span className="flex items-center gap-2">
-            <Info className="h-4 w-4" />
+        <div className="mt-4 grid gap-2">
+          <Link
+            to="/mobile/session-info"
+            className="flex w-full items-center justify-center active:scale-[0.98]"
+            style={{
+              height: 52,
+              borderRadius: 999,
+              background: "#F12F4A",
+              color: "#FFFFFF",
+              fontSize: 15,
+              fontWeight: 700,
+            }}
+          >
             Información de la sesión
-          </span>
-          <ChevronRight className="h-4 w-4 opacity-70" />
-        </Link>
-        {absenceNotified ? (
-          <div className="flex w-full items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
-            <span className="flex items-center gap-2">
-              <Check className="h-4 w-4" /> Ausencia notificada
-            </span>
-            <button
-              onClick={() => setAbsenceNotified(false)}
-              className="text-[11px] font-medium text-emerald-700 underline"
+          </Link>
+          {absenceNotified ? (
+            <div
+              className="flex w-full items-center justify-between px-4"
+              style={{
+                height: 52,
+                borderRadius: 999,
+                background: "#EAF8F0",
+                color: "#00843D",
+                border: "1px solid #AFE5C6",
+                fontSize: 14,
+                fontWeight: 700,
+              }}
             >
-              Deshacer
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setAbsenceOpen(true)}
-            className="flex w-full items-center justify-between rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm font-semibold text-foreground shadow-sm active:scale-[0.98]"
-          >
-            <span className="flex items-center gap-2">
-              <CalendarX className="h-4 w-4 text-muted-foreground" />
+              <span className="inline-flex items-center gap-2">
+                <Check className="h-4 w-4" /> Ausencia notificada
+              </span>
+              <button
+                onClick={() => setAbsenceNotified(false)}
+                className="text-[12px] font-semibold underline"
+              >
+                Deshacer
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setAbsenceOpen(true)}
+              className="flex w-full items-center justify-center active:scale-[0.98]"
+              style={{
+                height: 52,
+                borderRadius: 999,
+                background: "#EEF3F8",
+                color: "#21324A",
+                fontSize: 15,
+                fontWeight: 700,
+              }}
+            >
               Notificar ausencia
-            </span>
-            <ChevronRight className="h-4 w-4 opacity-50" />
-          </button>
-        )}
-      </section>
-
-      {/* Salud */}
-      <section>
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Salud
-        </h2>
-        <div className="space-y-2">
-          <Link
-            to="/mobile/health"
-            className="flex items-center justify-between rounded-2xl border border-amber-200 bg-amber-50 p-3 active:scale-[0.98]"
-          >
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                <HeartPulse className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-amber-800">
-                  Estado
-                </div>
-                <div className="text-sm font-bold text-amber-900">Apto</div>
-              </div>
-            </div>
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
-              Apto · En revisión · No apto
-            </span>
-          </Link>
-          <Link
-            to="/mobile/treatment"
-            className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 active:scale-[0.98]"
-          >
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Stethoscope className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Plan de tratamiento
-                </div>
-                <div className="text-sm font-bold text-foreground">Sin plan activo</div>
-              </div>
-            </div>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </Link>
-          <Link
-            to="/mobile/request-appointment"
-            className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 active:scale-[0.98]"
-          >
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <CalendarPlus className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Cita médica
-                </div>
-                <div className="text-sm font-bold text-foreground">Solicitar cita</div>
-              </div>
-            </div>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </Link>
+            </button>
+          )}
         </div>
       </section>
 
-      {/* Mi rendimiento */}
-      <section>
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Mi rendimiento
-        </h2>
-        <Link
-          to="/mobile/performance"
-          className="block rounded-2xl border border-border bg-card p-4 active:scale-[0.98]"
+      {/* Bloque Salud (wellbeing) */}
+      <section
+        style={{
+          background: "#FFF5DF",
+          border: "1px solid #FFE0A3",
+          borderRadius: 24,
+          padding: 18,
+          boxShadow: CARD_SHADOW,
+        }}
+      >
+        <div
+          className="flex items-center gap-2"
+          style={{ color: "#B56F00", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <TrendingUp className="h-4 w-4" />
+          <HeartPulse className="h-4 w-4" /> Salud
+        </div>
+        <div className="mt-3 space-y-2">
+          <WellRow
+            to="/mobile/health"
+            icon={HeartPulse}
+            title="Estado"
+            value="Apto"
+          />
+          <WellRow
+            to="/mobile/treatment"
+            icon={Stethoscope}
+            title="Plan de tratamiento"
+            value="Sin plan activo"
+          />
+          <WellRow
+            to="/mobile/request-appointment"
+            icon={CalendarPlus}
+            title="Cita médica"
+            value="Solicitar cita"
+          />
+        </div>
+      </section>
+
+      {/* Bloque Mi rendimiento */}
+      <section
+        style={{
+          background: "#FFFFFF",
+          border: "1px solid #DDE6F0",
+          borderRadius: 24,
+          padding: 18,
+          boxShadow: CARD_SHADOW,
+        }}
+      >
+        <div
+          className="flex items-center justify-between"
+          style={{ color: "#66758A", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}
+        >
+          <span className="inline-flex items-center gap-2">
+            <TrendingUp className="h-4 w-4" /> Mi rendimiento
+          </span>
+        </div>
+        <Link to="/mobile/performance" className="mt-3 block">
+          <div className="flex items-end justify-between">
+            <div>
+              <div style={{ color: "#8A98AA", fontSize: 11, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                Última valoración
               </div>
-              <div>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Última valoración
-                </div>
-                <div className="text-sm font-bold text-foreground">8.2 / 10</div>
+              <div style={{ color: "#21324A", fontSize: 22, fontWeight: 700, lineHeight: "28px" }}>
+                8.2 <span style={{ color: "#8A98AA", fontSize: 13, fontWeight: 500 }}>/ 10</span>
               </div>
             </div>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <ChevronRight className="h-4 w-4" style={{ color: "#8A98AA" }} />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
             <Stat label="Esfuerzo percibido" value="7.0" />
             <Stat label="Recuperación" value="8.5" />
           </div>
-          <div className="mt-3 rounded-lg bg-muted p-2">
-            <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+          <div
+            className="mt-3"
+            style={{
+              background: "#EEF3F8",
+              borderRadius: 14,
+              padding: "8px 10px",
+            }}
+          >
+            <div
+              className="flex items-center justify-between"
+              style={{ color: "#66758A", fontSize: 10, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}
+            >
               <span className="inline-flex items-center gap-1">
                 <Activity className="h-3 w-3" /> Evolución 30 días
               </span>
-              <span className="text-emerald-600">+6%</span>
+              <span style={{ color: "#00843D" }}>+6%</span>
             </div>
             <Sparkline values={[6.5, 7, 6.8, 7.4, 7.2, 7.8, 8.0, 7.9, 8.2, 8.4, 8.2, 8.6]} />
           </div>
@@ -405,6 +443,48 @@ function AthleteHome({ todays }: { todays: ReturnType<typeof useData.getState>["
     </>
   );
 }
+
+function WellRow({
+  to,
+  icon: Icon,
+  title,
+  value,
+}: {
+  to: string;
+  icon: LucideIcon;
+  title: string;
+  value: string;
+}) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center justify-between active:scale-[0.99]"
+      style={{
+        background: "#FFFFFF",
+        border: "1px solid #FFE0A3",
+        borderRadius: 16,
+        padding: "10px 12px",
+      }}
+    >
+      <div className="flex items-center gap-3">
+        <div
+          className="flex items-center justify-center"
+          style={{ width: 36, height: 36, borderRadius: 12, background: "#FFF5DF", color: "#B56F00" }}
+        >
+          <Icon className="h-4 w-4" />
+        </div>
+        <div>
+          <div style={{ color: "#B56F00", fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+            {title}
+          </div>
+          <div style={{ color: "#21324A", fontSize: 14, fontWeight: 700 }}>{value}</div>
+        </div>
+      </div>
+      <ChevronRight className="h-4 w-4" style={{ color: "#B56F00" }} />
+    </Link>
+  );
+}
+
 
 function Sparkline({ values }: { values: number[] }) {
   const max = Math.max(...values);
