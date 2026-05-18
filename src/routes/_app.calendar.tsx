@@ -980,6 +980,62 @@ function CalendarPage() {
           })}
         </div>
       </div>
+      )}
+
+      {view === "day" && (() => {
+        const dayStr = dayCursor.toISOString().slice(0, 10);
+        const dayOcc = occurrencesForDay(dayStr).sort((a, b) =>
+          (a.event.start_time ?? "").localeCompare(b.event.start_time ?? ""),
+        );
+        return (
+          <div className="saito-card p-4">
+            {dayOcc.length === 0 ? (
+              <div className="py-12 text-center text-sm text-muted-foreground">
+                No hay eventos programados.
+              </div>
+            ) : (
+              <ul className="divide-y divide-border">
+                {dayOcc.map((o, idx) => {
+                  const isCancelled = !!cancellations[o.event.id];
+                  const group = lookupGroup(o.event.group_id);
+                  return (
+                    <li key={o.event.id + idx}>
+                      <button
+                        onClick={() => setDetail(o)}
+                        className={`flex w-full items-center gap-4 px-2 py-3 text-left transition hover:bg-muted/40 ${
+                          isCancelled ? "opacity-60" : ""
+                        }`}
+                      >
+                        <div className="w-16 text-sm font-semibold tabular-nums text-foreground">
+                          {fmtTime(o.event.start_time) || "—"}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div
+                            className={`truncate text-sm font-medium ${
+                              isCancelled ? "line-through" : ""
+                            }`}
+                          >
+                            {o.event.title}
+                          </div>
+                          <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                            <TypeBadge type={o.event.type} />
+                            {group && <span>· {group.name}</span>}
+                            {facilityFor(o.event) && (
+                              <span>· {facilityFor(o.event)}</span>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        );
+      })()}
+
+
 
       {/* ────── Detail Sheet ────── */}
       <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
