@@ -23,8 +23,8 @@ export function MobileShell({
   title?: string;
   role?: "coach" | "athlete";
 }) {
-  const user = useCurrentUser();
   const setUser = useLocalAuth((s) => s.setUser);
+
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   // Role-scoped accent: coach = green, athlete = red.
