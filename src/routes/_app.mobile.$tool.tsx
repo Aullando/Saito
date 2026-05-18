@@ -144,9 +144,16 @@ const ATT_OPTIONS: { key: AttStatus; label: string; cls: string }[] = [
 
 function Attendance() {
   const athletes = useDemoAthletes();
-  const saved = useSessionLocal((s) => s.attendance[DEMO_SESSION_ID] ?? {});
+  const saved = useSessionLocal((s) => s.attendance[DEMO_SESSION_ID]);
   const saveAttendance = useSessionLocal((s) => s.saveAttendance);
-  const [state, setState] = useState<Record<string, AttStatus>>(saved);
+  const [state, setState] = useState<Record<string, AttStatus>>(() => {
+    if (!saved) return {};
+    const m: Record<string, AttStatus> = {};
+    Object.entries(saved).forEach(([k, v]) => {
+      m[k] = v === "present" ? "present" : v === "late" ? "justified" : "absent";
+    });
+    return m;
+  });
   const counts = useMemo(() => {
     const c = { present: 0, absent: 0, justified: 0, injured: 0 } as Record<AttStatus, number>;
     Object.values(state).forEach((s) => (c[s] += 1));
