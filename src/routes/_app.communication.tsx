@@ -268,6 +268,7 @@ function CommunicationPage() {
           </TabsTrigger>
           <TabsTrigger value="archived" className="gap-1.5">
             <Archive className="h-4 w-4" /> Archivados
+            <ProposalBadge className="ml-1" />
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {archivedList.length}
             </span>
