@@ -5,6 +5,7 @@ import { SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useData } from "@/lib/store";
 import { toast } from "sonner";
 import type { Role } from "@/lib/types";
+import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import {
   CalendarDays,
   ClipboardList,
