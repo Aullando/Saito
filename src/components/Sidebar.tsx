@@ -203,8 +203,8 @@ export function Sidebar() {
                     style={{
                       height: 44,
                       borderRadius: 14,
-                      background: active ? "#EAF4FF" : undefined,
-                      color: active ? "#0067C9" : "#66758A",
+                      background: active ? "var(--accent, #EAF4FF)" : undefined,
+                      color: active ? "var(--accent-foreground, #0054A4)" : "#66758A",
                     }}
                   >
                     <Icon className="shrink-0 h-5 w-5" />
