@@ -276,6 +276,36 @@
   .saito-drawer  { border-radius: var(--radius-drawer); box-shadow: var(--shadow-modal); }
   .saito-floating { box-shadow: var(--shadow-floating); }
 
+  /* Pill buttons */
+  .saito-button-primary {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-pill);
+    background: var(--saito-blue); color: #ffffff;
+    height: 44px; padding: 0 20px; font-weight: 600;
+    transition: filter 0.15s ease, box-shadow 0.15s ease;
+  }
+  .saito-button-primary:hover { filter: brightness(1.05); box-shadow: var(--shadow-card); }
+  .saito-button-secondary {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-pill);
+    background: var(--saito-surface-soft); color: var(--saito-text);
+    height: 44px; padding: 0 20px; font-weight: 600;
+    border: 1px solid var(--saito-border);
+    transition: background 0.15s ease;
+  }
+  .saito-button-secondary:hover { background: #e3ecf5; }
+
+  /* Generic SAITO chip (pair with chip-success/warning/danger/info/muted) */
+  .saito-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.02em; text-transform: uppercase;
+    border: 1px solid transparent;
+  }
+
+
   /* Uppercase status chip — PAGADO, PENDIENTE, APTO, NO APTO, EN REVISIÓN, … */
   .chip {
     display: inline-flex;
