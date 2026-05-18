@@ -55,7 +55,12 @@ export function Topbar() {
         <Logo size={28} />
       </div>
       <div className="flex md:hidden items-center shrink-0">
-        <LogoMark size={52} />
+        <img
+          src={saitoMark}
+          alt="SAITO"
+          style={{ width: 52, height: 52 }}
+          className="shrink-0 object-contain"
+        />
       </div>
 
       {/* Desktop / tablet search */}
