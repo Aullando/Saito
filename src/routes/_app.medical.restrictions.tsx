@@ -34,7 +34,7 @@ type Restriction = {
 
 const POOL: Omit<Restriction, "athleteId" | "id">[] = [
   {
-    type: "Lesión",
+    type: "Registro de incidencia",
     area: "Isquiotibial derecho",
     status: "Activa",
     startDate: "2026-04-30",
@@ -43,7 +43,7 @@ const POOL: Omit<Restriction, "athleteId" | "id">[] = [
     visibility: "Médico + entrenador",
   },
   {
-    type: "Restricción",
+    type: "Restricción operativa",
     area: "Hombro izquierdo",
     status: "En recuperación",
     startDate: "2026-04-12",
@@ -60,16 +60,16 @@ const POOL: Omit<Restriction, "athleteId" | "id">[] = [
     visibility: "Solo médico",
   },
   {
-    type: "Lesión",
+    type: "Registro de incidencia",
     area: "Tobillo derecho",
-    status: "Alta médica",
+    status: "Apto",
     startDate: "2026-03-20",
     expectedReturn: "2026-04-15",
     notes: "Apto. Mantener vendaje funcional 2 semanas.",
     visibility: "Médico + dirección",
   },
   {
-    type: "Restricción",
+    type: "Restricción operativa",
     area: "Cervical",
     status: "En recuperación",
     startDate: "2026-04-28",
@@ -77,7 +77,7 @@ const POOL: Omit<Restriction, "athleteId" | "id">[] = [
     visibility: "Médico + entrenador",
   },
   {
-    type: "Lesión",
+    type: "Registro de incidencia",
     area: "Cuádriceps",
     status: "Activa",
     startDate: "2026-05-02",
