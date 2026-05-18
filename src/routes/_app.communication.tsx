@@ -274,6 +274,18 @@ function CommunicationPage() {
               publishCircular(id);
               toast.success("Circular publicada");
             }}
+            onSchedule={(id, when) => {
+              scheduleCircular(id, when);
+              toast.success("Circular programada");
+            }}
+            onCancelSchedule={(id) => {
+              cancelScheduledCircular(id);
+              toast.success("Programación cancelada");
+            }}
+            onUpdate={(id, patch) => {
+              updateLocalCircular(id, patch);
+              toast.success("Circular actualizada");
+            }}
             onArchive={(id) => {
               archiveCircular(id);
               toast.success("Circular archivada");
