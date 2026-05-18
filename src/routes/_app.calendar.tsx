@@ -702,6 +702,84 @@ function CalendarPage() {
           )}
         </SheetContent>
       </Sheet>
+
+      <Dialog open={!!editEv} onOpenChange={(o) => !o && setEditEv(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("edit") || "Editar"}</DialogTitle>
+          </DialogHeader>
+          {editEv && (
+            <div className="space-y-3">
+              <div>
+                <Label>{t("name")}</Label>
+                <Input
+                  value={editEv.title}
+                  onChange={(e) => setEditEv({ ...editEv, title: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>{t("date")}</Label>
+                  <Input
+                    type="date"
+                    value={editEv.date}
+                    onChange={(e) => setEditEv({ ...editEv, date: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Hora</Label>
+                  <Input
+                    type="time"
+                    value={editEv.startTime}
+                    onChange={(e) => setEditEv({ ...editEv, startTime: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label>{t("group")}</Label>
+                <Select
+                  value={editEv.groupId}
+                  onValueChange={(v) => setEditEv({ ...editEv, groupId: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="—" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {groups.map((g) => (
+                      <SelectItem key={g.id} value={g.id}>
+                        {g.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditEv(null)}>
+              {t("cancel")}
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!editEv || !editEv.title) return;
+                const g = groups.find((g) => g.id === editEv.groupId);
+                await updateEvent.mutateAsync({
+                  id: editEv.id,
+                  title: editEv.title,
+                  event_date: editEv.date,
+                  start_time: editEv.startTime,
+                  group_id: editEv.groupId || null,
+                  section_id: g?.section_id ?? null,
+                  category_id: g?.category_id ?? null,
+                });
+                setEditEv(null);
+              }}
+            >
+              {t("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
