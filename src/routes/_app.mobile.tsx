@@ -37,8 +37,13 @@ function MobileLayout() {
       ];
 
   return (
-    <MobileShell tabs={tabs} title={isCoach ? "Entrenador" : "Atleta"}>
+    <MobileShell
+      tabs={tabs}
+      title={isCoach ? "Entrenador" : "Atleta"}
+      role={isCoach ? "coach" : "athlete"}
+    >
       <Outlet />
     </MobileShell>
   );
 }
+
