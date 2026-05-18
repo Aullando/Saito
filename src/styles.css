@@ -100,61 +100,82 @@
 :root {
   --radius: 0.625rem; /* inputs 10px */
   /* SAITO exact palette (brand manual 2026) */
-  --saito-navy: #21324a;     /* dark blue */
-  --saito-blue: #0067c9;     /* primary blue */
+  --saito-navy: #21324a;
+  --saito-blue: #0067c9;
   --saito-green: #00a74d;
   --saito-red: #f12f4a;
   --saito-yellow: #fdb113;
+  --saito-background: #f7f9fc;
+  --saito-surface: #ffffff;
+  --saito-surface-soft: #eef3f8;
+  --saito-border: #dde6f0;
+  --saito-text: #21324a;
+  --saito-text-muted: #66758a;
+  --saito-text-light: #8a98aa;
 
-  --background: oklch(0.978 0.006 250);            /* rgb(247,249,252) */
-  --foreground: var(--saito-navy);
-  --card: oklch(1 0 0);
-  --card-foreground: var(--saito-navy);
-  --popover: oklch(1 0 0);
-  --popover-foreground: var(--saito-navy);
-  --primary: var(--saito-blue);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0.01 250);
-  --secondary-foreground: var(--saito-navy);
-  --muted: oklch(0.96 0.01 250);
-  --muted-foreground: oklch(0.46 0.035 255);       /* AA contrast */
-  --accent: oklch(0.94 0.03 252);
-  --accent-foreground: var(--saito-navy);
-  --destructive: var(--saito-red);
-  --destructive-foreground: oklch(1 0 0);
-  --success: var(--saito-green);
-  --success-foreground: oklch(1 0 0);
-  --warning: var(--saito-yellow);
-  --warning-foreground: var(--saito-navy);
-  --info: var(--saito-blue);
-  --info-foreground: oklch(1 0 0);
-  --border: oklch(0.88 0.012 250);
-  --input: oklch(0.88 0.012 250);
-  --ring: var(--saito-blue);
-  --sidebar: oklch(0.99 0.005 250);
-  --sidebar-foreground: var(--saito-navy);
-  --sidebar-primary: var(--saito-blue);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.96 0.015 250);
-  --sidebar-accent-foreground: var(--saito-navy);
-  --sidebar-border: oklch(0.93 0.01 250);
-  --sidebar-ring: var(--saito-blue);
+  --background: #f7f9fc;
+  --foreground: #21324a;
+  --card: #ffffff;
+  --card-foreground: #21324a;
+  --popover: #ffffff;
+  --popover-foreground: #21324a;
+  --primary: #0067c9;
+  --primary-foreground: #ffffff;
+  --secondary: #eef3f8;
+  --secondary-foreground: #21324a;
+  --muted: #eef3f8;
+  --muted-foreground: #66758a;
+  --accent: #eaf4ff;
+  --accent-foreground: #0054a4;
+  --destructive: #f12f4a;
+  --destructive-foreground: #ffffff;
+  --success: #00a74d;
+  --success-foreground: #ffffff;
+  --warning: #fdb113;
+  --warning-foreground: #21324a;
+  --info: #0067c9;
+  --info-foreground: #ffffff;
+  --border: #dde6f0;
+  --input: #dde6f0;
+  --ring: #0067c9;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #21324a;
+  --sidebar-primary: #0067c9;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef3f8;
+  --sidebar-accent-foreground: #21324a;
+  --sidebar-border: #dde6f0;
+  --sidebar-ring: #0067c9;
 
-  /* Module identity (Administration=blue, Wellbeing=yellow/orange,
-     Coaching=green, Sport Life/Atleta=red). Used by sidebars, chips,
-     module headers and role-tinted cards. */
-  --mod-admin: var(--saito-blue);
-  --mod-admin-foreground: oklch(1 0 0);
-  --mod-admin-soft: oklch(0.95 0.04 252);
-  --mod-wellbeing: var(--saito-yellow);
-  --mod-wellbeing-foreground: var(--saito-navy);
-  --mod-wellbeing-soft: oklch(0.97 0.06 85);
-  --mod-coaching: var(--saito-green);
-  --mod-coaching-foreground: oklch(1 0 0);
-  --mod-coaching-soft: oklch(0.95 0.05 155);
-  --mod-sportlife: var(--saito-red);
-  --mod-sportlife-foreground: oklch(1 0 0);
-  --mod-sportlife-soft: oklch(0.96 0.04 20);
+  /* Module identity — exact HEX (Administration=blue, Wellbeing=yellow,
+     Coaching=green, Sport Life/Atleta=red). */
+  --mod-admin: #0067c9;
+  --mod-admin-foreground: #ffffff;
+  --mod-admin-soft: #eaf4ff;
+  --mod-admin-border: #b7d9ff;
+  --mod-admin-text: #0054a4;
+  --mod-coaching: #00a74d;
+  --mod-coaching-foreground: #ffffff;
+  --mod-coaching-soft: #eaf8f0;
+  --mod-coaching-border: #afe5c6;
+  --mod-coaching-text: #00843d;
+  --mod-wellbeing: #fdb113;
+  --mod-wellbeing-foreground: #21324a;
+  --mod-wellbeing-soft: #fff5df;
+  --mod-wellbeing-border: #ffe0a3;
+  --mod-wellbeing-text: #b56f00;
+  --mod-sportlife: #f12f4a;
+  --mod-sportlife-foreground: #ffffff;
+  --mod-sportlife-soft: #fff0f3;
+  --mod-sportlife-border: #ffc9d1;
+  --mod-sportlife-text: #c71f36;
+
+  /* State tokens (apto, no apto, en revisión, pagado, pendiente,
+     retirada/error, borrador/archivada) */
+  --state-ok-bg: #eaf8f0;        --state-ok-text: #00843d;     --state-ok-border: #afe5c6;
+  --state-danger-bg: #fff0f3;    --state-danger-text: #c71f36; --state-danger-border: #ffc9d1;
+  --state-warn-bg: #fff5df;      --state-warn-text: #b56f00;   --state-warn-border: #ffe0a3;
+  --state-neutral-bg: #eef3f8;   --state-neutral-text: #66758a;--state-neutral-border: #dde6f0;
 }
 
 .dark {
