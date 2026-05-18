@@ -983,10 +983,12 @@ function ConversationsTab({
                 <Button size="sm" variant="ghost" onClick={() => onArchive(active.id)}>
                   <Archive className="mr-1 h-4 w-4" />
                   Archivar
+                  <ProposalBadge className="ml-1" />
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => onHide(active.id)}>
                   <Inbox className="mr-1 h-4 w-4" />
                   Quitar de mi bandeja
+                  <ProposalBadge className="ml-1" />
                 </Button>
               </div>
             </div>
