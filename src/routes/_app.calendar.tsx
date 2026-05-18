@@ -149,7 +149,17 @@ function CalendarPage() {
   const t = useT();
   const { profile, roles } = useAuth();
   const orgId = profile?.organization_id;
-  const canEdit = roles.some((r) => ["admin", "manager", "technical"].includes(r));
+  // Permisos explícitos (no mezclar roles operativos con técnicos)
+  const canManageCalendarEvents = roles.some((r) => ["admin", "manager"].includes(r));
+  const canManageMedicalAppointments = roles.some((r) =>
+    ["admin", "manager", "medical"].includes(r),
+  );
+  // canEditSessionContent existe para futuras acciones de sesión (notas, valoración…)
+  // y aplica al entrenador. No habilita edición de eventos generales.
+  const canEditSessionContent = roles.some((r) => ["technical", "admin", "manager"].includes(r));
+  void canEditSessionContent;
+  // Alias de compatibilidad para gates UI que no dependen del tipo de evento.
+  const canEdit = canManageCalendarEvents;
   const qc = useQueryClient();
   const demoMode = isDemoMode();
   const demoEvents = useData((s) => s.events);
