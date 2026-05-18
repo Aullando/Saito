@@ -412,7 +412,10 @@ function Ratings() {
         className="w-full resize-none rounded-2xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
       />
       <button
-        onClick={() => toast.success("Valoración enviada")}
+        onClick={() => {
+          saveRating(DEMO_SESSION_ID, rpe, rec, comment.trim() || undefined);
+          toast.success("Valoración enviada");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
         <Send className="h-4 w-4" /> Enviar valoración
