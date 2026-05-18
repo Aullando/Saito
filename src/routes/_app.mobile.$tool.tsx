@@ -26,7 +26,10 @@ import {
   Loader2,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useData } from "@/lib/store";
+import { useData, useCurrentUser } from "@/lib/store";
+import { useSessionLocal } from "@/lib/sessionLocal";
+
+const DEMO_SESSION_ID = "session-today";
 
 export const Route = createFileRoute("/_app/mobile/$tool")({
   component: MobileTool,
@@ -141,7 +144,16 @@ const ATT_OPTIONS: { key: AttStatus; label: string; cls: string }[] = [
 
 function Attendance() {
   const athletes = useDemoAthletes();
-  const [state, setState] = useState<Record<string, AttStatus>>({});
+  const saved = useSessionLocal((s) => s.attendance[DEMO_SESSION_ID]);
+  const saveAttendance = useSessionLocal((s) => s.saveAttendance);
+  const [state, setState] = useState<Record<string, AttStatus>>(() => {
+    if (!saved) return {};
+    const m: Record<string, AttStatus> = {};
+    Object.entries(saved).forEach(([k, v]) => {
+      m[k] = v === "present" ? "present" : v === "late" ? "justified" : "absent";
+    });
+    return m;
+  });
   const counts = useMemo(() => {
     const c = { present: 0, absent: 0, justified: 0, injured: 0 } as Record<AttStatus, number>;
     Object.values(state).forEach((s) => (c[s] += 1));
@@ -192,7 +204,15 @@ function Attendance() {
         ))}
       </ul>
       <button
-        onClick={() => toast.success("Asistencia guardada")}
+        onClick={() => {
+          // sessionLocal solo conoce los 3 estados base; mapeamos justified/injured -> absent para conteo agregado.
+          const mapped: Record<string, "present" | "late" | "absent"> = {};
+          Object.entries(state).forEach(([k, v]) => {
+            mapped[k] = v === "present" ? "present" : v === "justified" ? "late" : "absent";
+          });
+          saveAttendance(DEMO_SESSION_ID, mapped);
+          toast.success("Asistencia guardada");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
         <Check className="h-4 w-4" /> Guardar asistencia
@@ -204,6 +224,7 @@ function Attendance() {
 // ───────── CONVOCATORIA ─────────
 function CallUp() {
   const athletes = useDemoAthletes(14);
+  const saveCallup = useSessionLocal((s) => s.saveCallup);
   const [sel, setSel] = useState<Record<string, boolean>>({});
   const count = Object.values(sel).filter(Boolean).length;
   return (
@@ -255,7 +276,11 @@ function CallUp() {
       </ul>
       <button
         disabled={count === 0}
-        onClick={() => toast.success(`Convocatoria enviada a ${count} deportistas`)}
+        onClick={() => {
+          const ids = Object.entries(sel).filter(([, v]) => v).map(([k]) => k);
+          saveCallup(DEMO_SESSION_ID, ids);
+          toast.success(`Convocatoria enviada a ${count} deportistas`);
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
         <Send className="h-4 w-4" /> Enviar convocatoria
@@ -266,6 +291,8 @@ function CallUp() {
 
 // ───────── NOTAS ─────────
 function Notes() {
+  const addNote = useSessionLocal((s) => s.addNote);
+  const notes = useSessionLocal((s) => s.notes.filter((n) => n.sessionId === DEMO_SESSION_ID));
   const [text, setText] = useState("");
   const [priv, setPriv] = useState(true);
   return (
@@ -303,6 +330,7 @@ function Notes() {
       <button
         disabled={!text.trim()}
         onClick={() => {
+          addNote(DEMO_SESSION_ID, text.trim(), priv);
           toast.success("Nota guardada");
           setText("");
         }}
@@ -310,12 +338,31 @@ function Notes() {
       >
         <Check className="h-4 w-4" /> Guardar nota
       </button>
+      {notes.length > 0 && (
+        <div className="space-y-2 pt-2">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Notas guardadas
+          </div>
+          {notes.map((n) => (
+            <div key={n.id} className="rounded-2xl border border-border bg-card p-3 text-sm">
+              <div className="mb-1 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {n.privateNote && <Lock className="h-3 w-3" />}
+                {new Date(n.createdAt).toLocaleString("es", {
+                  day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+                })}
+              </div>
+              <div>{n.text}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 // ───────── VALORACIONES ─────────
 function Ratings() {
+  const saveRating = useSessionLocal((s) => s.saveRating);
   const [rpe, setRpe] = useState(6);
   const [rec, setRec] = useState(7);
   const [comment, setComment] = useState("");
@@ -365,7 +412,10 @@ function Ratings() {
         className="w-full resize-none rounded-2xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
       />
       <button
-        onClick={() => toast.success("Valoración enviada")}
+        onClick={() => {
+          saveRating(DEMO_SESSION_ID, rpe, rec, comment.trim() || undefined);
+          toast.success("Valoración enviada");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
         <Send className="h-4 w-4" /> Enviar valoración
@@ -377,6 +427,7 @@ function Ratings() {
 // ───────── IA SESIÓN ─────────
 type AIBlock = { title: string; items: string[] };
 function AISession() {
+  const acceptAIBlock = useSessionLocal((s) => s.acceptAIBlock);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [blocks, setBlocks] = useState<AIBlock[] | null>(null);
@@ -489,7 +540,12 @@ function AISession() {
               Refinar
             </button>
             <button
-              onClick={() => toast.success("Incluido en la sesión")}
+              onClick={() => {
+                blocks?.forEach((b) =>
+                  acceptAIBlock(DEMO_SESSION_ID, b.title, b.items.join(" · ")),
+                );
+                toast.success("Incluido en la sesión");
+              }}
               className="rounded-xl bg-primary px-2 py-2 text-[11px] font-semibold text-primary-foreground active:scale-95"
             >
               Incluir
@@ -504,6 +560,8 @@ function AISession() {
 // ───────── AUSENCIA ─────────
 const ABSENCE_REASONS = ["Enfermedad", "Lesión", "Estudios", "Trabajo", "Personal", "Otro"];
 function Absence() {
+  const user = useCurrentUser();
+  const notifyAbsence = useSessionLocal((s) => s.notifyAbsence);
   const [reason, setReason] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   return (
@@ -540,7 +598,17 @@ function Absence() {
       />
       <button
         disabled={!reason}
-        onClick={() => toast.success("Ausencia notificada al entrenador")}
+        onClick={() => {
+          if (!reason) return;
+          notifyAbsence({
+            sessionId: DEMO_SESSION_ID,
+            athleteId: user?.id ?? "u-ath",
+            athleteName: user?.name ?? "Atleta",
+            reason,
+            comment: comment.trim() || undefined,
+          });
+          toast.success("Ausencia notificada al entrenador");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
         <Check className="h-4 w-4" /> Confirmar ausencia
@@ -552,6 +620,8 @@ function Absence() {
 // ───────── SOLICITAR CITA ─────────
 const SPECIALTIES = ["Fisioterapia", "Medicina deportiva", "Nutrición", "Psicología"];
 function RequestAppointment() {
+  const user = useCurrentUser();
+  const requestAppointment = useSessionLocal((s) => s.requestAppointment);
   const [reason, setReason] = useState("");
   const [specialty, setSpecialty] = useState(SPECIALTIES[0]);
   const [date, setDate] = useState("");
@@ -604,7 +674,16 @@ function RequestAppointment() {
       </div>
       <button
         disabled={!reason.trim() || !date}
-        onClick={() => toast.success("Solicitud enviada al staff médico")}
+        onClick={() => {
+          requestAppointment({
+            athleteId: user?.id ?? "u-ath",
+            athleteName: user?.name ?? "Atleta",
+            specialty,
+            reason: reason.trim(),
+            preferredDate: date || undefined,
+          });
+          toast.success("Solicitud enviada al staff médico");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
         <Send className="h-4 w-4" /> Enviar solicitud
@@ -721,6 +800,8 @@ function SessionInfo() {
 }
 
 function Feedback() {
+  const user = useCurrentUser();
+  const sendFeedback = useSessionLocal((s) => s.sendFeedback);
   const [rpe, setRpe] = useState(6);
   const [text, setText] = useState("");
   return (
@@ -747,7 +828,16 @@ function Feedback() {
         className="w-full resize-none rounded-2xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
       />
       <button
-        onClick={() => toast.success("Feedback enviado al entrenador")}
+        onClick={() => {
+          sendFeedback({
+            sessionId: DEMO_SESSION_ID,
+            athleteId: user?.id ?? "u-ath",
+            athleteName: user?.name ?? "Atleta",
+            rpe,
+            text: text.trim() || undefined,
+          });
+          toast.success("Feedback enviado al entrenador");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
         <Send className="h-4 w-4" /> Enviar feedback
