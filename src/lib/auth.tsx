@@ -3,7 +3,7 @@ import { useAuth as useLocalAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { isDemoMode } from "@/lib/appMode";
 
-type Role = "sysadmin" | "admin" | "manager" | "technical" | "medical";
+type Role = "sysadmin" | "admin" | "manager" | "technical" | "medical" | "athlete";
 
 type Profile = {
   id: string;

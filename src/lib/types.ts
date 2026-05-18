@@ -1,4 +1,4 @@
-export type Role = "sysadmin" | "admin" | "manager" | "technical" | "medical";
+export type Role = "sysadmin" | "admin" | "manager" | "technical" | "medical" | "athlete";
 export type Lang = "en" | "es";
 
 export interface User {

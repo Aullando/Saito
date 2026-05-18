@@ -136,6 +136,8 @@ function buildItems(role: Role, t: (k: string) => string): Item[] {
           module: "communication",
         },
       ];
+    case "athlete":
+      return [];
   }
 }
 
