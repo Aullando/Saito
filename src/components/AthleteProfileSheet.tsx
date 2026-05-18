@@ -242,23 +242,13 @@ function ManagerView({
         </div>
       </Section>
 
-      <Section title="Estado médico (resumen)" icon={HeartPulse}>
-        <Row
-          label="Aptitud"
-          value={
-            <Pill
-              tone={
-                athlete.medical_status === "Fit"
-                  ? "success"
-                  : athlete.medical_status === "Injured"
-                    ? "danger"
-                    : "warning"
-              }
-            >
-              {athlete.medical_status}
-            </Pill>
-          }
-        />
+      <Section title="Salud deportiva (resumen)" icon={HeartPulse}>
+        {(() => {
+          const info = medicalStatusInfo(athlete.medical_status);
+          return (
+            <Row label="Estado" value={<Pill tone={info.tone}>{info.label}</Pill>} />
+          );
+        })()}
         <Row label="Detalle clínico" value={<span className="text-muted-foreground">Restringido al staff médico</span>} />
       </Section>
     </>
