@@ -254,9 +254,13 @@
   .saito-card {
     background-color: var(--color-card);
     border: 1px solid var(--color-border);
-    border-radius: 22px;
-    box-shadow: 0 1px 2px 0 rgb(26 32 44 / 0.03), 0 8px 24px -16px rgb(26 32 44 / 0.08);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
   }
+  .saito-card-sm { border-radius: var(--radius-card-sm); }
+  .saito-modal   { border-radius: var(--radius-modal); box-shadow: var(--shadow-modal); }
+  .saito-drawer  { border-radius: var(--radius-drawer); box-shadow: var(--shadow-modal); }
+  .saito-floating { box-shadow: var(--shadow-floating); }
 
   /* Uppercase status chip — PAGADO, PENDIENTE, APTO, NO APTO, EN REVISIÓN, … */
   .chip {
@@ -271,12 +275,23 @@
     text-transform: uppercase;
     line-height: 1.4;
     white-space: nowrap;
+    border: 1px solid transparent;
   }
-  .chip-success { background: color-mix(in oklab, var(--color-success) 15%, transparent); color: color-mix(in oklab, var(--color-success) 70%, var(--color-foreground)); }
-  .chip-warning { background: color-mix(in oklab, var(--color-warning) 22%, transparent); color: color-mix(in oklab, var(--color-warning) 60%, var(--color-foreground)); }
-  .chip-danger  { background: color-mix(in oklab, var(--color-destructive) 14%, transparent); color: color-mix(in oklab, var(--color-destructive) 75%, var(--color-foreground)); }
-  .chip-info    { background: color-mix(in oklab, var(--color-info) 14%, transparent); color: color-mix(in oklab, var(--color-info) 75%, var(--color-foreground)); }
-  .chip-muted   { background: var(--color-muted); color: var(--color-muted-foreground); }
+  .chip-success { background: var(--state-ok-bg);      color: var(--state-ok-text);      border-color: var(--state-ok-border); }
+  .chip-warning { background: var(--state-warn-bg);    color: var(--state-warn-text);    border-color: var(--state-warn-border); }
+  .chip-danger  { background: var(--state-danger-bg);  color: var(--state-danger-text);  border-color: var(--state-danger-border); }
+  .chip-info    { background: var(--mod-admin-soft);   color: var(--mod-admin-text);     border-color: var(--mod-admin-border); }
+  .chip-muted   { background: var(--state-neutral-bg); color: var(--state-neutral-text); border-color: var(--state-neutral-border); }
+
+  /* SAITO AI gradient — only allowed multicolor gradient (subtle) */
+  .saito-ai-gradient {
+    background-image: linear-gradient(90deg, #0067c9 0%, #00a74d 38%, #fdb113 70%, #f12f4a 100%);
+  }
+  .saito-ai-text {
+    background-image: linear-gradient(90deg, #0067c9, #00a74d, #fdb113, #f12f4a);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
 
 
   /* Animated underline for nav links */
