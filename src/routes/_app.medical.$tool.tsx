@@ -488,15 +488,10 @@ function TreatmentCard({ t, onFinish }: { t: Treatment; onFinish?: () => void })
           <div className="text-sm font-semibold">{t.athlete}</div>
           <div className="text-xs text-muted-foreground">{t.title}</div>
         </div>
-        <span
-          className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-            finished
-              ? "bg-muted text-muted-foreground"
-              : "bg-emerald-100 text-emerald-800"
-          }`}
-        >
-          {finished ? "Finalizado" : "Activo"}
+        <span className="shrink-0">
+          <StatusChip>{finished ? "Finalizado" : "Activo"}</StatusChip>
         </span>
+
       </div>
 
       <div className="mt-3">
