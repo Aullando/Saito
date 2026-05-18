@@ -93,12 +93,28 @@ const STATUS_STYLES: Record<CircularStatus, string> = {
   withdrawn: "bg-rose-50 text-rose-700 border-rose-200",
 };
 
+const NON_MVP_STATUSES: CircularStatus[] = ["draft", "scheduled", "archived", "withdrawn"];
+
 function StatusBadge({ status }: { status: CircularStatus }) {
   return (
+    <span className="inline-flex items-center gap-1">
+      <span
+        className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLES[status]}`}
+      >
+        {STATUS_LABELS[status]}
+      </span>
+      {NON_MVP_STATUSES.includes(status) && <ProposalBadge />}
+    </span>
+  );
+}
+
+function ProposalBadge({ className = "" }: { className?: string }) {
+  return (
     <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLES[status]}`}
+      title="Mejora propuesta (no incluida en el MVP)"
+      className={`inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-wide text-violet-700 ${className}`}
     >
-      {STATUS_LABELS[status]}
+      Mejora propuesta
     </span>
   );
 }
@@ -257,6 +273,7 @@ function CommunicationPage() {
           </TabsTrigger>
           <TabsTrigger value="archived" className="gap-1.5">
             <Archive className="h-4 w-4" /> Archivados
+            <ProposalBadge className="ml-1" />
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {archivedList.length}
             </span>
@@ -522,7 +539,7 @@ function CircularsTab({
                             }}
                           >
                             <CalendarPlus className="mr-2 h-4 w-4" />
-                            Programar…
+                            Programar… <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -547,7 +564,7 @@ function CircularsTab({
                           )}
                           <DropdownMenuItem onClick={() => onCancelSchedule(c.id)}>
                             <Undo2 className="mr-2 h-4 w-4" />
-                            Cancelar programación
+                            Cancelar programación <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -566,7 +583,7 @@ function CircularsTab({
                         <>
                           <DropdownMenuItem onClick={() => onArchive(c.id)}>
                             <Archive className="mr-2 h-4 w-4" />
-                            Archivar
+                            Archivar <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-rose-600 focus:text-rose-600"
@@ -576,7 +593,7 @@ function CircularsTab({
                             }}
                           >
                             <Undo2 className="mr-2 h-4 w-4" />
-                            Retirar circular…
+                            Retirar circular… <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                         </>
                       )}
@@ -937,11 +954,11 @@ function ConversationsTab({
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => onArchive(c.id)}>
                       <Archive className="mr-2 h-4 w-4" />
-                      Archivar
+                      Archivar <ProposalBadge className="ml-auto" />
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onHide(c.id)}>
                       <Inbox className="mr-2 h-4 w-4" />
-                      Eliminar de mi bandeja
+                      Eliminar de mi bandeja <ProposalBadge className="ml-auto" />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -966,10 +983,12 @@ function ConversationsTab({
                 <Button size="sm" variant="ghost" onClick={() => onArchive(active.id)}>
                   <Archive className="mr-1 h-4 w-4" />
                   Archivar
+                  <ProposalBadge className="ml-1" />
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => onHide(active.id)}>
                   <Inbox className="mr-1 h-4 w-4" />
                   Quitar de mi bandeja
+                  <ProposalBadge className="ml-1" />
                 </Button>
               </div>
             </div>
@@ -1319,6 +1338,7 @@ function ArchivedTab({
                 <Button size="sm" variant="ghost" onClick={() => onHide(c.id)}>
                   <Inbox className="mr-1 h-4 w-4" />
                   Quitar de mi bandeja
+                  <ProposalBadge className="ml-1" />
                 </Button>
               </div>
             </li>
