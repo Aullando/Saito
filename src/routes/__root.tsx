@@ -10,6 +10,7 @@ import {
 import { AuthProvider } from "@/lib/auth";
 import { ClubProvider } from "@/clubs/ClubProvider";
 import { PasswordGate } from "@/components/PasswordGate";
+import { SportInnovationBanner } from "@/components/SportInnovationBanner";
 
 import appCss from "../styles.css?url";
 
@@ -139,6 +140,7 @@ function RootComponent() {
       <PasswordGate>
         <AuthProvider>
           <ClubProvider>
+            <SportInnovationBanner />
             <Outlet />
           </ClubProvider>
         </AuthProvider>
