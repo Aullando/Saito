@@ -224,6 +224,7 @@ function Attendance() {
 // ───────── CONVOCATORIA ─────────
 function CallUp() {
   const athletes = useDemoAthletes(14);
+  const saveCallup = useSessionLocal((s) => s.saveCallup);
   const [sel, setSel] = useState<Record<string, boolean>>({});
   const count = Object.values(sel).filter(Boolean).length;
   return (
