@@ -26,6 +26,8 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
+import { useData } from "@/lib/store";
+import { isDemoMode } from "@/lib/appMode";
 import { supabase } from "@/integrations/supabase/client";
 import {
   DEMO_CALENDAR_EVENTS_ROWS,
@@ -70,10 +72,18 @@ function CalendarPage() {
   const orgId = profile?.organization_id;
   const canEdit = roles.some((r) => ["admin", "manager", "technical"].includes(r));
   const qc = useQueryClient();
+  const demoMode = isDemoMode();
+  const demoEvents = useData((s) => s.events);
+  const demoSections = useData((s) => s.sections);
+  const demoCategories = useData((s) => s.categories);
+  const demoGroups = useData((s) => s.groups);
+  const demoAddEvent = useData((s) => s.addEvent);
+  const demoDeleteEvent = useData((s) => s.deleteEvent);
+  const demoAddEventException = useData((s) => s.addEventException);
 
   const eventsQ = useQuery({
     queryKey: ["calendar_events", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("calendar_events")
@@ -88,7 +98,7 @@ function CalendarPage() {
 
   const sectionsQ = useQuery({
     queryKey: ["sport_sections", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("sport_sections")
@@ -101,7 +111,7 @@ function CalendarPage() {
 
   const categoriesQ = useQuery({
     queryKey: ["categories", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("categories")
@@ -114,7 +124,7 @@ function CalendarPage() {
 
   const groupsQ = useQuery({
     queryKey: ["groups", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("groups")
