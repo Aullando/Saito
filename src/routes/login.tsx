@@ -4,7 +4,7 @@ import { Logo } from "@/components/Logo";
 import { useAuth as useLocalAuth } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { useActiveClubStore } from "@/clubs/activeClub";
-import { Briefcase, Wallet, Stethoscope, Whistle, User, Monitor, Smartphone } from "lucide-react";
+import { Briefcase, Wallet, Stethoscope, Dumbbell, User, Monitor, Smartphone } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
@@ -52,7 +52,7 @@ const PROFILES: DemoProfile[] = [
     title: "Entrenador",
     subtitle: "Tu día, asistencia y comunicación",
     surface: "mobile",
-    icon: Whistle,
+    icon: Dumbbell,
   },
   {
     id: "ath",
