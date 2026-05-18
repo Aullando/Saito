@@ -57,9 +57,9 @@ export function Topbar() {
       </div>
       <div className="flex md:hidden items-center shrink-0">
         <img
-          src={saitoMark}
+          src={saitoLogo}
           alt="SAITO"
-          style={{ width: 52, height: 52 }}
+          style={{ height: 36 }}
           className="shrink-0 object-contain"
         />
       </div>
