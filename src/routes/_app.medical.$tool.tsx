@@ -36,6 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useSessionLocal } from "@/lib/sessionLocal";
 
 export const Route = createFileRoute("/_app/medical/$tool")({
   component: MedicalToolPage,
@@ -582,12 +583,30 @@ const SEED_REQUESTS: ApptRequest[] = [
 function RequestsView() {
   const [items, setItems] = useState<ApptRequest[]>(SEED_REQUESTS);
   const [creating, setCreating] = useState<ApptRequest | null>(null);
+  const storeRequests = useSessionLocal((s) => s.appointmentRequests);
+  const resolveRequest = useSessionLocal((s) => s.resolveAppointmentRequest);
 
-  const pending = items.filter((r) => r.status === "pending");
-  const managed = items.filter((r) => r.status === "managed");
+  const liveRequests: ApptRequest[] = storeRequests.map((r) => ({
+    id: r.id,
+    athlete: r.athleteName,
+    reason: r.reason,
+    specialty: r.specialty,
+    preferred: r.preferredDate ?? "—",
+    requestedAt: new Date(r.createdAt).toLocaleString("es", {
+      day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+    }),
+    status: r.status === "pending" ? "pending" : "managed",
+  }));
+  const all = [...liveRequests, ...items];
+  const isLive = (id: string) => storeRequests.some((r) => r.id === id);
 
-  const markManaged = (id: string) =>
-    setItems((s) => s.map((r) => (r.id === id ? { ...r, status: "managed" } : r)));
+  const pending = all.filter((r) => r.status === "pending");
+  const managed = all.filter((r) => r.status === "managed");
+
+  const markManaged = (id: string) => {
+    if (isLive(id)) resolveRequest(id, "scheduled");
+    else setItems((s) => s.map((r) => (r.id === id ? { ...r, status: "managed" } : r)));
+  };
 
   return (
     <section className="space-y-6">
