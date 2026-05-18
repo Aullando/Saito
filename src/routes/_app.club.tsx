@@ -26,6 +26,7 @@ import {
   DEMO_ORG_USERS_ROWS,
 } from "@/lib/demoFallbacks";
 import { useAuth } from "@/lib/auth";
+import { useData } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 import { isDemoMode } from "@/lib/appMode";
@@ -58,10 +59,23 @@ function ClubPage() {
   const lang = (profile?.language ?? "es") as "es" | "en";
   const orgId = profile?.organization_id ?? null;
   const qc = useQueryClient();
+  const demoMode = isDemoMode();
+  const demoSections = useData((s) => s.sections);
+  const demoCategories = useData((s) => s.categories);
+  const demoGroups = useData((s) => s.groups);
+  const demoFacilities = useData((s) => s.facilities);
+  const demoAddSection = useData((s) => s.addSection);
+  const demoDeleteSection = useData((s) => s.deleteSection);
+  const demoAddCategory = useData((s) => s.addCategory);
+  const demoDeleteCategory = useData((s) => s.deleteCategory);
+  const demoAddGroup = useData((s) => s.addGroup);
+  const demoDeleteGroup = useData((s) => s.deleteGroup);
+  const demoAddFacility = useData((s) => s.addFacility);
+  const demoDeleteFacility = useData((s) => s.deleteFacility);
 
   const sectionsQ = useQuery({
     queryKey: ["sport_sections", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase.from("sport_sections").select("id,name").order("name");
       if (error) throw error;
@@ -71,7 +85,7 @@ function ClubPage() {
 
   const categoriesQ = useQuery({
     queryKey: ["categories", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("categories")
@@ -84,7 +98,7 @@ function ClubPage() {
 
   const groupsQ = useQuery({
     queryKey: ["groups", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("groups")
@@ -97,7 +111,7 @@ function ClubPage() {
 
   const facilitiesQ = useQuery({
     queryKey: ["facilities", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data, error } = await supabase.from("facilities").select("*").order("name");
       if (error) throw error;
@@ -107,7 +121,7 @@ function ClubPage() {
 
   const athletesCountQ = useQuery({
     queryKey: ["athletes_count", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { count, error } = await supabase
         .from("athletes")
@@ -119,7 +133,7 @@ function ClubPage() {
 
   const usersQ = useQuery({
     queryKey: ["org_users", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demoMode,
     queryFn: async () => {
       const { data: profiles, error: e1 } = await supabase
         .from("profiles")
