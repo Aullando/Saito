@@ -674,7 +674,16 @@ function RequestAppointment() {
       </div>
       <button
         disabled={!reason.trim() || !date}
-        onClick={() => toast.success("Solicitud enviada al staff médico")}
+        onClick={() => {
+          requestAppointment({
+            athleteId: user?.id ?? "u-ath",
+            athleteName: user?.name ?? "Atleta",
+            specialty,
+            reason: reason.trim(),
+            preferredDate: date || undefined,
+          });
+          toast.success("Solicitud enviada al staff médico");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
         <Send className="h-4 w-4" /> Enviar solicitud
