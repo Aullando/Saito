@@ -183,6 +183,7 @@ function CommunicationPage() {
       reads: c.reads,
       createdAt: c.createdAt,
       status: c.status,
+      scheduledAt: c.scheduledAt,
       withdrawReason: c.withdrawReason,
       source: "local",
     }));
