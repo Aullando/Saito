@@ -135,10 +135,33 @@ function CalendarPage() {
     },
   });
 
-  const events = demoOrEmpty(eventsQ.data, DEMO_CALENDAR_EVENTS_ROWS) as DBEvent[];
-  const sections = demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
-  const categories = demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
-  const groups = demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
+  const events = demoMode
+    ? demoEvents.map((e) => ({
+        id: e.id,
+        title: e.title,
+        event_date: e.date,
+        start_time: e.startTime,
+        type: e.type,
+        section_id: e.sectionId ?? null,
+        category_id: e.categoryId ?? null,
+        group_id: e.groupId ?? null,
+        recurrence: e.recurrence ?? null,
+      }))
+    : (demoOrEmpty(eventsQ.data, DEMO_CALENDAR_EVENTS_ROWS) as DBEvent[]);
+  const sections = demoMode
+    ? demoSections.map((s) => ({ id: s.id, name: s.name }))
+    : demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
+  const categories = demoMode
+    ? demoCategories.map((c) => ({ id: c.id, name: c.name, section_id: c.sectionId }))
+    : demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
+  const groups = demoMode
+    ? demoGroups.map((g) => ({
+        id: g.id,
+        name: g.name,
+        section_id: g.sectionId,
+        category_id: g.categoryId,
+      }))
+    : demoOrEmpty(groupsQ.data, DEMO_GROUPS_ROWS);
 
   const addEvent = useMutation({
     mutationFn: async (e: {
@@ -150,6 +173,19 @@ function CalendarPage() {
       category_id: string | null;
       recurrence: DBEvent["recurrence"];
     }) => {
+      if (demoMode) {
+        demoAddEvent({
+          title: e.title,
+          date: e.event_date,
+          startTime: e.start_time,
+          type: "training",
+          groupId: e.group_id ?? undefined,
+          sectionId: e.section_id ?? undefined,
+          categoryId: e.category_id ?? undefined,
+          recurrence: e.recurrence ?? undefined,
+        });
+        return;
+      }
       const { error } = await supabase.from("calendar_events").insert({
         organization_id: orgId!,
         title: e.title,
@@ -172,6 +208,10 @@ function CalendarPage() {
 
   const delEvent = useMutation({
     mutationFn: async (id: string) => {
+      if (demoMode) {
+        demoDeleteEvent(id);
+        return;
+      }
       const { error } = await supabase.from("calendar_events").delete().eq("id", id);
       if (error) throw error;
     },
@@ -185,6 +225,10 @@ function CalendarPage() {
     mutationFn: async ({ ev, date }: { ev: DBEvent; date: string }) => {
       const rec = ev.recurrence;
       if (!rec) return;
+      if (demoMode) {
+        demoAddEventException(ev.id, date);
+        return;
+      }
       const newRec = { ...rec, exceptions: [...(rec.exceptions ?? []), date] };
       const { error } = await supabase
         .from("calendar_events")
