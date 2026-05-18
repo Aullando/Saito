@@ -97,7 +97,7 @@ SUPABASE_SERVICE_ROLE_KEY=...   # NUNCA en una variable VITE_*
 
 ## 5. Pendientes de seguridad antes de producción real
 
-1. **Cambiar el fallback `"hola"` del PasswordGate** o eliminar el fallback completamente, para que el gate falle de forma explícita si no hay `VITE_DEMO_PASSWORD`.
+1. ~~Cambiar el fallback `"hola"` del PasswordGate~~ ✅ **Resuelto**: fallback eliminado. El gate falla de forma explícita si `VITE_ENABLE_PASSWORD_GATE=true` sin `VITE_DEMO_PASSWORD`.
 2. **Auditar las rutas seed-only** (`_app.attendance.tsx`, `_app.medical.restrictions.tsx`, `_app.economic.fees.tsx`, todas las `_app.rgcc.*`): hoy leen exclusivamente de `seed/`. Cuando se conecte backend real, reemplazar por queries Supabase con `demoOr/demoOrEmpty`.
 3. **RLS de Supabase:** verificar que toda tabla expuesta vía cliente tenga políticas RLS activas y restrictivas. Ejecutar el escáner de seguridad de Lovable Cloud antes de publish.
 4. **Service role key:** confirmar que `SUPABASE_SERVICE_ROLE_KEY` solo está en secretos de edge functions, nunca con prefijo `VITE_*`.
