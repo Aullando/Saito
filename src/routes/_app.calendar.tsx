@@ -52,6 +52,10 @@ import {
   CalendarDays,
   Clock,
   CircleSlash,
+  ClipboardCheck,
+  Send,
+  StickyNote,
+  Eye,
 } from "lucide-react";
 import { demoOrEmpty } from "@/lib/demoFallback";
 import type { CalendarEventType } from "@/lib/types";
