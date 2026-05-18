@@ -1338,6 +1338,7 @@ function ArchivedTab({
                 <Button size="sm" variant="ghost" onClick={() => onHide(c.id)}>
                   <Inbox className="mr-1 h-4 w-4" />
                   Quitar de mi bandeja
+                  <ProposalBadge className="ml-1" />
                 </Button>
               </div>
             </li>
