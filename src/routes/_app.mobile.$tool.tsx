@@ -828,7 +828,16 @@ function Feedback() {
         className="w-full resize-none rounded-2xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
       />
       <button
-        onClick={() => toast.success("Feedback enviado al entrenador")}
+        onClick={() => {
+          sendFeedback({
+            sessionId: DEMO_SESSION_ID,
+            athleteId: user?.id ?? "u-ath",
+            athleteName: user?.name ?? "Atleta",
+            rpe,
+            text: text.trim() || undefined,
+          });
+          toast.success("Feedback enviado al entrenador");
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
         <Send className="h-4 w-4" /> Enviar feedback
