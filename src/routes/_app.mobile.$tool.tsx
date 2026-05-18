@@ -620,6 +620,8 @@ function Absence() {
 // ───────── SOLICITAR CITA ─────────
 const SPECIALTIES = ["Fisioterapia", "Medicina deportiva", "Nutrición", "Psicología"];
 function RequestAppointment() {
+  const user = useCurrentUser();
+  const requestAppointment = useSessionLocal((s) => s.requestAppointment);
   const [reason, setReason] = useState("");
   const [specialty, setSpecialty] = useState(SPECIALTIES[0]);
   const [date, setDate] = useState("");
