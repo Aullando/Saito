@@ -168,8 +168,8 @@ function AthleteHome({ todays }: { todays: ReturnType<typeof useData.getState>["
           <>
             <div className="mt-2 flex items-center gap-1 text-xs text-white/80">
               <Clock className="h-3.5 w-3.5" /> {next.startTime}
-              {next.endTime ? ` – ${next.endTime}` : ""}
             </div>
+
             {next.location && (
               <div className="mt-1 flex items-center gap-1 text-xs text-white/80">
                 <MapPin className="h-3.5 w-3.5" /> {next.location}
