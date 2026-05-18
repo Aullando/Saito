@@ -638,6 +638,23 @@ function CalendarPage() {
                 )}
                 {canEdit && (
                   <div className="flex flex-col gap-2 pt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditEv({
+                          id: detail.event.id,
+                          title: detail.event.title,
+                          date: detail.event.event_date,
+                          startTime: detail.event.start_time ?? "10:00",
+                          groupId: detail.event.group_id ?? "",
+                        });
+                        setDetail(null);
+                      }}
+                    >
+                      <Pencil className="mr-1 h-4 w-4" />
+                      {t("edit") || "Editar"}
+                    </Button>
                     {detail.event.recurrence ? (
                       <>
                         <Button
