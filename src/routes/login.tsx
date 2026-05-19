@@ -237,7 +237,7 @@ const CLUB_META: Record<ClubKey, { tagline: string; subtitle: string }> = {
 };
 
 function LoginPage() {
-  const { session, roles } = useAuth();
+  useAuth();
   const navigate = useNavigate();
   const setUser = useLocalAuth((s) => s.setUser);
   const switchClub = useActiveClubStore((s) => s.switchClub);
@@ -250,13 +250,9 @@ function LoginPage() {
   const prevClub = idx > 0 ? CLUB_ORDER[idx - 1] : null;
   const nextClub = idx >= 0 && idx < CLUB_ORDER.length - 1 ? CLUB_ORDER[idx + 1] : null;
 
-  useEffect(() => {
-    if (session) {
-      const r = roles[0];
-      if (r === "technical" || r === "athlete") navigate({ to: "/mobile" });
-      else navigate({ to: "/dashboard" });
-    }
-  }, [session, roles, navigate]);
+  // No auto-redirect: la página /login es el selector de demo y debe
+  // mantenerse hasta que el comercial elija un perfil explícitamente.
+
 
   const enter = (p: DemoProfile) => {
     switchClub(selectedClub);

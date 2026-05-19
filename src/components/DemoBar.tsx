@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { ChevronDown, Check, ArrowLeft, LogOut, Sparkles } from "lucide-react";
+import { ChevronDown, Check, ArrowLeft, LogOut } from "lucide-react";
 import { useActiveClubStore } from "@/clubs/activeClub";
 import { useClub } from "@/clubs/ClubProvider";
 import { CLUBS } from "@/clubs/registry";
@@ -94,12 +94,8 @@ export function DemoBar() {
       role="region"
       aria-label="Modo demo comercial"
     >
-      <span className="hidden items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-white/80 sm:flex">
-        <Sparkles className="h-3.5 w-3.5 text-[#FDB113]" aria-hidden="true" />
-        Modo demo
-      </span>
-
       <div className="hidden h-4 w-px bg-white/15 sm:block" />
+
 
       {/* Club switcher */}
       <div className="relative min-w-0">
