@@ -2,10 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Clock, MapPin, UserCheck, TriangleAlert } from "lucide-react";
 import { useCurrentUser, useData } from "@/lib/store";
+import { useClub } from "@/clubs/ClubProvider";
+import { GffMobileCalendar } from "@/clubs/gff/GffMobileWorkspace";
 
 export const Route = createFileRoute("/_app/mobile/calendar")({
-  component: MobileCalendar,
+  component: MobileCalendarRoute,
 });
+
+function MobileCalendarRoute() {
+  const { club } = useClub();
+  if (club.id === "gff-demo") return <GffMobileCalendar />;
+  return <MobileCalendar />;
+}
 
 const INK = "#21324A";
 const MUTED = "#66758A";
