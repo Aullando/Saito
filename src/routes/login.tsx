@@ -484,5 +484,3 @@ function ProfileCard({
   );
 }
 
-// Silence unused-import warning when useMemo is not used in some builds.
-void useMemo;
