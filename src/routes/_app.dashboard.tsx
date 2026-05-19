@@ -6,6 +6,7 @@ import { PageHeader, Card, Pill } from "@/components/ui-kit";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
+import { GffWorkspace } from "@/clubs/gff/GffWorkspace";
 import {
   Users,
   CalendarDays,
