@@ -74,7 +74,9 @@ export function ClubSwitcher() {
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-medium">{c.brand.name}</span>
                       <span className="block truncate text-[11px] text-muted-foreground">
-                        {c.seed.live ? "Live" : "Demo"} · {c.brand.defaultLanguage.toUpperCase()}
+                        {c.id === "gff-demo"
+                          ? "Demo · Gulf federation"
+                          : `${c.seed.live ? "Live" : "Demo"} · ${c.brand.defaultLanguage.toUpperCase()}`}
                       </span>
                     </span>
                     {active && <Check className="h-4 w-4 text-primary" />}
