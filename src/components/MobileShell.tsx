@@ -25,6 +25,10 @@ export function MobileShell({
   role?: "coach" | "athlete";
 }) {
   const setUser = useLocalAuth((s) => s.setUser);
+  const { club } = useClub();
+  const isGff = club.id === "gff-demo";
+  const notifAria = isGff ? "الإشعارات" : "Notificaciones";
+  const exitAria = isGff ? "خروج" : "Salir";
 
   const path = useRouterState({ select: (s) => s.location.pathname });
 
