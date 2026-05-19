@@ -42,12 +42,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <div className="hidden md:block" style={{ paddingLeft: collapsed ? 72 : 264 }}>
           <main className="pt-[88px]" style={{ paddingInline: 32, paddingBottom: 32 }}>
             <div className="mx-auto w-full" style={{ maxWidth: 1440 }}>
-              {children}
+              <WorkspaceFrame>{children}</WorkspaceFrame>
             </div>
           </main>
         </div>
         <div className="md:hidden">
-          <main className="px-4 py-5 pt-[72px]">{children}</main>
+          <main className="px-4 py-5 pt-[72px]">
+            <WorkspaceFrame>{children}</WorkspaceFrame>
+          </main>
         </div>
       </div>
       <AIChat />
