@@ -6,6 +6,7 @@ import { PageHeader, Card, Pill } from "@/components/ui-kit";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
+import { GffWorkspace } from "@/clubs/gff/GffWorkspace";
 import {
   Users,
   CalendarDays,
@@ -39,6 +40,7 @@ export const Route = createFileRoute("/_app/dashboard")({
 function DashboardSwitch() {
   const { club } = useClub();
   if (club.id === "rgcc") return <RgccDashboard />;
+  if (club.id === "gff-demo") return <GffWorkspace view="dashboard" />;
   return <CommandCenter />;
 }
 
