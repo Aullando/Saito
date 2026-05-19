@@ -1,10 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCurrentUser } from "@/lib/store";
 import { Mail, Globe, Shield } from "lucide-react";
+import { useClub } from "@/clubs/ClubProvider";
+import { GffMobileProfile } from "@/clubs/gff/GffMobileWorkspace";
 
 export const Route = createFileRoute("/_app/mobile/profile")({
-  component: MobileProfile,
+  component: MobileProfileRoute,
 });
+
+function MobileProfileRoute() {
+  const { club } = useClub();
+  if (club.id === "gff-demo") return <GffMobileProfile />;
+  return <MobileProfile />;
+}
 
 function MobileProfile() {
   const user = useCurrentUser();
