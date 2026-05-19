@@ -170,15 +170,15 @@ export function AIChat() {
 
       if (!resp.ok || !resp.body) {
         const errTxt = await resp.text().catch(() => "");
-        let errMsg = "Error al contactar la IA.";
+        let errMsg = isGff ? "خطأ في الاتصال بالذكاء الاصطناعي." : "Error al contactar la IA.";
         try {
           const j = JSON.parse(errTxt);
           if (j.error) errMsg = j.error;
         } catch {
           /* ignore */
         }
-        if (resp.status === 429) errMsg = "Demasiadas peticiones. Espera un momento.";
-        if (resp.status === 402) errMsg = "Sin créditos de IA disponibles.";
+        if (resp.status === 429) errMsg = isGff ? "طلبات كثيرة جدًا. انتظر لحظة." : "Demasiadas peticiones. Espera un momento.";
+        if (resp.status === 402) errMsg = isGff ? "لا توجد أرصدة ذكاء اصطناعي." : "Sin créditos de IA disponibles.";
         // RGCC fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
           const local = rgccLocalFallback(
