@@ -1,10 +1,12 @@
 import type { ClubConfig, ClubModuleId } from "./types";
 import { saitoClub } from "./saito";
 import { rgccClub } from "./rgcc";
+import { gffClub } from "./gff";
 
 export const CLUBS: Record<string, ClubConfig> = {
   [saitoClub.id]: saitoClub,
   [rgccClub.id]: rgccClub,
+  [gffClub.id]: gffClub,
 };
 
 export const DEFAULT_CLUB_ID = saitoClub.id;

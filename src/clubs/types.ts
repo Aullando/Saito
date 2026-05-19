@@ -27,7 +27,14 @@ export type ClubModuleId =
   | "rgcc-pt"
   | "rgcc-biblioteca"
   | "rgcc-quiosco"
-  | "rgcc-copiloto";
+  | "rgcc-copiloto"
+  // GFF modules
+  | "gff-national-teams"
+  | "gff-calendar"
+  | "gff-clubs"
+  | "gff-development"
+  | "gff-reporting"
+  | "gff-administration";
 
 export interface ClubBrand {
   name: string;
@@ -64,10 +71,19 @@ export interface ClubSeed {
   data?: unknown;
 }
 
+export interface ClubWorkspace {
+  locale?: string;
+  direction?: "ltr" | "rtl";
+  className?: string;
+  weekendDays?: number[];
+  demoLabel?: string;
+}
+
 export interface ClubConfig {
   id: string;
   brand: ClubBrand;
   modules: ClubModulesConfig;
   navItems?: ClubNavItem[];
   seed: ClubSeed;
+  workspace?: ClubWorkspace;
 }
