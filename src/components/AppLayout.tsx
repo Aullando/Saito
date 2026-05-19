@@ -3,6 +3,7 @@ import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { AIChat } from "./AIChat";
 import { DataSourceBadge } from "./DataSourceBadge";
+import { WorkspaceFrame } from "./WorkspaceFrame";
 import { useCurrentUser, useAuth } from "@/lib/store";
 import { Navigate } from "@tanstack/react-router";
 
