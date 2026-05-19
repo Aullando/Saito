@@ -40,6 +40,7 @@ export const Route = createFileRoute("/_app/dashboard")({
 function DashboardSwitch() {
   const { club } = useClub();
   if (club.id === "rgcc") return <RgccDashboard />;
+  if (club.id === "gff-demo") return <GffWorkspace view="dashboard" />;
   return <CommandCenter />;
 }
 
