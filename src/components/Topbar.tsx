@@ -42,8 +42,12 @@ export function Topbar() {
   if (!user) return null;
   return (
     <header
-      className="fixed top-0 right-0 left-0 z-30 flex h-14 md:h-[72px] items-center gap-1.5 sm:gap-2 md:gap-4 px-2 sm:px-3 md:px-6"
-      style={{ background: "#F7F9FC", borderBottom: "1px solid #DDE6F0" }}
+      className="fixed right-0 left-0 z-30 flex h-14 md:h-[72px] items-center gap-1.5 sm:gap-2 md:gap-4 px-2 sm:px-3 md:px-6"
+      style={{
+        top: "var(--demo-bar-h, 0px)",
+        background: "#F7F9FC",
+        borderBottom: "1px solid #DDE6F0",
+      }}
     >
       <button
         onClick={() => setMobileNavOpen(true)}
