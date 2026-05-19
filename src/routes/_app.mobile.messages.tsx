@@ -17,9 +17,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
+import { useClub } from "@/clubs/ClubProvider";
+import { GffMobileMessages } from "@/clubs/gff/GffMobileWorkspace";
+
 export const Route = createFileRoute("/_app/mobile/messages")({
-  component: MobileMessages,
+  component: MobileMessagesRoute,
 });
+
+function MobileMessagesRoute() {
+  const { club } = useClub();
+  if (club.id === "gff-demo") return <GffMobileMessages />;
+  return <MobileMessages />;
+}
 
 function MobileMessages() {
   const conversations = useData((s) => s.conversations);
