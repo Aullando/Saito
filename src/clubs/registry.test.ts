@@ -3,8 +3,8 @@ import { CLUBS, DEFAULT_CLUB_ID, getClubConfig, isModuleEnabled } from "./regist
 import { rgccNavItems } from "./rgcc/modules";
 
 describe("Club registry & switcher", () => {
-  it("registers SAITO and RGCC", () => {
-    expect(Object.keys(CLUBS).sort()).toEqual(["rgcc", "saito"]);
+  it("registers SAITO, RGCC and GFF", () => {
+    expect(Object.keys(CLUBS).sort()).toEqual(["gff-demo", "rgcc", "saito"]);
     expect(DEFAULT_CLUB_ID).toBe("saito");
   });
 
