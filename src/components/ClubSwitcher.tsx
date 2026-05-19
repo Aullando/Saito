@@ -19,7 +19,7 @@ export function ClubSwitcher() {
   }, []);
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} dir="ltr" lang="en" className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1.5 shadow-sm hover:bg-muted"
