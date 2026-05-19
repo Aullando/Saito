@@ -286,8 +286,43 @@ function LoginPage() {
           <p className="text-sm text-muted-foreground">{meta.subtitle}</p>
         </header>
 
-        <div className="mb-8 flex justify-center">
+        <div className="mb-3 flex flex-col items-center gap-3">
           <ClubPicker value={selectedClub} onChange={setSelectedClub} tagline={meta.tagline} />
+        </div>
+
+        {/* Tour guiado: paso N/3 + flechas SAITO → RGCC → GFF */}
+        <div className="mb-8 flex items-center justify-center gap-3 text-xs text-muted-foreground">
+          <button
+            type="button"
+            onClick={() => prevClub && setSelectedClub(prevClub)}
+            disabled={!prevClub}
+            className="flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 font-medium hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Entidad anterior"
+          >
+            ← Anterior
+          </button>
+          <div className="flex items-center gap-1.5" aria-hidden="true">
+            {CLUB_ORDER.map((id, i) => (
+              <span
+                key={id}
+                className={`h-1.5 rounded-full transition-all ${
+                  i === idx ? "w-6 bg-primary" : "w-1.5 bg-muted-foreground/30"
+                }`}
+              />
+            ))}
+          </div>
+          <span className="font-medium">
+            Paso {idx + 1} de {CLUB_ORDER.length}
+          </span>
+          <button
+            type="button"
+            onClick={() => nextClub && setSelectedClub(nextClub)}
+            disabled={!nextClub}
+            className="flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 font-medium hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Siguiente entidad"
+          >
+            Siguiente →
+          </button>
         </div>
 
         {desktop.length > 0 && (
