@@ -52,7 +52,9 @@ export function DemoBar() {
       return;
     }
     root.style.setProperty("--demo-bar-h", "36px");
-    return () => root.style.removeProperty("--demo-bar-h");
+    return () => {
+      root.style.removeProperty("--demo-bar-h");
+    };
   }, [hidden]);
 
   useEffect(() => {
