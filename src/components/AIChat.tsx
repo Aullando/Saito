@@ -145,23 +145,6 @@ function buildGffContext(role: string) {
   return base;
 }
 
-  if (role === "admin" || role === "manager") {
-    return {
-      ...base,
-      fees: data.fees,
-      payments: data.payments,
-      appointments: role === "admin" ? data.appointments : undefined,
-    };
-  }
-  if (role === "technical") {
-    return base;
-  }
-  if (role === "medical") {
-    return { ...base, appointments: data.appointments };
-  }
-  return base;
-}
-
 export function AIChat() {
   const u = useCurrentUser();
   const { user, roles } = useAuth();
