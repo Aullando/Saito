@@ -165,7 +165,7 @@ export function AIChat() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: next, role, context, club: club.id, aiScope }),
+        body: JSON.stringify({ messages: next, role, context, club: club.id, aiScope, lang: isGff ? "ar" : "es" }),
       });
 
       if (!resp.ok || !resp.body) {
