@@ -28,12 +28,30 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { useData, useCurrentUser } from "@/lib/store";
 import { useSessionLocal } from "@/lib/sessionLocal";
+import { useClub } from "@/clubs/ClubProvider";
+import {
+  GffMobileSession,
+  GffMobileHealth,
+  GffMobilePerformance,
+} from "@/clubs/gff/GffMobileWorkspace";
 
 const DEMO_SESSION_ID = "session-today";
 
 export const Route = createFileRoute("/_app/mobile/$tool")({
-  component: MobileTool,
+  component: MobileToolRoute,
 });
+
+function MobileToolRoute() {
+  const { tool } = Route.useParams();
+  const { club } = useClub();
+  if (club.id === "gff-demo") {
+    if (tool === "session") return <GffMobileSession />;
+    if (tool === "health") return <GffMobileHealth />;
+    if (tool === "performance") return <GffMobilePerformance />;
+    // Fallback: render the Spanish tool but inside the Arabic/RTL workspace.
+  }
+  return <MobileTool />;
+}
 
 type Meta = { title: string; desc: string; icon: LucideIcon };
 
