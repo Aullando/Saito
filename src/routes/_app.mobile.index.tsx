@@ -35,14 +35,16 @@ const COACH = "#00A74D";
 const SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
 
 function MobileHome() {
-  const user = useCurrentUser();
   const { club } = useClub();
+  if (club.id === "gff-demo") return <GffMobileHome />;
+  return <DefaultMobileHome />;
+}
+
+function DefaultMobileHome() {
+  const user = useCurrentUser();
   const events = useData((s) => s.events);
   const today = new Date().toISOString().slice(0, 10);
   const isCoach = user?.role === "technical";
-
-  // GFF (Arabic / RTL) workspace mirrors the desktop GFF pattern.
-  if (club.id === "gff-demo") return <GffMobileHome />;
 
   const todayEvent = useMemo(
     () => events.find((e) => e.date === today),
