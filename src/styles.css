@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -509,9 +510,10 @@
    and global chrome stay LTR with SAITO branding.
    ============================================================ */
 
-/* Arabic typography stack — loaded from Google Fonts for the GFF workspace.
-   Falls back to system Arabic faces if the network is unavailable. */
-@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap");
+/* Arabic typography stack — Tajawal is loaded via @import at the top of the file
+   (CSS spec requires @import before any other rules). Falls back to system
+   Arabic faces if the network is unavailable. */
+
 
 .workspace-rtl,
 .workspace-rtl * {
