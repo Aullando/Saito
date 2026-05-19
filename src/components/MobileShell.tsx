@@ -43,7 +43,12 @@ export function MobileShell({
   const accent = role === "athlete" ? "#F12F4A" : role === "coach" ? "#00A74D" : "#0067C9";
 
   return (
-    <div className="min-h-screen w-full bg-muted/40 px-2 py-4 sm:py-8" style={roleStyle}>
+    <div
+      className="min-h-screen w-full bg-muted/40 px-2 py-4 sm:py-8"
+      style={roleStyle}
+      dir={isGff ? "rtl" : "ltr"}
+      lang={isGff ? "ar" : undefined}
+    >
       <div className="mx-auto" style={{ width: "min(100%, 390px)" }}>
         <div
           className="relative overflow-hidden"
