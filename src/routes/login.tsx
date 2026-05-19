@@ -217,6 +217,10 @@ const MODULE_STYLES: Record<
 
 const CLUB_ORDER: ClubKey[] = ["saito", "rgcc", "gff-demo"];
 
+function isClubKey(v: string | null | undefined): v is ClubKey {
+  return v === "saito" || v === "rgcc" || v === "gff-demo";
+}
+
 const CLUB_META: Record<ClubKey, { tagline: string; subtitle: string }> = {
   saito: {
     tagline: "Plataforma deportiva SAITO",
