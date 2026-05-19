@@ -11,6 +11,15 @@ import {
   rgccSuggestions,
 } from "@/clubs/rgcc/aiContext";
 import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
+import {
+  gffFederation,
+  gffTeams,
+  gffPlayers,
+  gffStaff,
+  gffMatches,
+  gffStats,
+  gffAffiliatedClubs,
+} from "@/clubs/gff/seed";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
@@ -92,6 +101,50 @@ function buildContext(role: string, data: ReturnType<typeof useData.getState>) {
   if (role === "sysadmin") {
     return { ...base, organizations: data.organizations, users: data.users };
   }
+  if (role === "admin" || role === "manager") {
+    return {
+      ...base,
+      fees: data.fees,
+      payments: data.payments,
+      appointments: role === "admin" ? data.appointments : undefined,
+    };
+  }
+  if (role === "technical") {
+    return base;
+  }
+  if (role === "medical") {
+    return { ...base, appointments: data.appointments };
+  }
+  return base;
+}
+
+function buildGffContext(role: string) {
+  // GFF federation seed — replaces generic athlete/payment/event store for
+  // Arabic federation questions.
+  const base = {
+    today: new Date().toISOString().slice(0, 10),
+    federation: gffFederation,
+    teams: gffTeams,
+    affiliatedClubs: gffAffiliatedClubs,
+  };
+  if (role === "sysadmin") {
+    return { ...base, players: gffPlayers, staff: gffStaff, matches: gffMatches, stats: gffStats };
+  }
+  if (role === "admin") {
+    return { ...base, players: gffPlayers, staff: gffStaff, matches: gffMatches, stats: gffStats };
+  }
+  if (role === "manager") {
+    return { ...base, players: gffPlayers, staff: gffStaff, matches: gffMatches, stats: gffStats };
+  }
+  if (role === "technical") {
+    return { ...base, players: gffPlayers, staff: gffStaff, matches: gffMatches, stats: gffStats };
+  }
+  if (role === "medical") {
+    return { ...base, players: gffPlayers, staff: gffStaff };
+  }
+  return base;
+}
+
   if (role === "admin" || role === "manager") {
     return {
       ...base,
