@@ -128,8 +128,21 @@ export function AIChat() {
   if (!u) return null;
   const role = u.role;
   const isRgcc = club.id === "rgcc";
+  const isGff = club.id === "gff-demo";
   const rgccIdentity = isRgcc ? resolveRgccIdentity(user, roles) : null;
   const aiScope = rgccIdentity?.scope ?? null;
+  const title = isGff ? (TITLES_AR[role] ?? TITLES[role]) : TITLES[role];
+  const suggestions = isGff
+    ? (SUGGESTIONS_GFF[role] ?? [])
+    : isRgcc
+      ? rgccSuggestions(role, user, roles)
+      : (SUGGESTIONS[role] ?? []);
+  const placeholder = isGff ? "اكتب سؤالك…" : "Pregunta algo…";
+  const thinking = isGff ? "جارٍ التفكير…" : "Pensando…";
+  const emptyHint = isGff
+    ? "مساعد ذكاء اصطناعي سياقي مع وصول إلى بيانات الاتحاد. اسأل ما تشاء:"
+    : "Asistente IA contextual con acceso a los datos del club. Pregunta lo que quieras:";
+  const connError = isGff ? "خطأ في الاتصال بالذكاء الاصطناعي." : "Error de conexión con la IA.";
 
   const ask = async (q: string) => {
     if (!q.trim() || loading) return;
