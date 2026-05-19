@@ -143,11 +143,17 @@ export function Sidebar() {
       )}
       <aside
         className={cn(
-          "fixed left-0 top-14 md:top-[72px] z-40 flex h-[calc(100vh-3.5rem)] md:h-[calc(100vh-72px)] flex-col transition-transform duration-200",
+          "fixed left-0 z-40 flex flex-col transition-transform duration-200 top-14 md:top-[72px]",
           "md:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
-        style={{ width, background: "#FFFFFF", borderRight: "1px solid #DDE6F0" }}
+        style={{
+          width,
+          background: "#FFFFFF",
+          borderRight: "1px solid #DDE6F0",
+          top: "calc(var(--topbar-base, 3.5rem) + var(--demo-bar-h, 0px))",
+          height: "calc(100vh - var(--topbar-base, 3.5rem) - var(--demo-bar-h, 0px))",
+        }}
       >
         <div className="flex h-12 items-center justify-between px-4">
           {!collapsed && (

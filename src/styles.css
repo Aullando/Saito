@@ -559,3 +559,8 @@
     opacity: 1 !important;
   }
 }
+
+/* Demo bar offset: --demo-bar-h is set by <DemoBar />.
+   --topbar-base is the height of the topbar (responsive). */
+:root { --topbar-base: 3.5rem; }
+@media (min-width: 768px) { :root { --topbar-base: 72px; } }
