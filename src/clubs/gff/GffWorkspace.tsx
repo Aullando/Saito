@@ -25,7 +25,7 @@ import {
   Tent,
   Map,
 } from "lucide-react";
-import { PageHeader, Card, Pill } from "@/components/ui-kit";
+import { Card, Pill } from "@/components/ui-kit";
 import { cn } from "@/lib/utils";
 import { GFFBadge } from "./GFFBadge";
 import { useGffTranslation } from "./translations";
