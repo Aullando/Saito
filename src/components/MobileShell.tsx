@@ -80,7 +80,7 @@ export function MobileShell({
             <div className="flex items-center gap-2">
               <Link
                 to="/mobile/notifications"
-                aria-label="Notificaciones"
+                aria-label={notifAria}
                 className="relative flex items-center justify-center"
                 style={{
                   width: 40, height: 40, borderRadius: 9999,
@@ -95,7 +95,7 @@ export function MobileShell({
               </Link>
               <button
                 onClick={() => setUser(null)}
-                aria-label="Salir"
+                aria-label={exitAria}
                 className="flex items-center justify-center"
                 style={{
                   width: 40, height: 40, borderRadius: 9999,
