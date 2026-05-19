@@ -251,7 +251,7 @@ export function AIChat() {
           /* ignore */
         }
       }
-      setMsgs((m) => [...m, { role: "assistant", content: "Error de conexión con la IA." }]);
+      setMsgs((m) => [...m, { role: "assistant", content: connError }]);
     } finally {
       setLoading(false);
     }
