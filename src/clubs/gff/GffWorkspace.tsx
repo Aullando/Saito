@@ -220,6 +220,24 @@ export function GffWorkspace({ view: viewProp }: { view?: string }) {
         {view === "reporting" && <ReportingView />}
         {view === "administration" && <AdministrationView />}
       </div>
+
+      <DemoBanner />
+    </div>
+  );
+}
+
+function DemoBanner() {
+  return (
+    <div
+      className="pointer-events-none mt-8 flex flex-col items-start gap-0.5 pb-2 text-start opacity-60"
+      aria-label="Demo workspace notice"
+    >
+      <span className="text-[12px] font-medium text-muted-foreground">
+        مساحة عمل تجريبية · اتحاد وبيانات افتراضية
+      </span>
+      <span lang="en" dir="ltr" className="text-[10px] text-muted-foreground/80">
+        Demo workspace · Fictional federation &amp; data
+      </span>
     </div>
   );
 }
