@@ -243,19 +243,21 @@ function CalendarPage() {
   });
 
   const events: DBEvent[] = demoMode
-    ? demoEvents.map((e): DBEvent => ({
-        id: e.id,
-        title: e.title,
-        event_date: e.date,
-        start_time: e.startTime,
-        type: e.type,
-        section_id: e.sectionId ?? null,
-        category_id: e.categoryId ?? null,
-        group_id: e.groupId ?? null,
-        staff_id: e.staffId ?? null,
-        location: e.location ?? null,
-        recurrence: e.recurrence ? { ...e.recurrence, exceptions: e.exceptions ?? [] } : null,
-      }))
+    ? demoEvents.map(
+        (e): DBEvent => ({
+          id: e.id,
+          title: e.title,
+          event_date: e.date,
+          start_time: e.startTime,
+          type: e.type,
+          section_id: e.sectionId ?? null,
+          category_id: e.categoryId ?? null,
+          group_id: e.groupId ?? null,
+          staff_id: e.staffId ?? null,
+          location: e.location ?? null,
+          recurrence: e.recurrence ? { ...e.recurrence, exceptions: e.exceptions ?? [] } : null,
+        }),
+      )
     : (demoOrEmpty(eventsQ.data, DEMO_CALENDAR_EVENTS_ROWS) as DBEvent[]);
   const sections = demoMode
     ? demoSections.map((s) => ({ id: s.id, name: s.name }))
@@ -529,9 +531,7 @@ function CalendarPage() {
     const hasPayment =
       ev.type === "payment" ||
       demoPayments.some(
-        (p) =>
-          p.date === dateStr &&
-          (!ev.section_id || p.sectionId === ev.section_id),
+        (p) => p.date === dateStr && (!ev.section_id || p.sectionId === ev.section_id),
       );
     const participants = participantsFor(ev);
     return {
@@ -546,7 +546,10 @@ function CalendarPage() {
     };
   };
 
-  const computeStatus = (ev: DBEvent, dateStr: string): {
+  const computeStatus = (
+    ev: DBEvent,
+    dateStr: string,
+  ): {
     label: string;
     tone: "muted" | "ok" | "warn" | "danger";
   } => {
@@ -928,386 +931,380 @@ function CalendarPage() {
       )}
 
       {view === "month" && (
-      <div className="saito-card p-3">
-        <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
-            <div key={d} className="px-2 py-1">
-              {d}
-            </div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7 gap-1">
-          {grid.map((d, i) => {
-            const inMonth = d.getMonth() === month;
-            const dayStr = d.toISOString().slice(0, 10);
-            const dayOcc = occurrencesForDay(dayStr);
-            const isToday = d.toDateString() === new Date().toDateString();
-            return (
-              <div
-                key={i}
-                className={`min-h-[110px] rounded-xl border p-2 ${
-                  inMonth
-                    ? "border-border bg-card"
-                    : "border-transparent bg-muted/30 text-muted-foreground"
-                }`}
-              >
-                <div className="mb-1 flex items-center justify-between text-[11px]">
-                  <span
-                    className={`flex h-5 w-5 items-center justify-center rounded-full font-semibold ${
-                      isToday ? "bg-primary text-primary-foreground" : ""
-                    }`}
-                  >
-                    {d.getDate()}
-                  </span>
-                </div>
-                <div className="space-y-1">
-                  {dayOcc.slice(0, 3).map((o, idx) => {
-                    const isCancelled = !!cancellations[o.event.id];
-                    return (
-                      <button
-                        key={o.event.id + idx}
-                        onClick={() => setDetail(o)}
-                        className={`block w-full truncate rounded-md border px-1.5 py-1 text-left text-[11px] font-medium transition hover:opacity-80 ${
-                          TYPE_STYLE[o.event.type] ??
-                          "bg-primary/10 text-primary border-primary/20"
-                        } ${isCancelled ? "line-through opacity-60" : ""}`}
-                      >
-                        {fmtTime(o.event.start_time)} · {o.event.title}
-                        {o.event.recurrence && (
-                          <span className="ml-1 text-[10px] opacity-60">↻</span>
-                        )}
-                      </button>
-                    );
-                  })}
-                  {dayOcc.length > 3 && (
-                    <div className="px-1.5 text-[11px] font-medium text-muted-foreground">
-                      +{dayOcc.length - 3} {t("more")}
-                    </div>
-                  )}
-                </div>
+        <div className="saito-card p-3">
+          <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
+              <div key={d} className="px-2 py-1">
+                {d}
               </div>
-            );
-          })}
+            ))}
+          </div>
+          <div className="grid grid-cols-7 gap-1">
+            {grid.map((d, i) => {
+              const inMonth = d.getMonth() === month;
+              const dayStr = d.toISOString().slice(0, 10);
+              const dayOcc = occurrencesForDay(dayStr);
+              const isToday = d.toDateString() === new Date().toDateString();
+              return (
+                <div
+                  key={i}
+                  className={`min-h-[110px] rounded-xl border p-2 ${
+                    inMonth
+                      ? "border-border bg-card"
+                      : "border-transparent bg-muted/30 text-muted-foreground"
+                  }`}
+                >
+                  <div className="mb-1 flex items-center justify-between text-[11px]">
+                    <span
+                      className={`flex h-5 w-5 items-center justify-center rounded-full font-semibold ${
+                        isToday ? "bg-primary text-primary-foreground" : ""
+                      }`}
+                    >
+                      {d.getDate()}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    {dayOcc.slice(0, 3).map((o, idx) => {
+                      const isCancelled = !!cancellations[o.event.id];
+                      return (
+                        <button
+                          key={o.event.id + idx}
+                          onClick={() => setDetail(o)}
+                          className={`block w-full truncate rounded-md border px-1.5 py-1 text-left text-[11px] font-medium transition hover:opacity-80 ${
+                            TYPE_STYLE[o.event.type] ??
+                            "bg-primary/10 text-primary border-primary/20"
+                          } ${isCancelled ? "line-through opacity-60" : ""}`}
+                        >
+                          {fmtTime(o.event.start_time)} · {o.event.title}
+                          {o.event.recurrence && (
+                            <span className="ml-1 text-[10px] opacity-60">↻</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                    {dayOcc.length > 3 && (
+                      <div className="px-1.5 text-[11px] font-medium text-muted-foreground">
+                        +{dayOcc.length - 3} {t("more")}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
       )}
 
-      {view === "day" && (() => {
-        const dayStr = dayCursor.toISOString().slice(0, 10);
-        const dayOcc = occurrencesForDay(dayStr).sort((a, b) =>
-          (a.event.start_time ?? "").localeCompare(b.event.start_time ?? ""),
-        );
-        return (
-          <div className="saito-card p-4">
-            {dayOcc.length === 0 ? (
-              <div className="py-12 text-center text-sm text-muted-foreground">
-                No hay eventos programados.
-              </div>
-            ) : (
-              <ul className="divide-y divide-border">
-                {dayOcc.map((o, idx) => {
-                  const isCancelled = !!cancellations[o.event.id];
-                  const group = lookupGroup(o.event.group_id);
-                  return (
-                    <li key={o.event.id + idx}>
-                      <button
-                        onClick={() => setDetail(o)}
-                        className={`flex w-full items-center gap-4 px-2 py-3 text-left transition hover:bg-muted/40 ${
-                          isCancelled ? "opacity-60" : ""
-                        }`}
-                      >
-                        <div className="w-16 text-sm font-semibold tabular-nums text-foreground">
-                          {fmtTime(o.event.start_time) || "—"}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div
-                            className={`truncate text-sm font-medium ${
-                              isCancelled ? "line-through" : ""
-                            }`}
-                          >
-                            {o.event.title}
+      {view === "day" &&
+        (() => {
+          const dayStr = dayCursor.toISOString().slice(0, 10);
+          const dayOcc = occurrencesForDay(dayStr).sort((a, b) =>
+            (a.event.start_time ?? "").localeCompare(b.event.start_time ?? ""),
+          );
+          return (
+            <div className="saito-card p-4">
+              {dayOcc.length === 0 ? (
+                <div className="py-12 text-center text-sm text-muted-foreground">
+                  No hay eventos programados.
+                </div>
+              ) : (
+                <ul className="divide-y divide-border">
+                  {dayOcc.map((o, idx) => {
+                    const isCancelled = !!cancellations[o.event.id];
+                    const group = lookupGroup(o.event.group_id);
+                    return (
+                      <li key={o.event.id + idx}>
+                        <button
+                          onClick={() => setDetail(o)}
+                          className={`flex w-full items-center gap-4 px-2 py-3 text-left transition hover:bg-muted/40 ${
+                            isCancelled ? "opacity-60" : ""
+                          }`}
+                        >
+                          <div className="w-16 text-sm font-semibold tabular-nums text-foreground">
+                            {fmtTime(o.event.start_time) || "—"}
                           </div>
-                          <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-                            <TypeBadge type={o.event.type} />
-                            {group && <span>· {group.name}</span>}
-                            {facilityFor(o.event) && (
-                              <span>· {facilityFor(o.event)}</span>
-                            )}
+                          <div className="flex-1 min-w-0">
+                            <div
+                              className={`truncate text-sm font-medium ${
+                                isCancelled ? "line-through" : ""
+                              }`}
+                            >
+                              {o.event.title}
+                            </div>
+                            <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                              <TypeBadge type={o.event.type} />
+                              {group && <span>· {group.name}</span>}
+                              {facilityFor(o.event) && <span>· {facilityFor(o.event)}</span>}
+                            </div>
                           </div>
-                        </div>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
-        );
-      })()}
-
-
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          );
+        })()}
 
       {/* ────── Detail Sheet ────── */}
       <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
         <SheetContent className="w-full sm:max-w-md">
-          {detail && (() => {
-            const ev = detail.event;
-            const a = associationsFor(ev, detail.date);
-            const status = computeStatus(ev, detail.date);
-            const cancelInfo = cancellations[ev.id];
-            const isFuture = detail.date >= todayStr;
-            // Permiso efectivo según tipo de evento
-            const canEditThis =
-              ev.type === "medical" ? canManageMedicalAppointments : canManageCalendarEvents;
-            const canEditEvent = canEditThis && isFuture && !a.cancelled;
-            const blockers = [
-              a.hasAttn && "asistencia registrada",
-              a.hasNotes && "notas",
-              a.hasPayment && "pagos asociados",
-              a.hasComm && "comunicación enviada",
-              a.hasParticipants && a.isPast && "participantes históricos",
-            ].filter(Boolean) as string[];
-            const canDelete = canEditThis && !a.cancelled && blockers.length === 0;
-            const shouldCancel = canEditThis && !a.cancelled && !canDelete && isFuture;
-            const group = lookupGroup(ev.group_id);
-            const staff = lookupStaff(ev.staff_id ?? null);
-            const facility = facilityFor(ev);
-            return (
-              <>
-                <SheetHeader>
-                  <div className="flex items-center gap-2">
-                    <TypeBadge type={ev.type} />
-                    <StatusPill tone={status.tone}>{status.label}</StatusPill>
-                  </div>
-                  <SheetTitle className="mt-2">{ev.title}</SheetTitle>
-                </SheetHeader>
-
-                <div className="mt-5 space-y-4 text-sm">
-                  <div className="grid grid-cols-1 gap-2">
-                    <Row icon={<CalendarDays className="h-4 w-4" />} label="Fecha">
-                      {detail.date}
-                    </Row>
-                    <Row icon={<Clock className="h-4 w-4" />} label="Hora">
-                      {fmtTime(ev.start_time) || "—"}
-                    </Row>
-                    <Row icon={<MapPin className="h-4 w-4" />} label="Ubicación">
-                      {facility ?? "—"}
-                    </Row>
-                    <Row icon={<Users className="h-4 w-4" />} label="Grupo">
-                      {group?.name ?? "—"}
-                    </Row>
-                    <Row icon={<UserCog className="h-4 w-4" />} label="Staff responsable">
-                      {staff?.name ?? "—"}
-                    </Row>
-                  </div>
-
-                  <div>
-                    <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Participantes ({a.participants.length})
+          {detail &&
+            (() => {
+              const ev = detail.event;
+              const a = associationsFor(ev, detail.date);
+              const status = computeStatus(ev, detail.date);
+              const cancelInfo = cancellations[ev.id];
+              const isFuture = detail.date >= todayStr;
+              // Permiso efectivo según tipo de evento
+              const canEditThis =
+                ev.type === "medical" ? canManageMedicalAppointments : canManageCalendarEvents;
+              const canEditEvent = canEditThis && isFuture && !a.cancelled;
+              const blockers = [
+                a.hasAttn && "asistencia registrada",
+                a.hasNotes && "notas",
+                a.hasPayment && "pagos asociados",
+                a.hasComm && "comunicación enviada",
+                a.hasParticipants && a.isPast && "participantes históricos",
+              ].filter(Boolean) as string[];
+              const canDelete = canEditThis && !a.cancelled && blockers.length === 0;
+              const shouldCancel = canEditThis && !a.cancelled && !canDelete && isFuture;
+              const group = lookupGroup(ev.group_id);
+              const staff = lookupStaff(ev.staff_id ?? null);
+              const facility = facilityFor(ev);
+              return (
+                <>
+                  <SheetHeader>
+                    <div className="flex items-center gap-2">
+                      <TypeBadge type={ev.type} />
+                      <StatusPill tone={status.tone}>{status.label}</StatusPill>
                     </div>
-                    {a.participants.length === 0 ? (
-                      <div className="text-xs text-muted-foreground">
-                        Sin participantes asignados.
-                      </div>
-                    ) : (
-                      <div className="max-h-32 overflow-y-auto rounded-lg border border-border p-2">
-                        <ul className="space-y-1 text-xs">
-                          {a.participants.slice(0, 10).map((p) => (
-                            <li key={p.id} className="truncate">
-                              · {p.name}
-                            </li>
-                          ))}
-                          {a.participants.length > 10 && (
-                            <li className="text-muted-foreground">
-                              + {a.participants.length - 10} más
-                            </li>
-                          )}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
+                    <SheetTitle className="mt-2">{ev.title}</SheetTitle>
+                  </SheetHeader>
 
-                  {ev.recurrence && (
-                    <div>
-                      <Pill tone="info">↻ Semanal hasta {ev.recurrence.until}</Pill>
+                  <div className="mt-5 space-y-4 text-sm">
+                    <div className="grid grid-cols-1 gap-2">
+                      <Row icon={<CalendarDays className="h-4 w-4" />} label="Fecha">
+                        {detail.date}
+                      </Row>
+                      <Row icon={<Clock className="h-4 w-4" />} label="Hora">
+                        {fmtTime(ev.start_time) || "—"}
+                      </Row>
+                      <Row icon={<MapPin className="h-4 w-4" />} label="Ubicación">
+                        {facility ?? "—"}
+                      </Row>
+                      <Row icon={<Users className="h-4 w-4" />} label="Grupo">
+                        {group?.name ?? "—"}
+                      </Row>
+                      <Row icon={<UserCog className="h-4 w-4" />} label="Staff responsable">
+                        {staff?.name ?? "—"}
+                      </Row>
                     </div>
-                  )}
 
-                  {cancelInfo && (
-                    <div className="rounded-lg border border-rose-200 bg-rose-50/60 px-3 py-2 text-xs text-rose-700">
-                      <div className="font-semibold">Motivo de cancelación</div>
-                      <div className="mt-0.5">{cancelInfo.reason}</div>
-                      <div className="mt-1 text-[11px] opacity-80">
-                        Cancelado el {new Date(cancelInfo.cancelledAt).toLocaleString()}
-                        {cancelInfo.notified ? " · participantes notificados" : ""}
-                      </div>
-                    </div>
-                  )}
-
-                  {!a.cancelled && blockers.length > 0 && (
-                    <div className="rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-xs text-amber-800">
-                      No se puede eliminar: el evento tiene {blockers.join(", ")}.
-                      {isFuture ? " Usa Cancelar para mantener el historial." : ""}
-                    </div>
-                  )}
-
-
-
-                  {/* Session quick actions (training events) */}
-                  {ev.type === "training" && !a.cancelled && (
                     <div>
                       <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Acciones de sesión
+                        Participantes ({a.participants.length})
                       </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            toast.info("Detalle de la sesión");
-                          }}
-                        >
-                          <Eye className="mr-1 h-4 w-4" />
-                          Ver detalle
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            markCommunication(ev.id, true);
-                            toast.success("Convocatoria generada");
-                            navigate({ to: "/communication" });
-                          }}
-                        >
-                          <Send className="mr-1 h-4 w-4" />
-                          Convocatoria
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            markAttendance(ev.id, true);
-                            navigate({ to: "/attendance" });
-                          }}
-                        >
-                          <ClipboardCheck className="mr-1 h-4 w-4" />
-                          Asistencia
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setNoteDraft(notes[ev.id] ?? "");
-                            setNotesOpen(true);
-                          }}
-                        >
-                          <StickyNote className="mr-1 h-4 w-4" />
-                          Notas
-                        </Button>
-                      </div>
-                      {notes[ev.id] && (
-                        <div className="mt-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-                          <span className="font-semibold text-foreground">Nota: </span>
-                          {notes[ev.id]}
+                      {a.participants.length === 0 ? (
+                        <div className="text-xs text-muted-foreground">
+                          Sin participantes asignados.
+                        </div>
+                      ) : (
+                        <div className="max-h-32 overflow-y-auto rounded-lg border border-border p-2">
+                          <ul className="space-y-1 text-xs">
+                            {a.participants.slice(0, 10).map((p) => (
+                              <li key={p.id} className="truncate">
+                                · {p.name}
+                              </li>
+                            ))}
+                            {a.participants.length > 10 && (
+                              <li className="text-muted-foreground">
+                                + {a.participants.length - 10} más
+                              </li>
+                            )}
+                          </ul>
                         </div>
                       )}
                     </div>
-                  )}
 
+                    {ev.recurrence && (
+                      <div>
+                        <Pill tone="info">↻ Semanal hasta {ev.recurrence.until}</Pill>
+                      </div>
+                    )}
 
+                    {cancelInfo && (
+                      <div className="rounded-lg border border-rose-200 bg-rose-50/60 px-3 py-2 text-xs text-rose-700">
+                        <div className="font-semibold">Motivo de cancelación</div>
+                        <div className="mt-0.5">{cancelInfo.reason}</div>
+                        <div className="mt-1 text-[11px] opacity-80">
+                          Cancelado el {new Date(cancelInfo.cancelledAt).toLocaleString()}
+                          {cancelInfo.notified ? " · participantes notificados" : ""}
+                        </div>
+                      </div>
+                    )}
 
-                  {canEditThis && (
-                    <div className="flex flex-col gap-2 pt-2">
-                      {canEditEvent && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setEditEv({
-                              id: ev.id,
-                              title: ev.title,
-                              date: ev.event_date,
-                              startTime: ev.start_time ?? "10:00",
-                              type: (ev.type as CalendarEventType) || "training",
-                              groupId: ev.group_id ?? "",
-                              staffId: ev.staff_id ?? "",
-                              location: ev.location ?? "",
-                              origDate: ev.event_date,
-                              origStartTime: ev.start_time ?? "10:00",
-                              origLocation: ev.location ?? "",
-                              notifyParticipants: true,
-                            });
-                            setDetail(null);
-                          }}
-                        >
-                          <Pencil className="mr-1 h-4 w-4" />
-                          Editar evento
-                        </Button>
-                      )}
+                    {!a.cancelled && blockers.length > 0 && (
+                      <div className="rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-xs text-amber-800">
+                        No se puede eliminar: el evento tiene {blockers.join(", ")}.
+                        {isFuture ? " Usa Cancelar para mantener el historial." : ""}
+                      </div>
+                    )}
 
-                      {ev.recurrence && isFuture && !a.cancelled && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={async () => {
-                            await addException.mutateAsync({ ev, date: detail.date });
-                            setDetail(null);
-                          }}
-                        >
-                          <CircleSlash className="mr-1 h-4 w-4" />
-                          Omitir solo esta ocurrencia
-                        </Button>
-                      )}
+                    {/* Session quick actions (training events) */}
+                    {ev.type === "training" && !a.cancelled && (
+                      <div>
+                        <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          Acciones de sesión
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              toast.info("Detalle de la sesión");
+                            }}
+                          >
+                            <Eye className="mr-1 h-4 w-4" />
+                            Ver detalle
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              markCommunication(ev.id, true);
+                              toast.success("Convocatoria generada");
+                              navigate({ to: "/communication" });
+                            }}
+                          >
+                            <Send className="mr-1 h-4 w-4" />
+                            Convocatoria
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              markAttendance(ev.id, true);
+                              navigate({ to: "/attendance" });
+                            }}
+                          >
+                            <ClipboardCheck className="mr-1 h-4 w-4" />
+                            Asistencia
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setNoteDraft(notes[ev.id] ?? "");
+                              setNotesOpen(true);
+                            }}
+                          >
+                            <StickyNote className="mr-1 h-4 w-4" />
+                            Notas
+                          </Button>
+                        </div>
+                        {notes[ev.id] && (
+                          <div className="mt-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">Nota: </span>
+                            {notes[ev.id]}
+                          </div>
+                        )}
+                      </div>
+                    )}
 
-                      {shouldCancel && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-rose-200 text-rose-700 hover:bg-rose-50"
-                          onClick={() => {
-                            setCancelReason("");
-                            setCancelNotify(true);
-                            setCancelOpen(true);
-                          }}
-                        >
-                          <Ban className="mr-1 h-4 w-4" />
-                          Cancelar evento
-                        </Button>
-                      )}
+                    {canEditThis && (
+                      <div className="flex flex-col gap-2 pt-2">
+                        {canEditEvent && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditEv({
+                                id: ev.id,
+                                title: ev.title,
+                                date: ev.event_date,
+                                startTime: ev.start_time ?? "10:00",
+                                type: (ev.type as CalendarEventType) || "training",
+                                groupId: ev.group_id ?? "",
+                                staffId: ev.staff_id ?? "",
+                                location: ev.location ?? "",
+                                origDate: ev.event_date,
+                                origStartTime: ev.start_time ?? "10:00",
+                                origLocation: ev.location ?? "",
+                                notifyParticipants: true,
+                              });
+                              setDetail(null);
+                            }}
+                          >
+                            <Pencil className="mr-1 h-4 w-4" />
+                            Editar evento
+                          </Button>
+                        )}
 
-                      {canDelete && (
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={async () => {
-                            if (!confirm("¿Eliminar este evento?")) return;
-                            await delEvent.mutateAsync(ev.id);
-                            setDetail(null);
-                          }}
-                        >
-                          <Trash2 className="mr-1 h-4 w-4" />
-                          Eliminar evento
-                        </Button>
-                      )}
+                        {ev.recurrence && isFuture && !a.cancelled && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={async () => {
+                              await addException.mutateAsync({ ev, date: detail.date });
+                              setDetail(null);
+                            }}
+                          >
+                            <CircleSlash className="mr-1 h-4 w-4" />
+                            Omitir solo esta ocurrencia
+                          </Button>
+                        )}
 
-                      {a.cancelled && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            uncancelEvent(ev.id);
-                            toast.success("Cancelación revertida");
-                          }}
-                        >
-                          Revertir cancelación
-                        </Button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </>
-            );
-          })()}
+                        {shouldCancel && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-rose-200 text-rose-700 hover:bg-rose-50"
+                            onClick={() => {
+                              setCancelReason("");
+                              setCancelNotify(true);
+                              setCancelOpen(true);
+                            }}
+                          >
+                            <Ban className="mr-1 h-4 w-4" />
+                            Cancelar evento
+                          </Button>
+                        )}
+
+                        {canDelete && (
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={async () => {
+                              if (!confirm("¿Eliminar este evento?")) return;
+                              await delEvent.mutateAsync(ev.id);
+                              setDetail(null);
+                            }}
+                          >
+                            <Trash2 className="mr-1 h-4 w-4" />
+                            Eliminar evento
+                          </Button>
+                        )}
+
+                        {a.cancelled && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              uncancelEvent(ev.id);
+                              toast.success("Cancelación revertida");
+                            }}
+                          >
+                            Revertir cancelación
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
         </SheetContent>
       </Sheet>
 
@@ -1332,10 +1329,7 @@ function CalendarPage() {
               />
             </div>
             <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-              <Checkbox
-                checked={cancelNotify}
-                onCheckedChange={(v) => setCancelNotify(!!v)}
-              />
+              <Checkbox checked={cancelNotify} onCheckedChange={(v) => setCancelNotify(!!v)} />
               <span>Notificar a participantes</span>
             </label>
           </div>
@@ -1378,9 +1372,7 @@ function CalendarPage() {
                   <Label>Tipo</Label>
                   <Select
                     value={editEv.type}
-                    onValueChange={(v) =>
-                      setEditEv({ ...editEv, type: v as CalendarEventType })
-                    }
+                    onValueChange={(v) => setEditEv({ ...editEv, type: v as CalendarEventType })}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -1475,13 +1467,9 @@ function CalendarPage() {
                 <label className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-sm text-amber-900">
                   <Checkbox
                     checked={editEv.notifyParticipants}
-                    onCheckedChange={(v) =>
-                      setEditEv({ ...editEv, notifyParticipants: !!v })
-                    }
+                    onCheckedChange={(v) => setEditEv({ ...editEv, notifyParticipants: !!v })}
                   />
-                  <span>
-                    Has cambiado fecha, hora o ubicación. Notificar a participantes.
-                  </span>
+                  <span>Has cambiado fecha, hora o ubicación. Notificar a participantes.</span>
                 </label>
               )}
             </div>
@@ -1559,8 +1547,6 @@ function CalendarPage() {
   );
 }
 
-
-
 function Row({
   icon,
   label,
@@ -1574,9 +1560,7 @@ function Row({
     <div className="flex items-start gap-2">
       <span className="mt-0.5 text-muted-foreground">{icon}</span>
       <div className="flex-1">
-        <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-          {label}
-        </div>
+        <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
         <div className="text-sm text-foreground">{children}</div>
       </div>
     </div>

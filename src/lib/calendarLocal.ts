@@ -36,9 +36,7 @@ export const useCalendarLocal = create<CalendarLocalState>()(
             ...s.cancellations,
             [id]: { reason, cancelledAt: new Date().toISOString(), notified: notify },
           },
-          hasCommunication: notify
-            ? { ...s.hasCommunication, [id]: true }
-            : s.hasCommunication,
+          hasCommunication: notify ? { ...s.hasCommunication, [id]: true } : s.hasCommunication,
         })),
       uncancelEvent: (id) =>
         set((s) => {
@@ -46,8 +44,7 @@ export const useCalendarLocal = create<CalendarLocalState>()(
           delete next[id];
           return { cancellations: next };
         }),
-      setNote: (id, note) =>
-        set((s) => ({ notes: { ...s.notes, [id]: note } })),
+      setNote: (id, note) => set((s) => ({ notes: { ...s.notes, [id]: note } })),
       markAttendance: (id, value) =>
         set((s) => ({ hasAttendance: { ...s.hasAttendance, [id]: value } })),
       markCommunication: (id, value) =>

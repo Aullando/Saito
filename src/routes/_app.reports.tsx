@@ -18,7 +18,11 @@ export const Route = createFileRoute("/_app/reports")({
 const reports = [
   { icon: Users, title: "Altas y bajas", desc: "Evolución mensual de la base de deportistas." },
   { icon: Wallet, title: "Ingresos por cuotas", desc: "Recaudación, morosidad y previsión." },
-  { icon: TrendingUp, title: "Asistencia por sección", desc: "Ratio de asistencia a entrenamientos." },
+  {
+    icon: TrendingUp,
+    title: "Asistencia por sección",
+    desc: "Ratio de asistencia a entrenamientos.",
+  },
   { icon: BarChart3, title: "Ocupación de instalaciones", desc: "Uso semanal por instalación." },
 ];
 

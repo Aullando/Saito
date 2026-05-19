@@ -179,8 +179,7 @@ export function calculateImpact(inputs: ImpactInputs): ImpactBreakdown {
 
   // Patrocinio: revalorización sobre facturación actual del club
   const patrocinio = inputs.facturaPatrocinio
-    ? (inputs.facturacionPatrocinioAnual * CONSTANTES.REVALORIZACION_PATROCINIO) /
-      12
+    ? (inputs.facturacionPatrocinioAnual * CONSTANTES.REVALORIZACION_PATROCINIO) / 12
     : 0;
 
   const ingresosTotal = bonos + eventos + merch + patrocinio;

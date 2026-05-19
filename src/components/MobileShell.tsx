@@ -5,7 +5,6 @@ import { Logo } from "@/components/Logo";
 import { useAuth as useLocalAuth } from "@/lib/store";
 import { useClub } from "@/clubs/ClubProvider";
 
-
 export interface MobileTab {
   id: string;
   label: string;
@@ -35,15 +34,26 @@ export function MobileShell({
   // Role-scoped accent: coach = green, athlete = red.
   const roleStyle =
     role === "athlete"
-      ? ({ ["--primary" as string]: "#f12f4a", ["--ring" as string]: "#f12f4a" } as React.CSSProperties)
+      ? ({
+          ["--primary" as string]: "#f12f4a",
+          ["--ring" as string]: "#f12f4a",
+        } as React.CSSProperties)
       : role === "coach"
-        ? ({ ["--primary" as string]: "#00a74d", ["--ring" as string]: "#00a74d" } as React.CSSProperties)
+        ? ({
+            ["--primary" as string]: "#00a74d",
+            ["--ring" as string]: "#00a74d",
+          } as React.CSSProperties)
         : undefined;
 
   const accent = role === "athlete" ? "#F12F4A" : role === "coach" ? "#00A74D" : "#0067C9";
 
   return (
-    <div className="min-h-screen w-full bg-muted/40 px-2 py-4 sm:py-8" style={roleStyle}>
+    <div
+      className="min-h-screen w-full bg-muted/40 px-2 py-4 sm:py-8"
+      style={roleStyle}
+      dir={isGff ? "rtl" : "ltr"}
+      lang={isGff ? "ar" : undefined}
+    >
       <div className="mx-auto" style={{ width: "min(100%, 390px)" }}>
         <div
           className="relative overflow-hidden"
@@ -56,7 +66,10 @@ export function MobileShell({
           }}
         >
           {/* Top status bar */}
-          <div className="flex h-11 items-center justify-between px-5 text-[11px] font-semibold text-foreground/70" style={{ background: "#F7F9FC" }}>
+          <div
+            className="flex h-11 items-center justify-between px-5 text-[11px] font-semibold text-foreground/70"
+            style={{ background: "#F7F9FC" }}
+          >
             <span>9:41</span>
             <div className="flex items-center gap-1">
               <span>•••</span>
@@ -72,7 +85,10 @@ export function MobileShell({
             <div className="flex items-center gap-2 min-w-0">
               <Logo size={28} withText />
               {title && (
-                <span className="ml-2 text-[11px] font-semibold uppercase tracking-wider truncate" style={{ color: "#66758A" }}>
+                <span
+                  className="ml-2 text-[11px] font-semibold uppercase tracking-wider truncate"
+                  style={{ color: "#66758A" }}
+                >
                   {title}
                 </span>
               )}
@@ -83,8 +99,12 @@ export function MobileShell({
                 aria-label={notifAria}
                 className="relative flex items-center justify-center"
                 style={{
-                  width: 40, height: 40, borderRadius: 9999,
-                  background: "#FFFFFF", border: "1px solid #DDE6F0", color: "#21324A",
+                  width: 40,
+                  height: 40,
+                  borderRadius: 9999,
+                  background: "#FFFFFF",
+                  border: "1px solid #DDE6F0",
+                  color: "#21324A",
                 }}
               >
                 <Bell className="h-[18px] w-[18px]" />
@@ -98,8 +118,12 @@ export function MobileShell({
                 aria-label={exitAria}
                 className="flex items-center justify-center"
                 style={{
-                  width: 40, height: 40, borderRadius: 9999,
-                  background: "#FFFFFF", border: "1px solid #DDE6F0", color: "#66758A",
+                  width: 40,
+                  height: 40,
+                  borderRadius: 9999,
+                  background: "#FFFFFF",
+                  border: "1px solid #DDE6F0",
+                  color: "#66758A",
                 }}
               >
                 <LogOut className="h-[18px] w-[18px]" />

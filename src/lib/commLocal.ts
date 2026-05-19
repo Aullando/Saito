@@ -34,7 +34,10 @@ interface CommLocalState {
   hideMsg: (id: string) => void;
 
   addLocalCircular: (c: Omit<LocalCircular, "id" | "createdAt" | "status" | "reads">) => string;
-  updateLocalCircular: (id: string, patch: Partial<Omit<LocalCircular, "id" | "createdAt">>) => void;
+  updateLocalCircular: (
+    id: string,
+    patch: Partial<Omit<LocalCircular, "id" | "createdAt">>,
+  ) => void;
   deleteLocalCircular: (id: string) => void;
   publishCircular: (id: string) => void;
   scheduleCircular: (id: string, scheduledAt: string) => void;
@@ -65,9 +68,7 @@ export const useCommLocal = create<CommLocalState>()(
         })),
       archiveConv: (id) =>
         set((s) => ({
-          archivedConvs: s.archivedConvs.includes(id)
-            ? s.archivedConvs
-            : [...s.archivedConvs, id],
+          archivedConvs: s.archivedConvs.includes(id) ? s.archivedConvs : [...s.archivedConvs, id],
         })),
       unarchiveConv: (id) =>
         set((s) => ({ archivedConvs: s.archivedConvs.filter((x) => x !== id) })),
@@ -90,9 +91,7 @@ export const useCommLocal = create<CommLocalState>()(
       },
       updateLocalCircular: (id, patch) =>
         set((s) => ({
-          localCirculars: s.localCirculars.map((c) =>
-            c.id === id ? { ...c, ...patch } : c,
-          ),
+          localCirculars: s.localCirculars.map((c) => (c.id === id ? { ...c, ...patch } : c)),
         })),
       deleteLocalCircular: (id) =>
         set((s) => ({ localCirculars: s.localCirculars.filter((c) => c.id !== id) })),

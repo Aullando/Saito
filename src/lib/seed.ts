@@ -756,4 +756,3 @@ export const MEDICAL_APPOINTMENTS: MedicalAppointment[] = [
 ];
 
 export const ALL_USERS: User[] = DEMO_USERS;
-

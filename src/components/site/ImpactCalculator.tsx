@@ -1,10 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from "react";
-import {
-  calculateImpact,
-  INPUTS_DEFAULT,
-  CONSTANTES,
-  type ImpactInputs,
-} from "@/lib/impact";
+import { calculateImpact, INPUTS_DEFAULT, CONSTANTES, type ImpactInputs } from "@/lib/impact";
 import { localizedPath, type Locale } from "@/lib/site-i18n";
 
 interface Props {
@@ -237,7 +232,10 @@ export function ImpactCalculator({ locale }: Props) {
               onChange={(v) => update("cuotaMedia", v)}
             />
             <SliderField
-              label={t("Horas/semana de gestión (personal remunerado)", "Hours/week of admin (paid staff)")}
+              label={t(
+                "Horas/semana de gestión (personal remunerado)",
+                "Hours/week of admin (paid staff)",
+              )}
               value={inputs.horasGestionSemana}
               min={0}
               max={60}
@@ -261,7 +259,10 @@ export function ImpactCalculator({ locale }: Props) {
               onChange={(v) => update("porcentajeChurnAnual", v)}
             />
             <NumberField
-              label={t("Coste mensual de herramientas que SAITO sustituye", "Monthly cost of tools SAITO replaces")}
+              label={t(
+                "Coste mensual de herramientas que SAITO sustituye",
+                "Monthly cost of tools SAITO replaces",
+              )}
               value={inputs.herramientasSustituidas}
               onChange={(v) => update("herramientasSustituidas", v)}
             />
@@ -273,7 +274,10 @@ export function ImpactCalculator({ locale }: Props) {
                 {t("Oportunidades del copiloto", "Copilot opportunities")}
               </h3>
               <p className="mt-1 text-xs text-foreground/50">
-                {t("Activa solo lo que aplica a tu club.", "Enable only what applies to your club.")}
+                {t(
+                  "Activa solo lo que aplica a tu club.",
+                  "Enable only what applies to your club.",
+                )}
               </p>
             </div>
 
@@ -364,19 +368,27 @@ export function ImpactCalculator({ locale }: Props) {
               <ul className="space-y-1.5 text-xs text-foreground/70">
                 <li className="flex justify-between">
                   <span>{t("Tiempo de equipo", "Team time")}</span>
-                  <span className="font-mono"><AnimatedEuro value={result.ahorro.tiempoStaff} /></span>
+                  <span className="font-mono">
+                    <AnimatedEuro value={result.ahorro.tiempoStaff} />
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>{t("Morosidad recuperada", "Overdue recovered")}</span>
-                  <span className="font-mono"><AnimatedEuro value={result.ahorro.morosidad} /></span>
+                  <span className="font-mono">
+                    <AnimatedEuro value={result.ahorro.morosidad} />
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>{t("Bajas evitadas", "Churn avoided")}</span>
-                  <span className="font-mono"><AnimatedEuro value={result.ahorro.churn} /></span>
+                  <span className="font-mono">
+                    <AnimatedEuro value={result.ahorro.churn} />
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>{t("Herramientas sustituidas", "Tools replaced")}</span>
-                  <span className="font-mono"><AnimatedEuro value={result.ahorro.herramientas} /></span>
+                  <span className="font-mono">
+                    <AnimatedEuro value={result.ahorro.herramientas} />
+                  </span>
                 </li>
               </ul>
             </div>
@@ -394,19 +406,27 @@ export function ImpactCalculator({ locale }: Props) {
               <ul className="space-y-1.5 text-xs text-foreground/70">
                 <li className="flex justify-between">
                   <span>{t("Bonos y clases", "Vouchers & classes")}</span>
-                  <span className="font-mono"><AnimatedEuro value={result.ingresos.bonos} /></span>
+                  <span className="font-mono">
+                    <AnimatedEuro value={result.ingresos.bonos} />
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>{t("Eventos con uplift", "Events uplift")}</span>
-                  <span className="font-mono"><AnimatedEuro value={result.ingresos.eventos} /></span>
+                  <span className="font-mono">
+                    <AnimatedEuro value={result.ingresos.eventos} />
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>{t("Equipaciones / merch", "Kits / merch")}</span>
-                  <span className="font-mono"><AnimatedEuro value={result.ingresos.merch} /></span>
+                  <span className="font-mono">
+                    <AnimatedEuro value={result.ingresos.merch} />
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>{t("Patrocinio revalorizado", "Sponsorship revalued")}</span>
-                  <span className="font-mono"><AnimatedEuro value={result.ingresos.patrocinio} /></span>
+                  <span className="font-mono">
+                    <AnimatedEuro value={result.ingresos.patrocinio} />
+                  </span>
                 </li>
               </ul>
             </div>
@@ -434,7 +454,8 @@ export function ImpactCalculator({ locale }: Props) {
                 {t("Impacto total estimado", "Total estimated impact")}
               </p>
               <p className="mt-2 text-2xl font-semibold leading-tight">
-                <AnimatedEuro value={result.totales.minMes} /> – <AnimatedEuro value={result.totales.maxMes} />
+                <AnimatedEuro value={result.totales.minMes} /> –{" "}
+                <AnimatedEuro value={result.totales.maxMes} />
                 <span className="ml-1 text-base opacity-60">/{t("mes", "mo")}</span>
               </p>
               <p className="mt-1 text-xs opacity-60">
@@ -447,7 +468,8 @@ export function ImpactCalculator({ locale }: Props) {
               <div className="mt-4 border-t border-background/15 pt-4">
                 <p className="text-xs opacity-60">{t("Anualizado", "Annualized")}</p>
                 <p className="font-mono text-base font-semibold">
-                  <AnimatedEuro value={result.totales.minAnio} /> – <AnimatedEuro value={result.totales.maxAnio} />
+                  <AnimatedEuro value={result.totales.minAnio} /> –{" "}
+                  <AnimatedEuro value={result.totales.maxAnio} />
                 </p>
               </div>
 
@@ -471,14 +493,39 @@ export function ImpactCalculator({ locale }: Props) {
 
             {showFormulas && (
               <div className="space-y-2 rounded-xl border border-foreground/10 bg-foreground/5 p-4 font-mono text-[11px] leading-relaxed text-foreground/70">
-                <p><strong>{t("Coste/h staff:", "Staff €/h:")}</strong> {CONSTANTES.COSTE_HORA_STAFF}€</p>
-                <p><strong>{t("Horas recuperables:", "Recoverable hours:")}</strong> {CONSTANTES.PORCENTAJE_HORAS_RECUPERABLES * 100}%</p>
-                <p><strong>{t("Morosidad recuperable:", "Overdue recoverable:")}</strong> {CONSTANTES.PORCENTAJE_MOROSIDAD_RECUPERABLE * 100}%</p>
-                <p><strong>{t("Reducción de churn:", "Churn reduction:")}</strong> {CONSTANTES.PORCENTAJE_REDUCCION_CHURN * 100}%</p>
-                <p><strong>{t("Conversión bonos:", "Voucher conversion:")}</strong> {CONSTANTES.CONVERSION_BONOS_MENSUAL * 100}%</p>
-                <p><strong>{t("Uplift eventos online:", "Online events uplift:")}</strong> {CONSTANTES.UPLIFT_EVENTOS_ONLINE * 100}%</p>
-                <p><strong>{t("Compradores merch:", "Merch buyers:")}</strong> {CONSTANTES.PORCENTAJE_SOCIOS_COMPRAN_MERCH * 100}% × {CONSTANTES.COMPRAS_MERCH_POR_SOCIO_ANIO}</p>
-                <p><strong>{t("Revalorización patrocinio:", "Sponsorship revalue:")}</strong> +{CONSTANTES.REVALORIZACION_PATROCINIO * 100}%</p>
+                <p>
+                  <strong>{t("Coste/h staff:", "Staff €/h:")}</strong> {CONSTANTES.COSTE_HORA_STAFF}
+                  €
+                </p>
+                <p>
+                  <strong>{t("Horas recuperables:", "Recoverable hours:")}</strong>{" "}
+                  {CONSTANTES.PORCENTAJE_HORAS_RECUPERABLES * 100}%
+                </p>
+                <p>
+                  <strong>{t("Morosidad recuperable:", "Overdue recoverable:")}</strong>{" "}
+                  {CONSTANTES.PORCENTAJE_MOROSIDAD_RECUPERABLE * 100}%
+                </p>
+                <p>
+                  <strong>{t("Reducción de churn:", "Churn reduction:")}</strong>{" "}
+                  {CONSTANTES.PORCENTAJE_REDUCCION_CHURN * 100}%
+                </p>
+                <p>
+                  <strong>{t("Conversión bonos:", "Voucher conversion:")}</strong>{" "}
+                  {CONSTANTES.CONVERSION_BONOS_MENSUAL * 100}%
+                </p>
+                <p>
+                  <strong>{t("Uplift eventos online:", "Online events uplift:")}</strong>{" "}
+                  {CONSTANTES.UPLIFT_EVENTOS_ONLINE * 100}%
+                </p>
+                <p>
+                  <strong>{t("Compradores merch:", "Merch buyers:")}</strong>{" "}
+                  {CONSTANTES.PORCENTAJE_SOCIOS_COMPRAN_MERCH * 100}% ×{" "}
+                  {CONSTANTES.COMPRAS_MERCH_POR_SOCIO_ANIO}
+                </p>
+                <p>
+                  <strong>{t("Revalorización patrocinio:", "Sponsorship revalue:")}</strong> +
+                  {CONSTANTES.REVALORIZACION_PATROCINIO * 100}%
+                </p>
                 <p className="mt-3 not-italic text-foreground/50">
                   {t(
                     "Estimación orientativa basada en benchmarks del sector. La conversión real depende de la activación.",

@@ -64,10 +64,22 @@ const META: Record<string, Meta> = {
   ai: { title: "IA de sesión", desc: "Create with SAITO", icon: Sparkles },
   absence: { title: "Notificar ausencia", desc: "Avisa a tu entrenador", icon: CalendarX },
   "session-info": { title: "Información de la sesión", desc: "Qué haremos hoy", icon: Info },
-  feedback: { title: "Feedback post-entreno", desc: "Cuéntanos cómo te fue", icon: MessageSquareHeart },
+  feedback: {
+    title: "Feedback post-entreno",
+    desc: "Cuéntanos cómo te fue",
+    icon: MessageSquareHeart,
+  },
   health: { title: "Salud", desc: "Tu estado y restricciones", icon: HeartPulse },
-  treatment: { title: "Plan de tratamiento", desc: "Indicaciones del staff médico", icon: Stethoscope },
-  "request-appointment": { title: "Solicitar cita médica", desc: "Reserva con el staff médico", icon: CalendarPlus },
+  treatment: {
+    title: "Plan de tratamiento",
+    desc: "Indicaciones del staff médico",
+    icon: Stethoscope,
+  },
+  "request-appointment": {
+    title: "Solicitar cita médica",
+    desc: "Reserva con el staff médico",
+    icon: CalendarPlus,
+  },
   performance: { title: "Mi rendimiento", desc: "Métricas de la temporada", icon: LineChart },
   notifications: { title: "Notificaciones", desc: "Avisos y novedades", icon: Bell },
 };
@@ -195,10 +207,7 @@ function Attendance() {
       </div>
       <ul className="space-y-2">
         {athletes.map((a) => (
-          <li
-            key={a.id}
-            className="rounded-2xl border border-border bg-card p-2.5"
-          >
+          <li key={a.id} className="rounded-2xl border border-border bg-card p-2.5">
             <div className="mb-2 truncate text-sm font-semibold">
               {a.firstName} {a.lastName}
             </div>
@@ -254,9 +263,7 @@ function CallUp() {
       <div className="flex items-center justify-between text-[11px] text-muted-foreground">
         <span>{count} seleccionados</span>
         <button
-          onClick={() =>
-            setSel(Object.fromEntries(athletes.map((a) => [a.id, true])))
-          }
+          onClick={() => setSel(Object.fromEntries(athletes.map((a) => [a.id, true])))}
           className="font-semibold text-primary"
         >
           Seleccionar todos
@@ -295,7 +302,9 @@ function CallUp() {
       <button
         disabled={count === 0}
         onClick={() => {
-          const ids = Object.entries(sel).filter(([, v]) => v).map(([k]) => k);
+          const ids = Object.entries(sel)
+            .filter(([, v]) => v)
+            .map(([k]) => k);
           saveCallup(DEMO_SESSION_ID, ids);
           toast.success(`Convocatoria enviada a ${count} deportistas`);
         }}
@@ -311,10 +320,7 @@ function CallUp() {
 function Notes() {
   const addNote = useSessionLocal((s) => s.addNote);
   const allNotes = useSessionLocal((s) => s.notes);
-  const notes = useMemo(
-    () => allNotes.filter((n) => n.sessionId === DEMO_SESSION_ID),
-    [allNotes],
-  );
+  const notes = useMemo(() => allNotes.filter((n) => n.sessionId === DEMO_SESSION_ID), [allNotes]);
   const [text, setText] = useState("");
   const [priv, setPriv] = useState(true);
   return (
@@ -370,7 +376,10 @@ function Notes() {
               <div className="mb-1 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {n.privateNote && <Lock className="h-3 w-3" />}
                 {new Date(n.createdAt).toLocaleString("es", {
-                  day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+                  day: "2-digit",
+                  month: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
                 })}
               </div>
               <div>{n.text}</div>
@@ -470,10 +479,7 @@ function AISession() {
         },
         {
           title: "Bloque técnico",
-          items: [
-            "Técnica de carrera: A-skip, B-skip, talones",
-            "Salidas reactivas 4×20 m al 80%",
-          ],
+          items: ["Técnica de carrera: A-skip, B-skip, talones", "Salidas reactivas 4×20 m al 80%"],
         },
         {
           title: "Ejercicio principal",
@@ -730,9 +736,7 @@ function SessionInfo() {
   return (
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-4">
-        <div className="text-base font-bold leading-tight">
-          Atletismo · Tecnificación Infantil
-        </div>
+        <div className="text-base font-bold leading-tight">Atletismo · Tecnificación Infantil</div>
         <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
           <Users className="h-3.5 w-3.5" /> Infantil A · 14 atletas
         </div>
@@ -763,7 +767,9 @@ function SessionInfo() {
               key={a.id}
               className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2 text-sm"
             >
-              <span className="truncate">{a.firstName} {a.lastName}</span>
+              <span className="truncate">
+                {a.firstName} {a.lastName}
+              </span>
               <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">
                 Convocado
               </span>
@@ -779,11 +785,15 @@ function SessionInfo() {
         <ul className="space-y-1.5">
           <li className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
             <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-            <span><b>Daniel Ruiz</b> — sin sprints máximos esta semana (molestia isquios).</span>
+            <span>
+              <b>Daniel Ruiz</b> — sin sprints máximos esta semana (molestia isquios).
+            </span>
           </li>
           <li className="flex items-start gap-2 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2 text-xs text-orange-900">
             <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-            <span><b>Sara López</b> — carga reducida 50% (en revisión médica).</span>
+            <span>
+              <b>Sara López</b> — carga reducida 50% (en revisión médica).
+            </span>
           </li>
         </ul>
       </div>
@@ -816,9 +826,7 @@ function SessionInfo() {
                 <div className="flex items-center gap-1.5 text-xs font-bold text-primary">
                   <Sparkles className="h-3.5 w-3.5" /> {b.title}
                 </div>
-                {b.detail && (
-                  <div className="mt-1 text-xs text-foreground">{b.detail}</div>
-                )}
+                {b.detail && <div className="mt-1 text-xs text-foreground">{b.detail}</div>}
               </li>
             ))}
           </ul>
@@ -839,9 +847,7 @@ function SessionInfo() {
                     RPE {f.rpe}/10
                   </span>
                 </div>
-                {f.text && (
-                  <div className="mt-1 text-xs text-muted-foreground">{f.text}</div>
-                )}
+                {f.text && <div className="mt-1 text-xs text-muted-foreground">{f.text}</div>}
               </li>
             ))}
           </ul>
@@ -853,19 +859,34 @@ function SessionInfo() {
           Acciones
         </div>
         <div className="grid grid-cols-3 gap-1.5">
-          <Link to="/mobile/attendance" className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95">
+          <Link
+            to="/mobile/attendance"
+            className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95"
+          >
             <ClipboardCheck className="h-4 w-4 text-primary" /> Asistencia
           </Link>
-          <Link to="/mobile/notes" className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95">
+          <Link
+            to="/mobile/notes"
+            className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95"
+          >
             <StickyNote className="h-4 w-4 text-primary" /> Notas
           </Link>
-          <Link to="/mobile/ratings" className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95">
+          <Link
+            to="/mobile/ratings"
+            className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95"
+          >
             <Star className="h-4 w-4 text-primary" /> Valoración
           </Link>
-          <Link to="/mobile/feedback" className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95">
+          <Link
+            to="/mobile/feedback"
+            className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95"
+          >
             <MessageSquareHeart className="h-4 w-4 text-primary" /> Feedback
           </Link>
-          <Link to="/mobile/ai" className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl bg-primary px-2 py-2.5 text-[11px] font-semibold text-primary-foreground active:scale-95">
+          <Link
+            to="/mobile/ai"
+            className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl bg-primary px-2 py-2.5 text-[11px] font-semibold text-primary-foreground active:scale-95"
+          >
             <Sparkles className="h-4 w-4" /> IA de sesión
           </Link>
         </div>

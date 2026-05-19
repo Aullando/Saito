@@ -49,14 +49,70 @@ export function HomePage({ locale }: Props) {
   const heroFade = useTransform(scrollYProgress, [0, 1], [1, 0.4]);
 
   const modules = [
-    { icon: Users, title: t("Socios y deportistas", "Members & athletes"), description: t("Ficha única, altas, bajas, categorías y fichajes en un solo lugar.", "Single profile, sign-ups, drop-offs, categories and signings in one place.") },
-    { icon: CalendarDays, title: t("Calendario y reservas", "Calendar & bookings"), description: t("Entrenamientos, partidos y reserva de instalaciones sin choques.", "Training, matches and facility booking with zero clashes.") },
-    { icon: ClipboardList, title: t("Staff y entrenadores", "Staff & coaches"), description: t("Plantillas, asistencias, alineaciones y reportes por jugador.", "Squads, attendance, line-ups and per-player reports.") },
-    { icon: CreditCard, title: t("Pagos y cuotas", "Payments & fees"), description: t("Cobros recurrentes, recordatorios automáticos y conciliación.", "Recurring billing, automated reminders and reconciliation.") },
-    { icon: MessageSquare, title: t("Comunicación", "Communication"), description: t("Mensajes a equipos, familias y secciones desde un único hilo.", "Messaging to teams, families and sections from a single thread.") },
-    { icon: HeartPulse, title: t("Salud y seguimiento", "Health & tracking"), description: t("Historial médico, lesiones y carga de entrenamiento.", "Medical history, injuries and training load.") },
-    { icon: Building2, title: t("Instalaciones", "Facilities"), description: t("Pistas, vestuarios, salas y cobros por uso.", "Pitches, locker rooms, halls and pay-per-use.") },
-    { icon: Sparkles, title: t("Copiloto Inteligente", "Smart Copilot"), description: t("Cada perfil ve solo lo que le importa, con respuestas accionables.", "Every role sees only what matters, with actionable answers.") },
+    {
+      icon: Users,
+      title: t("Socios y deportistas", "Members & athletes"),
+      description: t(
+        "Ficha única, altas, bajas, categorías y fichajes en un solo lugar.",
+        "Single profile, sign-ups, drop-offs, categories and signings in one place.",
+      ),
+    },
+    {
+      icon: CalendarDays,
+      title: t("Calendario y reservas", "Calendar & bookings"),
+      description: t(
+        "Entrenamientos, partidos y reserva de instalaciones sin choques.",
+        "Training, matches and facility booking with zero clashes.",
+      ),
+    },
+    {
+      icon: ClipboardList,
+      title: t("Staff y entrenadores", "Staff & coaches"),
+      description: t(
+        "Plantillas, asistencias, alineaciones y reportes por jugador.",
+        "Squads, attendance, line-ups and per-player reports.",
+      ),
+    },
+    {
+      icon: CreditCard,
+      title: t("Pagos y cuotas", "Payments & fees"),
+      description: t(
+        "Cobros recurrentes, recordatorios automáticos y conciliación.",
+        "Recurring billing, automated reminders and reconciliation.",
+      ),
+    },
+    {
+      icon: MessageSquare,
+      title: t("Comunicación", "Communication"),
+      description: t(
+        "Mensajes a equipos, familias y secciones desde un único hilo.",
+        "Messaging to teams, families and sections from a single thread.",
+      ),
+    },
+    {
+      icon: HeartPulse,
+      title: t("Salud y seguimiento", "Health & tracking"),
+      description: t(
+        "Historial médico, lesiones y carga de entrenamiento.",
+        "Medical history, injuries and training load.",
+      ),
+    },
+    {
+      icon: Building2,
+      title: t("Instalaciones", "Facilities"),
+      description: t(
+        "Pistas, vestuarios, salas y cobros por uso.",
+        "Pitches, locker rooms, halls and pay-per-use.",
+      ),
+    },
+    {
+      icon: Sparkles,
+      title: t("Copiloto Inteligente", "Smart Copilot"),
+      description: t(
+        "Cada perfil ve solo lo que le importa, con respuestas accionables.",
+        "Every role sees only what matters, with actionable answers.",
+      ),
+    },
   ];
 
   const benefits = [
@@ -70,23 +126,68 @@ export function HomePage({ locale }: Props) {
   const stats = [
     { value: 128, suffix: "+", label: t("Atletas gestionados / club", "Athletes managed / club") },
     { value: 8, suffix: "", label: t("Secciones deportivas", "Sport sections") },
-    { value: 73, suffix: "%", label: t("Ocupación media de instalaciones", "Average facility occupancy") },
+    {
+      value: 73,
+      suffix: "%",
+      label: t("Ocupación media de instalaciones", "Average facility occupancy"),
+    },
     { value: 18760, prefix: "€", label: t("Ingreso medio mensual", "Average monthly revenue") },
   ];
 
   const steps = [
-    { icon: Database, title: t("Conectamos tus datos", "We connect your data"), text: t("Importamos socios, calendarios y cuotas desde tus hojas o sistema actual.", "We import members, calendars and fees from your spreadsheets or current system.") },
-    { icon: PlugZap, title: t("Configuramos tu club", "We configure your club"), text: t("Permisos por rol, secciones, sedes y flujos a medida del club.", "Role permissions, sections, venues and workflows tailored to your club.") },
-    { icon: Sparkles, title: t("La IA aprende contigo", "The AI learns with you"), text: t("Detecta cuotas pendientes, lesiones y sobrecargas. Te propone la siguiente acción.", "Spots overdue fees, injuries and overload. Suggests the next action.") },
-    { icon: Rocket, title: t("Lanzas la temporada", "You start the season"), text: t("Todo en orden el día 1. Soporte continuo en español.", "Everything ready on day one. Continuous support in your language.") },
+    {
+      icon: Database,
+      title: t("Conectamos tus datos", "We connect your data"),
+      text: t(
+        "Importamos socios, calendarios y cuotas desde tus hojas o sistema actual.",
+        "We import members, calendars and fees from your spreadsheets or current system.",
+      ),
+    },
+    {
+      icon: PlugZap,
+      title: t("Configuramos tu club", "We configure your club"),
+      text: t(
+        "Permisos por rol, secciones, sedes y flujos a medida del club.",
+        "Role permissions, sections, venues and workflows tailored to your club.",
+      ),
+    },
+    {
+      icon: Sparkles,
+      title: t("La IA aprende contigo", "The AI learns with you"),
+      text: t(
+        "Detecta cuotas pendientes, lesiones y sobrecargas. Te propone la siguiente acción.",
+        "Spots overdue fees, injuries and overload. Suggests the next action.",
+      ),
+    },
+    {
+      icon: Rocket,
+      title: t("Lanzas la temporada", "You start the season"),
+      text: t(
+        "Todo en orden el día 1. Soporte continuo en español.",
+        "Everything ready on day one. Continuous support in your language.",
+      ),
+    },
   ];
 
-  const clients = ["Atlético FC", "RC Norte", "Pádel Pro", "Vela Bay", "Hockey 95", "Basket City", "RGCC", "Mountain Club", "Surf Asturias"];
+  const clients = [
+    "Atlético FC",
+    "RC Norte",
+    "Pádel Pro",
+    "Vela Bay",
+    "Hockey 95",
+    "Basket City",
+    "RGCC",
+    "Mountain Club",
+    "Surf Asturias",
+  ];
 
   return (
     <main>
       {/* ============= HERO ============= */}
-      <section ref={heroRef} className="relative overflow-hidden border-b border-border bg-background">
+      <section
+        ref={heroRef}
+        className="relative overflow-hidden border-b border-border bg-background"
+      >
         {/* Clean background — no grid, no gradient halos */}
         <motion.div
           className="pointer-events-none absolute -left-24 top-24 hidden h-[420px] w-[420px] rounded-full border border-primary/10 lg:block"
@@ -115,7 +216,10 @@ export function HomePage({ locale }: Props) {
                 <br />
                 <span className="relative inline-block text-primary">
                   {t("en una sola plataforma", "from a single platform")}
-                  <span className="saito-underline absolute -bottom-1 left-0 h-[6px] w-full rounded-full" aria-hidden />
+                  <span
+                    className="saito-underline absolute -bottom-1 left-0 h-[6px] w-full rounded-full"
+                    aria-hidden
+                  />
                 </span>
               </h1>
               <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-xs sm:tracking-[0.22em]">
@@ -131,12 +235,21 @@ export function HomePage({ locale }: Props) {
                 )}
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                <Button asChild size="lg" className="shimmer-btn w-full rounded-full px-6 sm:w-auto">
+                <Button
+                  asChild
+                  size="lg"
+                  className="shimmer-btn w-full rounded-full px-6 sm:w-auto"
+                >
                   <Link to={localizedPath("/contacto", locale) as unknown as never}>
                     {t("Pide una demo", "Book a demo")} <ArrowRight className="ml-1 size-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="w-full rounded-full px-6 sm:w-auto">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="w-full rounded-full px-6 sm:w-auto"
+                >
                   <Link to={localizedPath("/producto", locale) as unknown as never}>
                     {t("Ver funcionalidades", "See features")}
                   </Link>
@@ -212,7 +325,10 @@ export function HomePage({ locale }: Props) {
       <section className="border-y border-border bg-muted/40 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {t("Clubes y federaciones que confían en SAITO", "Clubs and federations that trust SAITO")}
+            {t(
+              "Clubes y federaciones que confían en SAITO",
+              "Clubs and federations that trust SAITO",
+            )}
           </p>
           <LogoMarquee items={clients} />
         </div>
@@ -223,8 +339,14 @@ export function HomePage({ locale }: Props) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Producto", "Product")}
-            title={t("Todo lo que tu club necesita, sin más herramientas", "Everything your club needs, without extra tools")}
-            subtitle={t("Módulos integrados, datos compartidos y flujos pensados para el día a día deportivo.", "Integrated modules, shared data and workflows designed for daily club life.")}
+            title={t(
+              "Todo lo que tu club necesita, sin más herramientas",
+              "Everything your club needs, without extra tools",
+            )}
+            subtitle={t(
+              "Módulos integrados, datos compartidos y flujos pensados para el día a día deportivo.",
+              "Integrated modules, shared data and workflows designed for daily club life.",
+            )}
           />
           {/* Mobile: stacked cards */}
           <div className="mt-10 grid gap-4 sm:hidden">
@@ -246,15 +368,24 @@ export function HomePage({ locale }: Props) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow={t("Cómo funciona", "How it works")}
-            title={t("De la hoja de cálculo a la temporada lanzada", "From spreadsheet chaos to season ready")}
-            subtitle={t("Cuatro pasos. Acompañamiento real en cada uno.", "Four steps. Real support at each one.")}
+            title={t(
+              "De la hoja de cálculo a la temporada lanzada",
+              "From spreadsheet chaos to season ready",
+            )}
+            subtitle={t(
+              "Cuatro pasos. Acompañamiento real en cada uno.",
+              "Four steps. Real support at each one.",
+            )}
           />
           {/* Mobile: stacked step cards */}
           <div className="mt-10 grid gap-4 sm:hidden">
             {steps.map((s, i) => {
               const Icon = s.icon;
               return (
-                <div key={s.title} className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm">
+                <div
+                  key={s.title}
+                  className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm"
+                >
                   <div className="absolute right-3 top-3 text-5xl font-extrabold leading-none text-primary/10">
                     0{i + 1}
                   </div>
@@ -262,7 +393,9 @@ export function HomePage({ locale }: Props) {
                     <Icon className="size-6" />
                   </div>
                   <h3 className="relative text-base font-semibold">{s.title}</h3>
-                  <p className="relative mt-1 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+                  <p className="relative mt-1 text-sm leading-relaxed text-muted-foreground">
+                    {s.text}
+                  </p>
                 </div>
               );
             })}
@@ -324,10 +457,16 @@ export function HomePage({ locale }: Props) {
           <div className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <Reveal>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
-                {t("Hecho para los clubes que viven el deporte", "Built for clubs that live the game")}
+                {t(
+                  "Hecho para los clubes que viven el deporte",
+                  "Built for clubs that live the game",
+                )}
               </p>
               <h2 className="mt-3 max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl md:text-5xl">
-                {t("Mientras la grada vibra, tu club funciona solo.", "While the stands roar, your club just runs.")}
+                {t(
+                  "Mientras la grada vibra, tu club funciona solo.",
+                  "While the stands roar, your club just runs.",
+                )}
               </h2>
             </Reveal>
           </div>
@@ -336,15 +475,26 @@ export function HomePage({ locale }: Props) {
 
       {/* ============= AI ROLES ============= */}
       <section className="relative overflow-hidden bg-saito-gradient py-16 text-white sm:py-24">
-        <div className="absolute inset-0 opacity-30"
-          style={{ backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 50%)" }}
-          aria-hidden />
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 50%)",
+          }}
+          aria-hidden
+        />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             invert
             eyebrow={t("Copiloto Inteligente", "Smart Copilot")}
-            title={t("Una IA que entiende cómo funciona un club", "An AI that understands how a club works")}
-            subtitle={t("Cada perfil ve solo lo que le importa. SAITO aprende de los datos de tu club y propone acciones, no solo gráficos.", "Every role sees only what matters. SAITO learns from your club's data and proposes actions, not just charts.")}
+            title={t(
+              "Una IA que entiende cómo funciona un club",
+              "An AI that understands how a club works",
+            )}
+            subtitle={t(
+              "Cada perfil ve solo lo que le importa. SAITO aprende de los datos de tu club y propone acciones, no solo gráficos.",
+              "Every role sees only what matters. SAITO learns from your club's data and proposes actions, not just charts.",
+            )}
           />
           <Reveal className="mt-12">
             <RoleTabs roles={locale === "en" ? defaultRolesEn : defaultRolesEs} />
@@ -361,15 +511,27 @@ export function HomePage({ locale }: Props) {
                 {t("Multi-club", "Multi-club")}
               </p>
               <h2 className="mt-3 text-3xl font-bold sm:text-4xl md:text-5xl">
-                {t("Un club matriz. Varias sedes. Muchas secciones.", "One parent club. Several venues. Many sections.")}
+                {t(
+                  "Un club matriz. Varias sedes. Muchas secciones.",
+                  "One parent club. Several venues. Many sections.",
+                )}
               </h2>
               <p className="mt-4 text-muted-foreground">
-                {t("Pensado para entidades como clubes históricos polideportivos: gobierno central, autonomía por sección y datos consolidados sin duplicar trabajo.", "Built for organisations like multi-sport historic clubs: central governance, per-section autonomy and consolidated data without duplicate work.")}
+                {t(
+                  "Pensado para entidades como clubes históricos polideportivos: gobierno central, autonomía por sección y datos consolidados sin duplicar trabajo.",
+                  "Built for organisations like multi-sport historic clubs: central governance, per-section autonomy and consolidated data without duplicate work.",
+                )}
               </p>
               <ul className="mt-6 space-y-3">
                 {[
-                  t("Permisos por sede, sección y rol.", "Permissions per venue, section and role."),
-                  t("Cuotas y descuentos cruzados entre secciones.", "Cross-section fees and discounts."),
+                  t(
+                    "Permisos por sede, sección y rol.",
+                    "Permissions per venue, section and role.",
+                  ),
+                  t(
+                    "Cuotas y descuentos cruzados entre secciones.",
+                    "Cross-section fees and discounts.",
+                  ),
                   t("Reporting consolidado y por unidad.", "Consolidated and per-unit reporting."),
                 ].map((b) => (
                   <li key={b} className="flex items-start gap-3 text-sm">
@@ -382,7 +544,10 @@ export function HomePage({ locale }: Props) {
               <TiltCard className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
                 <img
                   src={multiclubVisual}
-                  alt={t("Diagrama multi-club: matriz, sedes y secciones", "Multi-club diagram: parent, venues and sections")}
+                  alt={t(
+                    "Diagrama multi-club: matriz, sedes y secciones",
+                    "Multi-club diagram: parent, venues and sections",
+                  )}
                   loading="lazy"
                   width={1800}
                   height={1125}
@@ -427,18 +592,33 @@ export function HomePage({ locale }: Props) {
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>
             <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl">
-              {t("Lleva la gestión de tu club al siguiente nivel", "Take your club management to the next level")}
+              {t(
+                "Lleva la gestión de tu club al siguiente nivel",
+                "Take your club management to the next level",
+              )}
             </h2>
             <p className="mt-4 text-white/80">
-              {t("Te acompañamos en la migración y configuración. Empieza la temporada con todo en orden.", "We help you migrate and set everything up. Start your season fully sorted.")}
+              {t(
+                "Te acompañamos en la migración y configuración. Empieza la temporada con todo en orden.",
+                "We help you migrate and set everything up. Start your season fully sorted.",
+              )}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button asChild size="lg" className="shimmer-btn rounded-full bg-white px-6 text-saito-navy hover:bg-white/90">
+              <Button
+                asChild
+                size="lg"
+                className="shimmer-btn rounded-full bg-white px-6 text-saito-navy hover:bg-white/90"
+              >
                 <Link to={localizedPath("/contacto", locale) as unknown as never}>
                   {t("Pide una demo", "Book a demo")} <ArrowRight className="ml-1 size-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full border-white/30 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full border-white/30 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white"
+              >
                 <Link to={localizedPath("/precios", locale) as unknown as never}>
                   {t("Ver precios", "See pricing")}
                 </Link>

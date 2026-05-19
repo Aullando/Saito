@@ -178,7 +178,10 @@ function PlayerHome() {
 
       {/* Salud */}
       <section className="space-y-2">
-        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
+        >
           <HeartPulse className="h-4 w-4" /> الصحة
         </div>
         <div style={{ background: SOFT_BG, borderRadius: 18, padding: 14 }} className="space-y-2">
@@ -197,7 +200,13 @@ function PlayerHome() {
             خطة العلاج
             <span
               className="flex items-center justify-center"
-              style={{ width: 28, height: 28, borderRadius: 999, background: SOFT_BG, color: MUTED }}
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 999,
+                background: SOFT_BG,
+                color: MUTED,
+              }}
             >
               <ChevronLeft className="h-3.5 w-3.5" />
             </span>
@@ -220,7 +229,10 @@ function PlayerHome() {
 
       {/* Mi rendimiento */}
       <section className="space-y-2">
-        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
+        >
           <Trophy className="h-4 w-4" /> أدائي
         </div>
 
@@ -233,16 +245,20 @@ function PlayerHome() {
             boxShadow: SHADOW,
           }}
         >
-          <button className="flex w-full items-center gap-2" onClick={() => setImproveOpen((v) => !v)}>
+          <button
+            className="flex w-full items-center gap-2"
+            onClick={() => setImproveOpen((v) => !v)}
+          >
             <Sparkles className="h-4 w-4" style={{ color: ATHL }} />
             <span style={{ color: ATHL, fontSize: 14, fontWeight: 700 }}>طوّر أداءك:</span>
           </button>
           <p className="mt-2" style={{ color: INK, fontSize: 13, lineHeight: "20px" }}>
-            ركّز على التحوّل الدفاعي بعد فقدان الكرة. ستخفض <N>0,8</N> ثانية من زمن
-            ردّة الفعل إذا فعّلت الضغط المباشر خلال أول <N>6</N> ثوانٍ.
+            ركّز على التحوّل الدفاعي بعد فقدان الكرة. ستخفض <N>0,8</N> ثانية من زمن ردّة الفعل إذا
+            فعّلت الضغط المباشر خلال أول <N>6</N> ثوانٍ.
             {improveOpen && (
               <>
-                {" "}أضف <N>2</N> سرعات قصيرة في الإحماء، وأنهِ التدريب بـ <N>5</N> دقائق من تنفّس
+                {" "}
+                أضف <N>2</N> سرعات قصيرة في الإحماء، وأنهِ التدريب بـ <N>5</N> دقائق من تنفّس
                 <N>4-7-8</N>.
               </>
             )}
@@ -297,7 +313,9 @@ function PlayerHome() {
         >
           <div className="flex items-center justify-between">
             <span style={{ color: MUTED, fontSize: 13 }}>متوسط التقييم</span>
-            <span style={{ color: MUTED, fontSize: 12 }}>(آخر <N>30</N> يومًا)</span>
+            <span style={{ color: MUTED, fontSize: 12 }}>
+              (آخر <N>30</N> يومًا)
+            </span>
           </div>
           <div className="mt-2 flex items-center gap-2">
             <Star className="h-5 w-5" style={{ color: ATHL, fill: ATHL }} />
@@ -333,12 +351,10 @@ function CoachHome() {
     <div className="space-y-4">
       {/* Group selector */}
       <div className="flex gap-2">
-        {(
-          [
-            { id: "sr" as const, ar: "المنتخب الأول" },
-            { id: "u23" as const, ar: "تحت 23" },
-          ]
-        ).map((g) => (
+        {[
+          { id: "sr" as const, ar: "المنتخب الأول" },
+          { id: "u23" as const, ar: "تحت 23" },
+        ].map((g) => (
           <button
             key={g.id}
             onClick={() => setGroup(g.id)}
@@ -359,11 +375,7 @@ function CoachHome() {
       </div>
 
       <TodayCard
-        titleAr={
-          group === "sr"
-            ? "تدريب تكتيكي — المنتخب الأول"
-            : "تدريب بدني — المنتخب الأولمبي"
-        }
+        titleAr={group === "sr" ? "تدريب تكتيكي — المنتخب الأول" : "تدريب بدني — المنتخب الأولمبي"}
         timeLabel="18:00"
         venueAr="مدينة الخليج · الملعب الرئيسي"
         ctaAr="معلومات الحصة"
@@ -441,7 +453,10 @@ function CoachHome() {
           padding: "12px 16px",
         }}
       >
-        <div className="flex items-center gap-2" style={{ color: INK, fontSize: 14, fontWeight: 700 }}>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: INK, fontSize: 14, fontWeight: 700 }}
+        >
           <X className="h-4 w-4" /> غير جاهزين
         </div>
         <ul className="mt-2 space-y-0.5">
@@ -455,7 +470,10 @@ function CoachHome() {
 
       {/* Rate performance */}
       <section className="space-y-2">
-        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
+        >
           <Star className="h-4 w-4" /> تقييم الأداء
         </div>
         <div
@@ -545,8 +563,18 @@ function Stars({ value, color }: { value: number; color: string }) {
 
 const DOW_AR = ["إث", "ث", "أر", "خ", "ج", "س", "أح"];
 const MONTHS_AR = [
-  "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
-  "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر",
+  "يناير",
+  "فبراير",
+  "مارس",
+  "أبريل",
+  "مايو",
+  "يونيو",
+  "يوليو",
+  "أغسطس",
+  "سبتمبر",
+  "أكتوبر",
+  "نوفمبر",
+  "ديسمبر",
 ];
 
 function startOfWeek(d: Date) {
@@ -615,7 +643,7 @@ export function GffMobileCalendar() {
 
   const eventsByDate = useMemo(() => {
     const m: Record<string, typeof events> = {};
-    events.forEach((e) => ((m[e.date] ||= []).push(e)));
+    events.forEach((e) => (m[e.date] ||= []).push(e));
     return m;
   }, [events]);
 
@@ -750,7 +778,10 @@ export function GffMobileCalendar() {
                 <div className="mt-1.5 text-sm font-semibold" style={{ color: INK }}>
                   {e.titleAr}
                 </div>
-                <div className="mt-0.5 inline-flex items-center gap-1 text-[12px]" style={{ color: MUTED }}>
+                <div
+                  className="mt-0.5 inline-flex items-center gap-1 text-[12px]"
+                  style={{ color: MUTED }}
+                >
                   <MapPin className="h-3.5 w-3.5" /> {e.venueAr}
                 </div>
                 {e.scoreAr && (
@@ -894,7 +925,12 @@ export function GffMobileHealth() {
       </section>
 
       <section
-        style={{ background: "#FFFFFF", border: `1px solid ${CARD_BORDER}`, borderRadius: 16, padding: 14 }}
+        style={{
+          background: "#FFFFFF",
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 16,
+          padding: 14,
+        }}
       >
         <div className="text-sm font-bold" style={{ color: INK }}>
           خطة العلاج الحالية
@@ -952,10 +988,11 @@ export function GffMobileSession() {
         </p>
       </header>
 
-      <section
-        style={{ background: GFF_GREEN_SOFT, borderRadius: 18, padding: 16 }}
-      >
-        <div className="text-[11px] font-bold uppercase tracking-wider" style={{ color: GFF_GREEN }}>
+      <section style={{ background: GFF_GREEN_SOFT, borderRadius: 18, padding: 16 }}>
+        <div
+          className="text-[11px] font-bold uppercase tracking-wider"
+          style={{ color: GFF_GREEN }}
+        >
           الهدف التكتيكي
         </div>
         <p className="mt-1 text-sm font-semibold" style={{ color: INK }}>
@@ -964,22 +1001,45 @@ export function GffMobileSession() {
       </section>
 
       <section
-        style={{ background: "#FFFFFF", border: `1px solid ${CARD_BORDER}`, borderRadius: 16, padding: 14 }}
+        style={{
+          background: "#FFFFFF",
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 16,
+          padding: 14,
+        }}
       >
         <div className="text-sm font-bold" style={{ color: INK }}>
           محاور التدريب
         </div>
-        <ol className="mt-2 space-y-1.5 text-[13px]" style={{ color: INK, listStylePosition: "inside" }}>
-          <li>إحماء ديناميكي — <N>15</N> دقيقة</li>
-          <li>تمرين الضغط الجماعي — <N>20</N> دقيقة</li>
-          <li>لعبة مصغّرة 7 ضد 7 — <N>25</N> دقيقة</li>
-          <li>كرات ثابتة — <N>15</N> دقيقة</li>
-          <li>استشفاء — <N>10</N> دقائق</li>
+        <ol
+          className="mt-2 space-y-1.5 text-[13px]"
+          style={{ color: INK, listStylePosition: "inside" }}
+        >
+          <li>
+            إحماء ديناميكي — <N>15</N> دقيقة
+          </li>
+          <li>
+            تمرين الضغط الجماعي — <N>20</N> دقيقة
+          </li>
+          <li>
+            لعبة مصغّرة 7 ضد 7 — <N>25</N> دقيقة
+          </li>
+          <li>
+            كرات ثابتة — <N>15</N> دقيقة
+          </li>
+          <li>
+            استشفاء — <N>10</N> دقائق
+          </li>
         </ol>
       </section>
 
       <section
-        style={{ background: "#FFFFFF", border: `1px solid ${CARD_BORDER}`, borderRadius: 16, padding: 14 }}
+        style={{
+          background: "#FFFFFF",
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 16,
+          padding: 14,
+        }}
       >
         <div className="text-sm font-bold" style={{ color: INK }}>
           المستدعون اليوم
@@ -1028,7 +1088,12 @@ export function GffMobilePerformance() {
       </div>
 
       <section
-        style={{ background: "#FFFFFF", border: `1px solid ${CARD_BORDER}`, borderRadius: 16, padding: 14 }}
+        style={{
+          background: "#FFFFFF",
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 16,
+          padding: 14,
+        }}
       >
         <div className="flex items-center gap-2 text-[12px] font-semibold" style={{ color: MUTED }}>
           <TrendingUp className="h-3.5 w-3.5" /> الترتيب
@@ -1049,10 +1114,11 @@ export function GffMobilePerformance() {
         </ul>
       </section>
 
-      <section
-        style={{ background: GFF_GOLD_SOFT, borderRadius: 16, padding: 14 }}
-      >
-        <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider" style={{ color: "#8a6a14" }}>
+      <section style={{ background: GFF_GOLD_SOFT, borderRadius: 16, padding: 14 }}>
+        <div
+          className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider"
+          style={{ color: "#8a6a14" }}
+        >
           <Trophy className="h-3.5 w-3.5" /> الهداف
         </div>
         <p className="mt-1 text-sm font-bold" style={{ color: INK }}>
@@ -1104,8 +1170,20 @@ const GFF_THREADS_COACH: GffThread[] = [
     subtitleAr: "8 أعضاء",
     unread: 2,
     messages: [
-      { id: "m1", mine: false, authorAr: "د. سالم العتيبة", text: "تقرير الفحص الطبي جاهز. هناك ٣ لاعبين تحت المراقبة.", time: "09:14" },
-      { id: "m2", mine: false, authorAr: "محمود الشريف", text: "خطة الإحماء معدّلة لتقليل الحمل اليوم.", time: "09:32" },
+      {
+        id: "m1",
+        mine: false,
+        authorAr: "د. سالم العتيبة",
+        text: "تقرير الفحص الطبي جاهز. هناك ٣ لاعبين تحت المراقبة.",
+        time: "09:14",
+      },
+      {
+        id: "m2",
+        mine: false,
+        authorAr: "محمود الشريف",
+        text: "خطة الإحماء معدّلة لتقليل الحمل اليوم.",
+        time: "09:32",
+      },
       { id: "m3", mine: true, text: "ممتاز. نراكم في الملعب الساعة 17:30 للتحضير.", time: "09:40" },
     ],
   },
@@ -1115,7 +1193,12 @@ const GFF_THREADS_COACH: GffThread[] = [
     subtitleAr: "24 لاعبًا",
     unread: 5,
     messages: [
-      { id: "m1", mine: true, text: "تذكير: تركيز على الانتقال السريع في تدريب اليوم.", time: "08:00" },
+      {
+        id: "m1",
+        mine: true,
+        text: "تذكير: تركيز على الانتقال السريع في تدريب اليوم.",
+        time: "08:00",
+      },
       { id: "m2", mine: false, authorAr: "أحمد الزعابي", text: "حاضر يا كابتن.", time: "08:12" },
     ],
   },
@@ -1125,7 +1208,13 @@ const GFF_THREADS_COACH: GffThread[] = [
     subtitleAr: "محادثة فردية",
     unread: 0,
     messages: [
-      { id: "m1", mine: false, authorAr: "حمد الرميثي", text: "اجتماع غدًا الساعة 11:00 لمراجعة استدعاءات يونيو.", time: "أمس" },
+      {
+        id: "m1",
+        mine: false,
+        authorAr: "حمد الرميثي",
+        text: "اجتماع غدًا الساعة 11:00 لمراجعة استدعاءات يونيو.",
+        time: "أمس",
+      },
     ],
   },
 ];
@@ -1137,7 +1226,13 @@ const GFF_THREADS_PLAYER: GffThread[] = [
     subtitleAr: "محادثة فردية",
     unread: 1,
     messages: [
-      { id: "m1", mine: false, authorAr: "كارلوس مينديز", text: "أداؤك أمام لبنان كان رائعًا. ركّز على التغطية الدفاعية في تدريب اليوم.", time: "09:10" },
+      {
+        id: "m1",
+        mine: false,
+        authorAr: "كارلوس مينديز",
+        text: "أداؤك أمام لبنان كان رائعًا. ركّز على التغطية الدفاعية في تدريب اليوم.",
+        time: "09:10",
+      },
       { id: "m2", mine: true, text: "شكرًا كوتش. سأعمل عليها.", time: "09:22" },
     ],
   },
@@ -1147,7 +1242,13 @@ const GFF_THREADS_PLAYER: GffThread[] = [
     subtitleAr: "24 لاعبًا",
     unread: 5,
     messages: [
-      { id: "m1", mine: false, authorAr: "كارلوس مينديز", text: "تذكير: تركيز على الانتقال السريع في تدريب اليوم.", time: "08:00" },
+      {
+        id: "m1",
+        mine: false,
+        authorAr: "كارلوس مينديز",
+        text: "تذكير: تركيز على الانتقال السريع في تدريب اليوم.",
+        time: "08:00",
+      },
     ],
   },
   {
@@ -1156,7 +1257,13 @@ const GFF_THREADS_PLAYER: GffThread[] = [
     subtitleAr: "محادثة فردية",
     unread: 0,
     messages: [
-      { id: "m1", mine: false, authorAr: "د. سالم العتيبة", text: "نتائج الفحص ممتازة. تابع تمارين التقوية.", time: "أمس" },
+      {
+        id: "m1",
+        mine: false,
+        authorAr: "د. سالم العتيبة",
+        text: "نتائج الفحص ممتازة. تابع تمارين التقوية.",
+        time: "أمس",
+      },
     ],
   },
 ];
@@ -1173,7 +1280,10 @@ export function GffMobileMessages() {
   if (active) {
     return (
       <div className="flex h-[calc(100vh-12rem)] flex-col">
-        <header className="flex items-center gap-2 border-b pb-3" style={{ borderColor: CARD_BORDER }}>
+        <header
+          className="flex items-center gap-2 border-b pb-3"
+          style={{ borderColor: CARD_BORDER }}
+        >
           <button
             onClick={() => setOpenId(null)}
             aria-label="رجوع"
@@ -1300,7 +1410,9 @@ export function GffMobileProfile() {
   const user = useCurrentUser();
   const isCoach = user?.role === "technical";
   const nameAr = isCoach ? "كارلوس مينديز" : "أحمد الزعابي";
-  const roleAr = isCoach ? "المدرب الرئيسي · المنتخب الأول" : "صانع ألعاب · المنتخب الأول · الرقم 10";
+  const roleAr = isCoach
+    ? "المدرب الرئيسي · المنتخب الأول"
+    : "صانع ألعاب · المنتخب الأول · الرقم 10";
   const accent = isCoach ? COACH : ATHL;
   return (
     <div className="space-y-3">
@@ -1334,17 +1446,28 @@ export function GffMobileProfile() {
       </section>
 
       <section
-        style={{ background: "#FFFFFF", border: `1px solid ${CARD_BORDER}`, borderRadius: 16, padding: 14 }}
+        style={{
+          background: "#FFFFFF",
+          border: `1px solid ${CARD_BORDER}`,
+          borderRadius: 16,
+          padding: 14,
+        }}
       >
         <div className="text-sm font-bold" style={{ color: INK }}>
           الإعدادات
         </div>
         <ul className="mt-2 space-y-1 text-[13px]" style={{ color: INK }}>
-          <li className="flex items-center justify-between border-b py-2" style={{ borderColor: CARD_BORDER }}>
+          <li
+            className="flex items-center justify-between border-b py-2"
+            style={{ borderColor: CARD_BORDER }}
+          >
             <span>اللغة</span>
             <span style={{ color: MUTED }}>العربية</span>
           </li>
-          <li className="flex items-center justify-between border-b py-2" style={{ borderColor: CARD_BORDER }}>
+          <li
+            className="flex items-center justify-between border-b py-2"
+            style={{ borderColor: CARD_BORDER }}
+          >
             <span>الإشعارات</span>
             <span className="inline-flex items-center gap-1" style={{ color: accent }}>
               <Bell className="h-3.5 w-3.5" /> مفعّلة

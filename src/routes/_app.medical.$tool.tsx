@@ -230,7 +230,6 @@ function IncidentsView() {
               <span className="shrink-0">
                 <StatusChip>{r.fitness}</StatusChip>
               </span>
-
             </div>
             <div className="mt-1 text-[11px] text-muted-foreground">
               Responsable: {r.responsible}
@@ -492,7 +491,6 @@ function TreatmentCard({ t, onFinish }: { t: Treatment; onFinish?: () => void })
         <span className="shrink-0">
           <StatusChip>{finished ? "Finalizado" : "Activo"}</StatusChip>
         </span>
-
       </div>
 
       <div className="mt-3">
@@ -593,7 +591,10 @@ function RequestsView() {
     specialty: r.specialty,
     preferred: r.preferredDate ?? "—",
     requestedAt: new Date(r.createdAt).toLocaleString("es", {
-      day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
     }),
     status: r.status === "pending" ? "pending" : "managed",
   }));
@@ -624,10 +625,7 @@ function RequestsView() {
         ) : (
           <ul className="grid gap-2">
             {pending.map((r) => (
-              <li
-                key={r.id}
-                className="rounded-2xl border border-border bg-card p-4"
-              >
+              <li key={r.id} className="rounded-2xl border border-border bg-card p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="text-sm font-semibold">{r.athlete}</div>
@@ -641,14 +639,9 @@ function RequestsView() {
                   <span className="shrink-0">
                     <StatusChip>Pendiente</StatusChip>
                   </span>
-
                 </div>
                 <div className="mt-3 flex justify-end">
-                  <Button
-                    size="sm"
-                    className="gap-1.5"
-                    onClick={() => setCreating(r)}
-                  >
+                  <Button size="sm" className="gap-1.5" onClick={() => setCreating(r)}>
                     <Stethoscope className="h-4 w-4" /> Crear cita médica
                   </Button>
                 </div>
@@ -672,10 +665,7 @@ function RequestsView() {
         ) : (
           <ul className="grid gap-2">
             {managed.map((r) => (
-              <li
-                key={r.id}
-                className="rounded-2xl border border-border bg-card p-3"
-              >
+              <li key={r.id} className="rounded-2xl border border-border bg-card p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="text-sm font-semibold">{r.athlete}</div>
@@ -686,7 +676,6 @@ function RequestsView() {
                   <span className="shrink-0">
                     <StatusChip>Gestionada</StatusChip>
                   </span>
-
                 </div>
               </li>
             ))}
@@ -710,13 +699,7 @@ function RequestsView() {
   );
 }
 
-function CreateAppointmentForm({
-  req,
-  onSubmit,
-}: {
-  req: ApptRequest;
-  onSubmit: () => void;
-}) {
+function CreateAppointmentForm({ req, onSubmit }: { req: ApptRequest; onSubmit: () => void }) {
   const [date, setDate] = useState(req.preferred);
   const [time, setTime] = useState("12:00");
   const [staff, setStaff] = useState("J. Romero (fisio)");
@@ -742,11 +725,7 @@ function CreateAppointmentForm({
         </div>
         <div className="grid gap-1.5">
           <Label htmlFor="s">Responsable</Label>
-          <Input
-            id="s"
-            value={staff}
-            onChange={(e) => setStaff(e.target.value.slice(0, 80))}
-          />
+          <Input id="s" value={staff} onChange={(e) => setStaff(e.target.value.slice(0, 80))} />
         </div>
         <div className="grid gap-1.5">
           <Label htmlFor="n">Notas para el atleta</Label>

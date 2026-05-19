@@ -11,6 +11,15 @@ import {
   rgccSuggestions,
 } from "@/clubs/rgcc/aiContext";
 import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
+import {
+  gffFederation,
+  gffTeams,
+  gffPlayers,
+  gffStaff,
+  gffMatches,
+  gffStats,
+  gffAffiliatedClubs,
+} from "@/clubs/gff/seed";
 import { cn } from "@/lib/utils";
 
 const TITLES: Record<string, string> = {
@@ -109,6 +118,33 @@ function buildContext(role: string, data: ReturnType<typeof useData.getState>) {
   return base;
 }
 
+function buildGffContext(role: string) {
+  // GFF federation seed — replaces generic athlete/payment/event store for
+  // Arabic federation questions.
+  const base = {
+    today: new Date().toISOString().slice(0, 10),
+    federation: gffFederation,
+    teams: gffTeams,
+    affiliatedClubs: gffAffiliatedClubs,
+  };
+  if (role === "sysadmin") {
+    return { ...base, players: gffPlayers, staff: gffStaff, matches: gffMatches, stats: gffStats };
+  }
+  if (role === "admin") {
+    return { ...base, players: gffPlayers, staff: gffStaff, matches: gffMatches, stats: gffStats };
+  }
+  if (role === "manager") {
+    return { ...base, players: gffPlayers, staff: gffStaff, matches: gffMatches, stats: gffStats };
+  }
+  if (role === "technical") {
+    return { ...base, players: gffPlayers, staff: gffStaff, matches: gffMatches, stats: gffStats };
+  }
+  if (role === "medical") {
+    return { ...base, players: gffPlayers, staff: gffStaff };
+  }
+  return base;
+}
+
 export function AIChat() {
   const u = useCurrentUser();
   const { user, roles } = useAuth();
@@ -154,8 +190,9 @@ export function AIChat() {
 
     try {
       const data = useData.getState();
-      const context =
-        isRgcc && rgccIdentity
+      const context = isGff
+        ? buildGffContext(role)
+        : isRgcc && rgccIdentity
           ? buildRgccContextFromIdentity(rgccIdentity)
           : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
@@ -165,7 +202,14 @@ export function AIChat() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: next, role, context, club: club.id, aiScope, lang: isGff ? "ar" : "es" }),
+        body: JSON.stringify({
+          messages: next,
+          role,
+          context,
+          club: club.id,
+          aiScope,
+          lang: isGff ? "ar" : "es",
+        }),
       });
 
       if (!resp.ok || !resp.body) {
@@ -177,8 +221,12 @@ export function AIChat() {
         } catch {
           /* ignore */
         }
-        if (resp.status === 429) errMsg = isGff ? "طلبات كثيرة جدًا. انتظر لحظة." : "Demasiadas peticiones. Espera un momento.";
-        if (resp.status === 402) errMsg = isGff ? "لا توجد أرصدة ذكاء اصطناعي." : "Sin créditos de IA disponibles.";
+        if (resp.status === 429)
+          errMsg = isGff
+            ? "طلبات كثيرة جدًا. انتظر لحظة."
+            : "Demasiadas peticiones. Espera un momento.";
+        if (resp.status === 402)
+          errMsg = isGff ? "لا توجد أرصدة ذكاء اصطناعي." : "Sin créditos de IA disponibles.";
         // RGCC fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
           const local = rgccLocalFallback(
@@ -285,9 +333,7 @@ export function AIChat() {
             </button>
           </div>
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4 text-sm">
-            {msgs.length === 0 && (
-              <div className="text-xs text-muted-foreground">{emptyHint}</div>
-            )}
+            {msgs.length === 0 && <div className="text-xs text-muted-foreground">{emptyHint}</div>}
             {msgs.map((m, i) => (
               <div
                 key={i}

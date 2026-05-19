@@ -80,7 +80,9 @@ function ClubPage() {
       medical: count("medical"),
       technical: count("technical"),
       athletes: athletes.length,
-      tutors: athletes.filter((a) => /Benjam|Alev|Infantil/i.test(categoryName(categories, a.categoryId))).length,
+      tutors: athletes.filter((a) =>
+        /Benjam|Alev|Infantil/i.test(categoryName(categories, a.categoryId)),
+      ).length,
     };
   }, [users, athletes, categories]);
 
@@ -260,7 +262,9 @@ function ClubPage() {
                     <Label>Sección</Label>
                     <Select
                       value={newGroup.sectionId}
-                      onValueChange={(v) => setNewGroup({ ...newGroup, sectionId: v, categoryId: "" })}
+                      onValueChange={(v) =>
+                        setNewGroup({ ...newGroup, sectionId: v, categoryId: "" })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona sección" />
@@ -307,7 +311,8 @@ function ClubPage() {
                 <DialogFooter>
                   <Button
                     onClick={() => {
-                      if (!newGroup.name.trim() || !newGroup.sectionId || !newGroup.categoryId) return;
+                      if (!newGroup.name.trim() || !newGroup.sectionId || !newGroup.categoryId)
+                        return;
                       addGroup({
                         name: newGroup.name.trim(),
                         sectionId: newGroup.sectionId,
@@ -408,12 +413,42 @@ function ClubPage() {
         {/* 1. Usuarios y permisos */}
         <Section title="Usuarios y permisos" icon={ShieldCheck}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            <RoleCard icon={UserCog} label="Gestores / Dirección" count={usersByRole.managers} tone="bg-indigo-50 text-indigo-700" />
-            <RoleCard icon={Building2} label="Administración" count={usersByRole.admins} tone="bg-blue-50 text-blue-700" />
-            <RoleCard icon={Stethoscope} label="Staff médico" count={usersByRole.medical} tone="bg-rose-50 text-rose-700" />
-            <RoleCard icon={Wrench} label="Staff técnico" count={usersByRole.technical} tone="bg-amber-50 text-amber-700" />
-            <RoleCard icon={Users} label="Deportistas" count={usersByRole.athletes} tone="bg-emerald-50 text-emerald-700" />
-            <RoleCard icon={Baby} label="Tutores" count={usersByRole.tutors} tone="bg-violet-50 text-violet-700" />
+            <RoleCard
+              icon={UserCog}
+              label="Gestores / Dirección"
+              count={usersByRole.managers}
+              tone="bg-indigo-50 text-indigo-700"
+            />
+            <RoleCard
+              icon={Building2}
+              label="Administración"
+              count={usersByRole.admins}
+              tone="bg-blue-50 text-blue-700"
+            />
+            <RoleCard
+              icon={Stethoscope}
+              label="Staff médico"
+              count={usersByRole.medical}
+              tone="bg-rose-50 text-rose-700"
+            />
+            <RoleCard
+              icon={Wrench}
+              label="Staff técnico"
+              count={usersByRole.technical}
+              tone="bg-amber-50 text-amber-700"
+            />
+            <RoleCard
+              icon={Users}
+              label="Deportistas"
+              count={usersByRole.athletes}
+              tone="bg-emerald-50 text-emerald-700"
+            />
+            <RoleCard
+              icon={Baby}
+              label="Tutores"
+              count={usersByRole.tutors}
+              tone="bg-violet-50 text-violet-700"
+            />
           </div>
         </Section>
 

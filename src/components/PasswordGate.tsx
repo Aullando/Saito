@@ -32,11 +32,13 @@ export function PasswordGate({ children }: { children: ReactNode }) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <div className="w-full max-w-md space-y-3 rounded-2xl border border-destructive/40 bg-card p-6 shadow-lg">
-          <h1 className="text-lg font-semibold text-destructive">Acceso bloqueado: configuración incompleta</h1>
+          <h1 className="text-lg font-semibold text-destructive">
+            Acceso bloqueado: configuración incompleta
+          </h1>
           <p className="text-sm text-muted-foreground">
-            El gate de demo está activado (<code>VITE_ENABLE_PASSWORD_GATE=true</code>) pero
-            no se ha definido <code>VITE_DEMO_PASSWORD</code>. Configura la variable de
-            entorno o desactiva el gate para continuar. No existe contraseña por defecto.
+            El gate de demo está activado (<code>VITE_ENABLE_PASSWORD_GATE=true</code>) pero no se
+            ha definido <code>VITE_DEMO_PASSWORD</code>. Configura la variable de entorno o
+            desactiva el gate para continuar. No existe contraseña por defecto.
           </p>
         </div>
       </div>

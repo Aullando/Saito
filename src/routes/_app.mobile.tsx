@@ -70,11 +70,7 @@ function MobileLayout() {
       : "Atleta";
 
   return (
-    <MobileShell
-      tabs={tabs}
-      title={title}
-      role={isCoach ? "coach" : "athlete"}
-    >
+    <MobileShell tabs={tabs} title={title} role={isCoach ? "coach" : "athlete"}>
       <Outlet />
     </MobileShell>
   );
