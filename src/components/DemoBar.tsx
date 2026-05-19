@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { ChevronDown, Check, ArrowLeft, LogOut, Sparkles } from "lucide-react";
+import { ChevronDown, Check, ArrowLeft, LogOut } from "lucide-react";
 import { useActiveClubStore } from "@/clubs/activeClub";
 import { useClub } from "@/clubs/ClubProvider";
 import { CLUBS } from "@/clubs/registry";

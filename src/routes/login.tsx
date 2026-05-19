@@ -237,7 +237,7 @@ const CLUB_META: Record<ClubKey, { tagline: string; subtitle: string }> = {
 };
 
 function LoginPage() {
-  const { session, roles } = useAuth();
+  useAuth();
   const navigate = useNavigate();
   const setUser = useLocalAuth((s) => s.setUser);
   const switchClub = useActiveClubStore((s) => s.switchClub);
