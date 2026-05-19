@@ -1,9 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useData } from "@/lib/store";
+import { useClub } from "@/clubs/ClubProvider";
+import { GffMobileTeam } from "@/clubs/gff/GffMobileWorkspace";
 
 export const Route = createFileRoute("/_app/mobile/team")({
-  component: MobileTeam,
+  component: MobileTeamRoute,
 });
+
+function MobileTeamRoute() {
+  const { club } = useClub();
+  if (club.id === "gff-demo") return <GffMobileTeam />;
+  return <MobileTeam />;
+}
 
 function MobileTeam() {
   const athletes = useData((s) => s.athletes).slice(0, 12);

@@ -3,6 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { LogOut, Bell } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useAuth as useLocalAuth } from "@/lib/store";
+import { useClub } from "@/clubs/ClubProvider";
 
 
 export interface MobileTab {
@@ -24,6 +25,10 @@ export function MobileShell({
   role?: "coach" | "athlete";
 }) {
   const setUser = useLocalAuth((s) => s.setUser);
+  const { club } = useClub();
+  const isGff = club.id === "gff-demo";
+  const notifAria = isGff ? "الإشعارات" : "Notificaciones";
+  const exitAria = isGff ? "خروج" : "Salir";
 
   const path = useRouterState({ select: (s) => s.location.pathname });
 
@@ -75,7 +80,7 @@ export function MobileShell({
             <div className="flex items-center gap-2">
               <Link
                 to="/mobile/notifications"
-                aria-label="Notificaciones"
+                aria-label={notifAria}
                 className="relative flex items-center justify-center"
                 style={{
                   width: 40, height: 40, borderRadius: 9999,
@@ -90,7 +95,7 @@ export function MobileShell({
               </Link>
               <button
                 onClick={() => setUser(null)}
-                aria-label="Salir"
+                aria-label={exitAria}
                 className="flex items-center justify-center"
                 style={{
                   width: 40, height: 40, borderRadius: 9999,

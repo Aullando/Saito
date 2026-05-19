@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useSessionLocal } from "@/lib/sessionLocal";
+import { useClub } from "@/clubs/ClubProvider";
+import { GffMobileHome } from "@/clubs/gff/GffMobileWorkspace";
 
 const DEMO_SESSION_ID = "session-today";
 
@@ -34,9 +36,13 @@ const SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
 
 function MobileHome() {
   const user = useCurrentUser();
+  const { club } = useClub();
   const events = useData((s) => s.events);
   const today = new Date().toISOString().slice(0, 10);
   const isCoach = user?.role === "technical";
+
+  // GFF (Arabic / RTL) workspace mirrors the desktop GFF pattern.
+  if (club.id === "gff-demo") return <GffMobileHome />;
 
   const todayEvent = useMemo(
     () => events.find((e) => e.date === today),
