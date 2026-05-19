@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   BarChart,
   Bar,
@@ -198,6 +198,12 @@ export function GffWorkspace({ view: viewProp }: { view?: string }) {
 
   const [view, setView] = useState<GffView>(initialView);
   const [selectedTeam, setSelectedTeam] = useState<GffTeam>(gffTeams[0]);
+
+  // Keep internal view in sync with the route param so sidebar links navigate.
+  useEffect(() => {
+    setView(initialView);
+  }, [initialView]);
+
 
   return (
     <div className="space-y-5 text-start">
