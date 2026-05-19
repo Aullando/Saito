@@ -502,3 +502,60 @@
   --color-saito-red: #f12f4a;
   --color-saito-yellow: #fdb113;
 }
+
+/* ============================================================
+   Workspace-scoped styles (RTL + GFF tenant)
+   These ONLY affect <WorkspaceFrame> content. Header, Sidebar
+   and global chrome stay LTR with SAITO branding.
+   ============================================================ */
+
+/* Arabic typography stack — loaded from Google Fonts for the GFF workspace.
+   Falls back to system Arabic faces if the network is unavailable. */
+@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap");
+
+.workspace-rtl,
+.workspace-rtl * {
+  font-family: "Tajawal", "Noto Sans Arabic", "Google Sans Flex", "Inter", system-ui, sans-serif;
+}
+
+/* GFF tenant colour tokens — scoped to the workspace, never on :root. */
+.workspace-gff {
+  --gff-green: #0a6b4f;
+  --gff-green-soft: #e6f2ed;
+  --gff-gold: #d4af37;
+  --gff-gold-soft: #faf1d6;
+  --gff-ink: #0f2a22;
+}
+
+.workspace-gff .gff-accent-card {
+  background: linear-gradient(135deg, var(--gff-green), var(--gff-ink));
+  color: #fff;
+  border-radius: 18px;
+}
+
+.workspace-gff .gff-gold-chip {
+  background: var(--gff-gold-soft);
+  color: #8a6a14;
+  border: 1px solid color-mix(in oklab, var(--gff-gold) 40%, transparent);
+}
+
+.workspace-gff .gff-green-chip {
+  background: var(--gff-green-soft);
+  color: var(--gff-green);
+}
+
+/* Directional utility: only flip when explicitly opted in inside a
+   workspace whose direction is RTL. We do NOT auto-flip every icon — only
+   navigation chevrons / arrows that opt in via .rtl-flip. */
+.workspace-rtl .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Smooth workspace transitions respect reduced motion at the OS level. */
+@media (prefers-reduced-motion: reduce) {
+  .workspace-frame {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
