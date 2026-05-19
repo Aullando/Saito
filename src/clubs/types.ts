@@ -27,7 +27,14 @@ export type ClubModuleId =
   | "rgcc-pt"
   | "rgcc-biblioteca"
   | "rgcc-quiosco"
-  | "rgcc-copiloto";
+  | "rgcc-copiloto"
+  // GFF modules
+  | "gff-national-teams"
+  | "gff-calendar"
+  | "gff-clubs"
+  | "gff-development"
+  | "gff-reporting"
+  | "gff-administration";
 
 export interface ClubBrand {
   name: string;
