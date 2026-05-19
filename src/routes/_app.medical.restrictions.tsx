@@ -132,8 +132,8 @@ function RestrictionsPage() {
       <div className="mb-4 flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 text-xs">
         <Lock className="h-4 w-4 shrink-0 text-primary" />
         <span>
-          Solo personal médico autorizado y dirección con permiso explícito ven el detalle.
-          Todos los accesos quedan registrados en{" "}
+          Solo personal médico autorizado y dirección con permiso explícito ven el detalle. Todos
+          los accesos quedan registrados en{" "}
           <a className="font-semibold text-primary hover:underline" href="/settings/privacy">
             Privacidad y seguridad
           </a>

@@ -29,8 +29,18 @@ const ATHL_STRONG = "#F4889A";
 
 const DOW_ES = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 const MONTHS = [
-  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
 ];
 
 const toIso = (d: Date) => d.toISOString().slice(0, 10);
@@ -72,10 +82,8 @@ function MobileCalendar() {
 
   const eventsByDate = useMemo(() => {
     const m: Record<string, typeof events> = {};
-    events.forEach((e) => ((m[e.date] ||= []).push(e)));
-    Object.values(m).forEach((list) =>
-      list.sort((a, b) => a.startTime.localeCompare(b.startTime)),
-    );
+    events.forEach((e) => (m[e.date] ||= []).push(e));
+    Object.values(m).forEach((list) => list.sort((a, b) => a.startTime.localeCompare(b.startTime)));
     return m;
   }, [events]);
 
@@ -358,7 +366,8 @@ function DaySummary({
     return (
       <section className="space-y-2 pt-1">
         <h2 style={{ color: INK, fontSize: 20, fontWeight: 700 }}>
-          {label} <span style={{ color: MUTED }}>|</span> <span style={{ color: MUTED, fontWeight: 600 }}>Sin eventos</span>
+          {label} <span style={{ color: MUTED }}>|</span>{" "}
+          <span style={{ color: MUTED, fontWeight: 600 }}>Sin eventos</span>
         </h2>
         <div
           className="text-center"
@@ -378,13 +387,14 @@ function DaySummary({
   }
 
   const type = first.type.toLowerCase();
-  const typeLabel = type.includes("match") || type.includes("partido")
-    ? "Partido"
-    : type.includes("medic") || type.includes("médic")
-      ? "Médico"
-      : type.includes("event") || type.includes("evento")
-        ? "Evento"
-        : "Entrenamiento";
+  const typeLabel =
+    type.includes("match") || type.includes("partido")
+      ? "Partido"
+      : type.includes("medic") || type.includes("médic")
+        ? "Médico"
+        : type.includes("event") || type.includes("evento")
+          ? "Evento"
+          : "Entrenamiento";
 
   return (
     <section className="space-y-3 pt-1">

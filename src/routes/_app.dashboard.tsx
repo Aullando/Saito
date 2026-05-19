@@ -46,7 +46,11 @@ function DashboardSwitch() {
 
 // ---------- Helpers ----------
 const fmtMoney = (n: number) =>
-  new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(n);
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
@@ -65,8 +69,7 @@ function weekRange() {
 }
 
 // Deterministic helper to derive a stable fake percentage from an array length
-const stableHash = (n: number, salt = 7) =>
-  Math.abs(Math.sin(n * 9301 + salt) * 10000) % 1;
+const stableHash = (n: number, salt = 7) => Math.abs(Math.sin(n * 9301 + salt) * 10000) % 1;
 
 // ---------- Command Center ----------
 function CommandCenter() {
@@ -93,9 +96,7 @@ function CommandCenter() {
 
     // Asistencia media semanal — sintético determinista a partir del nº de entrenamientos
     const attendance =
-      weekTrainings.length === 0
-        ? 0
-        : Math.round(82 + stableHash(weekTrainings.length) * 12);
+      weekTrainings.length === 0 ? 0 : Math.round(82 + stableHash(weekTrainings.length) * 12);
 
     const pendingPayments = payments.filter((p) => p.status === "Pending");
     const pendingAmount = pendingPayments.reduce((s, p) => s + Number(p.amount ?? 0), 0);
@@ -104,7 +105,8 @@ function CommandCenter() {
     const underReview = athletes.filter((a) => a.medicalStatus === "Under review");
     const notFit = injured.length + underReview.length;
 
-    const openIncidents = injured.length + appointments.filter((a) => a.status === "Scheduled").length;
+    const openIncidents =
+      injured.length + appointments.filter((a) => a.status === "Scheduled").length;
 
     return {
       activeAthletes: activeAthletes.length,
@@ -182,7 +184,12 @@ function CommandCenter() {
   }, [kpis]);
 
   const activity = useMemo(() => {
-    type Item = { icon: LucideIcon; text: string; time: string; tone: "info" | "success" | "warning" };
+    type Item = {
+      icon: LucideIcon;
+      text: string;
+      time: string;
+      tone: "info" | "success" | "warning";
+    };
     const items: Item[] = [];
     // Latest paid payment
     const lastPaid = [...payments]
@@ -256,24 +263,9 @@ function CommandCenter() {
           hint={kpis.rgpdInvalid > 0 ? `${kpis.rgpdInvalid} pendientes` : "Al día"}
           tone={kpis.rgpdInvalid > 0 ? "warning" : "success"}
         />
-        <Kpi
-          icon={Layers}
-          label="Secciones activas"
-          value={kpis.sectionsCount}
-          tone="default"
-        />
-        <Kpi
-          icon={Activity}
-          label="Grupos activos"
-          value={kpis.groupsCount}
-          tone="default"
-        />
-        <Kpi
-          icon={Dumbbell}
-          label="Entrenos esta semana"
-          value={kpis.weekTrainings}
-          tone="info"
-        />
+        <Kpi icon={Layers} label="Secciones activas" value={kpis.sectionsCount} tone="default" />
+        <Kpi icon={Activity} label="Grupos activos" value={kpis.groupsCount} tone="default" />
+        <Kpi icon={Dumbbell} label="Entrenos esta semana" value={kpis.weekTrainings} tone="info" />
       </section>
 
       {/* Secondary KPIs */}
@@ -503,7 +495,9 @@ function Kpi({
           <div className="mt-1.5 truncate text-xl font-bold tracking-tight">{value}</div>
           {hint && <div className="mt-0.5 truncate text-[11px] text-muted-foreground">{hint}</div>}
         </div>
-        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${toneCls[tone]}`}>
+        <div
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${toneCls[tone]}`}
+        >
           <Icon className="h-4 w-4" />
         </div>
       </div>

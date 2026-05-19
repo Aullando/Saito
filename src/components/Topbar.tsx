@@ -71,7 +71,6 @@ export function Topbar() {
         />
       </div>
 
-
       {/* Desktop / tablet search */}
       <div className="hidden sm:flex flex-1 justify-center min-w-0">
         <div className="relative w-full max-w-2xl">

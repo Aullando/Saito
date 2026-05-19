@@ -78,7 +78,6 @@ function buildItems(role: Role): Item[] {
         { to: "/communication", label: "Circulares", icon: Megaphone },
       ];
 
-
     // Staff médico
     case "medical":
       return [
@@ -226,7 +225,6 @@ export function Sidebar() {
             })}
           </ul>
         </nav>
-
 
         <div className="border-t border-sidebar-border p-3">
           <Link

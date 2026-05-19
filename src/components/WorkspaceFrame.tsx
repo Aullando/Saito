@@ -60,10 +60,7 @@ export function WorkspaceFrame({ children }: { children: ReactNode }) {
 
   // Resolve direction/locale/className from the CURRENTLY DISPLAYED club, not
   // the next one — otherwise RTL would flip before the old (LTR) content fades.
-  const displayedClub =
-    displayedClubId === club.id
-      ? club
-      : null; // fallback handled below
+  const displayedClub = displayedClubId === club.id ? club : null; // fallback handled below
 
   // We need workspace metadata for the displayed club. Since ClubProvider only
   // exposes the active club, during the brief out-phase we still use `club`'s

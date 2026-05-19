@@ -1,13 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import {
   Trophy,
   CalendarDays,
@@ -143,13 +135,7 @@ function TeamSwitcher({
 }
 
 // ----- Internal section nav --------------------------------------------
-function InternalNav({
-  view,
-  onChange,
-}: {
-  view: GffView;
-  onChange: (v: GffView) => void;
-}) {
+function InternalNav({ view, onChange }: { view: GffView; onChange: (v: GffView) => void }) {
   const { t } = useGffTranslation();
   const items: { view: GffView; label: string; icon: typeof Shield }[] = [
     { view: "dashboard", label: t("dashboard"), icon: Shield },
@@ -203,7 +189,6 @@ export function GffWorkspace({ view: viewProp }: { view?: string }) {
   useEffect(() => {
     setView(initialView);
   }, [initialView]);
-
 
   return (
     <div className="space-y-5 text-start">
@@ -305,12 +290,7 @@ function DashboardView({ onOpenTeam }: { onOpenTeam: (t: GffTeam) => void }) {
           next={nextSenior}
           onOpen={() => onOpenTeam(senior)}
         />
-        <TeamSummaryCard
-          team={u23}
-          last={lastU23}
-          next={nextU23}
-          onOpen={() => onOpenTeam(u23)}
-        />
+        <TeamSummaryCard team={u23} last={lastU23} next={nextU23} onOpen={() => onOpenTeam(u23)} />
       </section>
 
       <section className="grid gap-4 lg:grid-cols-3">
@@ -356,15 +336,7 @@ function DashboardView({ onOpenTeam }: { onOpenTeam: (t: GffTeam) => void }) {
   );
 }
 
-function DevRow({
-  labelAr,
-  labelEn,
-  value,
-}: {
-  labelAr: string;
-  labelEn: string;
-  value: number;
-}) {
+function DevRow({ labelAr, labelEn, value }: { labelAr: string; labelEn: string; value: number }) {
   return (
     <li className="flex items-center justify-between gap-2 rounded-xl bg-[var(--gff-green-soft)]/60 px-3 py-2.5">
       <div>
@@ -550,9 +522,7 @@ function SquadGrid({ teamId }: { teamId: string }) {
                 )}
               </div>
               <p className="truncate text-xs text-muted-foreground">{p.nameLatin}</p>
-              <p className="mt-1 text-xs font-semibold text-[var(--gff-green)]">
-                {p.positionAr}
-              </p>
+              <p className="mt-1 text-xs font-semibold text-[var(--gff-green)]">{p.positionAr}</p>
               <div className="mt-2 flex items-center gap-3 text-[11px] text-muted-foreground">
                 <span>
                   {t("position", "en").slice(0, 1)}.{" "}
@@ -562,9 +532,7 @@ function SquadGrid({ teamId }: { teamId: string }) {
                   {t("age")}: <N>{p.age}</N>
                 </span>
               </div>
-              {p.note && (
-                <p className="mt-1 text-[10px] italic text-muted-foreground">{p.note}</p>
-              )}
+              {p.note && <p className="mt-1 text-[10px] italic text-muted-foreground">{p.note}</p>}
             </div>
           </div>
         </Card>
@@ -790,12 +758,32 @@ function CampsList() {
 function CalendarView() {
   const { t } = useGffTranslation();
   const items = [
-    { ar: "نافذة الفيفا — مباريات ودية", en: "FIFA window — friendlies", date: "2026-03-24", kind: "FIFA" },
-    { ar: "تصفيات آسيوية (الجولة 3)", en: "AFC qualifier (matchday 3)", date: "2026-06-07", kind: "AFC" },
-    { ar: "تصفيات آسيوية (الجولة 4)", en: "AFC qualifier (matchday 4)", date: "2026-06-12", kind: "AFC" },
+    {
+      ar: "نافذة الفيفا — مباريات ودية",
+      en: "FIFA window — friendlies",
+      date: "2026-03-24",
+      kind: "FIFA",
+    },
+    {
+      ar: "تصفيات آسيوية (الجولة 3)",
+      en: "AFC qualifier (matchday 3)",
+      date: "2026-06-07",
+      kind: "AFC",
+    },
+    {
+      ar: "تصفيات آسيوية (الجولة 4)",
+      en: "AFC qualifier (matchday 4)",
+      date: "2026-06-12",
+      kind: "AFC",
+    },
     { ar: "معسكر تدريبي صيفي", en: "Summer training camp", date: "2026-08-15", kind: "CAMP" },
     { ar: "نافذة الفيفا — خريف", en: "FIFA window — autumn", date: "2026-09-04", kind: "FIFA" },
-    { ar: "تصفيات تحت 23 (الجولة 5)", en: "U-23 qualifier (matchday 5)", date: "2026-10-10", kind: "AFC" },
+    {
+      ar: "تصفيات تحت 23 (الجولة 5)",
+      en: "U-23 qualifier (matchday 5)",
+      date: "2026-10-10",
+      kind: "AFC",
+    },
   ];
   return (
     <div className="space-y-4">
@@ -833,7 +821,9 @@ function KindBadge({ kind }: { kind: "FIFA" | "AFC" | "CAMP" }) {
         ? "bg-[var(--gff-gold-soft)] text-[#8a6a14]"
         : "bg-muted text-foreground";
   return (
-    <span className={cn("rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider", cls)}>
+    <span
+      className={cn("rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider", cls)}
+    >
       {kind}
     </span>
   );
@@ -942,8 +932,8 @@ function DevelopmentView() {
       <Card>
         <SectionTitle icon={GraduationCap} title={t("development")} />
         <p className="text-sm text-foreground/75">
-          مساحة عمل تجريبية لعرض مسارات تطوير اللاعبين والمدربين داخل اتحاد خليجي افتراضي.
-          البيانات هنا تمثيلية وتُستخدم لأغراض العرض فقط.
+          مساحة عمل تجريبية لعرض مسارات تطوير اللاعبين والمدربين داخل اتحاد خليجي افتراضي. البيانات
+          هنا تمثيلية وتُستخدم لأغراض العرض فقط.
         </p>
       </Card>
     </div>
@@ -1031,7 +1021,12 @@ function ReportingView() {
 function AdministrationView() {
   const { t } = useGffTranslation();
   const rows = [
-    { labelAr: t("president"), valueAr: gffFederation.presidentAr, sub: gffFederation.presidentLatin, icon: Crown },
+    {
+      labelAr: t("president"),
+      valueAr: gffFederation.presidentAr,
+      sub: gffFederation.presidentLatin,
+      icon: Crown,
+    },
     {
       labelAr: t("generalSecretary"),
       valueAr: gffFederation.generalSecretaryAr,
@@ -1080,8 +1075,8 @@ function AdministrationView() {
       </Card>
       <Card>
         <p className="text-sm text-foreground/75">
-          هذه وحدة عرض تجريبية للإدارة الفيدرالية. ستتضمن النسخة الكاملة الأمانة العامة،
-          واللجان الفنية، والمالية، والإعلام، وإدارة المسابقات.
+          هذه وحدة عرض تجريبية للإدارة الفيدرالية. ستتضمن النسخة الكاملة الأمانة العامة، واللجان
+          الفنية، والمالية، والإعلام، وإدارة المسابقات.
         </p>
         <p className="mt-2 text-[11px] italic text-muted-foreground">
           Demo module · No real federation, person or organisation is represented.
@@ -1145,7 +1140,12 @@ function Avatar({ initial, tone = "green" }: { initial: string; tone?: "green" |
       ? "bg-[var(--gff-gold)] text-[var(--gff-ink)]"
       : "bg-[var(--gff-green)] text-white";
   return (
-    <div className={cn("grid h-12 w-12 shrink-0 place-items-center rounded-full text-lg font-bold", cls)}>
+    <div
+      className={cn(
+        "grid h-12 w-12 shrink-0 place-items-center rounded-full text-lg font-bold",
+        cls,
+      )}
+    >
       <bdi>{initial}</bdi>
     </div>
   );

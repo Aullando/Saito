@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import {
-  ChevronDown,
-  Check,
-  ArrowLeft,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { ChevronDown, Check, ArrowLeft, LogOut, Sparkles } from "lucide-react";
 import { useActiveClubStore } from "@/clubs/activeClub";
 import { useClub } from "@/clubs/ClubProvider";
 import { CLUBS } from "@/clubs/registry";
@@ -130,9 +124,7 @@ export function DemoBar() {
             </span>
           )}
           <span className="max-w-[140px] truncate sm:max-w-[220px]">{club.brand.name}</span>
-          <ChevronDown
-            className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
-          />
+          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
 
         {open && (

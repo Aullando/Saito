@@ -29,9 +29,7 @@ function MobileProfile() {
         </div>
         <div>
           <div className="text-base font-bold">{user.name}</div>
-          <div className="text-xs uppercase tracking-wider text-muted-foreground">
-            {roleLabel}
-          </div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground">{roleLabel}</div>
         </div>
       </div>
 
@@ -57,9 +55,7 @@ function Row({
     <li className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3">
       <Icon className="h-4 w-4 text-muted-foreground" />
       <div className="min-w-0 flex-1">
-        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-          {label}
-        </div>
+        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
         <div className="truncate text-sm font-medium">{value}</div>
       </div>
     </li>

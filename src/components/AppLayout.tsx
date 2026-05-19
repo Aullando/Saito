@@ -10,13 +10,16 @@ import { Navigate } from "@tanstack/react-router";
 
 // Map each role to its brand accent (per SAITO brand manual).
 // Desktop roles get the blue/yellow accents; mobile roles their own greens/reds.
-const ROLE_ACCENT: Record<string, { primary: string; ring: string; soft: string; softText: string }> = {
-  manager:   { primary: "#0067C9", ring: "#0067C9", soft: "#EAF4FF", softText: "#0054A4" },
-  admin:     { primary: "#0067C9", ring: "#0067C9", soft: "#EAF4FF", softText: "#0054A4" },
-  sysadmin:  { primary: "#0067C9", ring: "#0067C9", soft: "#EAF4FF", softText: "#0054A4" },
-  medical:   { primary: "#FDB113", ring: "#FDB113", soft: "#FFF5DF", softText: "#B56F00" },
+const ROLE_ACCENT: Record<
+  string,
+  { primary: string; ring: string; soft: string; softText: string }
+> = {
+  manager: { primary: "#0067C9", ring: "#0067C9", soft: "#EAF4FF", softText: "#0054A4" },
+  admin: { primary: "#0067C9", ring: "#0067C9", soft: "#EAF4FF", softText: "#0054A4" },
+  sysadmin: { primary: "#0067C9", ring: "#0067C9", soft: "#EAF4FF", softText: "#0054A4" },
+  medical: { primary: "#FDB113", ring: "#FDB113", soft: "#FFF5DF", softText: "#B56F00" },
   technical: { primary: "#00A74D", ring: "#00A74D", soft: "#EAF8F0", softText: "#00843D" },
-  athlete:   { primary: "#F12F4A", ring: "#F12F4A", soft: "#FFF0F3", softText: "#C71F36" },
+  athlete: { primary: "#F12F4A", ring: "#F12F4A", soft: "#FFF0F3", softText: "#C71F36" },
 };
 
 export function AppLayout({ children }: { children: ReactNode }) {
@@ -55,10 +58,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </main>
         </div>
         <div className="md:hidden">
-          <main
-            className="px-4 py-5"
-            style={{ paddingTop: "calc(72px + var(--demo-bar-h, 0px))" }}
-          >
+          <main className="px-4 py-5" style={{ paddingTop: "calc(72px + var(--demo-bar-h, 0px))" }}>
             <WorkspaceFrame>{children}</WorkspaceFrame>
           </main>
         </div>

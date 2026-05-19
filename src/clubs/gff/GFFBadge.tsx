@@ -5,10 +5,7 @@ import type { SVGProps } from "react";
  * Double-ring (gold outside, green inside), heraldic falcon in gold,
  * "GFF" wordmark in white, Arabic name above, English name below.
  */
-export function GFFBadge({
-  size = 128,
-  ...props
-}: SVGProps<SVGSVGElement> & { size?: number }) {
+export function GFFBadge({ size = 128, ...props }: SVGProps<SVGSVGElement> & { size?: number }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -75,11 +72,7 @@ export function GFFBadge({
       </text>
 
       {/* English name (bottom arc) */}
-      <path
-        id="gff-arc-bottom"
-        d="M 30 110 A 70 70 0 0 0 170 110"
-        fill="none"
-      />
+      <path id="gff-arc-bottom" d="M 30 110 A 70 70 0 0 0 170 110" fill="none" />
       <text
         fill="#D4AF37"
         fontFamily="Georgia, 'Times New Roman', serif"

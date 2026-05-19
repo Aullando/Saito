@@ -46,15 +46,7 @@ function inferTone(label: string): StatusTone {
   )
     return "warning";
   if (
-    [
-      "no apto",
-      "vencido",
-      "overdue",
-      "cancelado",
-      "cancelled",
-      "rechazado",
-      "rejected",
-    ].includes(s)
+    ["no apto", "vencido", "overdue", "cancelado", "cancelled", "rechazado", "rejected"].includes(s)
   )
     return "danger";
   if (["finalizado", "finished", "cerrada", "—"].includes(s)) return "muted";

@@ -80,7 +80,11 @@ export function AthleteProfileSheet({
   const athleteEvents = useMemo(
     () =>
       events
-        .filter((e) => e.athleteId === athlete.id || (athlete.section_id && e.sectionId === athlete.section_id))
+        .filter(
+          (e) =>
+            e.athleteId === athlete.id ||
+            (athlete.section_id && e.sectionId === athlete.section_id),
+        )
         .sort((a, b) => `${a.date}T${a.startTime}`.localeCompare(`${b.date}T${b.startTime}`))
         .slice(0, 6),
     [events, athlete],
@@ -132,12 +136,8 @@ export function AthleteProfileSheet({
         {view === "technical" && (
           <TechnicalView athlete={athlete} groupNames={groupNames} events={athleteEvents} />
         )}
-        {view === "medical" && (
-          <MedicalView athlete={athlete} appointments={appointments} />
-        )}
-        {view === "athlete" && (
-          <AthleteView events={athleteEvents} appointments={appointments} />
-        )}
+        {view === "medical" && <MedicalView athlete={athlete} appointments={appointments} />}
+        {view === "athlete" && <AthleteView events={athleteEvents} appointments={appointments} />}
       </div>
     </>
   );
@@ -179,7 +179,11 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 const fmtEur = (n: number) =>
-  new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(n);
 
 // Safe-language helper for medical status. Never expose diagnosis or
 // auto-derived clinical judgement — labels come from professional input.
@@ -230,7 +234,11 @@ function ManagerView({
               </div>
               <div className="flex items-center gap-2">
                 <span>{fmtEur(p.amount)}</span>
-                <Pill tone={p.status === "Paid" ? "success" : p.status === "Failed" ? "danger" : "warning"}>
+                <Pill
+                  tone={
+                    p.status === "Paid" ? "success" : p.status === "Failed" ? "danger" : "warning"
+                  }
+                >
                   {p.status}
                 </Pill>
               </div>
@@ -245,11 +253,12 @@ function ManagerView({
       <Section title="Salud deportiva (resumen)" icon={HeartPulse}>
         {(() => {
           const info = medicalStatusInfo(athlete.medical_status);
-          return (
-            <Row label="Estado" value={<Pill tone={info.tone}>{info.label}</Pill>} />
-          );
+          return <Row label="Estado" value={<Pill tone={info.tone}>{info.label}</Pill>} />;
         })()}
-        <Row label="Detalle clínico" value={<span className="text-muted-foreground">Restringido al staff médico</span>} />
+        <Row
+          label="Detalle clínico"
+          value={<span className="text-muted-foreground">Restringido al staff médico</span>}
+        />
       </Section>
     </>
   );
@@ -305,7 +314,8 @@ function TechnicalView({
       <Section title="Notas de sesión" icon={FileText}>
         <ul className="space-y-1.5 text-xs">
           <li className="rounded-lg bg-slate-50 p-2">
-            <span className="font-medium">12/05 · Sesión técnica:</span> mejora visible en transiciones.
+            <span className="font-medium">12/05 · Sesión técnica:</span> mejora visible en
+            transiciones.
           </li>
           <li className="rounded-lg bg-slate-50 p-2">
             <span className="font-medium">08/05 · Carga:</span> recuperación buena tras serie.
@@ -339,7 +349,14 @@ function MedicalView({
   appointments,
 }: {
   athlete: AthleteLike;
-  appointments: { id: string; date: string; time: string; reason: string; status: string; notes: string }[];
+  appointments: {
+    id: string;
+    date: string;
+    time: string;
+    reason: string;
+    status: string;
+    notes: string;
+  }[];
 }) {
   const info = medicalStatusInfo(athlete.medical_status);
   return (
@@ -361,28 +378,21 @@ function MedicalView({
             <Plus className="mr-1.5 h-3.5 w-3.5" />
             Crear plan de tratamiento
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => toast.success("Cita médica agendada")}
-          >
+          <Button size="sm" variant="outline" onClick={() => toast.success("Cita médica agendada")}>
             <Plus className="mr-1.5 h-3.5 w-3.5" />
             Agendar cita
           </Button>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          Salud deportiva — estado apto/no apto introducido por profesional autorizado.
-          SAITO no realiza diagnóstico ni alta automática.
+          Salud deportiva — estado apto/no apto introducido por profesional autorizado. SAITO no
+          realiza diagnóstico ni alta automática.
         </p>
       </Section>
 
       <Section title="Datos básicos del atleta" icon={Users}>
         <Row label="Nombre" value={`${athlete.first_name} ${athlete.last_name}`} />
         <Row label="Estado deportivo" value={athlete.status} />
-        <Row
-          label="Estado de salud deportiva"
-          value={<Pill tone={info.tone}>{info.label}</Pill>}
-        />
+        <Row label="Estado de salud deportiva" value={<Pill tone={info.tone}>{info.label}</Pill>} />
         <Row
           label="Última revisión"
           value={<span className="text-muted-foreground">26/03/2026 · J. Romero (fisio)</span>}
@@ -397,7 +407,9 @@ function MedicalView({
           </li>
           <li className="rounded-lg border border-amber-200 bg-amber-50 p-2">
             <div className="font-medium text-amber-900">Molestia tobillo · 12/03/2026</div>
-            <div className="text-amber-700">Estado apto introducido por staff médico tras 14 días.</div>
+            <div className="text-amber-700">
+              Estado apto introducido por staff médico tras 14 días.
+            </div>
           </li>
         </ul>
       </Section>
@@ -424,7 +436,15 @@ function MedicalView({
               <li key={a.id} className="py-2">
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{a.reason}</span>
-                  <Pill tone={a.status === "Completed" ? "success" : a.status === "Cancelled" ? "danger" : "info"}>
+                  <Pill
+                    tone={
+                      a.status === "Completed"
+                        ? "success"
+                        : a.status === "Cancelled"
+                          ? "danger"
+                          : "info"
+                    }
+                  >
                     {a.status}
                   </Pill>
                 </div>
@@ -473,11 +493,15 @@ function MedicalView({
         <ul className="space-y-1 text-xs">
           <li className="flex items-center justify-between rounded-lg bg-slate-50 px-2 py-1.5">
             <span>Informe ecografía aductor.pdf</span>
-            <Button size="sm" variant="ghost">Ver</Button>
+            <Button size="sm" variant="ghost">
+              Ver
+            </Button>
           </li>
           <li className="flex items-center justify-between rounded-lg bg-slate-50 px-2 py-1.5">
             <span>Reconocimiento médico anual.pdf</span>
-            <Button size="sm" variant="ghost">Ver</Button>
+            <Button size="sm" variant="ghost">
+              Ver
+            </Button>
           </li>
         </ul>
       </Section>
@@ -552,7 +576,10 @@ function AthleteView({
         </div>
         {appointments[0] && (
           <div className="mt-2 text-xs text-slate-700">
-            Próxima cita médica: <strong>{appointments[0].date} · {appointments[0].time}</strong>
+            Próxima cita médica:{" "}
+            <strong>
+              {appointments[0].date} · {appointments[0].time}
+            </strong>
           </div>
         )}
       </Section>

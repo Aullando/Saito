@@ -46,10 +46,7 @@ function DefaultMobileHome() {
   const today = new Date().toISOString().slice(0, 10);
   const isCoach = user?.role === "technical";
 
-  const todayEvent = useMemo(
-    () => events.find((e) => e.date === today),
-    [events, today],
-  );
+  const todayEvent = useMemo(() => events.find((e) => e.date === today), [events, today]);
 
   return isCoach ? <CoachHome event={todayEvent} /> : <AthleteHome event={todayEvent} />;
 }
@@ -181,7 +178,10 @@ function AthleteHome({ event }: { event: Ev }) {
 
       {/* Salud */}
       <section className="space-y-2">
-        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
+        >
           <Activity className="h-4 w-4" /> Salud
         </div>
         <div
@@ -208,7 +208,13 @@ function AthleteHome({ event }: { event: Ev }) {
             Plan de tratamiento
             <span
               className="flex items-center justify-center"
-              style={{ width: 28, height: 28, borderRadius: 999, background: SOFT_BG, color: MUTED }}
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 999,
+                background: SOFT_BG,
+                color: MUTED,
+              }}
             >
               <ArrowRight className="h-3.5 w-3.5" />
             </span>
@@ -232,7 +238,10 @@ function AthleteHome({ event }: { event: Ev }) {
 
       {/* Mi rendimiento */}
       <section className="space-y-2">
-        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
+        >
           <Trophy className="h-4 w-4" /> Mi rendimiento
         </div>
 
@@ -258,9 +267,7 @@ function AthleteHome({ event }: { event: Ev }) {
             Trabaja la transición tras pérdida. Reduces 0,8 s de reacción defensiva si activas
             presión inmediata los primeros 6 segundos.
             {improveOpen && (
-              <>
-                {" "}Suma 2 sprints cortos al calentamiento y termina con 5 min de respiración 4-7-8.
-              </>
+              <> Suma 2 sprints cortos al calentamiento y termina con 5 min de respiración 4-7-8.</>
             )}
           </p>
           <div
@@ -275,7 +282,10 @@ function AthleteHome({ event }: { event: Ev }) {
             <button onClick={() => setImproveOpen((v) => !v)} aria-label="Toggle">
               <ChevronDown
                 className="h-4 w-4"
-                style={{ transform: improveOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+                style={{
+                  transform: improveOpen ? "rotate(180deg)" : "none",
+                  transition: "transform 0.2s",
+                }}
               />
             </button>
           </div>
@@ -449,7 +459,10 @@ function CoachHome({ event }: { event: Ev }) {
           padding: "12px 16px",
         }}
       >
-        <div className="flex items-center gap-2" style={{ color: INK, fontSize: 14, fontWeight: 700 }}>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: INK, fontSize: 14, fontWeight: 700 }}
+        >
           <X className="h-4 w-4" /> No aptos
         </div>
         <ul className="mt-2 space-y-0.5">
@@ -463,7 +476,10 @@ function CoachHome({ event }: { event: Ev }) {
 
       {/* Valoración de rendimiento */}
       <section className="space-y-2">
-        <div className="flex items-center gap-2" style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
+        >
           <Star className="h-4 w-4" /> Valoración de rendimiento
         </div>
         <div

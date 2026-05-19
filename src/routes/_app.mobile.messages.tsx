@@ -46,9 +46,8 @@ function MobileMessages() {
 
   const active = useMemo(
     () => conversations.find((c) => c.id === openId) ?? null,
-    [conversations, openId]
+    [conversations, openId],
   );
-  
 
   useEffect(() => {
     if (openId) markRead(openId);
@@ -118,15 +117,10 @@ function MobileMessages() {
             const mine = m.authorId === currentUserId;
             const author = users.find((u) => u.id === m.authorId);
             return (
-              <div
-                key={m.id}
-                className={`flex ${mine ? "justify-end" : "justify-start"}`}
-              >
+              <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${
-                    mine
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card border border-border"
+                    mine ? "bg-primary text-primary-foreground" : "bg-card border border-border"
                   }`}
                 >
                   {!mine && (
@@ -148,9 +142,7 @@ function MobileMessages() {
             );
           })}
           {active.messages.length === 0 && (
-            <p className="py-8 text-center text-xs text-muted-foreground">
-              Sin mensajes todavía
-            </p>
+            <p className="py-8 text-center text-xs text-muted-foreground">Sin mensajes todavía</p>
           )}
         </div>
 
@@ -180,9 +172,7 @@ function MobileMessages() {
     <div className="space-y-3">
       <header>
         <h1 className="text-xl font-bold tracking-tight">Mensajes</h1>
-        <p className="text-xs text-muted-foreground">
-          Toca una conversación para abrirla
-        </p>
+        <p className="text-xs text-muted-foreground">Toca una conversación para abrirla</p>
       </header>
 
       <ul className="space-y-2">
@@ -207,9 +197,7 @@ function MobileMessages() {
                     )}
                   </div>
                   {last && (
-                    <div className="truncate text-[11px] text-muted-foreground">
-                      {last.content}
-                    </div>
+                    <div className="truncate text-[11px] text-muted-foreground">{last.content}</div>
                   )}
                 </div>
               </button>
@@ -217,9 +205,7 @@ function MobileMessages() {
           );
         })}
         {list.length === 0 && (
-          <p className="py-8 text-center text-xs text-muted-foreground">
-            No hay conversaciones
-          </p>
+          <p className="py-8 text-center text-xs text-muted-foreground">No hay conversaciones</p>
         )}
       </ul>
     </div>

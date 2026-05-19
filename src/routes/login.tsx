@@ -278,7 +278,12 @@ function LoginPage() {
     <div className="min-h-screen bg-background px-4 py-10">
       <div className="mx-auto max-w-5xl">
         <header className="mb-8 flex flex-col items-center gap-1 text-center">
-          <img src={saitoFullLogo} alt="SAITO" style={{ height: 44 }} className="shrink-0 object-contain" />
+          <img
+            src={saitoFullLogo}
+            alt="SAITO"
+            style={{ height: 44 }}
+            className="shrink-0 object-contain"
+          />
           <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
             powered by Gemini
           </span>
@@ -333,9 +338,7 @@ function LoginPage() {
           >
             <div
               className={
-                desktop.length >= 3
-                  ? "grid gap-3 sm:grid-cols-3"
-                  : "grid gap-3 sm:grid-cols-2"
+                desktop.length >= 3 ? "grid gap-3 sm:grid-cols-3" : "grid gap-3 sm:grid-cols-2"
               }
             >
               {desktop.map((p) => (
@@ -547,4 +550,3 @@ function ProfileCard({
     </button>
   );
 }
-

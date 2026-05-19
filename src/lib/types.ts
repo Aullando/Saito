@@ -71,13 +71,7 @@ export interface Athlete {
   performanceStatus: "High" | "Medium" | "Low";
 }
 
-export type CalendarEventType =
-  | "training"
-  | "match"
-  | "medical"
-  | "meeting"
-  | "club"
-  | "payment";
+export type CalendarEventType = "training" | "match" | "medical" | "meeting" | "club" | "payment";
 
 export interface CalendarEvent {
   id: string;

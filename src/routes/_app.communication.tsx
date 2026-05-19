@@ -124,13 +124,7 @@ function isMedicalRequest(c: Conversation): boolean {
 }
 
 function CommunicationPage() {
-  const {
-    conversations,
-    users,
-    athletes,
-    sendMessage,
-    addAppointment,
-  } = useData();
+  const { conversations, users, athletes, sendMessage, addAppointment } = useData();
   const {
     archivedConvs,
     hiddenConvs,
@@ -152,9 +146,9 @@ function CommunicationPage() {
     markRequestHandled,
   } = useCommLocal();
 
-  const [tab, setTab] = useState<
-    "circulars" | "direct" | "groups" | "medical" | "archived"
-  >("circulars");
+  const [tab, setTab] = useState<"circulars" | "direct" | "groups" | "medical" | "archived">(
+    "circulars",
+  );
   const [openNew, setOpenNew] = useState(false);
 
   // ────── Circulares ──────
@@ -172,13 +166,7 @@ function CommunicationPage() {
           body: m.content,
           recipientsLabel: m.targetLabel,
           recipientsCount,
-          reads: Math.max(
-            0,
-            Math.min(
-              recipientsCount,
-              Math.round(recipientsCount * 0.78),
-            ),
-          ),
+          reads: Math.max(0, Math.min(recipientsCount, Math.round(recipientsCount * 0.78))),
           createdAt: m.createdAt,
           status: overridden ?? "published",
           withdrawReason: withdrawReasons[m.id],
@@ -203,9 +191,7 @@ function CommunicationPage() {
       withdrawReason: c.withdrawReason,
       source: "local",
     }));
-    return [...localItems, ...seedCirculars].sort((a, b) =>
-      b.createdAt.localeCompare(a.createdAt),
-    );
+    return [...localItems, ...seedCirculars].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }, [seedCirculars, localCirculars]);
 
   // ────── Conversations split ──────
@@ -468,9 +454,7 @@ function CircularsTab({
       ) : (
         <ul className="divide-y divide-border">
           {filtered.map((c) => {
-            const pct = c.recipientsCount
-              ? Math.round((c.reads / c.recipientsCount) * 100)
-              : 0;
+            const pct = c.recipientsCount ? Math.round((c.reads / c.recipientsCount) * 100) : 0;
             return (
               <li key={c.id} className="px-4 py-4 hover:bg-muted/30">
                 <div className="flex items-start justify-between gap-3">
@@ -484,16 +468,12 @@ function CircularsTab({
                     <div className="mt-1 truncate text-sm font-semibold text-foreground">
                       {c.title}
                     </div>
-                    <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                      {c.body}
-                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground line-clamp-2">{c.body}</div>
                     <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
                         <Users className="h-3 w-3" /> {c.recipientsLabel}
                       </span>
-                      <span className="tabular-nums">
-                        {c.recipientsCount} destinatarios
-                      </span>
+                      <span className="tabular-nums">{c.recipientsCount} destinatarios</span>
                       {c.status !== "draft" && c.status !== "scheduled" && (
                         <span className="tabular-nums">
                           {c.reads} lecturas ({pct}%)
@@ -661,7 +641,12 @@ function CircularsTab({
       </Dialog>
 
       {/* Editar borrador / programada */}
-      <Dialog open={!!editTarget} onOpenChange={(o) => { if (!o) setEditTarget(null); }}>
+      <Dialog
+        open={!!editTarget}
+        onOpenChange={(o) => {
+          if (!o) setEditTarget(null);
+        }}
+      >
         {editTarget && (
           <EditCircularDialog
             initial={editTarget}
@@ -675,7 +660,12 @@ function CircularsTab({
       </Dialog>
 
       {/* Programar envío */}
-      <Dialog open={!!scheduleTarget} onOpenChange={(o) => { if (!o) setScheduleTarget(null); }}>
+      <Dialog
+        open={!!scheduleTarget}
+        onOpenChange={(o) => {
+          if (!o) setScheduleTarget(null);
+        }}
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Programar circular</DialogTitle>
@@ -763,7 +753,9 @@ function EditCircularDialog({
         </div>
       </div>
       <DialogFooter>
-        <Button variant="outline" onClick={onClose}>Cancelar</Button>
+        <Button variant="outline" onClick={onClose}>
+          Cancelar
+        </Button>
         <Button
           disabled={!title || !body}
           onClick={() =>
@@ -841,10 +833,7 @@ function NewCircularDialog({
           variant="secondary"
           disabled={!title || !body}
           onClick={() =>
-            onSave(
-              { title, body, recipientsLabel: recipients, recipientsCount: count },
-              false,
-            )
+            onSave({ title, body, recipientsLabel: recipients, recipientsCount: count }, false)
           }
         >
           Guardar borrador
@@ -852,10 +841,7 @@ function NewCircularDialog({
         <Button
           disabled={!title || !body}
           onClick={() =>
-            onSave(
-              { title, body, recipientsLabel: recipients, recipientsCount: count },
-              true,
-            )
+            onSave({ title, body, recipientsLabel: recipients, recipientsCount: count }, true)
           }
         >
           <Send className="mr-1 h-4 w-4" />
@@ -884,8 +870,7 @@ function ConversationsTab({
   emptyLabel: string;
 }) {
   const [activeId, setActiveId] = useState<string | null>(conversations[0]?.id ?? null);
-  const active =
-    conversations.find((c) => c.id === activeId) ?? conversations[0] ?? null;
+  const active = conversations.find((c) => c.id === activeId) ?? conversations[0] ?? null;
   const [draft, setDraft] = useState("");
 
   const authorName = (id: string) => users.find((u) => u.id === id)?.name ?? id.slice(0, 6);
@@ -1000,16 +985,12 @@ function ConversationsTab({
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2 text-xs">
-                      <span className="font-medium text-foreground">
-                        {authorName(m.authorId)}
-                      </span>
+                      <span className="font-medium text-foreground">{authorName(m.authorId)}</span>
                       <span className="text-muted-foreground tabular-nums">
                         · {formatDateTime(m.createdAt)}
                       </span>
                     </div>
-                    <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">
-                      {m.content}
-                    </div>
+                    <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{m.content}</div>
                   </div>
                 </div>
               ))}
@@ -1117,9 +1098,7 @@ function MedicalRequestsTab({
                       {last ? formatDateTime(last.createdAt) : ""}
                     </span>
                   </div>
-                  <div className="mt-1 text-sm font-semibold text-foreground">
-                    {r.title}
-                  </div>
+                  <div className="mt-1 text-sm font-semibold text-foreground">{r.title}</div>
                   {last && (
                     <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
                       {last.content}
@@ -1190,7 +1169,9 @@ function CreateAppointmentDialog({
   const initialAthlete =
     athletes.find(
       (a) => `${a.firstName} ${a.lastName}`.toLowerCase() === (guessed || "").toLowerCase(),
-    )?.id ?? athletes[0]?.id ?? "";
+    )?.id ??
+    athletes[0]?.id ??
+    "";
 
   const [athleteId, setAthleteId] = useState(initialAthlete);
   const [staffId, setStaffId] = useState(medics[0]?.id ?? "");

@@ -59,8 +59,7 @@ export function Header() {
               activeOptions={it.to === "/" ? { exact: true } : undefined}
               className="story-link rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               activeProps={{
-                className:
-                  "story-link rounded-md px-3 py-2 text-sm font-semibold text-foreground",
+                className: "story-link rounded-md px-3 py-2 text-sm font-semibold text-foreground",
               }}
             >
               {it.label}

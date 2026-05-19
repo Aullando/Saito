@@ -202,7 +202,14 @@ export function AIChat() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: next, role, context, club: club.id, aiScope, lang: isGff ? "ar" : "es" }),
+        body: JSON.stringify({
+          messages: next,
+          role,
+          context,
+          club: club.id,
+          aiScope,
+          lang: isGff ? "ar" : "es",
+        }),
       });
 
       if (!resp.ok || !resp.body) {
@@ -214,8 +221,12 @@ export function AIChat() {
         } catch {
           /* ignore */
         }
-        if (resp.status === 429) errMsg = isGff ? "طلبات كثيرة جدًا. انتظر لحظة." : "Demasiadas peticiones. Espera un momento.";
-        if (resp.status === 402) errMsg = isGff ? "لا توجد أرصدة ذكاء اصطناعي." : "Sin créditos de IA disponibles.";
+        if (resp.status === 429)
+          errMsg = isGff
+            ? "طلبات كثيرة جدًا. انتظر لحظة."
+            : "Demasiadas peticiones. Espera un momento.";
+        if (resp.status === 402)
+          errMsg = isGff ? "لا توجد أرصدة ذكاء اصطناعي." : "Sin créditos de IA disponibles.";
         // RGCC fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
           const local = rgccLocalFallback(
@@ -322,9 +333,7 @@ export function AIChat() {
             </button>
           </div>
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4 text-sm">
-            {msgs.length === 0 && (
-              <div className="text-xs text-muted-foreground">{emptyHint}</div>
-            )}
+            {msgs.length === 0 && <div className="text-xs text-muted-foreground">{emptyHint}</div>}
             {msgs.map((m, i) => (
               <div
                 key={i}

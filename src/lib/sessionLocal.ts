@@ -81,12 +81,7 @@ interface SessionLocalState {
   notifyAbsence: (data: Omit<NotifiedAbsence, "id" | "createdAt">) => void;
   saveCallup: (sessionId: string, athleteIds: string[]) => void;
   addNote: (sessionId: string, text: string, privateNote: boolean) => void;
-  saveRating: (
-    sessionId: string,
-    rpe: number,
-    recovery: number,
-    comment?: string,
-  ) => void;
+  saveRating: (sessionId: string, rpe: number, recovery: number, comment?: string) => void;
   acceptAIBlock: (sessionId: string, title: string, detail?: string) => void;
   requestAppointment: (data: Omit<AppointmentRequest, "id" | "createdAt" | "status">) => void;
   resolveAppointmentRequest: (id: string, status: "scheduled" | "rejected") => void;
