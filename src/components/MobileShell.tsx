@@ -3,6 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { LogOut, Bell } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useAuth as useLocalAuth } from "@/lib/store";
+import { useClub } from "@/clubs/ClubProvider";
 
 
 export interface MobileTab {
