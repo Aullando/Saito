@@ -21,6 +21,14 @@ const TITLES: Record<string, string> = {
   medical: "Medical Staff AI",
 };
 
+const TITLES_AR: Record<string, string> = {
+  sysadmin: "مساعد مدير النظام",
+  admin: "مساعد إدارة الاتحاد",
+  manager: "مساعد المدير",
+  technical: "مساعد الجهاز الفني",
+  medical: "مساعد الجهاز الطبي",
+};
+
 const SUGGESTIONS: Record<string, string[]> = {
   sysadmin: ["¿Qué organizaciones tienen IA activada?", "¿Cuántas organizaciones están activas?"],
   admin: [
@@ -42,6 +50,30 @@ const SUGGESTIONS: Record<string, string[]> = {
     "¿Qué citas tengo hoy?",
     "¿Atletas con tratamiento activo?",
     "¿Deportistas en revisión?",
+  ],
+};
+
+const SUGGESTIONS_GFF: Record<string, string[]> = {
+  sysadmin: ["ما الاتحادات التي فعّلت الذكاء الاصطناعي؟", "كم عدد الاتحادات النشطة؟"],
+  admin: [
+    "ما المباريات القادمة للمنتخب الأول؟",
+    "ما حالة تسجيل اللاعبين هذا الموسم؟",
+    "ما الأندية المنتسبة الأكثر نشاطًا؟",
+  ],
+  manager: [
+    "ما تدريبات المنتخب هذا الأسبوع؟",
+    "من اللاعبون المستدعون للمعسكر القادم؟",
+    "ما حالة جاهزية اللاعبين؟",
+  ],
+  technical: [
+    "من اللاعبون ذوو الحالة البدنية المجهولة؟",
+    "ما تدريباتي هذا الأسبوع؟",
+    "ملخص ملاحظات اللاعب أحمد",
+  ],
+  medical: [
+    "ما المواعيد الطبية اليوم؟",
+    "اللاعبون الخاضعون للعلاج؟",
+    "اللاعبون قيد المراجعة الطبية؟",
   ],
 };
 
