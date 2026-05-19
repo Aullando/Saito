@@ -1,9 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { useAuth as useLocalAuth } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { useActiveClubStore } from "@/clubs/activeClub";
+import { CLUBS } from "@/clubs/registry";
+import saitoMark from "@/assets/brand/saito-iso.svg";
 import {
   Briefcase,
   Wallet,
@@ -12,6 +14,11 @@ import {
   User,
   Monitor,
   Smartphone,
+  Crown,
+  ClipboardList,
+  BarChart3,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -21,6 +28,7 @@ export const Route = createFileRoute("/login")({
 });
 
 type ModuleKey = "admin" | "wellbeing" | "coaching" | "sportlife";
+type ClubKey = "saito" | "rgcc" | "gff-demo";
 
 type DemoProfile = {
   id: string;
@@ -30,15 +38,11 @@ type DemoProfile = {
   surface: "desktop" | "mobile";
   module: ModuleKey;
   icon: LucideIcon;
+  /** Optional route override; otherwise dashboard/mobile by surface. */
+  to?: string;
 };
 
-/** Channel rule (Confluence):
- *   - WebApp escritorio: Gestor/Dirección, Administración, Staff médico
- *   - App móvil: Entrenador, Atleta
- * Module color (brand):
- *   admin=azul · wellbeing=amarillo · coaching=verde · sportlife=rojo
- */
-const PROFILES: DemoProfile[] = [
+const SAITO_PROFILES: DemoProfile[] = [
   {
     id: "mgr",
     userId: "u-mgr",
@@ -86,6 +90,83 @@ const PROFILES: DemoProfile[] = [
   },
 ];
 
+const RGCC_PROFILES: DemoProfile[] = [
+  {
+    id: "rgcc-mgr",
+    userId: "u-mgr",
+    title: "Dirección RGCC",
+    subtitle: "Dashboard de club, secciones polideportivas y socios",
+    surface: "desktop",
+    module: "admin",
+    icon: Briefcase,
+  },
+  {
+    id: "rgcc-adm",
+    userId: "u-adm",
+    title: "Administración",
+    subtitle: "Cuotas, pagos, calendario y comunicaciones de socio",
+    surface: "desktop",
+    module: "admin",
+    icon: Wallet,
+  },
+  {
+    id: "rgcc-tec",
+    userId: "u-tec",
+    title: "Entrenador",
+    subtitle: "Clases, asistencia y entrenamiento personal",
+    surface: "mobile",
+    module: "coaching",
+    icon: Dumbbell,
+    to: "/rgcc/mi-dia",
+  },
+  {
+    id: "rgcc-ath",
+    userId: "u-ath",
+    title: "Socio / Atleta",
+    subtitle: "Mi día, clases, reservas y comunicaciones",
+    surface: "mobile",
+    module: "sportlife",
+    icon: User,
+    to: "/rgcc/mi-dia",
+  },
+];
+
+const GFF_PROFILES: DemoProfile[] = [
+  {
+    id: "gff-pres",
+    userId: "u-mgr",
+    title: "President · الرئيس",
+    subtitle: "Federation overview, FIFA/AFC ranking and national teams",
+    surface: "desktop",
+    module: "admin",
+    icon: Crown,
+  },
+  {
+    id: "gff-sg",
+    userId: "u-adm",
+    title: "General Secretary · الأمين العام",
+    subtitle: "Affiliated clubs, calendar windows and administration",
+    surface: "desktop",
+    module: "admin",
+    icon: ClipboardList,
+  },
+  {
+    id: "gff-tech",
+    userId: "u-mgr",
+    title: "Technical Director · المدير الفني",
+    subtitle: "Squad, staff, matches and development pathways",
+    surface: "desktop",
+    module: "coaching",
+    icon: BarChart3,
+  },
+];
+
+const PROFILES_BY_CLUB: Record<ClubKey, DemoProfile[]> = {
+  saito: SAITO_PROFILES,
+  rgcc: RGCC_PROFILES,
+  "gff-demo": GFF_PROFILES,
+};
+
 const MODULE_STYLES: Record<
   ModuleKey,
   { icon: string; ring: string; chip: string; label: string }
@@ -116,11 +197,29 @@ const MODULE_STYLES: Record<
   },
 };
 
+const CLUB_ORDER: ClubKey[] = ["saito", "rgcc", "gff-demo"];
+
+const CLUB_META: Record<ClubKey, { tagline: string; subtitle: string }> = {
+  saito: {
+    tagline: "Plataforma deportiva SAITO",
+    subtitle: "Elige tu rol. Cada rol entra al canal correcto: escritorio o móvil.",
+  },
+  rgcc: {
+    tagline: "Real Grupo de Cultura Covadonga",
+    subtitle: "Demo multi-sección polideportiva basada en SAITO.",
+  },
+  "gff-demo": {
+    tagline: "Gulf Football Federation · Demo",
+    subtitle: "Federación ficticia. Workspace internacional en árabe RTL.",
+  },
+};
+
 function LoginPage() {
   const { session, roles } = useAuth();
   const navigate = useNavigate();
   const setUser = useLocalAuth((s) => s.setUser);
   const switchClub = useActiveClubStore((s) => s.switchClub);
+  const [selectedClub, setSelectedClub] = useState<ClubKey>("saito");
 
   useEffect(() => {
     if (session) {
@@ -131,69 +230,191 @@ function LoginPage() {
   }, [session, roles, navigate]);
 
   const enter = (p: DemoProfile) => {
-    switchClub("saito");
+    switchClub(selectedClub);
     setUser(p.userId);
+    if (p.to) {
+      navigate({ to: p.to });
+      return;
+    }
     if (p.surface === "mobile") navigate({ to: "/mobile" });
     else navigate({ to: "/dashboard" });
   };
 
-  const desktop = PROFILES.filter((p) => p.surface === "desktop");
-  const mobile = PROFILES.filter((p) => p.surface === "mobile");
+  const profiles = PROFILES_BY_CLUB[selectedClub];
+  const desktop = profiles.filter((p) => p.surface === "desktop");
+  const mobile = profiles.filter((p) => p.surface === "mobile");
+  const meta = CLUB_META[selectedClub];
 
   return (
     <div className="min-h-screen bg-background px-4 py-10">
       <div className="mx-auto max-w-5xl">
-        <header className="mb-10 flex flex-col items-center gap-1 text-center">
+        <header className="mb-8 flex flex-col items-center gap-1 text-center">
           <Logo size={44} />
           <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
             powered by Gemini
           </span>
           <h1 className="mt-4 text-2xl font-bold tracking-tight">Ver SAITO como…</h1>
-          <p className="text-sm text-muted-foreground">
-            Elige tu rol. Cada rol entra al canal correcto: escritorio o móvil.
-          </p>
+          <p className="text-sm text-muted-foreground">{meta.subtitle}</p>
         </header>
 
-        <ChannelSection
-          icon={Monitor}
-          title="WebApp · Escritorio"
-          description="Gestión y operaciones del club. Sidebar + topbar."
-        >
-          <div className="grid gap-3 sm:grid-cols-3">
-            {desktop.map((p) => (
-              <ProfileCard key={p.id} profile={p} onSelect={enter} />
-            ))}
-          </div>
-        </ChannelSection>
-
-        <ChannelSection
-          icon={Smartphone}
-          title="App móvil"
-          description="Frame 390 px. Solo entrenador y atleta."
-          className="mt-10"
-        >
-          <div className="grid gap-3 sm:grid-cols-2">
-            {mobile.map((p) => (
-              <ProfileCard key={p.id} profile={p} onSelect={enter} />
-            ))}
-          </div>
-        </ChannelSection>
-
-        <div className="mt-10 text-center text-xs text-muted-foreground">
-          ¿Buscas la demo del Real Grupo Covadonga?{" "}
-          <button
-            type="button"
-            className="font-semibold text-primary underline-offset-2 hover:underline"
-            onClick={() => {
-              switchClub("rgcc");
-              setUser("u-mgr");
-              navigate({ to: "/rgcc/mi-dia" });
-            }}
-          >
-            Entrar
-          </button>
+        <div className="mb-8 flex justify-center">
+          <ClubPicker value={selectedClub} onChange={setSelectedClub} tagline={meta.tagline} />
         </div>
+
+        {desktop.length > 0 && (
+          <ChannelSection
+            icon={Monitor}
+            title="WebApp · Escritorio"
+            description="Gestión y operaciones. Sidebar + topbar."
+          >
+            <div
+              className={
+                desktop.length >= 3
+                  ? "grid gap-3 sm:grid-cols-3"
+                  : "grid gap-3 sm:grid-cols-2"
+              }
+            >
+              {desktop.map((p) => (
+                <ProfileCard key={p.id} profile={p} onSelect={enter} />
+              ))}
+            </div>
+          </ChannelSection>
+        )}
+
+        {mobile.length > 0 && (
+          <ChannelSection
+            icon={Smartphone}
+            title="App móvil"
+            description="Frame 390 px. Solo entrenador y atleta."
+            className="mt-10"
+          >
+            <div className="grid gap-3 sm:grid-cols-2">
+              {mobile.map((p) => (
+                <ProfileCard key={p.id} profile={p} onSelect={enter} />
+              ))}
+            </div>
+          </ChannelSection>
+        )}
       </div>
+    </div>
+  );
+}
+
+// ----- Club picker popover --------------------------------------------------
+
+function ClubPicker({
+  value,
+  onChange,
+  tagline,
+}: {
+  value: ClubKey;
+  onChange: (id: ClubKey) => void;
+  tagline: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const club = CLUBS[value];
+  const logo = club.brand.logoMark ?? (value === "saito" ? saitoMark : undefined);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  return (
+    <div ref={ref} dir="ltr" lang="en" className="relative w-full max-w-md">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-left shadow-sm transition hover:shadow-md"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label="Seleccionar entidad demo"
+      >
+        {logo ? (
+          <img
+            src={logo}
+            alt=""
+            aria-hidden="true"
+            className="h-10 w-10 rounded-lg bg-muted/40 object-contain p-1"
+          />
+        ) : (
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-xs font-bold text-primary">
+            {club.brand.shortName.slice(0, 3)}
+          </span>
+        )}
+        <span className="min-w-0 flex-1">
+          <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Entidad demo
+          </span>
+          <span className="block truncate text-sm font-semibold">{club.brand.name}</span>
+          <span className="block truncate text-[11px] text-muted-foreground">{tagline}</span>
+        </span>
+        <ChevronDown
+          className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div
+          role="listbox"
+          className="absolute left-0 right-0 top-full z-20 mt-2 overflow-hidden rounded-2xl border border-border bg-popover shadow-xl"
+        >
+          <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Elige una entidad
+          </div>
+          <ul className="pb-1">
+            {CLUB_ORDER.map((id) => {
+              const c = CLUBS[id];
+              const active = id === value;
+              const src = c.brand.logoMark ?? (id === "saito" ? saitoMark : undefined);
+              const subtitle =
+                id === "gff-demo"
+                  ? "Demo · Gulf federation"
+                  : `${c.seed.live ? "Live" : "Demo"} · ${c.brand.defaultLanguage.toUpperCase()}`;
+              return (
+                <li key={id}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={active}
+                    onClick={() => {
+                      onChange(id);
+                      setOpen(false);
+                    }}
+                    className={`flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm hover:bg-muted ${
+                      active ? "bg-primary/10" : ""
+                    }`}
+                  >
+                    {src ? (
+                      <img
+                        src={src}
+                        alt=""
+                        aria-hidden="true"
+                        className="h-8 w-8 rounded-lg bg-muted/40 object-contain p-0.5"
+                      />
+                    ) : (
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 text-[10px] font-bold text-primary">
+                        {c.brand.shortName.slice(0, 3)}
+                      </span>
+                    )}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-medium">{c.brand.name}</span>
+                      <span className="block truncate text-[11px] text-muted-foreground">
+                        {subtitle}
+                      </span>
+                    </span>
+                    {active && <Check className="h-4 w-4 text-primary" />}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
@@ -262,3 +483,4 @@ function ProfileCard({
     </button>
   );
 }
+
