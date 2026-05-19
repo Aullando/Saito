@@ -37,18 +37,28 @@ export function AppLayout({ children }: { children: ReactNode }) {
       data-role={user.role}
       style={{ background: "#F7F9FC", ...roleStyle }}
     >
+      <DemoBar />
       <Topbar />
       <Sidebar />
       <div className="transition-[padding] duration-200">
         <div className="hidden md:block" style={{ paddingLeft: collapsed ? 72 : 264 }}>
-          <main className="pt-[88px]" style={{ paddingInline: 32, paddingBottom: 32 }}>
+          <main
+            style={{
+              paddingTop: "calc(88px + var(--demo-bar-h, 0px))",
+              paddingInline: 32,
+              paddingBottom: 32,
+            }}
+          >
             <div className="mx-auto w-full" style={{ maxWidth: 1440 }}>
               <WorkspaceFrame>{children}</WorkspaceFrame>
             </div>
           </main>
         </div>
         <div className="md:hidden">
-          <main className="px-4 py-5 pt-[72px]">
+          <main
+            className="px-4 py-5"
+            style={{ paddingTop: "calc(72px + var(--demo-bar-h, 0px))" }}
+          >
             <WorkspaceFrame>{children}</WorkspaceFrame>
           </main>
         </div>
