@@ -18,6 +18,7 @@ export const gffClub: ClubConfig = {
   },
 };
 
-export { GFFBadge } from "./GFFBadge";
-export { GffGuard } from "./GffGuard";
-export { gffTranslations } from "./translations";
+// NOTE: do not re-export GffGuard / GFFBadge / translations here.
+// Those modules import ClubProvider → activeClub → registry, which would
+// create a circular dependency since registry.ts imports this barrel.
+// Import them directly from their files where needed.
