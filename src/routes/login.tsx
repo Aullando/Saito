@@ -159,6 +159,24 @@ const GFF_PROFILES: DemoProfile[] = [
     module: "coaching",
     icon: BarChart3,
   },
+  {
+    id: "gff-coach",
+    userId: "u-tec",
+    title: "National Team Coach · مدرب المنتخب",
+    subtitle: "Convocatoria, sesiones y notas del cuerpo técnico",
+    surface: "mobile",
+    module: "coaching",
+    icon: Dumbbell,
+  },
+  {
+    id: "gff-player",
+    userId: "u-ath",
+    title: "National Team Player · لاعب المنتخب",
+    subtitle: "Calendario, convocatorias, feedback y comunicaciones",
+    surface: "mobile",
+    module: "sportlife",
+    icon: User,
+  },
 ];
 
 const PROFILES_BY_CLUB: Record<ClubKey, DemoProfile[]> = {
