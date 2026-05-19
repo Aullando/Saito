@@ -1126,6 +1126,3 @@ function Avatar({ initial, tone = "green" }: { initial: string; tone?: "green" |
     </div>
   );
 }
-
-// Re-export view alias to support placeholder header context (kept for hero).
-export const __GffPageHeader = PageHeader;
