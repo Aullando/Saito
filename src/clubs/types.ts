@@ -71,10 +71,19 @@ export interface ClubSeed {
   data?: unknown;
 }
 
+export interface ClubWorkspace {
+  locale?: string;
+  direction?: "ltr" | "rtl";
+  className?: string;
+  weekendDays?: number[];
+  demoLabel?: string;
+}
+
 export interface ClubConfig {
   id: string;
   brand: ClubBrand;
   modules: ClubModulesConfig;
   navItems?: ClubNavItem[];
   seed: ClubSeed;
+  workspace?: ClubWorkspace;
 }
