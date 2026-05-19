@@ -1,5 +1,5 @@
 import type { ClubBrand } from "../types";
-import logoRgcc from "./assets/logo-rgcc.png";
+import logoRgcc from "./assets/logo-rgcc.svg";
 import rgccMascot from "./assets/rgcc-ai.png";
 
 // RGCC se presenta como club participante en SAITO, pero con su propia
