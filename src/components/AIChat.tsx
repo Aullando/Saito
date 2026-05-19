@@ -190,8 +190,9 @@ export function AIChat() {
 
     try {
       const data = useData.getState();
-      const context =
-        isRgcc && rgccIdentity
+      const context = isGff
+        ? buildGffContext(role)
+        : isRgcc && rgccIdentity
           ? buildRgccContextFromIdentity(rgccIdentity)
           : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
