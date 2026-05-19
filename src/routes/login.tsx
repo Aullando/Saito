@@ -241,7 +241,14 @@ function LoginPage() {
   const navigate = useNavigate();
   const setUser = useLocalAuth((s) => s.setUser);
   const switchClub = useActiveClubStore((s) => s.switchClub);
-  const [selectedClub, setSelectedClub] = useState<ClubKey>("saito");
+  const activeClubId = useActiveClubStore((s) => s.overrideClubId);
+  const [selectedClub, setSelectedClub] = useState<ClubKey>(
+    isClubKey(activeClubId) ? activeClubId : "saito",
+  );
+
+  const idx = CLUB_ORDER.indexOf(selectedClub);
+  const prevClub = idx > 0 ? CLUB_ORDER[idx - 1] : null;
+  const nextClub = idx >= 0 && idx < CLUB_ORDER.length - 1 ? CLUB_ORDER[idx + 1] : null;
 
   useEffect(() => {
     if (session) {
