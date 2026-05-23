@@ -33,6 +33,8 @@ export const STR: Dict = {
   athletes_nav: { en: "Athletes", es: "Deportistas" },
   switch_role: { en: "Switch role", es: "Cambiar de rol" },
   last_name: { en: "Last name", es: "Apellido" },
+  search_in: { en: "Search", es: "Buscar en" },
+
 
 
   organizations: { en: "Organizations", es: "Organizaciones" },

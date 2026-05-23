@@ -250,7 +250,7 @@ function AthletesPage() {
                     />
                   </div>
                   <div>
-                    <Label>Apellido</Label>
+                    <Label>{t("last_name")}</Label>
                     <Input
                       value={newAth.lastName}
                       onChange={(e) => setNewAth({ ...newAth, lastName: e.target.value })}
