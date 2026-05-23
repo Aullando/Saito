@@ -151,14 +151,17 @@ function ClubPage() {
   return (
     <>
       <PageHeader
-        title="Club & Organización"
-        subtitle="Núcleo administrativo del club: usuarios, instalaciones, secciones, categorías y grupos."
+        title={tr("Club & Organización", "Club & Organization")}
+        subtitle={tr(
+          "Núcleo administrativo del club: usuarios, instalaciones, secciones, categorías y grupos.",
+          "Club administrative core: users, facilities, sections, categories and groups.",
+        )}
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Button variant="outline" asChild>
               <a href="/athletes">
                 <Plus className="mr-2 h-4 w-4" />
-                Nueva alta
+                {tr("Nueva alta", "New athlete")}
               </a>
             </Button>
 
@@ -167,19 +170,19 @@ function ClubPage() {
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
-                  Añadir sección
+                  {tr("Añadir sección", "Add section")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Nueva sección deportiva</DialogTitle>
+                  <DialogTitle>{tr("Nueva sección deportiva", "New sports section")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-2">
-                  <Label>Nombre</Label>
+                  <Label>{tr("Nombre", "Name")}</Label>
                   <Input
                     value={newSection}
                     onChange={(e) => setNewSection(e.target.value)}
-                    placeholder="Ej: Voleibol"
+                    placeholder={tr("Ej: Voleibol", "e.g. Volleyball")}
                   />
                 </div>
                 <DialogFooter>
@@ -188,10 +191,10 @@ function ClubPage() {
                       if (!newSection.trim()) return;
                       addSection(newSection.trim());
                       setNewSection("");
-                      toast.success("Sección añadida");
+                      toast.success(tr("Sección añadida", "Section added"));
                     }}
                   >
-                    Crear
+                    {tr("Crear", "Create")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -202,19 +205,19 @@ function ClubPage() {
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
-                  Añadir categoría
+                  {tr("Añadir categoría", "Add category")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Nueva categoría</DialogTitle>
+                  <DialogTitle>{tr("Nueva categoría", "New category")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <Label>Sección</Label>
+                    <Label>{tr("Sección", "Section")}</Label>
                     <Select value={newCatSection} onValueChange={setNewCatSection}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona sección" />
+                        <SelectValue placeholder={tr("Selecciona sección", "Select section")} />
                       </SelectTrigger>
                       <SelectContent>
                         {sections.map((s) => (
@@ -226,11 +229,11 @@ function ClubPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Nombre</Label>
+                    <Label>{tr("Nombre", "Name")}</Label>
                     <Input
                       value={newCatName}
                       onChange={(e) => setNewCatName(e.target.value)}
-                      placeholder="Ej: Cadete"
+                      placeholder={tr("Ej: Cadete", "e.g. Cadet")}
                     />
                   </div>
                 </div>
@@ -241,10 +244,10 @@ function ClubPage() {
                       addCategory({ name: newCatName.trim(), sectionId: newCatSection });
                       setNewCatName("");
                       setNewCatSection("");
-                      toast.success("Categoría añadida");
+                      toast.success(tr("Categoría añadida", "Category added"));
                     }}
                   >
-                    Crear
+                    {tr("Crear", "Create")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -255,16 +258,16 @@ function ClubPage() {
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
-                  Añadir grupo
+                  {tr("Añadir grupo", "Add group")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Nuevo grupo</DialogTitle>
+                  <DialogTitle>{tr("Nuevo grupo", "New group")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <Label>Sección</Label>
+                    <Label>{tr("Sección", "Section")}</Label>
                     <Select
                       value={newGroup.sectionId}
                       onValueChange={(v) =>
@@ -272,7 +275,7 @@ function ClubPage() {
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona sección" />
+                        <SelectValue placeholder={tr("Selecciona sección", "Select section")} />
                       </SelectTrigger>
                       <SelectContent>
                         {sections.map((s) => (
@@ -284,14 +287,14 @@ function ClubPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Categoría</Label>
+                    <Label>{tr("Categoría", "Category")}</Label>
                     <Select
                       value={newGroup.categoryId}
                       onValueChange={(v) => setNewGroup({ ...newGroup, categoryId: v })}
                       disabled={!newGroup.sectionId}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona categoría" />
+                        <SelectValue placeholder={tr("Selecciona categoría", "Select category")} />
                       </SelectTrigger>
                       <SelectContent>
                         {categories
@@ -305,11 +308,11 @@ function ClubPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Nombre</Label>
+                    <Label>{tr("Nombre", "Name")}</Label>
                     <Input
                       value={newGroup.name}
                       onChange={(e) => setNewGroup({ ...newGroup, name: e.target.value })}
-                      placeholder="Ej: Tecnificación"
+                      placeholder={tr("Ej: Tecnificación", "e.g. Elite squad")}
                     />
                   </div>
                 </div>
@@ -324,10 +327,10 @@ function ClubPage() {
                         categoryId: newGroup.categoryId,
                       });
                       setNewGroup({ name: "", sectionId: "", categoryId: "" });
-                      toast.success("Grupo añadido");
+                      toast.success(tr("Grupo añadido", "Group added"));
                     }}
                   >
-                    Crear
+                    {tr("Crear", "Create")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -338,32 +341,35 @@ function ClubPage() {
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
-                  Añadir instalación
+                  {tr("Añadir instalación", "Add facility")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Nueva instalación</DialogTitle>
+                  <DialogTitle>{tr("Nueva instalación", "New facility")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <Label>Nombre</Label>
+                    <Label>{tr("Nombre", "Name")}</Label>
                     <Input
                       value={newFacility.name}
                       onChange={(e) => setNewFacility({ ...newFacility, name: e.target.value })}
-                      placeholder="Ej: Sala de musculación"
+                      placeholder={tr("Ej: Sala de musculación", "e.g. Strength room")}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Ubicación</Label>
+                    <Label>{tr("Ubicación", "Location")}</Label>
                     <Input
                       value={newFacility.location}
                       onChange={(e) => setNewFacility({ ...newFacility, location: e.target.value })}
-                      placeholder="Ej: Madrid · Sede principal"
+                      placeholder={tr(
+                        "Ej: Madrid · Sede principal",
+                        "e.g. Madrid · Main venue",
+                      )}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Capacidad</Label>
+                    <Label>{tr("Capacidad", "Capacity")}</Label>
                     <Input
                       type="number"
                       value={newFacility.capacity}
@@ -372,13 +378,13 @@ function ClubPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Sección principal</Label>
+                    <Label>{tr("Sección principal", "Primary section")}</Label>
                     <Select
                       value={newFacility.sectionId}
                       onValueChange={(v) => setNewFacility({ ...newFacility, sectionId: v })}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona sección" />
+                        <SelectValue placeholder={tr("Selecciona sección", "Select section")} />
                       </SelectTrigger>
                       <SelectContent>
                         {sections.map((s) => (
@@ -402,10 +408,10 @@ function ClubPage() {
                         capacity: newFacility.capacity ? Number(newFacility.capacity) : undefined,
                       });
                       setNewFacility({ name: "", location: "", capacity: "", sectionId: "" });
-                      toast.success("Instalación añadida");
+                      toast.success(tr("Instalación añadida", "Facility added"));
                     }}
                   >
-                    Crear
+                    {tr("Crear", "Create")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
