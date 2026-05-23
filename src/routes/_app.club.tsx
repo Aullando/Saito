@@ -555,10 +555,9 @@ function ClubPage() {
         </Section>
 
         {/* 4. Categorías por sección */}
-        <Section title="Categorías" icon={FolderTree}>
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         <Section title={tr("Categorías", "Categories")} icon={FolderTree}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+
             {sections.map((s) => {
               const cats = categories.filter((c) => c.sectionId === s.id);
               return (
