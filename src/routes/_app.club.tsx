@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useData } from "@/lib/store";
+import { useTr } from "@/lib/i18n";
 import { toast } from "sonner";
 import {
   Plus,
@@ -51,9 +52,11 @@ export const Route = createFileRoute("/_app/club")({
   ),
 });
 
-const DAY_NAMES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+const DAY_NAMES_ES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+const DAY_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function ClubPage() {
+  const tr = useTr();
   const sections = useData((s) => s.sections);
   const categories = useData((s) => s.categories);
   const groups = useData((s) => s.groups);
