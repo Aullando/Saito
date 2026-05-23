@@ -13,6 +13,7 @@ Deno.serve(async (req) => {
 
     const isGff = club === "gff-demo" || lang === "ar";
     const isRgcc = club === "rgcc";
+    const isEn = !isGff && lang === "en";
 
     const roleScope: Record<string, string> = isGff
       ? {
@@ -25,26 +26,44 @@ Deno.serve(async (req) => {
           medical:
             "تصل فقط إلى البيانات الطبية: المواعيد، الحالة الطبية للاعبين، العلاجات. لا تصل إلى المعلومات الاقتصادية.",
         }
-      : {
-          sysadmin: "Tienes acceso completo a organizaciones, usuarios y datos del sistema.",
-          admin: "Tienes acceso a datos del club: deportistas, pagos, cuotas, calendario, médico.",
-          manager:
-            "Tienes acceso a operaciones del club: deportistas, pagos, cuotas, calendario. NO accedes a datos sensibles médicos detallados.",
-          technical:
-            "Solo accedes a datos deportivos: deportistas, grupos, entrenamientos, rendimiento. NO accedes a información económica.",
-          medical:
-            "Solo accedes a datos médicos: citas, estado médico de deportistas, tratamientos. NO accedes a información económica.",
-        };
+      : isEn
+        ? {
+            sysadmin: "You have full access to organizations, users and system data.",
+            admin:
+              "You have access to club data: athletes, payments, fees, calendar, medical.",
+            manager:
+              "You have access to club operations: athletes, payments, fees, calendar. You do NOT access sensitive detailed medical data.",
+            technical:
+              "You only access sports data: athletes, groups, training, performance. You do NOT access economic information.",
+            medical:
+              "You only access medical data: appointments, athletes' medical status, treatments. You do NOT access economic information.",
+          }
+        : {
+            sysadmin: "Tienes acceso completo a organizaciones, usuarios y datos del sistema.",
+            admin: "Tienes acceso a datos del club: deportistas, pagos, cuotas, calendario, médico.",
+            manager:
+              "Tienes acceso a operaciones del club: deportistas, pagos, cuotas, calendario. NO accedes a datos sensibles médicos detallados.",
+            technical:
+              "Solo accedes a datos deportivos: deportistas, grupos, entrenamientos, rendimiento. NO accedes a información económica.",
+            medical:
+              "Solo accedes a datos médicos: citas, estado médico de deportistas, tratamientos. NO accedes a información económica.",
+          };
 
     const clubIntro = isGff
       ? `أنت المساعد الذكي لاتحاد كرة القدم الخليجي (GFF) داخل منصة SAITO، للدور "${role}". يشمل السياق المنتخبات الوطنية، اللاعبين، الجهاز الفني، المباريات، المعسكرات، التقويم الدولي، والأندية المنتسبة. عند الحاجة استخدم جداول أو قوائم واضحة.`
       : isRgcc
-        ? `Eres el copiloto operativo del Real Grupo de Cultura Covadonga (RGCC) dentro de SAITO. El contexto incluye clases, monitores, sedes/salas, incidencias, ausencias/sustituciones, sesiones de entrenamiento personal, biblioteca de ejercicios y socios. Cuando proceda, responde con tablas o listas claras agrupadas por sede/horario.`
-        : `Eres el asistente IA del club deportivo Saito para el rol "${role}".`;
+        ? isEn
+          ? `You are the operational copilot for Real Grupo de Cultura Covadonga (RGCC) inside SAITO. Context includes classes, instructors, venues/rooms, incidents, absences/substitutions, personal-training sessions, exercise library and members. When relevant, answer with clear tables or lists grouped by venue/timeslot.`
+          : `Eres el copiloto operativo del Real Grupo de Cultura Covadonga (RGCC) dentro de SAITO. El contexto incluye clases, monitores, sedes/salas, incidencias, ausencias/sustituciones, sesiones de entrenamiento personal, biblioteca de ejercicios y socios. Cuando proceda, responde con tablas o listas claras agrupadas por sede/horario.`
+        : isEn
+          ? `You are the Saito sports-club AI assistant for the "${role}" role.`
+          : `Eres el asistente IA del club deportivo Saito para el rol "${role}".`;
 
     const langInstruction = isGff
       ? `أجب دائمًا باللغة العربية الفصحى، بأسلوب موجز ومهني. استخدم بيانات الاتحاد المُقدَّمة أدناه للإجابة بدقة. إذا كان السؤال خارج صلاحيات هذا الدور، أجب: "هذا الاستعلام خارج صلاحيات دورك." إذا لم تجد بيانات كافية، صرّح بذلك بوضوح. استخدم تنسيق markdown خفيف (قوائم، عريض) عند الفائدة.\n\nبيانات الاتحاد (JSON):`
-      : `Responde SIEMPRE en español, de forma concisa y profesional. Usa los datos del club que se te proporcionan a continuación para responder con precisión. Si la pregunta queda fuera de los permisos del rol, responde: "Esta consulta queda fuera de los permisos de tu rol."\n\nSi no encuentras datos suficientes, dilo claramente. Usa formato markdown ligero (listas, negritas) cuando ayude a la lectura.\n\nDATOS DEL CLUB (JSON):`;
+      : isEn
+        ? `ALWAYS reply in English, concise and professional. Use the club data provided below to answer accurately. If the question is outside this role's permissions, reply: "This query is outside your role's permissions." If you don't have enough data, say so clearly. Use light markdown (lists, bold) when helpful.\n\nCLUB DATA (JSON):`
+        : `Responde SIEMPRE en español, de forma concisa y profesional. Usa los datos del club que se te proporcionan a continuación para responder con precisión. Si la pregunta queda fuera de los permisos del rol, responde: "Esta consulta queda fuera de los permisos de tu rol."\n\nSi no encuentras datos suficientes, dilo claramente. Usa formato markdown ligero (listas, negritas) cuando ayude a la lectura.\n\nDATOS DEL CLUB (JSON):`;
 
     const systemPrompt = `${clubIntro} ${roleScope[role] ?? ""}\n\n${langInstruction}\n${JSON.stringify(context).slice(0, 60000)}`;
 
