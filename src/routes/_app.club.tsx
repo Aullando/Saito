@@ -422,41 +422,41 @@ function ClubPage() {
 
       <div className="space-y-6">
         {/* 1. Usuarios y permisos */}
-        <Section title="Usuarios y permisos" icon={ShieldCheck}>
+        <Section title={tr("Usuarios y permisos", "Users and permissions")} icon={ShieldCheck}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             <RoleCard
               icon={UserCog}
-              label="Gestores / Dirección"
+              label={tr("Gestores / Dirección", "Managers / Direction")}
               count={usersByRole.managers}
               tone="bg-indigo-50 text-indigo-700"
             />
             <RoleCard
               icon={Building2}
-              label="Administración"
+              label={tr("Administración", "Administration")}
               count={usersByRole.admins}
               tone="bg-blue-50 text-blue-700"
             />
             <RoleCard
               icon={Stethoscope}
-              label="Staff médico"
+              label={tr("Staff médico", "Medical staff")}
               count={usersByRole.medical}
               tone="bg-rose-50 text-rose-700"
             />
             <RoleCard
               icon={Wrench}
-              label="Staff técnico"
+              label={tr("Staff técnico", "Technical staff")}
               count={usersByRole.technical}
               tone="bg-amber-50 text-amber-700"
             />
             <RoleCard
               icon={Users}
-              label="Deportistas"
+              label={tr("Deportistas", "Athletes")}
               count={usersByRole.athletes}
               tone="bg-emerald-50 text-emerald-700"
             />
             <RoleCard
               icon={Baby}
-              label="Tutores"
+              label={tr("Tutores", "Tutors")}
               count={usersByRole.tutors}
               tone="bg-violet-50 text-violet-700"
             />
@@ -464,7 +464,7 @@ function ClubPage() {
         </Section>
 
         {/* 2. Instalaciones */}
-        <Section title="Instalaciones" icon={MapPin}>
+        <Section title={tr("Instalaciones", "Facilities")} icon={MapPin}>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {facilities.map((f) => (
               <Card key={f.id} className="space-y-3">
@@ -476,10 +476,10 @@ function ClubPage() {
                     </div>
                   </div>
                   <button
-                    aria-label="Eliminar instalación"
+                    aria-label={tr("Eliminar instalación", "Delete facility")}
                     onClick={() => {
                       deleteFacility(f.id);
-                      toast.success("Instalación eliminada");
+                      toast.success(tr("Instalación eliminada", "Facility deleted"));
                     }}
                     className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                   >
@@ -496,38 +496,47 @@ function ClubPage() {
 
                 <div className="flex items-center justify-between text-sm">
                   <div className="text-slate-600">
-                    <span className="text-xs text-slate-400">Capacidad</span>
+                    <span className="text-xs text-slate-400">{tr("Capacidad", "Capacity")}</span>
                     <div className="font-medium">{f.capacity ?? "—"}</div>
                   </div>
                   <div className="text-right text-slate-600">
-                    <span className="text-xs text-slate-400">Próximo uso</span>
+                    <span className="text-xs text-slate-400">{tr("Próximo uso", "Next use")}</span>
                     <div className="font-medium">{f.nextActivity ?? "—"}</div>
                   </div>
                 </div>
               </Card>
             ))}
             {facilities.length === 0 && (
-              <Card className="text-sm text-slate-500">Sin instalaciones todavía.</Card>
+              <Card className="text-sm text-slate-500">
+                {tr("Sin instalaciones todavía.", "No facilities yet.")}
+              </Card>
             )}
           </div>
         </Section>
 
         {/* 3. Organigrama deportivo */}
-        <Section title="Organigrama deportivo" icon={Layers}>
+        <Section title={tr("Organigrama deportivo", "Sports org chart")} icon={Layers}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {sectionStats.map((s) => (
               <Card key={s.id} className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="font-semibold text-slate-900">{s.name}</div>
-                    <div className="text-xs text-slate-500">Sección deportiva</div>
+                    <div className="text-xs text-slate-500">{tr("Sección deportiva", "Sports section")}</div>
                   </div>
                   <button
-                    aria-label="Eliminar sección"
+                    aria-label={tr("Eliminar sección", "Delete section")}
                     onClick={() => {
-                      if (confirm(`Eliminar la sección "${s.name}" y todos sus grupos?`)) {
+                      if (
+                        confirm(
+                          tr(
+                            `Eliminar la sección "${s.name}" y todos sus grupos?`,
+                            `Delete section "${s.name}" and all its groups?`,
+                          ),
+                        )
+                      ) {
                         deleteSection(s.id);
-                        toast.success("Sección eliminada");
+                        toast.success(tr("Sección eliminada", "Section deleted"));
                       }
                     }}
                     className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
@@ -536,9 +545,9 @@ function ClubPage() {
                   </button>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <Stat label="Atletas" value={s.athletes} />
+                  <Stat label={tr("Atletas", "Athletes")} value={s.athletes} />
                   <Stat label="Staff" value={s.staff} />
-                  <Stat label="Grupos" value={s.groups} />
+                  <Stat label={tr("Grupos", "Groups")} value={s.groups} />
                 </div>
               </Card>
             ))}
@@ -548,17 +557,23 @@ function ClubPage() {
         {/* 4. Categorías por sección */}
         <Section title="Categorías" icon={FolderTree}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <Section title={tr("Categorías", "Categories")} icon={FolderTree}>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {sections.map((s) => {
               const cats = categories.filter((c) => c.sectionId === s.id);
               return (
                 <Card key={s.id} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-slate-900">{s.name}</div>
-                    <span className="text-xs text-slate-400">{cats.length} categorías</span>
+                    <span className="text-xs text-slate-400">
+                      {tr(`${cats.length} categorías`, `${cats.length} categories`)}
+                    </span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {cats.length === 0 && (
-                      <span className="text-xs text-slate-400">Sin categorías.</span>
+                      <span className="text-xs text-slate-400">
+                        {tr("Sin categorías.", "No categories.")}
+                      </span>
                     )}
                     {cats.map((c) => (
                       <span
@@ -568,13 +583,20 @@ function ClubPage() {
                         {c.name}
                         <button
                           onClick={() => {
-                            if (confirm(`Eliminar la categoría "${c.name}"?`)) {
+                            if (
+                              confirm(
+                                tr(
+                                  `Eliminar la categoría "${c.name}"?`,
+                                  `Delete category "${c.name}"?`,
+                                ),
+                              )
+                            ) {
                               deleteCategory(c.id);
-                              toast.success("Categoría eliminada");
+                              toast.success(tr("Categoría eliminada", "Category deleted"));
                             }
                           }}
                           className="ml-1 text-slate-400 opacity-0 group-hover:opacity-100 hover:text-rose-600"
-                          aria-label="Eliminar categoría"
+                          aria-label={tr("Eliminar categoría", "Delete category")}
                         >
                           ×
                         </button>
