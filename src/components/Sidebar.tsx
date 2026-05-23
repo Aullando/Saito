@@ -41,53 +41,53 @@ type Item = {
   params?: Record<string, string>;
 };
 
-function buildItems(role: Role): Item[] {
+function buildItems(role: Role, tr: (k: keyof typeof import("@/lib/i18n").STR) => string): Item[] {
   switch (role) {
     case "sysadmin":
-      return [{ to: "/organizations", label: "Organizaciones", icon: Building2 }];
+      return [{ to: "/organizations", label: tr("organizations"), icon: Building2 }];
 
     // Gestor / Dirección
     case "manager":
       return [
-        { to: "/dashboard", label: "Dashboard", icon: LayoutGrid },
-        { to: "/club", label: "Club & Organización", icon: Building2 },
-        { to: "/settings/team", label: "Usuarios y permisos", icon: Users },
-        { to: "/calendar", label: "Calendario", icon: CalendarDays },
-        { to: "/athletes", label: "Deportistas", icon: Users },
-        { to: "/economic/fees", label: "Pagos y cuotas", icon: Wallet },
-        { to: "/communication", label: "Comunicación", icon: MessageSquare },
-        { to: "/reports", label: "Informes", icon: BarChart3 },
-        { to: "/profile", label: "Notificaciones", icon: Megaphone },
-        { to: "/settings/privacy", label: "Privacidad y seguridad", icon: ShieldCheck },
+        { to: "/dashboard", label: tr("dashboard_nav"), icon: LayoutGrid },
+        { to: "/club", label: tr("club_org"), icon: Building2 },
+        { to: "/settings/team", label: tr("users_perms"), icon: Users },
+        { to: "/calendar", label: tr("calendar"), icon: CalendarDays },
+        { to: "/athletes", label: tr("athletes_nav"), icon: Users },
+        { to: "/economic/fees", label: tr("payments_fees"), icon: Wallet },
+        { to: "/communication", label: tr("communication"), icon: MessageSquare },
+        { to: "/reports", label: tr("reports"), icon: BarChart3 },
+        { to: "/profile", label: tr("notifications"), icon: Megaphone },
+        { to: "/settings/privacy", label: tr("privacy_security"), icon: ShieldCheck },
       ];
 
     // Administración
     case "admin":
       return [
-        { to: "/club", label: "Organización", icon: Building2 },
-        { to: "/settings/team", label: "Usuarios", icon: UserPlus },
-        { to: "/club", label: "Secciones", icon: Layers, indent: true },
-        { to: "/club", label: "Categorías", icon: Layers, indent: true },
-        { to: "/club", label: "Grupos", icon: Users, indent: true },
-        { to: "/calendar", label: "Horarios", icon: CalendarClock, indent: true },
-        { to: "/settings/team", label: "Tutores", icon: Users, indent: true },
-        { to: "/economic/fees", label: "Cuotas y tasas", icon: Receipt },
-        { to: "/economic/fees", label: "Aplicar cuota", icon: Wallet, indent: true },
-        { to: "/economic/payments", label: "Estado de pagos", icon: Wallet },
-        { to: "/calendar", label: "Calendario de club", icon: CalendarDays },
-        { to: "/communication", label: "Circulares", icon: Megaphone },
+        { to: "/club", label: tr("organization"), icon: Building2 },
+        { to: "/settings/team", label: tr("users"), icon: UserPlus },
+        { to: "/club", label: tr("sections_nav"), icon: Layers, indent: true },
+        { to: "/club", label: tr("categories_nav"), icon: Layers, indent: true },
+        { to: "/club", label: tr("groups_nav"), icon: Users, indent: true },
+        { to: "/calendar", label: tr("schedules"), icon: CalendarClock, indent: true },
+        { to: "/settings/team", label: tr("tutors"), icon: Users, indent: true },
+        { to: "/economic/fees", label: tr("fees_and_rates"), icon: Receipt },
+        { to: "/economic/fees", label: tr("apply_fee"), icon: Wallet, indent: true },
+        { to: "/economic/payments", label: tr("payment_status_nav"), icon: Wallet },
+        { to: "/calendar", label: tr("club_calendar"), icon: CalendarDays },
+        { to: "/communication", label: tr("circulars"), icon: Megaphone },
       ];
 
     // Staff médico
     case "medical":
       return [
-        { to: "/medical/calendar", label: "Agenda médica", icon: Stethoscope },
-        { to: "/athletes", label: "Atletas", icon: Users },
-        { to: "/medical/restrictions", label: "Restricciones", icon: Activity },
-        { to: "/medical/incidents", label: "Incidencias", icon: AlertTriangle },
-        { to: "/medical/treatments", label: "Planes de tratamiento", icon: ClipboardList },
-        { to: "/medical/requests", label: "Solicitudes de cita", icon: CalendarPlus },
-        { to: "/communication", label: "Comunicación médica", icon: MessageSquare },
+        { to: "/medical/calendar", label: tr("medical_agenda"), icon: Stethoscope },
+        { to: "/athletes", label: tr("athletes_nav"), icon: Users },
+        { to: "/medical/restrictions", label: tr("restrictions"), icon: Activity },
+        { to: "/medical/incidents", label: tr("incidents"), icon: AlertTriangle },
+        { to: "/medical/treatments", label: tr("treatment_plans"), icon: ClipboardList },
+        { to: "/medical/requests", label: tr("appointment_requests"), icon: CalendarPlus },
+        { to: "/communication", label: tr("medical_comm"), icon: MessageSquare },
       ];
 
     case "technical":
@@ -126,7 +126,7 @@ export function Sidebar() {
         .filter((n) => isModuleEnabled(n.module))
         .filter((n) => !n.allowedRoles || n.allowedRoles.includes(user.role))
         .map(navItemToItem)
-    : buildItems(user.role);
+    : buildItems(user.role, t);
   const width = collapsed ? 72 : 264;
   const notifCount = user.role === "sysadmin" ? 25 : user.role === "medical" ? 13 : 0;
 
@@ -157,7 +157,7 @@ export function Sidebar() {
         <div className="flex h-12 items-center justify-between px-4">
           {!collapsed && (
             <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              Navegación
+              {t("navigation")}
             </span>
           )}
           <button
