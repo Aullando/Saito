@@ -555,10 +555,9 @@ function ClubPage() {
         </Section>
 
         {/* 4. Categorías por sección */}
-        <Section title="Categorías" icon={FolderTree}>
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         <Section title={tr("Categorías", "Categories")} icon={FolderTree}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+
             {sections.map((s) => {
               const cats = categories.filter((c) => c.sectionId === s.id);
               return (
@@ -610,7 +609,7 @@ function ClubPage() {
         </Section>
 
         {/* 5. Grupos por categoría */}
-        <Section title="Grupos" icon={UserSquare2}>
+        <Section title={tr("Grupos", "Groups")} icon={UserSquare2}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {groups.map((g) => {
               const sec = sections.find((s) => s.id === g.sectionId);
@@ -628,11 +627,15 @@ function ClubPage() {
                       </div>
                     </div>
                     <button
-                      aria-label="Eliminar grupo"
+                      aria-label={tr("Eliminar grupo", "Delete group")}
                       onClick={() => {
-                        if (confirm(`Eliminar el grupo "${g.name}"?`)) {
+                        if (
+                          confirm(
+                            tr(`Eliminar el grupo "${g.name}"?`, `Delete group "${g.name}"?`),
+                          )
+                        ) {
                           deleteGroup(g.id);
-                          toast.success("Grupo eliminado");
+                          toast.success(tr("Grupo eliminado", "Group deleted"));
                         }
                       }}
                       className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
@@ -642,7 +645,7 @@ function ClubPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-center">
-                    <Stat label="Atletas" value={groupAthletes.length} />
+                    <Stat label={tr("Atletas", "Athletes")} value={groupAthletes.length} />
                     <Stat label="Staff" value={staff.length} />
                   </div>
 
@@ -655,10 +658,12 @@ function ClubPage() {
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-1 text-xs font-medium text-slate-500">
-                      <Clock className="h-3 w-3" /> Horario semanal
+                      <Clock className="h-3 w-3" /> {tr("Horario semanal", "Weekly schedule")}
                     </div>
                     {schedule.length === 0 ? (
-                      <div className="text-xs text-slate-400">Sin sesiones programadas.</div>
+                      <div className="text-xs text-slate-400">
+                        {tr("Sin sesiones programadas.", "No sessions scheduled.")}
+                      </div>
                     ) : (
                       <div className="flex flex-wrap gap-1.5">
                         {schedule.map((slot) => (
@@ -676,8 +681,11 @@ function ClubPage() {
               );
             })}
             {groups.length === 0 && (
-              <Card className="text-sm text-slate-500">Aún no hay grupos creados.</Card>
+              <Card className="text-sm text-slate-500">
+                {tr("Aún no hay grupos creados.", "No groups created yet.")}
+              </Card>
             )}
+
           </div>
         </Section>
       </div>
