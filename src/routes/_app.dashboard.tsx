@@ -4,6 +4,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card, Pill } from "@/components/ui-kit";
 import { useCurrentUser, useData } from "@/lib/store";
+import { useTr } from "@/lib/i18n";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
 import { GffWorkspace } from "@/clubs/gff/GffWorkspace";
@@ -74,6 +75,7 @@ const stableHash = (n: number, salt = 7) => Math.abs(Math.sin(n * 9301 + salt) *
 // ---------- Command Center ----------
 function CommandCenter() {
   const user = useCurrentUser();
+  const tr = useTr();
   const athletes = useData((s) => s.athletes);
   const sections = useData((s) => s.sections);
   const groups = useData((s) => s.groups);
@@ -152,36 +154,51 @@ function CommandCenter() {
     const items: { label: string; tone: "warning" | "danger" | "info"; to: string }[] = [];
     if (kpis.rgpdInvalid > 0)
       items.push({
-        label: `${kpis.rgpdInvalid} deportistas sin RGPD vigente`,
+        label: tr(
+          `${kpis.rgpdInvalid} deportistas sin RGPD vigente`,
+          `${kpis.rgpdInvalid} athletes with expired GDPR consent`,
+        ),
         tone: "danger",
         to: "/athletes",
       });
     if (kpis.pendingCount > 0)
       items.push({
-        label: `${kpis.pendingCount} pagos pendientes · ${fmtMoney(kpis.pendingAmount)}`,
+        label: tr(
+          `${kpis.pendingCount} pagos pendientes · ${fmtMoney(kpis.pendingAmount)}`,
+          `${kpis.pendingCount} pending payments · ${fmtMoney(kpis.pendingAmount)}`,
+        ),
         tone: "warning",
         to: "/economic/payments",
       });
     if (kpis.notFit > 0)
       items.push({
-        label: `${kpis.notFit} atletas no aptos o en revisión`,
+        label: tr(
+          `${kpis.notFit} atletas no aptos o en revisión`,
+          `${kpis.notFit} athletes not fit or under review`,
+        ),
         tone: "warning",
         to: "/medical/restrictions",
       });
     if (kpis.weekTrainings === 0)
       items.push({
-        label: "Sin entrenamientos planificados esta semana",
+        label: tr(
+          "Sin entrenamientos planificados esta semana",
+          "No training sessions planned this week",
+        ),
         tone: "info",
         to: "/calendar",
       });
     if (kpis.openIncidents > 5)
       items.push({
-        label: `${kpis.openIncidents} incidencias médicas abiertas`,
+        label: tr(
+          `${kpis.openIncidents} incidencias médicas abiertas`,
+          `${kpis.openIncidents} open medical incidents`,
+        ),
         tone: "danger",
         to: "/medical/incidents",
       });
     return items;
-  }, [kpis]);
+  }, [kpis, tr]);
 
   const activity = useMemo(() => {
     type Item = {
@@ -197,9 +214,13 @@ function CommandCenter() {
       .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))[0];
     if (lastPaid) {
       const ath = athletes.find((a) => a.id === lastPaid.athleteId);
+      const who = ath ? `${ath.firstName} ${ath.lastName}` : tr("Deportista", "Athlete");
       items.push({
         icon: Wallet,
-        text: `Cobro registrado · ${ath ? `${ath.firstName} ${ath.lastName}` : "Deportista"} · ${fmtMoney(Number(lastPaid.amount))}`,
+        text: tr(
+          `Cobro registrado · ${who} · ${fmtMoney(Number(lastPaid.amount))}`,
+          `Payment recorded · ${who} · ${fmtMoney(Number(lastPaid.amount))}`,
+        ),
         time: lastPaid.date ?? "",
         tone: "success",
       });
@@ -209,7 +230,7 @@ function CommandCenter() {
     if (nextEvent) {
       items.push({
         icon: CalendarDays,
-        text: `Próximo evento: ${nextEvent.title}`,
+        text: tr(`Próximo evento: ${nextEvent.title}`, `Next event: ${nextEvent.title}`),
         time: `${nextEvent.date} · ${nextEvent.startTime}`,
         tone: "info",
       });
@@ -221,7 +242,10 @@ function CommandCenter() {
     if (lastConv) {
       items.push({
         icon: MessageSquare,
-        text: `Nuevo mensaje en “${lastConv.title}”`,
+        text: tr(
+          `Nuevo mensaje en “${lastConv.title}”`,
+          `New message in “${lastConv.title}”`,
+        ),
         time: lastConv.m.createdAt.slice(0, 10),
         tone: "info",
       });
@@ -230,78 +254,109 @@ function CommandCenter() {
     const nextAppt = [...appointments].sort((a, b) => a.date.localeCompare(b.date))[0];
     if (nextAppt) {
       const ath = athletes.find((a) => a.id === nextAppt.athleteId);
+      const who = ath ? `${ath.firstName} ${ath.lastName}` : tr("Deportista", "Athlete");
       items.push({
         icon: HeartPulse,
-        text: `Cita médica · ${ath ? `${ath.firstName} ${ath.lastName}` : "Deportista"} · ${nextAppt.reason}`,
+        text: tr(
+          `Cita médica · ${who} · ${nextAppt.reason}`,
+          `Medical appointment · ${who} · ${nextAppt.reason}`,
+        ),
         time: `${nextAppt.date} ${nextAppt.time}`,
         tone: "warning",
       });
     }
     return items;
-  }, [payments, upcomingEvents, conversations, appointments, athletes]);
+  }, [payments, upcomingEvents, conversations, appointments, athletes, tr]);
 
   return (
     <>
       <PageHeader
-        title="Centro de mando"
-        subtitle={user ? `Hola, ${user.name.split(" ")[0]} — visión global del club hoy` : ""}
+        title={tr("Centro de mando", "Command center")}
+        subtitle={
+          user
+            ? tr(
+                `Hola, ${user.name.split(" ")[0]} — visión global del club hoy`,
+                `Hello, ${user.name.split(" ")[0]} — today's club overview`,
+              )
+            : ""
+        }
       />
 
       {/* Headline KPIs */}
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <Kpi
           icon={Users}
-          label="Deportistas activos"
+          label={tr("Deportistas activos", "Active athletes")}
           value={kpis.activeAthletes}
-          hint={`${kpis.totalAthletes} en total`}
+          hint={tr(`${kpis.totalAthletes} en total`, `${kpis.totalAthletes} total`)}
           tone="primary"
         />
         <Kpi
           icon={ShieldCheck}
-          label="RGPD válido"
+          label={tr("RGPD válido", "GDPR valid")}
           value={`${kpis.rgpdValid}/${kpis.activeAthletes}`}
-          hint={kpis.rgpdInvalid > 0 ? `${kpis.rgpdInvalid} pendientes` : "Al día"}
+          hint={
+            kpis.rgpdInvalid > 0
+              ? tr(`${kpis.rgpdInvalid} pendientes`, `${kpis.rgpdInvalid} pending`)
+              : tr("Al día", "Up to date")
+          }
           tone={kpis.rgpdInvalid > 0 ? "warning" : "success"}
         />
-        <Kpi icon={Layers} label="Secciones activas" value={kpis.sectionsCount} tone="default" />
-        <Kpi icon={Activity} label="Grupos activos" value={kpis.groupsCount} tone="default" />
-        <Kpi icon={Dumbbell} label="Entrenos esta semana" value={kpis.weekTrainings} tone="info" />
+        <Kpi
+          icon={Layers}
+          label={tr("Secciones activas", "Active sections")}
+          value={kpis.sectionsCount}
+          tone="default"
+        />
+        <Kpi
+          icon={Activity}
+          label={tr("Grupos activos", "Active groups")}
+          value={kpis.groupsCount}
+          tone="default"
+        />
+        <Kpi
+          icon={Dumbbell}
+          label={tr("Entrenos esta semana", "Training sessions this week")}
+          value={kpis.weekTrainings}
+          tone="info"
+        />
       </section>
 
       {/* Secondary KPIs */}
       <section className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <Kpi
           icon={ClipboardCheck}
-          label="Asistencia media"
+          label={tr("Asistencia media", "Average attendance")}
           value={kpis.weekTrainings === 0 ? "—" : `${kpis.attendance}%`}
-          hint="Última semana"
+          hint={tr("Última semana", "Last week")}
           tone="success"
         />
         <Kpi
           icon={CreditCard}
-          label="Pagos pendientes"
+          label={tr("Pagos pendientes", "Pending payments")}
           value={kpis.pendingCount}
           tone={kpis.pendingCount > 0 ? "warning" : "default"}
         />
         <Kpi
           icon={Wallet}
-          label="Importe pendiente"
+          label={tr("Importe pendiente", "Pending amount")}
           value={fmtMoney(kpis.pendingAmount)}
           tone={kpis.pendingAmount > 0 ? "warning" : "default"}
         />
         <Kpi
           icon={AlertTriangle}
-          label="Incidencias abiertas"
+          label={tr("Incidencias abiertas", "Open incidents")}
           value={kpis.openIncidents}
           tone={kpis.openIncidents > 0 ? "danger" : "success"}
         />
         <Kpi
           icon={HeartPulse}
-          label="No aptos / en revisión"
+          label={tr("No aptos / en revisión", "Not fit / under review")}
           value={kpis.notFit}
           tone={kpis.notFit > 0 ? "warning" : "success"}
         />
       </section>
+
 
       {/* Main content */}
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
@@ -309,19 +364,22 @@ function CommandCenter() {
         <Card className="lg:col-span-2">
           <SectionHeader
             icon={CalendarDays}
-            title="Próximos eventos"
-            actionLabel="Ver calendario"
+            title={tr("Próximos eventos", "Upcoming events")}
+            actionLabel={tr("Ver calendario", "View calendar")}
             actionTo="/calendar"
           />
           {upcomingEvents.length === 0 ? (
-            <Empty>Sin eventos próximos.</Empty>
+            <Empty>{tr("Sin eventos próximos.", "No upcoming events.")}</Empty>
           ) : (
             <ul className="divide-y divide-border">
               {upcomingEvents.map((e) => (
                 <li key={e.id} className="flex items-center gap-3 py-2.5">
                   <div className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <span className="text-[10px] font-semibold uppercase">
-                      {new Date(e.date).toLocaleDateString("es-ES", { month: "short" })}
+                      {new Date(e.date).toLocaleDateString(
+                        user?.language === "en" ? "en-GB" : "es-ES",
+                        { month: "short" },
+                      )}
                     </span>
                     <span className="text-sm font-bold leading-none">
                       {new Date(e.date).getDate()}
@@ -345,9 +403,9 @@ function CommandCenter() {
 
         {/* Riesgos operativos */}
         <Card>
-          <SectionHeader icon={AlertTriangle} title="Riesgos operativos" />
+          <SectionHeader icon={AlertTriangle} title={tr("Riesgos operativos", "Operational risks")} />
           {risks.length === 0 ? (
-            <Empty>Sin riesgos detectados. Todo en orden.</Empty>
+            <Empty>{tr("Sin riesgos detectados. Todo en orden.", "No risks detected. All clear.")}</Empty>
           ) : (
             <ul className="space-y-2">
               {risks.map((r, i) => (
@@ -382,12 +440,12 @@ function CommandCenter() {
         <Card className="lg:col-span-2">
           <SectionHeader
             icon={Megaphone}
-            title="Circulares recientes"
-            actionLabel="Ver comunicación"
+            title={tr("Circulares recientes", "Recent circulars")}
+            actionLabel={tr("Ver comunicación", "View communication")}
             actionTo="/communication"
           />
           {recentCirculars.length === 0 ? (
-            <Empty>No hay circulares publicadas.</Empty>
+            <Empty>{tr("No hay circulares publicadas.", "No circulars published.")}</Empty>
           ) : (
             <ul className="divide-y divide-border">
               {recentCirculars.map((c) => (
@@ -396,7 +454,9 @@ function CommandCenter() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="truncate text-sm font-semibold">{c.title}</span>
-                        {c.unread > 0 && <Pill tone="info">{c.unread} nuevas</Pill>}
+                        {c.unread > 0 && (
+                          <Pill tone="info">{tr(`${c.unread} nuevas`, `${c.unread} new`)}</Pill>
+                        )}
                       </div>
                       <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
                         {c.excerpt}
@@ -414,9 +474,9 @@ function CommandCenter() {
 
         {/* Actividad reciente */}
         <Card>
-          <SectionHeader icon={Bell} title="Actividad reciente" />
+          <SectionHeader icon={Bell} title={tr("Actividad reciente", "Recent activity")} />
           {activity.length === 0 ? (
-            <Empty>Sin actividad reciente.</Empty>
+            <Empty>{tr("Sin actividad reciente.", "No recent activity.")}</Empty>
           ) : (
             <ul className="space-y-2.5">
               {activity.map((it, i) => {
