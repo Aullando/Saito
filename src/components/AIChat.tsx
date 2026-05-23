@@ -62,6 +62,30 @@ const SUGGESTIONS: Record<string, string[]> = {
   ],
 };
 
+const SUGGESTIONS_EN: Record<string, string[]> = {
+  sysadmin: ["Which organizations have AI enabled?", "How many organizations are active?"],
+  admin: [
+    "Which payments failed this week?",
+    "Which athletes are not fit?",
+    "What fees does Juan Granados have?",
+  ],
+  manager: [
+    "Which groups train today in Valencia?",
+    "Failed payments this week?",
+    "Juan Granados' fees?",
+  ],
+  technical: [
+    "Athletes with unknown medical status?",
+    "My training sessions this week?",
+    "Summary of notes for Raul",
+  ],
+  medical: [
+    "What appointments do I have today?",
+    "Athletes with an active treatment?",
+    "Athletes under review?",
+  ],
+};
+
 const SUGGESTIONS_GFF: Record<string, string[]> = {
   sysadmin: ["ما الاتحادات التي فعّلت الذكاء الاصطناعي؟", "كم عدد الاتحادات النشطة؟"],
   admin: [
@@ -163,6 +187,7 @@ export function AIChat() {
 
   if (!u) return null;
   const role = u.role;
+  const lang = u.language; // "es" | "en"
   const isRgcc = club.id === "rgcc";
   const isGff = club.id === "gff-demo";
   const rgccIdentity = isRgcc ? resolveRgccIdentity(user, roles) : null;
@@ -172,13 +197,19 @@ export function AIChat() {
     ? (SUGGESTIONS_GFF[role] ?? [])
     : isRgcc
       ? rgccSuggestions(role, user, roles)
-      : (SUGGESTIONS[role] ?? []);
-  const placeholder = isGff ? "اكتب سؤالك…" : "Pregunta algo…";
-  const thinking = isGff ? "جارٍ التفكير…" : "Pensando…";
+      : ((lang === "en" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
+  const placeholder = isGff ? "اكتب سؤالك…" : lang === "en" ? "Ask something…" : "Pregunta algo…";
+  const thinking = isGff ? "جارٍ التفكير…" : lang === "en" ? "Thinking…" : "Pensando…";
   const emptyHint = isGff
     ? "مساعد ذكاء اصطناعي سياقي مع وصول إلى بيانات الاتحاد. اسأل ما تشاء:"
-    : "Asistente IA contextual con acceso a los datos del club. Pregunta lo que quieras:";
-  const connError = isGff ? "خطأ في الاتصال بالذكاء الاصطناعي." : "Error de conexión con la IA.";
+    : lang === "en"
+      ? "Contextual AI assistant with access to club data. Ask anything:"
+      : "Asistente IA contextual con acceso a los datos del club. Pregunta lo que quieras:";
+  const connError = isGff
+    ? "خطأ في الاتصال بالذكاء الاصطناعي."
+    : lang === "en"
+      ? "AI connection error."
+      : "Error de conexión con la IA.";
 
   const ask = async (q: string) => {
     if (!q.trim() || loading) return;
@@ -208,13 +239,17 @@ export function AIChat() {
           context,
           club: club.id,
           aiScope,
-          lang: isGff ? "ar" : "es",
+          lang: isGff ? "ar" : lang,
         }),
       });
 
       if (!resp.ok || !resp.body) {
         const errTxt = await resp.text().catch(() => "");
-        let errMsg = isGff ? "خطأ في الاتصال بالذكاء الاصطناعي." : "Error al contactar la IA.";
+        let errMsg = isGff
+          ? "خطأ في الاتصال بالذكاء الاصطناعي."
+          : lang === "en"
+            ? "Could not contact the AI."
+            : "Error al contactar la IA.";
         try {
           const j = JSON.parse(errTxt);
           if (j.error) errMsg = j.error;
@@ -224,9 +259,15 @@ export function AIChat() {
         if (resp.status === 429)
           errMsg = isGff
             ? "طلبات كثيرة جدًا. انتظر لحظة."
-            : "Demasiadas peticiones. Espera un momento.";
+            : lang === "en"
+              ? "Too many requests. Try again shortly."
+              : "Demasiadas peticiones. Espera un momento.";
         if (resp.status === 402)
-          errMsg = isGff ? "لا توجد أرصدة ذكاء اصطناعي." : "Sin créditos de IA disponibles.";
+          errMsg = isGff
+            ? "لا توجد أرصدة ذكاء اصطناعي."
+            : lang === "en"
+              ? "No AI credits available."
+              : "Sin créditos de IA disponibles.";
         // RGCC fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
           const local = rgccLocalFallback(

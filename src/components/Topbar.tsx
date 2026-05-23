@@ -26,6 +26,7 @@ export function Topbar() {
   const setMobileNavOpen = useAuth((s) => s.setMobileNavOpen);
   const setUser = useAuth((s) => s.setUser);
   const collapsed = useAuth((s) => s.sidebarCollapsed);
+  const setLangOverride = useAuth((s) => s.setLangOverride);
   const { club } = useClub();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -40,6 +41,8 @@ export function Topbar() {
   }, []);
 
   if (!user) return null;
+  const isGff = club.id === "gff-demo";
+  const lang = user.language;
   return (
     <header
       className="fixed right-0 left-0 z-30 flex h-14 md:h-[72px] items-center gap-1.5 sm:gap-2 md:gap-4 px-2 sm:px-3 md:px-6"
@@ -105,6 +108,40 @@ export function Topbar() {
         </button>
         <NotificationsBell />
         <ClubSwitcher />
+
+        {/* ES / EN language toggle (hidden inside the GFF Arabic workspace) */}
+        {!isGff && (
+          <div
+            className="hidden sm:inline-flex items-center rounded-full border border-border bg-card p-0.5 text-[11px] font-semibold shadow-sm"
+            role="group"
+            aria-label="Language"
+          >
+            <button
+              onClick={() => setLangOverride("es")}
+              className={cn(
+                "rounded-full px-2.5 py-1 transition-colors",
+                lang === "es"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+              aria-pressed={lang === "es"}
+            >
+              ES
+            </button>
+            <button
+              onClick={() => setLangOverride("en")}
+              className={cn(
+                "rounded-full px-2.5 py-1 transition-colors",
+                lang === "en"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+              aria-pressed={lang === "en"}
+            >
+              EN
+            </button>
+          </div>
+        )}
 
         <div ref={ref} className="relative">
           <button

@@ -4,7 +4,37 @@ import { useCurrentUser } from "./store";
 type Dict = Record<string, { en: string; es: string }>;
 
 export const STR: Dict = {
-  // sidebar
+  // sidebar / nav
+  navigation: { en: "Navigation", es: "Navegación" },
+  dashboard_nav: { en: "Dashboard", es: "Dashboard" },
+  club_org: { en: "Club & Organization", es: "Club y Organización" },
+  organization: { en: "Organization", es: "Organización" },
+  sections_nav: { en: "Sections", es: "Secciones" },
+  categories_nav: { en: "Categories", es: "Categorías" },
+  groups_nav: { en: "Groups", es: "Grupos" },
+  schedules: { en: "Schedules", es: "Horarios" },
+  tutors: { en: "Tutors", es: "Tutores" },
+  users_perms: { en: "Users and Permissions", es: "Usuarios y permisos" },
+  users: { en: "Users", es: "Usuarios" },
+  payments_fees: { en: "Payments and Fees", es: "Pagos y cuotas" },
+  fees_and_rates: { en: "Fees and Rates", es: "Cuotas y tasas" },
+  apply_fee: { en: "Apply fee", es: "Aplicar cuota" },
+  payment_status_nav: { en: "Payment Status", es: "Estado de pagos" },
+  club_calendar: { en: "Club calendar", es: "Calendario de club" },
+  circulars: { en: "Circulars", es: "Circulares" },
+  reports: { en: "Reports", es: "Informes" },
+  privacy_security: { en: "Privacy & Security", es: "Privacidad y seguridad" },
+  medical_agenda: { en: "Medical Calendar", es: "Agenda médica" },
+  restrictions: { en: "Restrictions", es: "Restricciones" },
+  incidents: { en: "Incidents", es: "Incidencias" },
+  treatment_plans: { en: "Treatment plans", es: "Planes de tratamiento" },
+  appointment_requests: { en: "Appointment requests", es: "Solicitudes de cita" },
+  medical_comm: { en: "Medical communication", es: "Comunicación médica" },
+  athletes_nav: { en: "Athletes", es: "Deportistas" },
+  switch_role: { en: "Switch role", es: "Cambiar de rol" },
+  search_in: { en: "Search", es: "Buscar en" },
+
+
   organizations: { en: "Organizations", es: "Organizaciones" },
   profile_settings: { en: "Profile & Settings", es: "Perfil y configuración" },
   club_organization: { en: "Club & Organization", es: "Club y Organización" },
@@ -165,3 +195,12 @@ export const useT = () => {
 };
 
 export const t = (key: keyof typeof STR, lang: Lang) => STR[key]?.[lang] ?? String(key);
+
+/** Returns the active language reactively. */
+export const useLang = (): Lang => useCurrentUser()?.language ?? "en";
+
+/** Inline translator: `tr("Hola", "Hello")` returns the right one for the active lang. */
+export const useTr = () => {
+  const lang = useLang();
+  return (es: string, en: string) => (lang === "es" ? es : en);
+};
