@@ -36,12 +36,14 @@ interface AuthState {
   avatars: Record<string, string>;
   mobileNavOpen: boolean;
   sidebarCollapsed: boolean;
+  langOverride: "es" | "en" | null;
   setUser: (id: string | null) => void;
   setAvatar: (id: string, dataUrl: string) => void;
   removeAvatar: (id: string) => void;
   setMobileNavOpen: (open: boolean) => void;
   setSidebarCollapsed: (v: boolean) => void;
   toggleSidebarCollapsed: () => void;
+  setLangOverride: (lang: "es" | "en" | null) => void;
 }
 
 export const useAuth = create<AuthState>()(
@@ -51,6 +53,7 @@ export const useAuth = create<AuthState>()(
       avatars: {},
       mobileNavOpen: false,
       sidebarCollapsed: false,
+      langOverride: null,
       setUser: (id) => set({ currentUserId: id, mobileNavOpen: false }),
       setAvatar: (id, dataUrl) => set((s) => ({ avatars: { ...s.avatars, [id]: dataUrl } })),
       removeAvatar: (id) =>
@@ -61,6 +64,7 @@ export const useAuth = create<AuthState>()(
       setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
       setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
       toggleSidebarCollapsed: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
+      setLangOverride: (lang) => set({ langOverride: lang }),
     }),
     {
       name: "saito-auth",
@@ -68,6 +72,7 @@ export const useAuth = create<AuthState>()(
         currentUserId: s.currentUserId,
         avatars: s.avatars,
         sidebarCollapsed: s.sidebarCollapsed,
+        langOverride: s.langOverride,
       }),
     },
   ),
@@ -80,17 +85,19 @@ import { useAuth as useRealAuth } from "./auth";
 
 export const useCurrentUser = (): User | null => {
   const { user, profile, roles } = useRealAuth();
+  const langOverride = useAuth((s) => s.langOverride);
   if (!user) return null;
   const role = (roles[0] ?? "admin") as User["role"];
   const name = profile?.full_name || user.email?.split("@")[0] || "User";
   const parts = name.split(" ");
   const initials = (parts[0]?.[0] ?? "?") + (parts[1]?.[0] ?? "");
+  const baseLang = (profile?.language as User["language"]) ?? "es";
   return {
     id: user.id,
     name,
     email: user.email ?? "",
     role,
-    language: (profile?.language as User["language"]) ?? "es",
+    language: langOverride ?? baseLang,
     initials: initials.toUpperCase(),
   };
 };
