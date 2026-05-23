@@ -91,6 +91,7 @@ function ClubPage() {
 
   // ───── Horario semanal por grupo (derivado de events training) ─────
   const groupSchedules = useMemo(() => {
+    const DAY_NAMES = tr("es", "en") === "es" ? DAY_NAMES_ES : DAY_NAMES_EN;
     const map = new Map<string, Set<string>>();
     for (const e of events) {
       if (e.type !== "training" || !e.groupId) continue;
@@ -111,7 +112,8 @@ function ClubPage() {
       );
     });
     return out;
-  }, [events]);
+  }, [events, tr]);
+
 
   // ───── Staff por grupo (heurística: técnicos repartidos por sección) ─────
   const staffByGroup = useMemo(() => {
