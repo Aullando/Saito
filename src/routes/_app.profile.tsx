@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useAuth as useUiAuth, useUserAvatar } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
-import { useT } from "@/lib/i18n";
+import { useT, useLang } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { Camera } from "lucide-react";
 
@@ -31,7 +31,7 @@ function ProfilePage() {
   const removeAvatar = useUiAuth((s) => s.removeAvatar);
   const avatar = useUserAvatar(user?.id);
   const fileRef = useRef<HTMLInputElement>(null);
-  const lang = (profile?.language as "es" | "en") ?? "es";
+  const lang = useLang();
 
   const orgQ = useQuery({
     queryKey: ["organization", profile?.organization_id],
