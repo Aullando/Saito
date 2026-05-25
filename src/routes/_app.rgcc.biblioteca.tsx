@@ -8,6 +8,8 @@ import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import { RGCC_EXERCISES, RGCC_ROUTINES, type RgccExercise } from "@/clubs/rgcc/seed";
 import { getRgccExerciseImage } from "@/clubs/rgcc/exerciseImages";
 import { BookOpen, Dumbbell, Search, Filter, ImageOff } from "lucide-react";
+import { useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 
 export const Route = createFileRoute("/_app/rgcc/biblioteca")({
   component: () => (
@@ -18,19 +20,22 @@ export const Route = createFileRoute("/_app/rgcc/biblioteca")({
 });
 
 function Biblioteca() {
+  const tr = useTr();
+  const td = useTd();
   const [tab, setTab] = useState<"ejercicios" | "rutinas">("ejercicios");
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<string>("Todas");
+  const ALL = tr("Todas","All");
+  const [cat, setCat] = useState<string>(ALL);
   const [src, setSrc] = useState<"all" | "library" | "evidence">("all");
 
   const categories = useMemo(
-    () => ["Todas", ...Array.from(new Set(RGCC_EXERCISES.map((e) => e.category)))],
-    [],
+    () => [ALL, ...Array.from(new Set(RGCC_EXERCISES.map((e) => e.category)))],
+    [ALL],
   );
 
   const filtered = useMemo(() => {
     return RGCC_EXERCISES.filter((e) => {
-      if (cat !== "Todas" && e.category !== cat) return false;
+      if (cat !== ALL && e.category !== cat) return false;
       if (src !== "all" && (e.source ?? "library") !== src) return false;
       if (!q.trim()) return true;
       const needle = q.toLowerCase();
@@ -45,12 +50,12 @@ function Biblioteca() {
   return (
     <>
       <PageHeader
-        title="Biblioteca"
-        subtitle="Catálogo de ejercicios y rutinas del Real Grupo de Cultura Covadonga."
+        title={tr("Biblioteca","Library")}
+        subtitle={tr("Catálogo de ejercicios y rutinas del Real Grupo de Cultura Covadonga.","Catalogue of exercises and routines of Real Grupo de Cultura Covadonga.")}
         actions={
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <BookOpen className="h-4 w-4" />
-            {RGCC_EXERCISES.length} ejercicios · {RGCC_ROUTINES.length} rutinas
+            {RGCC_EXERCISES.length} {tr("ejercicios","exercises")} · {RGCC_ROUTINES.length} {tr("rutinas","routines")}
           </div>
         }
       />
@@ -60,13 +65,13 @@ function Biblioteca() {
           onClick={() => setTab("ejercicios")}
           className={`rounded-full px-3 py-1.5 text-sm ${tab === "ejercicios" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}
         >
-          Ejercicios
+          {tr("Ejercicios","Exercises")}
         </button>
         <button
           onClick={() => setTab("rutinas")}
           className={`rounded-full px-3 py-1.5 text-sm ${tab === "rutinas" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}
         >
-          Rutinas
+          {tr("Rutinas","Routines")}
         </button>
       </div>
 
@@ -78,7 +83,7 @@ function Biblioteca() {
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Buscar ejercicio…"
+                placeholder={tr("Buscar ejercicio…","Search exercise…")}
                 className="w-72 rounded-full border border-border bg-background py-2 pl-9 pr-3 text-sm"
               />
             </div>
@@ -88,11 +93,11 @@ function Biblioteca() {
               className="rounded-full border border-border bg-background px-3 py-2 text-sm"
             >
               {categories.map((c) => (
-                <option key={c}>{c}</option>
+                <option key={c}>{td(c)}</option>
               ))}
             </select>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Filter className="h-3 w-3" /> origen
+              <Filter className="h-3 w-3" /> {tr("origen","source")}
             </div>
             {(["all", "library", "evidence"] as const).map((s) => (
               <button
@@ -100,16 +105,16 @@ function Biblioteca() {
                 onClick={() => setSrc(s)}
                 className={`rounded-full px-3 py-1 text-xs ${src === s ? "bg-primary/15 text-primary" : "bg-muted text-foreground"}`}
               >
-                {s === "all" ? "Todos" : s === "library" ? "Catálogo" : "Evidencia"}
+                {s === "all" ? tr("Todos","All") : s === "library" ? tr("Catálogo","Catalogue") : tr("Evidencia","Evidence")}
               </button>
             ))}
             <div className="ml-auto text-xs text-muted-foreground">
-              {filtered.length} resultados
+              {filtered.length} {tr("resultados","results")}
             </div>
           </div>
 
           {filtered.length === 0 ? (
-            <EmptyState>No hay ejercicios para ese filtro.</EmptyState>
+            <EmptyState>{tr("No hay ejercicios para ese filtro.","No exercises match that filter.")}</EmptyState>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filtered.map((ex) => (
@@ -129,7 +134,7 @@ function Biblioteca() {
                     {r.level} · {r.durationMin} min
                   </div>
                 </div>
-                <Pill tone="info">{r.exerciseIds.length} ej.</Pill>
+                <Pill tone="info">{r.exerciseIds.length} {tr("ej.","ex.")}</Pill>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">{r.goal}</p>
               <ul className="mt-3 space-y-1 text-xs">
@@ -151,7 +156,7 @@ function Biblioteca() {
                   to="/rgcc/entrenamiento-personal"
                   className="text-xs text-primary hover:underline"
                 >
-                  Asignar a sesión EP →
+                  {tr("Asignar a sesión EP","Assign to PT session")} →
                 </Link>
               </div>
             </Card>
@@ -179,11 +184,11 @@ function ExerciseCard({ ex }: { ex: RgccExercise }) {
         <div className="flex items-start justify-between gap-2">
           <div className="font-semibold leading-tight">{ex.name}</div>
           <Pill tone={ex.source === "evidence" ? "success" : "info"}>
-            {ex.source === "evidence" ? "EV" : "Cat."}
+            {ex.source === "evidence" ? "EV" : tr("Cat.","Cat.")}
           </Pill>
         </div>
         <div className="mt-1 text-xs text-muted-foreground">
-          {ex.category} · {ex.group}
+          {td(ex.category)} · {ex.group}
         </div>
         <div className="mt-2 flex flex-wrap gap-1 text-[11px]">
           <span className="rounded-full bg-muted px-2 py-0.5">{ex.equipment}</span>
