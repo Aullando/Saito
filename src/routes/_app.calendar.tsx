@@ -26,7 +26,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useT } from "@/lib/i18n";
+import { useT, useTr, useLang } from "@/lib/i18n";
+import type { Lang } from "@/lib/types";
 import { useAuth } from "@/lib/auth";
 import { useData } from "@/lib/store";
 import { useCalendarLocal } from "@/lib/calendarLocal";
@@ -89,21 +90,41 @@ interface Occurrence {
   date: string;
 }
 
-const TYPE_OPTIONS: { value: CalendarEventType; label: string }[] = [
-  { value: "training", label: "Entrenamiento" },
-  { value: "match", label: "Competición" },
-  { value: "medical", label: "Cita médica" },
-  { value: "club", label: "Evento de club" },
-  { value: "payment", label: "Vencimiento de pago" },
-];
+const typeOptions = (lang: Lang): { value: CalendarEventType; label: string }[] =>
+  lang === "es"
+    ? [
+        { value: "training", label: "Entrenamiento" },
+        { value: "match", label: "Competición" },
+        { value: "medical", label: "Cita médica" },
+        { value: "club", label: "Evento de club" },
+        { value: "payment", label: "Vencimiento de pago" },
+      ]
+    : [
+        { value: "training", label: "Training" },
+        { value: "match", label: "Competition" },
+        { value: "medical", label: "Medical appointment" },
+        { value: "club", label: "Club event" },
+        { value: "payment", label: "Payment due" },
+      ];
 
-const TYPE_LABEL: Record<string, string> = {
-  training: "Entrenamiento",
-  match: "Competición",
-  medical: "Cita médica",
-  meeting: "Reunión",
-  club: "Evento de club",
-  payment: "Vencimiento de pago",
+const typeLabel = (type: string, lang: Lang): string => {
+  const es: Record<string, string> = {
+    training: "Entrenamiento",
+    match: "Competición",
+    medical: "Cita médica",
+    meeting: "Reunión",
+    club: "Evento de club",
+    payment: "Vencimiento de pago",
+  };
+  const en: Record<string, string> = {
+    training: "Training",
+    match: "Competition",
+    medical: "Medical appointment",
+    meeting: "Meeting",
+    club: "Club event",
+    payment: "Payment due",
+  };
+  return (lang === "es" ? es : en)[type] ?? type;
 };
 
 const TYPE_STYLE: Record<string, string> = {
@@ -115,7 +136,6 @@ const TYPE_STYLE: Record<string, string> = {
   payment: "bg-sky-50 text-sky-700 border-sky-200",
 };
 
-// Which event types each role typically sees in their calendar
 const ROLE_TYPE_FILTER: Record<string, CalendarEventType[]> = {
   manager: ["training", "match", "medical", "club", "payment"],
   admin: ["club", "payment", "training", "match"],
@@ -124,29 +144,44 @@ const ROLE_TYPE_FILTER: Record<string, CalendarEventType[]> = {
   athlete: ["training", "match", "medical", "club"],
 };
 
-const ROLE_OPTIONS: { value: string; label: string }[] = [
-  { value: "all", label: "Todos los roles" },
-  { value: "manager", label: "Gestor / Dirección" },
-  { value: "admin", label: "Administración" },
-  { value: "medical", label: "Staff médico" },
-  { value: "technical", label: "Entrenador" },
-  { value: "athlete", label: "Atleta" },
-];
+const roleOptions = (lang: Lang): { value: string; label: string }[] =>
+  lang === "es"
+    ? [
+        { value: "all", label: "Todos los roles" },
+        { value: "manager", label: "Gestor / Dirección" },
+        { value: "admin", label: "Administración" },
+        { value: "medical", label: "Staff médico" },
+        { value: "technical", label: "Entrenador" },
+        { value: "athlete", label: "Atleta" },
+      ]
+    : [
+        { value: "all", label: "All roles" },
+        { value: "manager", label: "Manager / Direction" },
+        { value: "admin", label: "Administration" },
+        { value: "medical", label: "Medical staff" },
+        { value: "technical", label: "Coach" },
+        { value: "athlete", label: "Athlete" },
+      ];
 
 function TypeBadge({ type }: { type: string }) {
+  const lang = useLang();
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${
         TYPE_STYLE[type] ?? "bg-muted text-muted-foreground border-border"
       }`}
     >
-      {TYPE_LABEL[type] ?? type}
+      {typeLabel(type, lang)}
     </span>
   );
 }
 
 function CalendarPage() {
   const t = useT();
+  const tr = useTr();
+  const lang = useLang();
+  const TYPE_OPTIONS = typeOptions(lang);
+  const ROLE_OPTIONS = roleOptions(lang);
   const { profile, roles } = useAuth();
   const orgId = profile?.organization_id;
   // Permisos explícitos (no mezclar roles operativos con técnicos)
