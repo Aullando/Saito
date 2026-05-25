@@ -114,6 +114,7 @@ function navItemToItem(n: ClubNavItem): Item {
 export function Sidebar() {
   const user = useCurrentUser();
   const t = useT();
+  const td = useTd();
   const setUser = useAuth((s) => s.setUser);
   const mobileOpen = useAuth((s) => s.mobileNavOpen);
   const setMobileOpen = useAuth((s) => s.setMobileNavOpen);
