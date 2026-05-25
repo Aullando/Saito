@@ -55,7 +55,7 @@ interface DBPayment {
 function PaymentsPage() {
   const t = useT();
   const { profile } = useAuth();
-  const lang = (profile?.language as "es" | "en") ?? "es";
+  const lang = (profile?.language as "es" | "en") ?? "en";
   const orgId = profile?.organization_id;
   const qc = useQueryClient();
 

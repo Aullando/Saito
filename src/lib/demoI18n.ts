@@ -177,6 +177,38 @@ const MAP: Record<string, string> = {
   Socio: "Member",
   Sustituciones: "Substitutions",
   // Vacaciones already mapped above
+
+  // ─── Medical / fitness status ─────────────────────────────────────────────
+  Apto: "Fit",
+  "No apto": "Not fit",
+  "En revisión": "Under review",
+
+  // ─── Incident types ────────────────────────────────────────────────────────
+  "Molestia muscular": "Muscle discomfort",
+  Sobrecarga: "Overload",
+  "Contusión": "Bruise",
+  Esguince: "Sprain",
+  "Tendinopatía": "Tendinopathy",
+
+  // ─── Medical specialties ───────────────────────────────────────────────────
+  Fisioterapia: "Physiotherapy",
+  "Medicina deportiva": "Sports medicine",
+  Nutrición: "Nutrition",
+  Psicología: "Psychology",
+
+  // ─── Extra absence reasons ────────────────────────────────────────────────
+  Lesión: "Injury",
+  Estudios: "Studies",
+  Trabajo: "Work",
+
+  // ─── Display-level statuses ────────────────────────────────────────────────
+  Activo: "Active",
+  Finalizado: "Finished",
+  Pendiente: "Pending",
+  Gestionada: "Managed",
+  Convocado: "Called up",
+  Sustitución: "Substitution",
+
 };
 
 /** Translate a single demo value. Returns the input unchanged when no mapping. */

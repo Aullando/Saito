@@ -38,7 +38,7 @@ function TeamPage() {
   const t = useT();
   const qc = useQueryClient();
   const { profile, user: me } = useAuth();
-  const lang = (profile?.language ?? "es") as "es" | "en";
+  const lang = (profile?.language ?? "en") as "es" | "en";
   const orgId = profile?.organization_id ?? null;
 
   const membersQ = useQuery({

@@ -8,24 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
+import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/organizations")({
   component: () => (
@@ -38,24 +30,42 @@ export const Route = createFileRoute("/_app/organizations")({
 });
 
 type Org = {
-  id: string;
-  name: string;
-  slug: string;
-  language: string;
-  logo_url: string | null;
-  created_at: string;
-  updated_at: string;
+  id: string; name: string; slug: string; language: string;
+  logo_url: string | null; created_at: string; updated_at: string;
 };
 
 const PAGE_SIZE = 8;
 const slugify = (s: string) =>
-  s
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+  s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 function OrganizationsPage() {
+  const lang = useLang();
+  const L = lang === "en"
+    ? {
+        title: "Organizations", subtitle: "Manage all organizations on the SAITO platform.",
+        newOrg: "New organization", newOrgTitle: "New organization",
+        nameLbl: "Name", slugLbl: "Slug", langLbl: "Language",
+        cancel: "Cancel", create: "Create",
+        colName: "Name", colSlug: "Slug", colLang: "Lang",
+        colCreated: "Created", colUpdated: "Updated",
+        details: "Details", delete: "Delete", noOrgs: "No organizations",
+        deleteConfirm: "Delete this organization?",
+        prev: "Previous", next: "Next",
+        deleteOrgBtn: "Delete organization", deleteOrgConfirm: "Delete this organization?",
+      }
+    : {
+        title: "Organizaciones", subtitle: "Gestiona todas las organizaciones en la plataforma SAITO.",
+        newOrg: "Nueva organización", newOrgTitle: "Nueva organización",
+        nameLbl: "Nombre", slugLbl: "Slug", langLbl: "Idioma",
+        cancel: "Cancelar", create: "Crear",
+        colName: "Nombre", colSlug: "Slug", colLang: "Idioma",
+        colCreated: "Creado", colUpdated: "Actualizado",
+        details: "Detalles", delete: "Eliminar", noOrgs: "Sin organizaciones",
+        deleteConfirm: "¿Eliminar esta organización?",
+        prev: "Anterior", next: "Siguiente",
+        deleteOrgBtn: "Eliminar organización", deleteOrgConfirm: "¿Eliminar esta organización?",
+      };
+
   const qc = useQueryClient();
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
@@ -68,9 +78,7 @@ function OrganizationsPage() {
     queryKey: ["organizations"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("organizations")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from("organizations").select("*").order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Org[];
     },
@@ -83,10 +91,7 @@ function OrganizationsPage() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["organizations"] });
-      setOpen(false);
-      setName("");
-      setSlug("");
-      setLanguage("es");
+      setOpen(false); setName(""); setSlug(""); setLanguage("es");
     },
   });
 
@@ -103,10 +108,7 @@ function OrganizationsPage() {
       const { error } = await supabase.from("organizations").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["organizations"] });
-      setDetail(null);
-    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["organizations"] }); setDetail(null); },
   });
 
   const orgs = orgsQ.data ?? [];
@@ -116,40 +118,28 @@ function OrganizationsPage() {
   return (
     <>
       <PageHeader
-        title="Organizations"
-        subtitle="Manage all organizations on the SAITO platform."
+        title={L.title}
+        subtitle={L.subtitle}
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="rounded-full">
-                <Plus className="mr-1 h-4 w-4" /> New organization
-              </Button>
+              <Button className="rounded-full"><Plus className="mr-1 h-4 w-4" /> {L.newOrg}</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader>
-                <DialogTitle>New organization</DialogTitle>
-              </DialogHeader>
+              <DialogHeader><DialogTitle>{L.newOrgTitle}</DialogTitle></DialogHeader>
               <div className="space-y-3">
                 <div>
-                  <Label>Name</Label>
-                  <Input
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      if (!slug) setSlug(slugify(e.target.value));
-                    }}
-                  />
+                  <Label>{L.nameLbl}</Label>
+                  <Input value={name} onChange={(e) => { setName(e.target.value); if (!slug) setSlug(slugify(e.target.value)); }} />
                 </div>
                 <div>
-                  <Label>Slug</Label>
+                  <Label>{L.slugLbl}</Label>
                   <Input value={slug} onChange={(e) => setSlug(slugify(e.target.value))} />
                 </div>
                 <div>
-                  <Label>Language</Label>
+                  <Label>{L.langLbl}</Label>
                   <Select value={language} onValueChange={setLanguage}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="es">Español</SelectItem>
                       <SelectItem value="en">English</SelectItem>
@@ -158,14 +148,10 @@ function OrganizationsPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>
-                  Cancel
-                </Button>
-                <Button
-                  disabled={!name.trim() || !slug.trim() || addOrg.isPending}
-                  onClick={() => addOrg.mutate({ name: name.trim(), slug: slug.trim(), language })}
-                >
-                  Create
+                <Button variant="outline" onClick={() => setOpen(false)}>{L.cancel}</Button>
+                <Button disabled={!name.trim() || !slug.trim() || addOrg.isPending}
+                  onClick={() => addOrg.mutate({ name: name.trim(), slug: slug.trim(), language })}>
+                  {L.create}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -178,53 +164,33 @@ function OrganizationsPage() {
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="px-5 py-3 font-semibold">Name</th>
-                <th className="px-5 py-3 font-semibold">Slug</th>
-                <th className="px-5 py-3 font-semibold">Lang</th>
-                <th className="px-5 py-3 font-semibold">Created</th>
-                <th className="px-5 py-3 font-semibold">Updated</th>
+                <th className="px-5 py-3 font-semibold">{L.colName}</th>
+                <th className="px-5 py-3 font-semibold">{L.colSlug}</th>
+                <th className="px-5 py-3 font-semibold">{L.colLang}</th>
+                <th className="px-5 py-3 font-semibold">{L.colCreated}</th>
+                <th className="px-5 py-3 font-semibold">{L.colUpdated}</th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
             <tbody>
               {orgsQ.isLoading && (
-                <tr>
-                  <td colSpan={6} className="px-5 py-6 text-center text-muted-foreground">
-                    …
-                  </td>
-                </tr>
+                <tr><td colSpan={6} className="px-5 py-6 text-center text-muted-foreground">…</td></tr>
               )}
               {!orgsQ.isLoading && paged.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-5 py-6 text-center text-muted-foreground">
-                    No organizations
-                  </td>
-                </tr>
+                <tr><td colSpan={6} className="px-5 py-6 text-center text-muted-foreground">{L.noOrgs}</td></tr>
               )}
               {paged.map((o) => (
                 <tr key={o.id} className="border-t border-border hover:bg-muted/30">
                   <td className="px-5 py-3 font-medium">{o.name}</td>
                   <td className="px-5 py-3 text-muted-foreground">{o.slug}</td>
                   <td className="px-5 py-3 uppercase text-xs">{o.language}</td>
-                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">
-                    {formatDateTime(o.created_at)}
-                  </td>
-                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">
-                    {formatDateTime(o.updated_at)}
-                  </td>
+                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">{formatDateTime(o.created_at)}</td>
+                  <td className="px-5 py-3 text-muted-foreground whitespace-nowrap">{formatDateTime(o.updated_at)}</td>
                   <td className="px-5 py-3 text-right whitespace-nowrap">
-                    <Button size="sm" variant="ghost" onClick={() => setDetail(o)}>
-                      Details
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-destructive"
-                      onClick={() => {
-                        if (confirm("Delete this organization?")) delOrg.mutate(o.id);
-                      }}
-                    >
-                      Delete
+                    <Button size="sm" variant="ghost" onClick={() => setDetail(o)}>{L.details}</Button>
+                    <Button size="sm" variant="ghost" className="text-destructive"
+                      onClick={() => { if (confirm(L.deleteConfirm)) delOrg.mutate(o.id); }}>
+                      {L.delete}
                     </Button>
                   </td>
                 </tr>
@@ -236,29 +202,16 @@ function OrganizationsPage() {
 
       {totalPages > 1 && (
         <div className="mt-4 flex items-center justify-end gap-3 text-sm">
-          <button
-            className="text-muted-foreground hover:text-foreground disabled:opacity-40"
-            disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-          >
-            Previous
-          </button>
+          <button className="text-muted-foreground hover:text-foreground disabled:opacity-40"
+            disabled={page === 1} onClick={() => setPage((p) => p - 1)}>{L.prev}</button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-            <button
-              key={n}
-              onClick={() => setPage(n)}
-              className={`flex h-7 w-7 items-center justify-center rounded-full ${n === page ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-            >
+            <button key={n} onClick={() => setPage(n)}
+              className={`flex h-7 w-7 items-center justify-center rounded-full ${n === page ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}>
               {n}
             </button>
           ))}
-          <button
-            className="text-muted-foreground hover:text-foreground disabled:opacity-40"
-            disabled={page === totalPages}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            Next
-          </button>
+          <button className="text-muted-foreground hover:text-foreground disabled:opacity-40"
+            disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}>{L.next}</button>
         </div>
       )}
 
@@ -266,42 +219,31 @@ function OrganizationsPage() {
         <SheetContent className="w-full sm:max-w-md">
           {detail && (
             <>
-              <SheetHeader>
-                <SheetTitle>{detail.name}</SheetTitle>
-              </SheetHeader>
+              <SheetHeader><SheetTitle>{detail.name}</SheetTitle></SheetHeader>
               <div className="mt-6 space-y-4 text-sm">
                 <div>
                   <span className="text-muted-foreground">ID:</span>{" "}
                   <span className="font-mono text-xs">{detail.id}</span>
                 </div>
                 <div>
-                  <Label>Name</Label>
-                  <Input
-                    value={detail.name}
+                  <Label>{L.nameLbl}</Label>
+                  <Input value={detail.name}
                     onChange={(e) => setDetail({ ...detail, name: e.target.value })}
-                    onBlur={() => updateOrg.mutate({ id: detail.id, patch: { name: detail.name } })}
-                  />
+                    onBlur={() => updateOrg.mutate({ id: detail.id, patch: { name: detail.name } })} />
                 </div>
                 <div>
-                  <Label>Slug</Label>
-                  <Input
-                    value={detail.slug}
+                  <Label>{L.slugLbl}</Label>
+                  <Input value={detail.slug}
                     onChange={(e) => setDetail({ ...detail, slug: slugify(e.target.value) })}
-                    onBlur={() => updateOrg.mutate({ id: detail.id, patch: { slug: detail.slug } })}
-                  />
+                    onBlur={() => updateOrg.mutate({ id: detail.id, patch: { slug: detail.slug } })} />
                 </div>
                 <div>
-                  <Label>Language</Label>
-                  <Select
-                    value={detail.language}
-                    onValueChange={(v) => {
-                      setDetail({ ...detail, language: v });
-                      updateOrg.mutate({ id: detail.id, patch: { language: v } });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
+                  <Label>{L.langLbl}</Label>
+                  <Select value={detail.language} onValueChange={(v) => {
+                    setDetail({ ...detail, language: v });
+                    updateOrg.mutate({ id: detail.id, patch: { language: v } });
+                  }}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="es">Español</SelectItem>
                       <SelectItem value="en">English</SelectItem>
@@ -309,18 +251,13 @@ function OrganizationsPage() {
                   </Select>
                 </div>
                 <div className="text-xs text-muted-foreground pt-2">
-                  Created: {formatDateTime(detail.created_at)}
-                  <br />
-                  Updated: {formatDateTime(detail.updated_at)}
+                  {L.colCreated}: {formatDateTime(detail.created_at)}<br />
+                  {L.colUpdated}: {formatDateTime(detail.updated_at)}
                 </div>
                 <div className="pt-4">
-                  <Button
-                    variant="destructive"
-                    onClick={() => {
-                      if (confirm("Delete this organization?")) delOrg.mutate(detail.id);
-                    }}
-                  >
-                    Delete organization
+                  <Button variant="destructive"
+                    onClick={() => { if (confirm(L.deleteOrgConfirm)) delOrg.mutate(detail.id); }}>
+                    {L.deleteOrgBtn}
                   </Button>
                 </div>
               </div>
