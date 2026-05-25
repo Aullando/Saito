@@ -157,6 +157,26 @@ const MAP: Record<string, string> = {
   Hoy: "Today",
   Mañana: "Tomorrow",
   Ayer: "Yesterday",
+
+  // ─── RGCC nav labels ───────────────────────────────────────────────────
+  Biblioteca: "Library",
+  "Centro Datos": "Data Center",
+  Clases: "Classes",
+  Copiloto: "Copilot",
+  Dashboard: "Dashboard",
+  Dirección: "Management",
+  "Entrenamiento Personal": "Personal Training",
+  Incidencias: "Incidents",
+  "Mi Día": "My Day",
+  Monitores: "Coaches",
+  Quiosco: "Kiosk",
+  Resumen: "Summary",
+  Salas: "Rooms",
+  Secciones: "Sections",
+  Sedes: "Venues",
+  Socio: "Member",
+  Sustituciones: "Substitutions",
+  Vacaciones: "Vacations",
 };
 
 /** Translate a single demo value. Returns the input unchanged when no mapping. */
