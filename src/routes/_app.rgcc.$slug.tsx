@@ -35,7 +35,8 @@ function RgccModulePage() {
   const { club } = useClub();
   const item = rgccNavItems.find((i) => i.slug === slug);
   const tr = useTr();
-  const label = item?.label ?? slug;
+  const td = useTd();
+  const label = td(item?.label ?? slug);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
