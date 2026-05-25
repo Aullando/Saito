@@ -219,7 +219,7 @@ export function Sidebar() {
                     }}
                   >
                     <Icon className="shrink-0 h-5 w-5" />
-                    {!collapsed && <span className="truncate">{it.label}</span>}
+                    {!collapsed && <span className="truncate">{td(it.label)}</span>}
                   </Link>
                 </li>
               );
