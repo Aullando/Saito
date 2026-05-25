@@ -12,11 +12,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuth } from "@/lib/auth";
+import { useTr } from "@/lib/i18n";
 import { ATHLETES, GROUPS, EVENTS, SECTIONS } from "@/lib/seed";
 import { Check, X, Minus, CalendarCheck, Users, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/_app/attendance")({
-  head: () => ({ meta: [{ title: "Asistencia y disponibilidad — SAITO" }] }),
+  head: () => ({ meta: [{ title: "Attendance & availability — SAITO" }] }),
   component: () => (
     <RoleGate roles={["admin", "manager", "technical"]}>
       <AppLayout>
@@ -50,19 +51,21 @@ const STATUS_META: Record<
   Status,
   {
     label: string;
+    labelEn: string;
     icon: typeof Check;
     cls: string;
     tone: "success" | "warning" | "danger" | "info";
   }
 > = {
-  present: { label: "Presente", icon: Check, cls: "text-emerald-600", tone: "success" },
-  doubt: { label: "Duda", icon: Minus, cls: "text-amber-600", tone: "warning" },
-  absent: { label: "Ausente", icon: X, cls: "text-rose-600", tone: "danger" },
-  injured: { label: "Lesión", icon: ShieldAlert, cls: "text-red-700", tone: "danger" },
+  present: { label: "Presente", labelEn: "Present", icon: Check, cls: "text-emerald-600", tone: "success" },
+  doubt: { label: "Duda", labelEn: "Maybe", icon: Minus, cls: "text-amber-600", tone: "warning" },
+  absent: { label: "Ausente", labelEn: "Absent", icon: X, cls: "text-rose-600", tone: "danger" },
+  injured: { label: "Lesión", labelEn: "Injured", icon: ShieldAlert, cls: "text-red-700", tone: "danger" },
 };
 
 function AttendancePage() {
   const { profile } = useAuth();
+  const tr = useTr();
   const [eventId, setEventId] = useState(NEXT_TRAININGS[0]?.id ?? "");
   const [groupFilter, setGroupFilter] = useState<string>("all");
 
@@ -92,14 +95,14 @@ function AttendancePage() {
   return (
     <>
       <PageHeader
-        title="Asistencia y disponibilidad"
-        subtitle="Confirmaciones del próximo entrenamiento o partido por equipo. Datos demo."
+        title={tr("Asistencia y disponibilidad","Attendance & availability")}
+        subtitle={tr("Confirmaciones del próximo entrenamiento o partido por equipo. Datos demo.","Confirmations for the upcoming training or match by team. Demo data.")}
       />
 
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <div className="min-w-[260px] flex-1">
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Sesión
+            {tr("Sesión","Session")}
           </label>
           <Select value={eventId} onValueChange={setEventId}>
             <SelectTrigger>
@@ -116,14 +119,14 @@ function AttendancePage() {
         </div>
         <div className="min-w-[200px]">
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Equipo / grupo
+            {tr("Equipo / grupo","Team / group")}
           </label>
           <Select value={groupFilter} onValueChange={setGroupFilter}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Grupo de la sesión</SelectItem>
+              <SelectItem value="all">{tr("Grupo de la sesión","Session group")}</SelectItem>
               {GROUPS.map((g) => (
                 <SelectItem key={g.id} value={g.id}>
                   {g.name}
@@ -132,31 +135,31 @@ function AttendancePage() {
             </SelectContent>
           </Select>
         </div>
-        <Button variant="outline">Enviar recordatorio al grupo</Button>
+        <Button variant="outline">{tr("Enviar recordatorio al grupo","Send reminder to group")}</Button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi
           icon={<Users className="h-4 w-4" />}
-          label="Convocados"
+          label={tr("Convocados","Called up")}
           value={String(roster.length)}
         />
         <Kpi
           icon={<Check className="h-4 w-4 text-emerald-600" />}
-          label="Confirmados"
+          label={tr("Confirmados","Confirmed")}
           value={String(counts.present)}
           hint={`${rate}%`}
         />
         <Kpi
           icon={<Minus className="h-4 w-4 text-amber-600" />}
-          label="Dudas"
+          label={tr("Dudas","Maybes")}
           value={String(counts.doubt)}
         />
         <Kpi
           icon={<X className="h-4 w-4 text-rose-600" />}
-          label="Ausencias"
+          label={tr("Ausencias","Absences")}
           value={String(counts.absent + counts.injured)}
-          hint={`${counts.injured} lesión`}
+          hint={tr(`${counts.injured} lesión`,`${counts.injured} injured`)}
         />
       </div>
 
@@ -170,17 +173,17 @@ function AttendancePage() {
           </div>
           <Pill tone="info">
             <CalendarCheck className="mr-1 inline h-3 w-3" />
-            Asistencia mock
+            {tr("Asistencia mock","Mock attendance")}
           </Pill>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="px-5 py-2 font-semibold">Deportista</th>
-                <th className="px-3 py-2 font-semibold">Estado</th>
-                <th className="px-3 py-2 font-semibold">Confirmado por</th>
-                <th className="px-3 py-2 font-semibold">Notas</th>
+                <th className="px-5 py-2 font-semibold">{tr("Deportista","Athlete")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Estado","Status")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Confirmado por","Confirmed by")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Notas","Notes")}</th>
               </tr>
             </thead>
             <tbody>
@@ -196,21 +199,21 @@ function AttendancePage() {
                     <td className="px-3 py-2.5">
                       <span className={`inline-flex items-center gap-1.5 ${meta.cls}`}>
                         <Icon className="h-4 w-4" />
-                        <span className="text-xs font-semibold">{meta.label}</span>
+                        <span className="text-xs font-semibold">{tr(meta.label, meta.labelEn)}</span>
                       </span>
                     </td>
                     <td className="px-3 py-2.5 text-xs text-muted-foreground">
                       {s === "present" || s === "doubt"
-                        ? "Familia / jugador"
+                        ? tr("Familia / jugador","Family / player")
                         : s === "injured"
-                          ? "Staff médico"
+                          ? tr("Staff médico","Medical staff")
                           : "—"}
                     </td>
                     <td className="px-3 py-2.5 text-xs text-muted-foreground">
                       {s === "doubt"
-                        ? "Pendiente confirmar"
+                        ? tr("Pendiente confirmar","Pending confirmation")
                         : s === "injured"
-                          ? "Restricción activa"
+                          ? tr("Restricción activa","Active restriction")
                           : ""}
                     </td>
                   </tr>
@@ -222,8 +225,7 @@ function AttendancePage() {
       </Card>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        {profile?.full_name ? `Vista para ${profile.full_name}.` : ""} La asistencia se sincroniza
-        con el calendario y el módulo médico cuando un deportista está marcado como lesión activa.
+        {profile?.full_name ? tr(`Vista para ${profile.full_name}.`,`View for ${profile.full_name}.`) : ""} {tr("La asistencia se sincroniza con el calendario y el módulo médico cuando un deportista está marcado como lesión activa.","Attendance syncs with the calendar and the medical module when an athlete is marked as actively injured.")}
       </p>
     </>
   );
