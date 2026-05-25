@@ -26,7 +26,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useT } from "@/lib/i18n";
+import { useT, useTr, useLang } from "@/lib/i18n";
+import type { Lang } from "@/lib/types";
 import { useAuth } from "@/lib/auth";
 import { useData } from "@/lib/store";
 import { useCalendarLocal } from "@/lib/calendarLocal";
@@ -89,21 +90,41 @@ interface Occurrence {
   date: string;
 }
 
-const TYPE_OPTIONS: { value: CalendarEventType; label: string }[] = [
-  { value: "training", label: "Entrenamiento" },
-  { value: "match", label: "Competición" },
-  { value: "medical", label: "Cita médica" },
-  { value: "club", label: "Evento de club" },
-  { value: "payment", label: "Vencimiento de pago" },
-];
+const typeOptions = (lang: Lang): { value: CalendarEventType; label: string }[] =>
+  lang === "es"
+    ? [
+        { value: "training", label: "Entrenamiento" },
+        { value: "match", label: "Competición" },
+        { value: "medical", label: "Cita médica" },
+        { value: "club", label: "Evento de club" },
+        { value: "payment", label: "Vencimiento de pago" },
+      ]
+    : [
+        { value: "training", label: "Training" },
+        { value: "match", label: "Competition" },
+        { value: "medical", label: "Medical appointment" },
+        { value: "club", label: "Club event" },
+        { value: "payment", label: "Payment due" },
+      ];
 
-const TYPE_LABEL: Record<string, string> = {
-  training: "Entrenamiento",
-  match: "Competición",
-  medical: "Cita médica",
-  meeting: "Reunión",
-  club: "Evento de club",
-  payment: "Vencimiento de pago",
+const typeLabel = (type: string, lang: Lang): string => {
+  const es: Record<string, string> = {
+    training: "Entrenamiento",
+    match: "Competición",
+    medical: "Cita médica",
+    meeting: "Reunión",
+    club: "Evento de club",
+    payment: "Vencimiento de pago",
+  };
+  const en: Record<string, string> = {
+    training: "Training",
+    match: "Competition",
+    medical: "Medical appointment",
+    meeting: "Meeting",
+    club: "Club event",
+    payment: "Payment due",
+  };
+  return (lang === "es" ? es : en)[type] ?? type;
 };
 
 const TYPE_STYLE: Record<string, string> = {
@@ -115,7 +136,6 @@ const TYPE_STYLE: Record<string, string> = {
   payment: "bg-sky-50 text-sky-700 border-sky-200",
 };
 
-// Which event types each role typically sees in their calendar
 const ROLE_TYPE_FILTER: Record<string, CalendarEventType[]> = {
   manager: ["training", "match", "medical", "club", "payment"],
   admin: ["club", "payment", "training", "match"],
@@ -124,29 +144,44 @@ const ROLE_TYPE_FILTER: Record<string, CalendarEventType[]> = {
   athlete: ["training", "match", "medical", "club"],
 };
 
-const ROLE_OPTIONS: { value: string; label: string }[] = [
-  { value: "all", label: "Todos los roles" },
-  { value: "manager", label: "Gestor / Dirección" },
-  { value: "admin", label: "Administración" },
-  { value: "medical", label: "Staff médico" },
-  { value: "technical", label: "Entrenador" },
-  { value: "athlete", label: "Atleta" },
-];
+const roleOptions = (lang: Lang): { value: string; label: string }[] =>
+  lang === "es"
+    ? [
+        { value: "all", label: "Todos los roles" },
+        { value: "manager", label: "Gestor / Dirección" },
+        { value: "admin", label: "Administración" },
+        { value: "medical", label: "Staff médico" },
+        { value: "technical", label: "Entrenador" },
+        { value: "athlete", label: "Atleta" },
+      ]
+    : [
+        { value: "all", label: "All roles" },
+        { value: "manager", label: "Manager / Direction" },
+        { value: "admin", label: "Administration" },
+        { value: "medical", label: "Medical staff" },
+        { value: "technical", label: "Coach" },
+        { value: "athlete", label: "Athlete" },
+      ];
 
 function TypeBadge({ type }: { type: string }) {
+  const lang = useLang();
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${
         TYPE_STYLE[type] ?? "bg-muted text-muted-foreground border-border"
       }`}
     >
-      {TYPE_LABEL[type] ?? type}
+      {typeLabel(type, lang)}
     </span>
   );
 }
 
 function CalendarPage() {
   const t = useT();
+  const tr = useTr();
+  const lang = useLang();
+  const TYPE_OPTIONS = typeOptions(lang);
+  const ROLE_OPTIONS = roleOptions(lang);
   const { profile, roles } = useAuth();
   const orgId = profile?.organization_id;
   // Permisos explícitos (no mezclar roles operativos con técnicos)
@@ -319,7 +354,7 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Evento creado");
+      toast.success(tr("Evento creado", "Event created"));
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -335,7 +370,7 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Evento eliminado");
+      toast.success(tr("Evento eliminado", "Event deleted"));
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -385,7 +420,7 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Evento actualizado");
+      toast.success(tr("Evento actualizado", "Event updated"));
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -553,10 +588,10 @@ function CalendarPage() {
     label: string;
     tone: "muted" | "ok" | "warn" | "danger";
   } => {
-    if (cancellations[ev.id]) return { label: "Cancelado", tone: "danger" };
-    if (dateStr < todayStr) return { label: "Pasado", tone: "muted" };
-    if (dateStr === todayStr) return { label: "Hoy", tone: "warn" };
-    return { label: "Programado", tone: "ok" };
+    if (cancellations[ev.id]) return { label: tr("Cancelado", "Cancelled"), tone: "danger" };
+    if (dateStr < todayStr) return { label: tr("Pasado", "Past"), tone: "muted" };
+    if (dateStr === todayStr) return { label: tr("Hoy", "Today"), tone: "warn" };
+    return { label: tr("Programado", "Scheduled"), tone: "ok" };
   };
 
   // ────── Render ──────
@@ -602,17 +637,17 @@ function CalendarPage() {
                 <DialogTrigger asChild>
                   <Button size="sm" className="rounded-full">
                     <Plus className="mr-1 h-4 w-4" />
-                    Nuevo evento
+                    {tr("Nuevo evento", "New event")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-lg">
                   <DialogHeader>
-                    <DialogTitle>Nuevo evento</DialogTitle>
+                    <DialogTitle>{tr("Nuevo evento", "New event")}</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label>Tipo</Label>
+                        <Label>{tr("Tipo", "Type")}</Label>
                         <Select
                           value={newEv.type}
                           onValueChange={(v) =>
@@ -632,7 +667,7 @@ function CalendarPage() {
                         </Select>
                       </div>
                       <div>
-                        <Label>Título</Label>
+                        <Label>{tr("Título", "Title")}</Label>
                         <Input
                           value={newEv.title}
                           onChange={(e) => setNewEv({ ...newEv, title: e.target.value })}
@@ -641,7 +676,7 @@ function CalendarPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label>Fecha</Label>
+                        <Label>{tr("Fecha", "Date")}</Label>
                         <Input
                           type="date"
                           value={newEv.date}
@@ -649,7 +684,7 @@ function CalendarPage() {
                         />
                       </div>
                       <div>
-                        <Label>Hora</Label>
+                        <Label>{tr("Hora", "Time")}</Label>
                         <Input
                           type="time"
                           value={newEv.startTime}
@@ -658,16 +693,16 @@ function CalendarPage() {
                       </div>
                     </div>
                     <div>
-                      <Label>Ubicación</Label>
+                      <Label>{tr("Ubicación", "Location")}</Label>
                       <Input
                         value={newEv.location}
                         onChange={(e) => setNewEv({ ...newEv, location: e.target.value })}
-                        placeholder="Pista 1, Sala médica, …"
+                        placeholder={tr("Pista 1, Sala médica, …", "Court 1, Medical room, …")}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label>Grupo</Label>
+                        <Label>{tr("Grupo", "Group")}</Label>
                         <Select
                           value={newEv.groupId}
                           onValueChange={(v) => setNewEv({ ...newEv, groupId: v })}
@@ -685,7 +720,7 @@ function CalendarPage() {
                         </Select>
                       </div>
                       <div>
-                        <Label>Staff responsable</Label>
+                        <Label>{tr("Staff responsable", "Responsible staff")}</Label>
                         <Select
                           value={newEv.staffId}
                           onValueChange={(v) => setNewEv({ ...newEv, staffId: v })}
@@ -708,7 +743,7 @@ function CalendarPage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
-                      <Label className="text-sm">Recurrente (semanal)</Label>
+                      <Label className="text-sm">{tr("Recurrente (semanal)", "Recurring (weekly)")}</Label>
                       <Switch
                         checked={newEv.recurring}
                         onCheckedChange={(v) => setNewEv({ ...newEv, recurring: v })}
@@ -716,7 +751,7 @@ function CalendarPage() {
                     </div>
                     {newEv.recurring && (
                       <div>
-                        <Label>Hasta</Label>
+                        <Label>{tr("Hasta", "Until")}</Label>
                         <Input
                           type="date"
                           value={newEv.until}
@@ -752,7 +787,7 @@ function CalendarPage() {
                         setOpen(false);
                       }}
                     >
-                      Crear
+                      {tr("Crear", "Create")}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -825,10 +860,10 @@ function CalendarPage() {
         </Select>
         <Select value={typeF} onValueChange={setTypeF}>
           <SelectTrigger className="w-44 rounded-full">
-            <SelectValue placeholder="Todos los tipos" />
+            <SelectValue placeholder={tr("Todos los tipos", "All types")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos los tipos</SelectItem>
+            <SelectItem value="all">{tr("Todos los tipos", "All types")}</SelectItem>
             {TYPE_OPTIONS.map((o) => (
               <SelectItem key={o.value} value={o.value}>
                 {o.label}
@@ -838,7 +873,7 @@ function CalendarPage() {
         </Select>
         <Select value={roleF} onValueChange={setRoleF}>
           <SelectTrigger className="w-48 rounded-full">
-            <SelectValue placeholder="Todos los roles" />
+            <SelectValue placeholder={tr("Todos los roles", "All roles")} />
           </SelectTrigger>
           <SelectContent>
             {ROLE_OPTIONS.map((o) => (
@@ -871,7 +906,7 @@ function CalendarPage() {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            Mes
+            {tr("Mes", "Month")}
           </button>
           <button
             type="button"
@@ -882,7 +917,7 @@ function CalendarPage() {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            Día
+            {tr("Día", "Day")}
           </button>
         </div>
       </div>
@@ -933,8 +968,8 @@ function CalendarPage() {
       {view === "month" && (
         <div className="saito-card p-3">
           <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
-              <div key={d} className="px-2 py-1">
+            {(lang === "es" ? ["L", "M", "X", "J", "V", "S", "D"] : ["M", "T", "W", "T", "F", "S", "S"]).map((d, i) => (
+              <div key={i} className="px-2 py-1">
                 {d}
               </div>
             ))}
@@ -1005,7 +1040,7 @@ function CalendarPage() {
             <div className="saito-card p-4">
               {dayOcc.length === 0 ? (
                 <div className="py-12 text-center text-sm text-muted-foreground">
-                  No hay eventos programados.
+                  {tr("No hay eventos programados.", "No scheduled events.")}
                 </div>
               ) : (
                 <ul className="divide-y divide-border">
@@ -1062,11 +1097,11 @@ function CalendarPage() {
                 ev.type === "medical" ? canManageMedicalAppointments : canManageCalendarEvents;
               const canEditEvent = canEditThis && isFuture && !a.cancelled;
               const blockers = [
-                a.hasAttn && "asistencia registrada",
-                a.hasNotes && "notas",
-                a.hasPayment && "pagos asociados",
-                a.hasComm && "comunicación enviada",
-                a.hasParticipants && a.isPast && "participantes históricos",
+                a.hasAttn && tr("asistencia registrada", "attendance recorded"),
+                a.hasNotes && tr("notas", "notes"),
+                a.hasPayment && tr("pagos asociados", "associated payments"),
+                a.hasComm && tr("comunicación enviada", "communication sent"),
+                a.hasParticipants && a.isPast && tr("participantes históricos", "historical participants"),
               ].filter(Boolean) as string[];
               const canDelete = canEditThis && !a.cancelled && blockers.length === 0;
               const shouldCancel = canEditThis && !a.cancelled && !canDelete && isFuture;
@@ -1085,30 +1120,30 @@ function CalendarPage() {
 
                   <div className="mt-5 space-y-4 text-sm">
                     <div className="grid grid-cols-1 gap-2">
-                      <Row icon={<CalendarDays className="h-4 w-4" />} label="Fecha">
+                      <Row icon={<CalendarDays className="h-4 w-4" />} label={tr("Fecha", "Date")}>
                         {detail.date}
                       </Row>
-                      <Row icon={<Clock className="h-4 w-4" />} label="Hora">
+                      <Row icon={<Clock className="h-4 w-4" />} label={tr("Hora", "Time")}>
                         {fmtTime(ev.start_time) || "—"}
                       </Row>
-                      <Row icon={<MapPin className="h-4 w-4" />} label="Ubicación">
+                      <Row icon={<MapPin className="h-4 w-4" />} label={tr("Ubicación", "Location")}>
                         {facility ?? "—"}
                       </Row>
-                      <Row icon={<Users className="h-4 w-4" />} label="Grupo">
+                      <Row icon={<Users className="h-4 w-4" />} label={tr("Grupo", "Group")}>
                         {group?.name ?? "—"}
                       </Row>
-                      <Row icon={<UserCog className="h-4 w-4" />} label="Staff responsable">
+                      <Row icon={<UserCog className="h-4 w-4" />} label={tr("Staff responsable", "Responsible staff")}>
                         {staff?.name ?? "—"}
                       </Row>
                     </div>
 
                     <div>
                       <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Participantes ({a.participants.length})
+                        {tr("Participantes", "Participants")} ({a.participants.length})
                       </div>
                       {a.participants.length === 0 ? (
                         <div className="text-xs text-muted-foreground">
-                          Sin participantes asignados.
+                          {tr("Sin participantes asignados.", "No participants assigned.")}
                         </div>
                       ) : (
                         <div className="max-h-32 overflow-y-auto rounded-lg border border-border p-2">
@@ -1120,7 +1155,7 @@ function CalendarPage() {
                             ))}
                             {a.participants.length > 10 && (
                               <li className="text-muted-foreground">
-                                + {a.participants.length - 10} más
+                                + {a.participants.length - 10} {tr("más", "more")}
                               </li>
                             )}
                           </ul>
@@ -1130,25 +1165,25 @@ function CalendarPage() {
 
                     {ev.recurrence && (
                       <div>
-                        <Pill tone="info">↻ Semanal hasta {ev.recurrence.until}</Pill>
+                        <Pill tone="info">↻ {tr("Semanal hasta", "Weekly until")} {ev.recurrence.until}</Pill>
                       </div>
                     )}
 
                     {cancelInfo && (
                       <div className="rounded-lg border border-rose-200 bg-rose-50/60 px-3 py-2 text-xs text-rose-700">
-                        <div className="font-semibold">Motivo de cancelación</div>
+                        <div className="font-semibold">{tr("Motivo de cancelación", "Cancellation reason")}</div>
                         <div className="mt-0.5">{cancelInfo.reason}</div>
                         <div className="mt-1 text-[11px] opacity-80">
-                          Cancelado el {new Date(cancelInfo.cancelledAt).toLocaleString()}
-                          {cancelInfo.notified ? " · participantes notificados" : ""}
+                          {tr("Cancelado el", "Cancelled on")} {new Date(cancelInfo.cancelledAt).toLocaleString()}
+                          {cancelInfo.notified ? tr(" · participantes notificados", " · participants notified") : ""}
                         </div>
                       </div>
                     )}
 
                     {!a.cancelled && blockers.length > 0 && (
                       <div className="rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-xs text-amber-800">
-                        No se puede eliminar: el evento tiene {blockers.join(", ")}.
-                        {isFuture ? " Usa Cancelar para mantener el historial." : ""}
+                        {tr("No se puede eliminar: el evento tiene", "Cannot delete: event has")} {blockers.join(", ")}.
+                        {isFuture ? tr(" Usa Cancelar para mantener el historial.", " Use Cancel to keep the history.") : ""}
                       </div>
                     )}
 
@@ -1156,30 +1191,30 @@ function CalendarPage() {
                     {ev.type === "training" && !a.cancelled && (
                       <div>
                         <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                          Acciones de sesión
+                          {tr("Acciones de sesión", "Session actions")}
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              toast.info("Detalle de la sesión");
+                              toast.info(tr("Detalle de la sesión", "Session detail"));
                             }}
                           >
                             <Eye className="mr-1 h-4 w-4" />
-                            Ver detalle
+                            {tr("Ver detalle", "View detail")}
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
                               markCommunication(ev.id, true);
-                              toast.success("Convocatoria generada");
+                              toast.success(tr("Convocatoria generada", "Call-up generated"));
                               navigate({ to: "/communication" });
                             }}
                           >
                             <Send className="mr-1 h-4 w-4" />
-                            Convocatoria
+                            {tr("Convocatoria", "Call-up")}
                           </Button>
                           <Button
                             variant="outline"
@@ -1190,7 +1225,7 @@ function CalendarPage() {
                             }}
                           >
                             <ClipboardCheck className="mr-1 h-4 w-4" />
-                            Asistencia
+                            {tr("Asistencia", "Attendance")}
                           </Button>
                           <Button
                             variant="outline"
@@ -1201,12 +1236,12 @@ function CalendarPage() {
                             }}
                           >
                             <StickyNote className="mr-1 h-4 w-4" />
-                            Notas
+                            {tr("Notas", "Notes")}
                           </Button>
                         </div>
                         {notes[ev.id] && (
                           <div className="mt-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-                            <span className="font-semibold text-foreground">Nota: </span>
+                            <span className="font-semibold text-foreground">{tr("Nota: ", "Note: ")}</span>
                             {notes[ev.id]}
                           </div>
                         )}
@@ -1238,7 +1273,7 @@ function CalendarPage() {
                             }}
                           >
                             <Pencil className="mr-1 h-4 w-4" />
-                            Editar evento
+                            {tr("Editar evento", "Edit event")}
                           </Button>
                         )}
 
@@ -1252,7 +1287,7 @@ function CalendarPage() {
                             }}
                           >
                             <CircleSlash className="mr-1 h-4 w-4" />
-                            Omitir solo esta ocurrencia
+                            {tr("Omitir solo esta ocurrencia", "Skip only this occurrence")}
                           </Button>
                         )}
 
@@ -1268,7 +1303,7 @@ function CalendarPage() {
                             }}
                           >
                             <Ban className="mr-1 h-4 w-4" />
-                            Cancelar evento
+                            {tr("Cancelar evento", "Cancel event")}
                           </Button>
                         )}
 
@@ -1277,13 +1312,13 @@ function CalendarPage() {
                             variant="destructive"
                             size="sm"
                             onClick={async () => {
-                              if (!confirm("¿Eliminar este evento?")) return;
+                              if (!confirm(tr("¿Eliminar este evento?", "Delete this event?"))) return;
                               await delEvent.mutateAsync(ev.id);
                               setDetail(null);
                             }}
                           >
                             <Trash2 className="mr-1 h-4 w-4" />
-                            Eliminar evento
+                            {tr("Eliminar evento", "Delete event")}
                           </Button>
                         )}
 
@@ -1293,10 +1328,10 @@ function CalendarPage() {
                             size="sm"
                             onClick={() => {
                               uncancelEvent(ev.id);
-                              toast.success("Cancelación revertida");
+                              toast.success(tr("Cancelación revertida", "Cancellation reverted"));
                             }}
                           >
-                            Revertir cancelación
+                            {tr("Revertir cancelación", "Revert cancellation")}
                           </Button>
                         )}
                       </div>
@@ -1312,30 +1347,32 @@ function CalendarPage() {
       <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Cancelar evento</DialogTitle>
+            <DialogTitle>{tr("Cancelar evento", "Cancel event")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 text-sm">
             <p className="text-muted-foreground">
-              El evento se mantendrá en el calendario marcado como cancelado, conservando
-              asistencia, notas y comunicaciones existentes.
+              {tr(
+                "El evento se mantendrá en el calendario marcado como cancelado, conservando asistencia, notas y comunicaciones existentes.",
+                "The event will remain in the calendar marked as cancelled, keeping existing attendance, notes and communications.",
+              )}
             </p>
             <div>
-              <Label>Motivo de cancelación</Label>
+              <Label>{tr("Motivo de cancelación", "Cancellation reason")}</Label>
               <Textarea
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
                 rows={3}
-                placeholder="Ej: lluvia, instalación cerrada, lesión múltiple…"
+                placeholder={tr("Ej: lluvia, instalación cerrada, lesión múltiple…", "E.g.: rain, facility closed, multiple injuries…")}
               />
             </div>
             <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
               <Checkbox checked={cancelNotify} onCheckedChange={(v) => setCancelNotify(!!v)} />
-              <span>Notificar a participantes</span>
+              <span>{tr("Notificar a participantes", "Notify participants")}</span>
             </label>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancelOpen(false)}>
-              Cerrar
+              {tr("Cerrar", "Close")}
             </Button>
             <Button
               variant="destructive"
@@ -1345,8 +1382,8 @@ function CalendarPage() {
                 cancelEvent(detail.event.id, cancelReason.trim(), cancelNotify);
                 toast.success(
                   cancelNotify
-                    ? "Evento cancelado y participantes notificados"
-                    : "Evento cancelado",
+                    ? tr("Evento cancelado y participantes notificados", "Event cancelled and participants notified")
+                    : tr("Evento cancelado", "Event cancelled"),
                 );
                 setCancelOpen(false);
                 setDetail(null);

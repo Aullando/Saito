@@ -34,6 +34,8 @@ import { useData } from "@/lib/store";
 import { useCommLocal, type CircularStatus, type LocalCircular } from "@/lib/commLocal";
 import { formatDateTime } from "@/lib/format";
 import { toast } from "sonner";
+import { useTr, useLang } from "@/lib/i18n";
+import type { Lang } from "@/lib/types";
 import {
   Archive,
   ArchiveRestore,
@@ -77,12 +79,22 @@ interface CircularItem {
   source: "seed" | "local";
 }
 
-const STATUS_LABELS: Record<CircularStatus, string> = {
-  draft: "Borrador",
-  scheduled: "Programada",
-  published: "Publicada",
-  archived: "Archivada",
-  withdrawn: "Retirada",
+const statusLabel = (s: CircularStatus, lang: Lang): string => {
+  const es: Record<CircularStatus, string> = {
+    draft: "Borrador",
+    scheduled: "Programada",
+    published: "Publicada",
+    archived: "Archivada",
+    withdrawn: "Retirada",
+  };
+  const en: Record<CircularStatus, string> = {
+    draft: "Draft",
+    scheduled: "Scheduled",
+    published: "Published",
+    archived: "Archived",
+    withdrawn: "Withdrawn",
+  };
+  return (lang === "es" ? es : en)[s];
 };
 
 const STATUS_STYLES: Record<CircularStatus, string> = {
@@ -96,12 +108,13 @@ const STATUS_STYLES: Record<CircularStatus, string> = {
 const NON_MVP_STATUSES: CircularStatus[] = ["draft", "scheduled", "archived", "withdrawn"];
 
 function StatusBadge({ status }: { status: CircularStatus }) {
+  const lang = useLang();
   return (
     <span className="inline-flex items-center gap-1">
       <span
         className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLES[status]}`}
       >
-        {STATUS_LABELS[status]}
+        {statusLabel(status, lang)}
       </span>
       {NON_MVP_STATUSES.includes(status) && <ProposalBadge />}
     </span>
@@ -109,12 +122,13 @@ function StatusBadge({ status }: { status: CircularStatus }) {
 }
 
 function ProposalBadge({ className = "" }: { className?: string }) {
+  const lang = useLang();
   return (
     <span
-      title="Mejora propuesta (no incluida en el MVP)"
+      title={lang === "es" ? "Mejora propuesta (no incluida en el MVP)" : "Proposed enhancement (not included in MVP)"}
       className={`inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-wide text-violet-700 ${className}`}
     >
-      Mejora propuesta
+      {lang === "es" ? "Mejora propuesta" : "Proposed"}
     </span>
   );
 }
@@ -124,6 +138,7 @@ function isMedicalRequest(c: Conversation): boolean {
 }
 
 function CommunicationPage() {
+  const tr = useTr();
   const { conversations, users, athletes, sendMessage, addAppointment } = useData();
   const {
     archivedConvs,
@@ -208,13 +223,13 @@ function CommunicationPage() {
   return (
     <>
       <PageHeader
-        title="Comunicación"
+        title={tr("Comunicación", "Communication")}
         actions={
           <Dialog open={openNew} onOpenChange={setOpenNew}>
             <DialogTrigger asChild>
               <Button className="rounded-full">
                 <Plus className="mr-1 h-4 w-4" />
-                Nueva circular
+                {tr("Nueva circular", "New circular")}
               </Button>
             </DialogTrigger>
             <NewCircularDialog
@@ -222,7 +237,7 @@ function CommunicationPage() {
               onSave={(payload, publish) => {
                 const id = addLocalCircular(payload);
                 if (publish) publishCircular(id);
-                toast.success(publish ? "Circular publicada" : "Borrador guardado");
+                toast.success(publish ? tr("Circular publicada", "Circular published") : tr("Borrador guardado", "Draft saved"));
                 setOpenNew(false);
                 setTab("circulars");
               }}
@@ -234,31 +249,31 @@ function CommunicationPage() {
       <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="space-y-4">
         <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-muted/40 p-1">
           <TabsTrigger value="circulars" className="gap-1.5">
-            <Megaphone className="h-4 w-4" /> Circulares
+            <Megaphone className="h-4 w-4" /> {tr("Circulares", "Circulars")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {allCirculars.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="direct" className="gap-1.5">
-            <Inbox className="h-4 w-4" /> Chats directos
+            <Inbox className="h-4 w-4" /> {tr("Chats directos", "Direct chats")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {directChats.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="groups" className="gap-1.5">
-            <Users className="h-4 w-4" /> Grupos
+            <Users className="h-4 w-4" /> {tr("Grupos", "Groups")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {groupChats.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="medical" className="gap-1.5">
-            <Stethoscope className="h-4 w-4" /> Solicitudes médicas
+            <Stethoscope className="h-4 w-4" /> {tr("Solicitudes médicas", "Medical requests")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {medicalRequests.filter((r) => !handledRequests.includes(r.id)).length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="archived" className="gap-1.5">
-            <Archive className="h-4 w-4" /> Archivados
+            <Archive className="h-4 w-4" /> {tr("Archivados", "Archived")}
             <ProposalBadge className="ml-1" />
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {archivedList.length}
@@ -306,21 +321,21 @@ function CommunicationPage() {
             users={users}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success("Conversación archivada");
+              toast.success(tr("Conversación archivada", "Conversation archived"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success("Eliminada de tu bandeja");
+              toast.success(tr("Eliminada de tu bandeja", "Removed from your inbox"));
             }}
             onSend={(id, content) =>
               sendMessage(id, {
                 authorId: users[0]?.id ?? "u-adm",
                 authorRole: "admin",
-                targetLabel: "Conversación directa",
+                targetLabel: tr("Conversación directa", "Direct conversation"),
                 content,
               })
             }
-            emptyLabel="No hay chats directos."
+            emptyLabel={tr("No hay chats directos.", "No direct chats.")}
           />
         </TabsContent>
 
@@ -330,21 +345,21 @@ function CommunicationPage() {
             users={users}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success("Grupo archivado");
+              toast.success(tr("Grupo archivado", "Group archived"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success("Eliminado de tu bandeja");
+              toast.success(tr("Eliminado de tu bandeja", "Removed from your inbox"));
             }}
             onSend={(id, content) =>
               sendMessage(id, {
                 authorId: users[0]?.id ?? "u-adm",
                 authorRole: "admin",
-                targetLabel: "Conversación de grupo",
+                targetLabel: tr("Conversación de grupo", "Group conversation"),
                 content,
               })
             }
-            emptyLabel="No hay conversaciones de grupo."
+            emptyLabel={tr("No hay conversaciones de grupo.", "No group conversations.")}
           />
         </TabsContent>
 
@@ -357,11 +372,11 @@ function CommunicationPage() {
             onCreateAppointment={(req, payload) => {
               addAppointment(payload);
               markRequestHandled(req.id);
-              toast.success("Cita médica creada");
+              toast.success(tr("Cita médica creada", "Medical appointment created"));
             }}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success("Solicitud archivada");
+              toast.success(tr("Solicitud archivada", "Request archived"));
             }}
           />
         </TabsContent>
@@ -371,11 +386,11 @@ function CommunicationPage() {
             conversations={archivedList}
             onUnarchive={(id) => {
               unarchiveConv(id);
-              toast.success("Restaurada en tu bandeja");
+              toast.success(tr("Restaurada en tu bandeja", "Restored to your inbox"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success("Eliminada de tu bandeja");
+              toast.success(tr("Eliminada de tu bandeja", "Removed from your inbox"));
             }}
           />
         </TabsContent>
@@ -413,6 +428,8 @@ function CircularsTab({
   onArchive: (id: string) => void;
   onWithdraw: (id: string, reason: string) => void;
 }) {
+  const lang = useLang();
+  const tr = useTr();
   const [filter, setFilter] = useState<CircularStatus | "all">("all");
   const filtered = items.filter((c) => (filter === "all" ? true : c.status === filter));
   const counts: Record<CircularStatus | "all", number> = {
@@ -443,14 +460,14 @@ function CircularsTab({
                 : "border-border bg-background text-muted-foreground hover:bg-muted/40"
             }`}
           >
-            {s === "all" ? "Todas" : STATUS_LABELS[s]}
+            {s === "all" ? tr("Todas", "All") : statusLabel(s, lang)}
             <span className="ml-1.5 tabular-nums opacity-70">{counts[s]}</span>
           </button>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState>No hay circulares en este estado.</EmptyState>
+        <EmptyState>{tr("No hay circulares en este estado.", "No circulars in this state.")}</EmptyState>
       ) : (
         <ul className="divide-y divide-border">
           {filtered.map((c) => {
@@ -473,22 +490,22 @@ function CircularsTab({
                       <span className="inline-flex items-center gap-1">
                         <Users className="h-3 w-3" /> {c.recipientsLabel}
                       </span>
-                      <span className="tabular-nums">{c.recipientsCount} destinatarios</span>
+                      <span className="tabular-nums">{c.recipientsCount} {tr("destinatarios", "recipients")}</span>
                       {c.status !== "draft" && c.status !== "scheduled" && (
                         <span className="tabular-nums">
-                          {c.reads} lecturas ({pct}%)
+                          {c.reads} {tr("lecturas", "reads")} ({pct}%)
                         </span>
                       )}
                       {c.status === "scheduled" && c.scheduledAt && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 font-medium text-sky-700">
                           <CalendarPlus className="h-3 w-3" />
-                          Envío: {formatDateTime(c.scheduledAt)}
+                          {tr("Envío:", "Send:")} {formatDateTime(c.scheduledAt)}
                         </span>
                       )}
                     </div>
                     {c.status === "withdrawn" && c.withdrawReason && (
                       <div className="mt-2 rounded-md border border-rose-200 bg-rose-50/60 px-2 py-1 text-[11px] text-rose-700">
-                        <strong>Motivo retirada:</strong> {c.withdrawReason}
+                        <strong>{tr("Motivo retirada:", "Withdrawal reason:")}</strong> {c.withdrawReason}
                       </div>
                     )}
                   </div>
@@ -505,12 +522,12 @@ function CircularsTab({
                           {c.source === "local" && (
                             <DropdownMenuItem onClick={() => setEditTarget(c)}>
                               <MoreVertical className="mr-2 h-4 w-4" />
-                              Editar
+                              {tr("Editar", "Edit")}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem onClick={() => onPublish(c.id)}>
                             <Send className="mr-2 h-4 w-4" />
-                            Publicar ahora
+                            {tr("Publicar ahora", "Publish now")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
@@ -519,18 +536,18 @@ function CircularsTab({
                             }}
                           >
                             <CalendarPlus className="mr-2 h-4 w-4" />
-                            Programar… <ProposalBadge className="ml-auto" />
+                            {tr("Programar…", "Schedule…")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onClick={() => {
-                              if (!confirm("¿Eliminar este borrador?")) return;
+                              if (!confirm(tr("¿Eliminar este borrador?", "Delete this draft?"))) return;
                               onDeleteDraft(c.id);
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
+                            {tr("Eliminar", "Delete")}
                           </DropdownMenuItem>
                         </>
                       )}
@@ -539,23 +556,23 @@ function CircularsTab({
                           {c.source === "local" && (
                             <DropdownMenuItem onClick={() => setEditTarget(c)}>
                               <MoreVertical className="mr-2 h-4 w-4" />
-                              Editar
+                              {tr("Editar", "Edit")}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem onClick={() => onCancelSchedule(c.id)}>
                             <Undo2 className="mr-2 h-4 w-4" />
-                            Cancelar programación <ProposalBadge className="ml-auto" />
+                            {tr("Cancelar programación", "Cancel schedule")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onClick={() => {
-                              if (!confirm("¿Eliminar esta circular programada?")) return;
+                              if (!confirm(tr("¿Eliminar esta circular programada?", "Delete this scheduled circular?"))) return;
                               onDeleteDraft(c.id);
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
+                            {tr("Eliminar", "Delete")}
                           </DropdownMenuItem>
                         </>
                       )}
@@ -563,7 +580,7 @@ function CircularsTab({
                         <>
                           <DropdownMenuItem onClick={() => onArchive(c.id)}>
                             <Archive className="mr-2 h-4 w-4" />
-                            Archivar <ProposalBadge className="ml-auto" />
+                            {tr("Archivar", "Archive")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-rose-600 focus:text-rose-600"
@@ -573,20 +590,20 @@ function CircularsTab({
                             }}
                           >
                             <Undo2 className="mr-2 h-4 w-4" />
-                            Retirar circular… <ProposalBadge className="ml-auto" />
+                            {tr("Retirar circular…", "Withdraw circular…")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                         </>
                       )}
                       {c.status === "archived" && (
                         <DropdownMenuItem disabled>
                           <Archive className="mr-2 h-4 w-4" />
-                          Sólo consulta
+                          {tr("Sólo consulta", "Read only")}
                         </DropdownMenuItem>
                       )}
                       {c.status === "withdrawn" && (
                         <DropdownMenuItem disabled>
                           <Undo2 className="mr-2 h-4 w-4" />
-                          Consultar motivo
+                          {tr("Consultar motivo", "View reason")}
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>
