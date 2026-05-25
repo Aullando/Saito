@@ -19,6 +19,7 @@ import { useCurrentUser, useData } from "@/lib/store";
 import { useSessionLocal } from "@/lib/sessionLocal";
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileHome } from "@/clubs/gff/GffMobileWorkspace";
+import { useTr, useLang } from "@/lib/i18n";
 
 const DEMO_SESSION_ID = "session-today";
 
@@ -65,7 +66,8 @@ function TodayCard({
   ctaTo: string;
   accent: string;
 }) {
-  const title = event ? event.title || "Entrenamiento" : "Sin sesión hoy";
+  const tr = useTr();
+  const title = event ? event.title || tr("Entrenamiento", "Training") : tr("Sin sesión hoy", "No session today");
   return (
     <section
       style={{
@@ -75,7 +77,7 @@ function TodayCard({
       }}
     >
       <h2 style={{ color: INK, fontSize: 20, fontWeight: 700 }}>
-        Hoy: <span style={{ fontWeight: 700 }}>{title}</span>
+        {tr("Hoy", "Today")}: <span style={{ fontWeight: 700 }}>{title}</span>
       </h2>
       {event && (
         <div className="mt-1.5 space-y-1" style={{ color: MUTED, fontSize: 13 }}>
@@ -122,6 +124,7 @@ function TodayCard({
 
 /* ─────────────── ATHLETE HOME ─────────────── */
 function AthleteHome({ event }: { event: Ev }) {
+  const tr = useTr();
   const [absenceOpen, setAbsenceOpen] = useState(false);
   const [absenceNotified, setAbsenceNotified] = useState(false);
   const [improveOpen, setImproveOpen] = useState(false);
@@ -130,7 +133,7 @@ function AthleteHome({ event }: { event: Ev }) {
     <div className="space-y-4">
       <TodayCard
         event={event}
-        ctaLabel="Información de la sesión"
+        ctaLabel={tr("Información de la sesión", "Session info")}
         ctaTo="/mobile/session-info"
         accent={ATHL}
       />
@@ -150,13 +153,13 @@ function AthleteHome({ event }: { event: Ev }) {
           }}
         >
           <span className="inline-flex items-center gap-2">
-            <Check className="h-4 w-4" /> Ausencia notificada
+            <Check className="h-4 w-4" /> {tr("Ausencia notificada", "Absence notified")}
           </span>
           <button
             onClick={() => setAbsenceNotified(false)}
             className="text-[12px] font-semibold underline"
           >
-            Deshacer
+            {tr("Deshacer", "Undo")}
           </button>
         </div>
       ) : (
@@ -172,7 +175,7 @@ function AthleteHome({ event }: { event: Ev }) {
             fontWeight: 700,
           }}
         >
-          <TriangleAlert className="h-4 w-4" /> Notificar ausencia
+          <TriangleAlert className="h-4 w-4" /> {tr("Notificar ausencia", "Report absence")}
         </button>
       )}
 
@@ -182,7 +185,7 @@ function AthleteHome({ event }: { event: Ev }) {
           className="flex items-center gap-2"
           style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
         >
-          <Activity className="h-4 w-4" /> Salud
+          <Activity className="h-4 w-4" /> {tr("Salud", "Health")}
         </div>
         <div
           style={{
@@ -205,7 +208,7 @@ function AthleteHome({ event }: { event: Ev }) {
               fontWeight: 600,
             }}
           >
-            Plan de tratamiento
+            {tr("Plan de tratamiento", "Treatment plan")}
             <span
               className="flex items-center justify-center"
               style={{
@@ -231,7 +234,7 @@ function AthleteHome({ event }: { event: Ev }) {
               fontWeight: 600,
             }}
           >
-            <CalendarPlus className="h-4 w-4" /> Solicitar cita médica
+            <CalendarPlus className="h-4 w-4" /> {tr("Solicitar cita médica", "Request medical appointment")}
           </Link>
         </div>
       </section>
@@ -242,7 +245,7 @@ function AthleteHome({ event }: { event: Ev }) {
           className="flex items-center gap-2"
           style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
         >
-          <Trophy className="h-4 w-4" /> Mi rendimiento
+          <Trophy className="h-4 w-4" /> {tr("Mi rendimiento", "My performance")}
         </div>
 
         <div
@@ -260,14 +263,13 @@ function AthleteHome({ event }: { event: Ev }) {
           >
             <Sparkles className="h-4 w-4" style={{ color: ATHL }} />
             <span style={{ color: ATHL, fontSize: 14, fontWeight: 700 }}>
-              Mejora tu rendimiento:
+              {tr("Mejora tu rendimiento:", "Improve your performance:")}
             </span>
           </button>
           <p className="mt-2" style={{ color: INK, fontSize: 13, lineHeight: "20px" }}>
-            Trabaja la transición tras pérdida. Reduces 0,8 s de reacción defensiva si activas
-            presión inmediata los primeros 6 segundos.
+            {tr("Trabaja la transición tras pérdida. Reduces 0,8 s de reacción defensiva si activas presión inmediata los primeros 6 segundos.", "Work on transition after losing the ball. You cut 0.8s off defensive reaction with immediate press in the first 6 seconds.")}
             {improveOpen && (
-              <> Suma 2 sprints cortos al calentamiento y termina con 5 min de respiración 4-7-8.</>
+              <> {tr("Suma 2 sprints cortos al calentamiento y termina con 5 min de respiración 4-7-8.", "Add 2 short sprints to warm-up and finish with 5 min of 4-7-8 breathing.")}</>
             )}
           </p>
           <div
@@ -301,15 +303,14 @@ function AthleteHome({ event }: { event: Ev }) {
           }}
         >
           <div className="flex items-center justify-between">
-            <span style={{ color: MUTED, fontSize: 13 }}>Última valoración</span>
+            <span style={{ color: MUTED, fontSize: 13 }}>{tr("Última valoración", "Last rating")}</span>
             <span style={{ color: MUTED, fontSize: 12 }}>22/10/25</span>
           </div>
           <div className="mt-1.5">
             <Stars value={3} color={ATHL} />
           </div>
           <p className="mt-2" style={{ color: INK, fontSize: 13, lineHeight: "19px" }}>
-            Están funcionando muy bien los pases largos cruzados. Aunque puedes mejorar las
-            combinaciones rápidas con el extremo.
+            {tr("Están funcionando muy bien los pases largos cruzados. Aunque puedes mejorar las combinaciones rápidas con el extremo.", "Your long cross-field passes are working great. You can still improve quick combinations with the winger.")}
           </p>
         </div>
 
@@ -323,8 +324,8 @@ function AthleteHome({ event }: { event: Ev }) {
           }}
         >
           <div className="flex items-center justify-between">
-            <span style={{ color: MUTED, fontSize: 13 }}>Valoración media</span>
-            <span style={{ color: MUTED, fontSize: 12 }}>(últimos 30 días)</span>
+            <span style={{ color: MUTED, fontSize: 13 }}>{tr("Valoración media", "Average rating")}</span>
+            <span style={{ color: MUTED, fontSize: 12 }}>{tr("(últimos 30 días)", "(last 30 days)")}</span>
           </div>
           <div className="mt-2 flex items-center gap-2">
             <Star className="h-5 w-5" style={{ color: ATHL, fill: ATHL }} />
@@ -339,7 +340,7 @@ function AthleteHome({ event }: { event: Ev }) {
           onConfirm={() => {
             setAbsenceOpen(false);
             setAbsenceNotified(true);
-            toast.success("Ausencia notificada al entrenador");
+            toast.success(tr("Ausencia notificada al entrenador", "Absence reported to coach"));
           }}
         />
       )}
@@ -349,14 +350,15 @@ function AthleteHome({ event }: { event: Ev }) {
 
 /* ─────────────── COACH HOME ─────────────── */
 function CoachHome({ event }: { event: Ev }) {
-  const [group, setGroup] = useState("Cadete - Grupo A");
+  const tr = useTr();
+  const [group, setGroup] = useState(tr("Cadete - Grupo A", "U16 - Group A"));
   const [absencesOpen, setAbsencesOpen] = useState(true);
   const storeAbsences = useSessionLocal((s) => s.absences);
   const saveRating = useSessionLocal((s) => s.saveRating);
 
   const seedAbsences = [
-    { id: "ab1", name: "Lucía García", reason: "Enfermedad" },
-    { id: "ab2", name: "Mario Pérez", reason: "Estudios" },
+    { id: "ab1", name: "Lucía García", reason: tr("Enfermedad", "Illness") },
+    { id: "ab2", name: "Mario Pérez", reason: tr("Estudios", "Studies") },
   ];
   const liveAbsences = storeAbsences
     .filter((a) => a.sessionId === DEMO_SESSION_ID)
@@ -381,7 +383,7 @@ function CoachHome({ event }: { event: Ev }) {
 
       <TodayCard
         event={event}
-        ctaLabel="Información de la sesión"
+        ctaLabel={tr("Información de la sesión", "Session info")}
         ctaTo="/mobile/session"
         accent={COACH}
       />
@@ -402,7 +404,7 @@ function CoachHome({ event }: { event: Ev }) {
         >
           <span className="inline-flex items-center gap-2">
             <TriangleAlert className="h-4 w-4" style={{ color: MUTED }} />
-            Ausencias notificadas
+            {tr("Ausencias notificadas", "Reported absences")}
             {absences.length > 0 && (
               <span
                 style={{
@@ -463,7 +465,7 @@ function CoachHome({ event }: { event: Ev }) {
           className="flex items-center gap-2"
           style={{ color: INK, fontSize: 14, fontWeight: 700 }}
         >
-          <X className="h-4 w-4" /> No aptos
+          <X className="h-4 w-4" /> {tr("No aptos", "Not fit")}
         </div>
         <ul className="mt-2 space-y-0.5">
           {notFit.map((a) => (
@@ -480,7 +482,7 @@ function CoachHome({ event }: { event: Ev }) {
           className="flex items-center gap-2"
           style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
         >
-          <Star className="h-4 w-4" /> Valoración de rendimiento
+          <Star className="h-4 w-4" /> {tr("Valoración de rendimiento", "Performance rating")}
         </div>
         <div
           className="flex gap-3 overflow-x-auto pb-2"
@@ -492,7 +494,7 @@ function CoachHome({ event }: { event: Ev }) {
               athleteName={a.name}
               onSubmit={(value, text) => {
                 saveRating(DEMO_SESSION_ID, value * 2, 7, text || undefined);
-                toast.success(`Valoración enviada a ${a.name.split(" ")[0]}`);
+                toast.success(tr(`Valoración enviada a ${a.name.split(" ")[0]}`, `Rating sent to ${a.name.split(" ")[0]}`));
               }}
             />
           ))}
@@ -531,6 +533,7 @@ function RatingCard({
   athleteName: string;
   onSubmit: (value: number, text: string) => void;
 }) {
+  const tr = useTr();
   const [value, setValue] = useState(3);
   const [text, setText] = useState("");
   const [sent, setSent] = useState(false);
@@ -551,7 +554,7 @@ function RatingCard({
         {[1, 2, 3, 4, 5].map((i) => {
           const filled = i <= value;
           return (
-            <button key={i} onClick={() => setValue(i)} aria-label={`${i} estrellas`}>
+            <button key={i} onClick={() => setValue(i)} aria-label={tr(`${i} estrellas`, `${i} stars`)}>
               <Star
                 className="h-6 w-6"
                 style={{
@@ -567,7 +570,7 @@ function RatingCard({
         value={text}
         onChange={(e) => setText(e.target.value.slice(0, 240))}
         rows={2}
-        placeholder={`Escribe feedback sobre el rendimiento de ${athleteName.split(" ")[0]}...`}
+        placeholder={tr(`Escribe feedback sobre el rendimiento de ${athleteName.split(" ")[0]}...`, `Write feedback on ${athleteName.split(" ")[0]}'s performance...`)}
         className="mt-3 w-full resize-none outline-none"
         style={{
           border: `1px solid ${CARD_BORDER}`,
@@ -596,7 +599,7 @@ function RatingCard({
           opacity: sent ? 0.7 : 1,
         }}
       >
-        {sent ? "Enviada ✓" : "Enviar valoración"}
+        {sent ? tr("Enviada ✓", "Sent ✓") : tr("Enviar valoración", "Send rating")}
       </button>
     </div>
   );
@@ -605,6 +608,8 @@ function RatingCard({
 const ABSENCE_REASONS = ["Enfermedad", "Lesión", "Estudios", "Trabajo", "Personal", "Otro"];
 
 function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onConfirm: () => void }) {
+  const tr = useTr();
+  const ABSENCE_REASONS_I = [tr("Enfermedad","Illness"), tr("Lesión","Injury"), tr("Estudios","Studies"), tr("Trabajo","Work"), tr("Personal","Personal"), tr("Otro","Other")];
   const [reason, setReason] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   return (
@@ -617,16 +622,16 @@ function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onConfirm: 
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-sm font-bold">Notificar ausencia</h3>
-          <button onClick={onClose} className="text-muted-foreground" aria-label="Cerrar">
+          <h3 className="text-sm font-bold">{tr("Notificar ausencia", "Report absence")}</h3>
+          <button onClick={onClose} className="text-muted-foreground" aria-label={tr("Cerrar","Close")}>
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Motivo
+          {tr("Motivo","Reason")}
         </div>
         <div className="grid grid-cols-2 gap-1.5">
-          {ABSENCE_REASONS.map((r) => {
+          {ABSENCE_REASONS_I.map((r) => {
             const active = reason === r;
             return (
               <button
@@ -647,7 +652,7 @@ function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onConfirm: 
           value={comment}
           onChange={(e) => setComment(e.target.value.slice(0, 300))}
           rows={3}
-          placeholder="Comentario opcional para el entrenador"
+          placeholder={tr("Comentario opcional para el entrenador","Optional comment for the coach")}
           className="mt-3 w-full resize-none rounded-xl border border-border bg-card p-2.5 text-sm outline-none focus:border-primary"
         />
         <div className="mt-3 grid grid-cols-2 gap-2">
@@ -655,14 +660,14 @@ function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onConfirm: 
             onClick={onClose}
             className="rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-semibold text-foreground"
           >
-            Cancelar
+            {tr("Cancelar","Cancel")}
           </button>
           <button
             disabled={!reason}
             onClick={onConfirm}
             className="flex items-center justify-center gap-1 rounded-xl bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
           >
-            <Check className="h-4 w-4" /> Confirmar
+            <Check className="h-4 w-4" /> {tr("Confirmar","Confirm")}
           </button>
         </div>
       </div>
@@ -671,8 +676,9 @@ function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onConfirm: 
 }
 
 function GroupSelector({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const tr = useTr();
   const [open, setOpen] = useState(false);
-  const options = ["Cadete - Grupo A", "Cadete - Grupo B", "Juvenil A", "Infantil A"];
+  const options = [tr("Cadete - Grupo A","U16 - Group A"), tr("Cadete - Grupo B","U16 - Group B"), tr("Juvenil A","U18 A"), tr("Infantil A","U14 A")];
   return (
     <div className="relative">
       <button
