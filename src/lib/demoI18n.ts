@@ -209,6 +209,39 @@ const MAP: Record<string, string> = {
   Convocado: "Called up",
   Sustitución: "Substitution",
 
+  // ─── Treatment plan titles ────────────────────────────────────────────────────
+  "Protocolo tobillo · 4 semanas": "Ankle protocol · 4 weeks",
+  "Readaptación isquiotibial": "Hamstring rehabilitation",
+  "Recuperación contusión rodilla": "Knee bruise recovery",
+
+  // ─── Appointment request reasons ──────────────────────────────────────────────
+  "Reconocimiento anual": "Annual check-up",
+  "Molestia aductor": "Adductor discomfort",
+  "Revisión post-incidencia": "Post-incident review",
+
+  // ─── Relative time strings ─────────────────────────────────────────────────────
+  "hoy 09:12": "today 09:12",
+  "ayer": "yesterday",
+  "hace 2 días": "2 days ago",
+  "hace 12 min": "12 min ago",
+  "hace 2 h": "2 h ago",
+
+  // ─── AI session block titles ───────────────────────────────────────────────────
+  "Calentamiento": "Warm-up",
+  "Bloque técnico": "Technical block",
+  "Ejercicio principal": "Main exercise",
+  "Variantes": "Variants",
+
+  // ─── Notification messages ─────────────────────────────────────────────────────
+  "Nuevo mensaje del entrenador": "New message from coach",
+  "Nueva valoración disponible": "New rating available",
+  "Notas de la sesión del miércoles": "Wednesday session notes",
+  "Cambio de horario: viernes 18:00 → 17:30": "Schedule change: Friday 18:00 → 17:30",
+
+  // ─── Personal absence reason ───────────────────────────────────────────────────
+  "Personal": "Personal",
+
+
 };
 
 /** Translate a single demo value. Returns the input unchanged when no mapping. */
