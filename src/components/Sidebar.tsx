@@ -27,6 +27,7 @@ import {
 
 import { useCurrentUser, useAuth } from "@/lib/store";
 import { useT } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import type { Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useClub } from "@/clubs/ClubProvider";
