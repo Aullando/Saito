@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/onboarding")({
   head: () => ({ meta: [{ title: "Welcome — SAITO" }] }),
@@ -26,6 +27,27 @@ function slugify(s: string) {
 function OnboardingPage() {
   const { user, refresh } = useAuth();
   const navigate = useNavigate();
+  const lang = useLang();
+  const L =
+    lang === "en"
+      ? {
+          welcome: "Welcome",
+          subtitle: "Create your organization to get started.",
+          orgLabel: "Organization name",
+          placeholder: "My Sports Club",
+          creating: "Creating…",
+          create: "Create organization",
+          successMsg: "Organization created",
+        }
+      : {
+          welcome: "Bienvenido",
+          subtitle: "Crea tu organización para comenzar.",
+          orgLabel: "Nombre de la organización",
+          placeholder: "Mi Club Deportivo",
+          creating: "Creando…",
+          create: "Crear organización",
+          successMsg: "Organización creada",
+        };
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -44,7 +66,7 @@ function OnboardingPage() {
       return;
     }
     await refresh();
-    toast.success("Organization created");
+    toast.success(L.successMsg);
     navigate({ to: "/club" });
   };
 
@@ -56,25 +78,23 @@ function OnboardingPage() {
         </div>
         <div className="saito-card p-8">
           <h1 className="text-center text-2xl font-bold">
-            Welcome{user?.email ? `, ${user.email.split("@")[0]}` : ""}
+            {L.welcome}{user?.email ? `, ${user.email.split("@")[0]}` : ""}
           </h1>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
-            Create your organization to get started.
-          </p>
+          <p className="mt-2 text-center text-sm text-muted-foreground">{L.subtitle}</p>
           <form onSubmit={submit} className="mt-6 space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="org">Organization name</Label>
+              <Label htmlFor="org">{L.orgLabel}</Label>
               <Input
                 id="org"
                 required
                 autoFocus
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="My Sports Club"
+                placeholder={L.placeholder}
               />
             </div>
             <Button type="submit" disabled={busy} className="w-full rounded-full">
-              {busy ? "Creating..." : "Create organization"}
+              {busy ? L.creating : L.create}
             </Button>
           </form>
         </div>
