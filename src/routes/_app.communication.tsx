@@ -34,6 +34,8 @@ import { useData } from "@/lib/store";
 import { useCommLocal, type CircularStatus, type LocalCircular } from "@/lib/commLocal";
 import { formatDateTime } from "@/lib/format";
 import { toast } from "sonner";
+import { useTr, useLang } from "@/lib/i18n";
+import type { Lang } from "@/lib/types";
 import {
   Archive,
   ArchiveRestore,
@@ -77,12 +79,22 @@ interface CircularItem {
   source: "seed" | "local";
 }
 
-const STATUS_LABELS: Record<CircularStatus, string> = {
-  draft: "Borrador",
-  scheduled: "Programada",
-  published: "Publicada",
-  archived: "Archivada",
-  withdrawn: "Retirada",
+const statusLabel = (s: CircularStatus, lang: Lang): string => {
+  const es: Record<CircularStatus, string> = {
+    draft: "Borrador",
+    scheduled: "Programada",
+    published: "Publicada",
+    archived: "Archivada",
+    withdrawn: "Retirada",
+  };
+  const en: Record<CircularStatus, string> = {
+    draft: "Draft",
+    scheduled: "Scheduled",
+    published: "Published",
+    archived: "Archived",
+    withdrawn: "Withdrawn",
+  };
+  return (lang === "es" ? es : en)[s];
 };
 
 const STATUS_STYLES: Record<CircularStatus, string> = {
@@ -96,12 +108,13 @@ const STATUS_STYLES: Record<CircularStatus, string> = {
 const NON_MVP_STATUSES: CircularStatus[] = ["draft", "scheduled", "archived", "withdrawn"];
 
 function StatusBadge({ status }: { status: CircularStatus }) {
+  const lang = useLang();
   return (
     <span className="inline-flex items-center gap-1">
       <span
         className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLES[status]}`}
       >
-        {STATUS_LABELS[status]}
+        {statusLabel(status, lang)}
       </span>
       {NON_MVP_STATUSES.includes(status) && <ProposalBadge />}
     </span>
@@ -109,12 +122,13 @@ function StatusBadge({ status }: { status: CircularStatus }) {
 }
 
 function ProposalBadge({ className = "" }: { className?: string }) {
+  const lang = useLang();
   return (
     <span
-      title="Mejora propuesta (no incluida en el MVP)"
+      title={lang === "es" ? "Mejora propuesta (no incluida en el MVP)" : "Proposed enhancement (not included in MVP)"}
       className={`inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-wide text-violet-700 ${className}`}
     >
-      Mejora propuesta
+      {lang === "es" ? "Mejora propuesta" : "Proposed"}
     </span>
   );
 }
@@ -124,6 +138,7 @@ function isMedicalRequest(c: Conversation): boolean {
 }
 
 function CommunicationPage() {
+  const tr = useTr();
   const { conversations, users, athletes, sendMessage, addAppointment } = useData();
   const {
     archivedConvs,
