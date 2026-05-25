@@ -223,13 +223,13 @@ function CommunicationPage() {
   return (
     <>
       <PageHeader
-        title="Comunicación"
+        title={tr("Comunicación", "Communication")}
         actions={
           <Dialog open={openNew} onOpenChange={setOpenNew}>
             <DialogTrigger asChild>
               <Button className="rounded-full">
                 <Plus className="mr-1 h-4 w-4" />
-                Nueva circular
+                {tr("Nueva circular", "New circular")}
               </Button>
             </DialogTrigger>
             <NewCircularDialog
@@ -237,7 +237,7 @@ function CommunicationPage() {
               onSave={(payload, publish) => {
                 const id = addLocalCircular(payload);
                 if (publish) publishCircular(id);
-                toast.success(publish ? "Circular publicada" : "Borrador guardado");
+                toast.success(publish ? tr("Circular publicada", "Circular published") : tr("Borrador guardado", "Draft saved"));
                 setOpenNew(false);
                 setTab("circulars");
               }}
@@ -249,31 +249,31 @@ function CommunicationPage() {
       <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="space-y-4">
         <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-muted/40 p-1">
           <TabsTrigger value="circulars" className="gap-1.5">
-            <Megaphone className="h-4 w-4" /> Circulares
+            <Megaphone className="h-4 w-4" /> {tr("Circulares", "Circulars")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {allCirculars.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="direct" className="gap-1.5">
-            <Inbox className="h-4 w-4" /> Chats directos
+            <Inbox className="h-4 w-4" /> {tr("Chats directos", "Direct chats")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {directChats.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="groups" className="gap-1.5">
-            <Users className="h-4 w-4" /> Grupos
+            <Users className="h-4 w-4" /> {tr("Grupos", "Groups")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {groupChats.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="medical" className="gap-1.5">
-            <Stethoscope className="h-4 w-4" /> Solicitudes médicas
+            <Stethoscope className="h-4 w-4" /> {tr("Solicitudes médicas", "Medical requests")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {medicalRequests.filter((r) => !handledRequests.includes(r.id)).length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="archived" className="gap-1.5">
-            <Archive className="h-4 w-4" /> Archivados
+            <Archive className="h-4 w-4" /> {tr("Archivados", "Archived")}
             <ProposalBadge className="ml-1" />
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {archivedList.length}
@@ -321,21 +321,21 @@ function CommunicationPage() {
             users={users}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success("Conversación archivada");
+              toast.success(tr("Conversación archivada", "Conversation archived"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success("Eliminada de tu bandeja");
+              toast.success(tr("Eliminada de tu bandeja", "Removed from your inbox"));
             }}
             onSend={(id, content) =>
               sendMessage(id, {
                 authorId: users[0]?.id ?? "u-adm",
                 authorRole: "admin",
-                targetLabel: "Conversación directa",
+                targetLabel: tr("Conversación directa", "Direct conversation"),
                 content,
               })
             }
-            emptyLabel="No hay chats directos."
+            emptyLabel={tr("No hay chats directos.", "No direct chats.")}
           />
         </TabsContent>
 
@@ -345,21 +345,21 @@ function CommunicationPage() {
             users={users}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success("Grupo archivado");
+              toast.success(tr("Grupo archivado", "Group archived"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success("Eliminado de tu bandeja");
+              toast.success(tr("Eliminado de tu bandeja", "Removed from your inbox"));
             }}
             onSend={(id, content) =>
               sendMessage(id, {
                 authorId: users[0]?.id ?? "u-adm",
                 authorRole: "admin",
-                targetLabel: "Conversación de grupo",
+                targetLabel: tr("Conversación de grupo", "Group conversation"),
                 content,
               })
             }
-            emptyLabel="No hay conversaciones de grupo."
+            emptyLabel={tr("No hay conversaciones de grupo.", "No group conversations.")}
           />
         </TabsContent>
 
@@ -372,11 +372,11 @@ function CommunicationPage() {
             onCreateAppointment={(req, payload) => {
               addAppointment(payload);
               markRequestHandled(req.id);
-              toast.success("Cita médica creada");
+              toast.success(tr("Cita médica creada", "Medical appointment created"));
             }}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success("Solicitud archivada");
+              toast.success(tr("Solicitud archivada", "Request archived"));
             }}
           />
         </TabsContent>
@@ -386,11 +386,11 @@ function CommunicationPage() {
             conversations={archivedList}
             onUnarchive={(id) => {
               unarchiveConv(id);
-              toast.success("Restaurada en tu bandeja");
+              toast.success(tr("Restaurada en tu bandeja", "Restored to your inbox"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success("Eliminada de tu bandeja");
+              toast.success(tr("Eliminada de tu bandeja", "Removed from your inbox"));
             }}
           />
         </TabsContent>
