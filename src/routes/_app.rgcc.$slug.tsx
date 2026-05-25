@@ -19,6 +19,9 @@ import {
 } from "@/clubs/rgcc/seed";
 import { RGCC_SECTION_ICONS } from "@/clubs/rgcc/sectionIcons";
 
+import { useTd, tdSchedule } from "@/lib/demoI18n";
+import { useLang, useTr } from "@/lib/i18n";
+
 export const Route = createFileRoute("/_app/rgcc/$slug")({
   component: () => (
     <RgccGuard>
@@ -31,9 +34,8 @@ function RgccModulePage() {
   const { slug } = Route.useParams();
   const { club } = useClub();
   const item = rgccNavItems.find((i) => i.slug === slug);
+  const tr = useTr();
   const label = item?.label ?? slug;
-
-  const preview = previewFor(slug);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
@@ -41,12 +43,12 @@ function RgccModulePage() {
         <p className="text-xs uppercase tracking-wider text-muted-foreground">{club.brand.name}</p>
         <h1 className="text-2xl font-bold">{label}</h1>
       </header>
-      {preview ?? <ComingSoon label={label} clubName={club.brand.name} />}
+      <ModulePreview slug={slug} fallback={<ComingSoon label={label} clubName={club.brand.name} tr={tr} />} />
     </div>
   );
 }
 
-function ComingSoon({ label, clubName }: { label: string; clubName: string }) {
+function ComingSoon({ label, clubName, tr }: { label: string; clubName: string; tr: (es: string, en: string) => string }) {
   return (
     <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-border bg-card/40 p-10 text-center">
       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -54,20 +56,20 @@ function ComingSoon({ label, clubName }: { label: string; clubName: string }) {
       </div>
       <h2 className="text-lg font-semibold">{label}</h2>
       <p className="max-w-md text-sm text-muted-foreground">
-        Este módulo de <span className="font-medium text-foreground">{clubName}</span> está en
-        preparación. Pronto estará disponible aquí dentro de SAITO.
+        {tr(
+          `Este módulo de ${clubName} está en preparación. Pronto estará disponible aquí dentro de SAITO.`,
+          `This ${clubName} module is in preparation. It will be available here inside SAITO soon.`,
+        )}
       </p>
       <Link
         to="/dashboard"
         className="mt-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
       >
-        Volver al Dashboard
+        {tr("Volver al Dashboard", "Back to Dashboard")}
       </Link>
     </div>
   );
 }
-
-// ─── Per-module preview using RGCC seed data ────────────────────────────────
 
 function Card({ children }: { children: React.ReactNode }) {
   return (
@@ -79,7 +81,11 @@ function Grid({ children }: { children: React.ReactNode }) {
   return <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{children}</div>;
 }
 
-function previewFor(slug: string): React.ReactNode | null {
+function ModulePreview({ slug, fallback }: { slug: string; fallback: React.ReactNode }) {
+  const td = useTd();
+  const tr = useTr();
+  const lang = useLang();
+
   switch (slug) {
     case "sedes":
       return (
@@ -87,9 +93,9 @@ function previewFor(slug: string): React.ReactNode | null {
           {RGCC_VENUES.map((v) => (
             <Card key={v.id}>
               <div className="font-semibold">{v.name}</div>
-              <div className="text-xs text-muted-foreground">{v.zone}</div>
-              <p className="mt-2 line-clamp-3 text-xs">{v.description}</p>
-              <div className="mt-2 text-[11px] text-muted-foreground">{v.schedule}</div>
+              <div className="text-xs text-muted-foreground">{td(v.zone)}</div>
+              <p className="mt-2 line-clamp-3 text-xs">{td(v.description)}</p>
+              <div className="mt-2 text-[11px] text-muted-foreground">{tdSchedule(v.schedule, lang)}</div>
             </Card>
           ))}
         </Grid>
@@ -104,11 +110,11 @@ function previewFor(slug: string): React.ReactNode | null {
                 <span
                   className={`rounded-full px-2 py-0.5 text-[10px] ${r.status === "incident" ? "bg-amber-500/15 text-amber-600" : "bg-emerald-500/15 text-emerald-600"}`}
                 >
-                  {r.status}
+                  {td(r.status)}
                 </span>
               </div>
               <div className="text-xs text-muted-foreground">
-                {r.type} · aforo {r.capacity}
+                {td(r.type)} · {tr("aforo", "capacity")} {r.capacity}
               </div>
             </Card>
           ))}
@@ -128,12 +134,12 @@ function previewFor(slug: string): React.ReactNode | null {
                     </div>
                   )}
                   <div className="min-w-0">
-                    <div className="font-semibold truncate">{s.name}</div>
+                    <div className="font-semibold truncate">{td(s.name)}</div>
                     <div className="text-xs text-muted-foreground">
-                      {s.category} · {s.venueLabel}
+                      {td(s.category)} · {s.venueLabel}
                     </div>
-                    <div className="mt-1 text-xs">Resp.: {s.responsible}</div>
-                    <div className="mt-1 text-xs text-primary">{s.membersCount} socios</div>
+                    <div className="mt-1 text-xs">{tr("Resp.", "Lead")}: {s.responsible}</div>
+                    <div className="mt-1 text-xs text-primary">{s.membersCount} {tr("socios", "members")}</div>
                   </div>
                 </div>
               </Card>
@@ -149,10 +155,10 @@ function previewFor(slug: string): React.ReactNode | null {
               <div className="font-semibold">{c.name}</div>
               <div className="text-xs text-muted-foreground">{c.specialty}</div>
               <div className="mt-1 text-xs">
-                Contrato: {c.contractedHours}h · Total: {c.totalHours}h
+                {tr("Contrato", "Contract")}: {c.contractedHours}h · {tr("Total", "Total")}: {c.totalHours}h
               </div>
               <div className="mt-1 text-[11px] uppercase tracking-wide text-primary">
-                {c.status}
+                {td(c.status)}
               </div>
             </Card>
           ))}
@@ -167,10 +173,10 @@ function previewFor(slug: string): React.ReactNode | null {
                 {m.firstName} {m.lastName}
               </div>
               <div className="text-xs text-muted-foreground">
-                {m.memberNumber} · {m.activity}
+                {m.memberNumber} · {td(m.activity)}
               </div>
               <div className="mt-1 text-xs">
-                Monitor: {m.coachName} · Nivel {m.level}
+                {tr("Monitor", "Coach")}: {m.coachName} · {tr("Nivel", "Level")} {m.level}
               </div>
               <div className="mt-1 text-[11px] text-muted-foreground line-clamp-2">{m.goal}</div>
             </Card>
@@ -186,7 +192,7 @@ function previewFor(slug: string): React.ReactNode | null {
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <div className="font-semibold">
-                    {s.time} · {s.activity}
+                    {s.time} · {td(s.activity)}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {s.roomLabel} · {s.primaryCoach}
@@ -196,7 +202,7 @@ function previewFor(slug: string): React.ReactNode | null {
                   <div>
                     {s.bookings.length}/{s.capacity}
                   </div>
-                  <div className="text-[10px] uppercase tracking-wide text-primary">{s.status}</div>
+                  <div className="text-[10px] uppercase tracking-wide text-primary">{td(s.status)}</div>
                 </div>
               </div>
             </Card>
@@ -209,10 +215,10 @@ function previewFor(slug: string): React.ReactNode | null {
           {RGCC_INCIDENTS.map((i) => (
             <Card key={i.id}>
               <div className="font-semibold">
-                {i.type} · {i.severity}
+                {td(i.type)} · {td(i.severity)}
               </div>
-              <div className="text-xs text-muted-foreground">Reportado por {i.reportedBy}</div>
-              <p className="mt-1 text-xs">{i.description}</p>
+              <div className="text-xs text-muted-foreground">{tr("Reportado por", "Reported by")} {i.reportedBy}</div>
+              <p className="mt-1 text-xs">{td(i.description)}</p>
             </Card>
           ))}
         </div>
@@ -224,13 +230,13 @@ function previewFor(slug: string): React.ReactNode | null {
           {RGCC_ABSENCES.map((a) => (
             <Card key={a.id}>
               <div className="font-semibold">
-                {a.coachName} — {a.reason}
+                {a.coachName} — {td(a.reason)}
               </div>
               <div className="text-xs text-muted-foreground">
                 {a.from} → {a.to}
               </div>
-              {a.detail && <p className="mt-1 text-xs">{a.detail}</p>}
-              <div className="mt-1 text-[11px] uppercase text-primary">{a.status}</div>
+              {a.detail && <p className="mt-1 text-xs">{td(a.detail)}</p>}
+              <div className="mt-1 text-[11px] uppercase text-primary">{td(a.status)}</div>
             </Card>
           ))}
         </div>
@@ -238,7 +244,7 @@ function previewFor(slug: string): React.ReactNode | null {
     case "entrenamiento-personal":
       return (
         <>
-          <h3 className="mb-2 text-sm font-semibold">Sesiones de hoy</h3>
+          <h3 className="mb-2 text-sm font-semibold">{tr("Sesiones de hoy", "Today's sessions")}</h3>
           <div className="mb-6 space-y-2">
             {RGCC_PT_SESSIONS.map((s) => (
               <Card key={s.id}>
@@ -246,21 +252,21 @@ function previewFor(slug: string): React.ReactNode | null {
                   {s.time} · {s.memberName}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Coach: {s.coachName} · {s.status}
+                  {tr("Monitor", "Coach")}: {s.coachName} · {td(s.status)}
                 </div>
               </Card>
             ))}
           </div>
-          <h3 className="mb-2 text-sm font-semibold">Asignaciones recientes</h3>
+          <h3 className="mb-2 text-sm font-semibold">{tr("Asignaciones recientes", "Recent assignments")}</h3>
           <div className="space-y-2">
             {RGCC_WORKOUTS.map((w) => (
               <Card key={w.id}>
                 <div className="font-semibold">{w.title}</div>
                 <div className="text-xs text-muted-foreground">
-                  {w.memberNumber} · {w.coachName} · {w.status}
+                  {w.memberNumber} · {w.coachName} · {td(w.status)}
                 </div>
                 <div className="mt-1 text-xs">
-                  {w.blocks.length} bloques · origen {w.source}
+                  {w.blocks.length} {tr("bloques", "blocks")} · {tr("origen", "source")} {w.source}
                 </div>
               </Card>
             ))}
@@ -270,7 +276,7 @@ function previewFor(slug: string): React.ReactNode | null {
     case "biblioteca":
       return (
         <>
-          <h3 className="mb-2 text-sm font-semibold">Rutinas</h3>
+          <h3 className="mb-2 text-sm font-semibold">{tr("Rutinas", "Routines")}</h3>
           <Grid>
             {RGCC_ROUTINES.map((r) => (
               <Card key={r.id}>
@@ -282,13 +288,13 @@ function previewFor(slug: string): React.ReactNode | null {
               </Card>
             ))}
           </Grid>
-          <h3 className="mb-2 mt-6 text-sm font-semibold">Ejercicios ({RGCC_EXERCISES.length})</h3>
+          <h3 className="mb-2 mt-6 text-sm font-semibold">{tr("Ejercicios", "Exercises")} ({RGCC_EXERCISES.length})</h3>
           <Grid>
             {RGCC_EXERCISES.map((e) => (
               <Card key={e.id}>
                 <div className="font-semibold">{e.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  {e.category} · {e.group}
+                  {td(e.category)} · {e.group}
                 </div>
                 <div className="mt-1 text-xs">
                   {e.equipment} · {e.dose}
@@ -303,36 +309,36 @@ function previewFor(slug: string): React.ReactNode | null {
       return (
         <Grid>
           <Card>
-            <div className="text-xs text-muted-foreground">Sedes operativas</div>
+            <div className="text-xs text-muted-foreground">{tr("Sedes operativas", "Active venues")}</div>
             <div className="text-2xl font-bold">
               {RGCC_VENUES.filter((v) => v.status === "active").length}
             </div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">Salas</div>
+            <div className="text-xs text-muted-foreground">{tr("Salas", "Rooms")}</div>
             <div className="text-2xl font-bold">{RGCC_ROOMS.length}</div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">Secciones deportivas</div>
+            <div className="text-xs text-muted-foreground">{tr("Secciones deportivas", "Sport sections")}</div>
             <div className="text-2xl font-bold">{RGCC_SECTIONS.length}</div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">Monitores</div>
+            <div className="text-xs text-muted-foreground">{tr("Monitores", "Coaches")}</div>
             <div className="text-2xl font-bold">{RGCC_COACHES.length}</div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">Clases hoy/mañana</div>
+            <div className="text-xs text-muted-foreground">{tr("Clases hoy/mañana", "Classes today/tomorrow")}</div>
             <div className="text-2xl font-bold">{RGCC_SESSIONS.length}</div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">Socios totales (secciones)</div>
+            <div className="text-xs text-muted-foreground">{tr("Socios totales (secciones)", "Total members (sections)")}</div>
             <div className="text-2xl font-bold">
-              {RGCC_SECTIONS.reduce((a, s) => a + s.membersCount, 0).toLocaleString("es-ES")}
+              {RGCC_SECTIONS.reduce((a, s) => a + s.membersCount, 0).toLocaleString(lang === "es" ? "es-ES" : "en-US")}
             </div>
           </Card>
         </Grid>
       );
     default:
-      return null;
+      return <>{fallback}</>;
   }
 }
