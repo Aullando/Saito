@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useData } from "@/lib/store";
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileTeam } from "@/clubs/gff/GffMobileWorkspace";
+import { useTr } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/mobile/team")({
   component: MobileTeamRoute,
@@ -15,12 +16,15 @@ function MobileTeamRoute() {
 
 function MobileTeam() {
   const athletes = useData((s) => s.athletes).slice(0, 12);
+  const tr = useTr();
 
   return (
     <div className="space-y-3">
       <header>
-        <h1 className="text-xl font-bold tracking-tight">Equipo</h1>
-        <p className="text-sm text-muted-foreground">{athletes.length} deportistas</p>
+        <h1 className="text-xl font-bold tracking-tight">{tr("Equipo", "Team")}</h1>
+        <p className="text-sm text-muted-foreground">
+          {athletes.length} {tr("deportistas", "athletes")}
+        </p>
       </header>
 
       <ul className="space-y-2">

@@ -3,6 +3,7 @@ import { useCurrentUser } from "@/lib/store";
 import { Mail, Globe, Shield } from "lucide-react";
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileProfile } from "@/clubs/gff/GffMobileWorkspace";
+import { useTr } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/mobile/profile")({
   component: MobileProfileRoute,
@@ -16,10 +17,15 @@ function MobileProfileRoute() {
 
 function MobileProfile() {
   const user = useCurrentUser();
+  const tr = useTr();
   if (!user) return null;
 
   const roleLabel =
-    user.role === "technical" ? "Entrenador" : user.role === "athlete" ? "Atleta" : user.role;
+    user.role === "technical"
+      ? tr("Entrenador", "Coach")
+      : user.role === "athlete"
+        ? tr("Atleta", "Athlete")
+        : user.role;
 
   return (
     <div className="space-y-4">
@@ -35,8 +41,12 @@ function MobileProfile() {
 
       <ul className="space-y-2">
         <Row icon={Mail} label="Email" value={user.email} />
-        <Row icon={Globe} label="Idioma" value={user.language.toUpperCase()} />
-        <Row icon={Shield} label="Privacidad" value="Datos cifrados" />
+        <Row icon={Globe} label={tr("Idioma", "Language")} value={user.language.toUpperCase()} />
+        <Row
+          icon={Shield}
+          label={tr("Privacidad", "Privacy")}
+          value={tr("Datos cifrados", "Encrypted data")}
+        />
       </ul>
     </div>
   );
