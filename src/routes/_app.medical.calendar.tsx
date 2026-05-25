@@ -23,7 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useT } from "@/lib/i18n";
+import { useT, useTr, useLang } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import { supabase } from "@/integrations/supabase/client";
@@ -55,6 +55,8 @@ interface DBAppt {
 
 function MedicalCalendarPage() {
   const t = useT();
+  const tr = useTr();
+  const lang = useLang();
   const { user, profile } = useAuth();
   const orgId = profile?.organization_id;
   const qc = useQueryClient();
@@ -136,7 +138,7 @@ function MedicalCalendarPage() {
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
-  const monthLabel = cursor.toLocaleDateString("es", { month: "long", year: "numeric" });
+  const monthLabel = cursor.toLocaleDateString(lang === "es" ? "es" : "en", { month: "long", year: "numeric" });
   const grid = useMemo(() => buildMonthGrid(year, month), [year, month]);
   const filtered = appointments.filter((a) => athF === "all" || a.athlete_id === athF);
   const fmtTime = (t: string | null) => (t ? t.slice(0, 5) : "");
@@ -209,7 +211,7 @@ function MedicalCalendarPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label>Fecha</Label>
+                      <Label>{tr("Fecha","Date")}</Label>
                       <Input
                         type="date"
                         value={form.date}
@@ -217,7 +219,7 @@ function MedicalCalendarPage() {
                       />
                     </div>
                     <div>
-                      <Label>Hora</Label>
+                      <Label>{tr("Hora","Time")}</Label>
                       <Input
                         type="time"
                         value={form.time}
@@ -226,7 +228,7 @@ function MedicalCalendarPage() {
                     </div>
                   </div>
                   <div>
-                    <Label>Motivo</Label>
+                    <Label>{tr("Motivo","Reason")}</Label>
                     <Input
                       value={form.reason}
                       onChange={(e) => setForm({ ...form, reason: e.target.value })}
@@ -244,7 +246,7 @@ function MedicalCalendarPage() {
                         athlete_id: form.athleteId,
                         appointment_date: form.date,
                         appointment_time: form.time,
-                        reason: form.reason || "Cita médica",
+                        reason: form.reason || tr("Cita médica","Medical appointment"),
                       });
                       setOpen(false);
                     }}
@@ -262,8 +264,8 @@ function MedicalCalendarPage() {
 
       <div className="saito-card p-3">
         <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
-            <div key={d} className="px-2 py-1">
+          {(lang === "es" ? ["L", "M", "X", "J", "V", "S", "D"] : ["M", "T", "W", "T", "F", "S", "S"]).map((d, idx) => (
+            <div key={idx} className="px-2 py-1">
               {d}
             </div>
           ))}
@@ -317,30 +319,30 @@ function MedicalCalendarPage() {
           {detail && (
             <>
               <SheetHeader>
-                <SheetTitle>Cita médica</SheetTitle>
+                <SheetTitle>{tr("Cita médica","Medical appointment")}</SheetTitle>
               </SheetHeader>
               <div className="mt-6 space-y-3 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Atleta:</span>{" "}
+                  <span className="text-muted-foreground">{tr("Atleta","Athlete")}:</span>{" "}
                   {(() => {
                     const a = athletes.find((x) => x.id === detail.athlete_id);
                     return a ? `${a.first_name} ${a.last_name}` : "—";
                   })()}
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Fecha:</span> {detail.appointment_date}{" "}
+                  <span className="text-muted-foreground">{tr("Fecha","Date")}:</span> {detail.appointment_date}{" "}
                   {fmtTime(detail.appointment_time)}
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Motivo:</span> {detail.reason}
+                  <span className="text-muted-foreground">{tr("Motivo","Reason")}:</span> {detail.reason}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Estado:</span>{" "}
+                  <span className="text-muted-foreground">{tr("Estado","Status")}:</span>{" "}
                   <Pill tone="info">{detail.status}</Pill>
                 </div>
                 {detail.notes && (
                   <div>
-                    <span className="text-muted-foreground">Notas:</span>
+                    <span className="text-muted-foreground">{tr("Notas","Notes")}:</span>
                     <div className="mt-1 whitespace-pre-wrap rounded-lg bg-muted p-3 text-xs">
                       {detail.notes}
                     </div>
