@@ -108,7 +108,7 @@ function FeesPage() {
 
   const addFee = useMutation({
     mutationFn: async () => {
-      if (!form.name) throw new Error("Nombre requerido");
+      if (!form.name) throw new Error(lang === "es" ? "Nombre requerido" : "Name required");
       const { error } = await supabase.from("fees").insert({
         organization_id: orgId!,
         section_id: activeSec,
@@ -238,7 +238,7 @@ function FeesPage() {
               </Select>
             </div>
             <div>
-              <Label>Tipo</Label>
+              <Label>{t("category")}</Label>
               <Select
                 value={form.kind}
                 onValueChange={(v) => setForm({ ...form, kind: v as "fee" | "rate" })}
@@ -338,7 +338,7 @@ function FeeTable({
               )}
               <td className="px-2 py-2.5 text-muted-foreground">
                 {!f.applies_to_group_ids || f.applies_to_group_ids.length === 0
-                  ? "Todos"
+                  ? t("all_groups" as any)
                   : f.applies_to_group_ids
                       .map((id) => groups.find((g) => g.id === id)?.name)
                       .join(", ")}

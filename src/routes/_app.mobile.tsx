@@ -11,6 +11,7 @@ import {
 import { MobileShell, type MobileTab } from "@/components/MobileShell";
 import { useCurrentUser } from "@/lib/store";
 import { useClub } from "@/clubs/ClubProvider";
+import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/mobile")({
   component: MobileLayout,
@@ -19,12 +20,12 @@ export const Route = createFileRoute("/_app/mobile")({
 function MobileLayout() {
   const user = useCurrentUser();
   const { club } = useClub();
+  const lang = useLang();
   if (!user) return <Navigate to="/login" />;
 
   const isCoach = user.role === "technical";
   const isGff = club.id === "gff-demo";
 
-  // Tab labels — Arabic for GFF, Spanish otherwise. Tab routes stay the same.
   const L = isGff
     ? {
         home: "اليوم",
@@ -35,15 +36,25 @@ function MobileLayout() {
         hea: "الصحة",
         per: "الأداء",
       }
-    : {
-        home: "Hoy",
-        cal: "Calendario",
-        ses: "Sesión",
-        team: "Equipo",
-        msg: "Mensajes",
-        hea: "Salud",
-        per: "Rendimiento",
-      };
+    : lang === "en"
+      ? {
+          home: "Today",
+          cal: "Calendar",
+          ses: "Session",
+          team: "Team",
+          msg: "Messages",
+          hea: "Health",
+          per: "Performance",
+        }
+      : {
+          home: "Hoy",
+          cal: "Calendario",
+          ses: "Sesión",
+          team: "Equipo",
+          msg: "Mensajes",
+          hea: "Salud",
+          per: "Rendimiento",
+        };
 
   const tabs: MobileTab[] = isCoach
     ? [
@@ -65,9 +76,13 @@ function MobileLayout() {
     ? isCoach
       ? "مدرب المنتخب"
       : "لاعب المنتخب"
-    : isCoach
-      ? "Entrenador"
-      : "Atleta";
+    : lang === "en"
+      ? isCoach
+        ? "Coach"
+        : "Athlete"
+      : isCoach
+        ? "Entrenador"
+        : "Atleta";
 
   return (
     <MobileShell tabs={tabs} title={title} role={isCoach ? "coach" : "athlete"}>

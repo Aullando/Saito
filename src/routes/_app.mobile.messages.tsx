@@ -19,6 +19,7 @@ import { toast } from "sonner";
 
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileMessages } from "@/clubs/gff/GffMobileWorkspace";
+import { useLang, useTr } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/mobile/messages")({
   component: MobileMessagesRoute,
@@ -38,6 +39,8 @@ function MobileMessages() {
   const sendMessage = useData((s) => s.sendMessage);
   const markRead = useData((s) => s.markConversationRead);
   const deleteConversation = useData((s) => s.deleteConversation);
+  const tr = useTr();
+  const lang = useLang();
 
   const list = useMemo(() => conversations.slice(0, 8), [conversations]);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -73,7 +76,7 @@ function MobileMessages() {
   const handleDelete = (id: string, title: string) => {
     deleteConversation(id);
     setOpenId(null);
-    toast.success(`Conversación "${title}" eliminada`);
+    toast.success(tr(`Conversación "${title}" eliminada`, `Conversation "${title}" deleted`));
   };
 
   if (active) {
@@ -86,7 +89,7 @@ function MobileMessages() {
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-base font-bold">{active.title}</h1>
             <p className="text-[11px] text-muted-foreground">
-              {active.participants.length} participantes · {active.type}
+              {active.participants.length} {tr("participantes", "participants")} · {active.type}
             </p>
           </div>
           <AlertDialog>
@@ -97,15 +100,18 @@ function MobileMessages() {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Eliminar conversación</AlertDialogTitle>
+                <AlertDialogTitle>{tr("Eliminar conversación", "Delete conversation")}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Se eliminará "{active.title}" de tu bandeja en esta demo.
+                  {tr(
+                    `Se eliminará "${active.title}" de tu bandeja en esta demo.`,
+                    `"${active.title}" will be removed from your inbox in this demo.`,
+                  )}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogCancel>{tr("Cancelar", "Cancel")}</AlertDialogCancel>
                 <AlertDialogAction onClick={() => handleDelete(active.id, active.title)}>
-                  Eliminar
+                  {tr("Eliminar", "Delete")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -125,12 +131,12 @@ function MobileMessages() {
                 >
                   {!mine && (
                     <div className="mb-1 text-[10px] font-semibold opacity-70">
-                      {author?.name ?? "Usuario"}
+                      {author?.name ?? tr("Usuario", "User")}
                     </div>
                   )}
                   <div className="whitespace-pre-wrap break-words">{m.content}</div>
                   <div className="mt-1 text-[10px] opacity-60">
-                    {new Date(m.createdAt).toLocaleString("es-ES", {
+                    {new Date(m.createdAt).toLocaleString(lang === "es" ? "es-ES" : "en-US", {
                       day: "2-digit",
                       month: "short",
                       hour: "2-digit",
@@ -142,7 +148,7 @@ function MobileMessages() {
             );
           })}
           {active.messages.length === 0 && (
-            <p className="py-8 text-center text-xs text-muted-foreground">Sin mensajes todavía</p>
+            <p className="py-8 text-center text-xs text-muted-foreground">{tr("Sin mensajes todavía", "No messages yet")}</p>
           )}
         </div>
 
@@ -150,7 +156,7 @@ function MobileMessages() {
           <Textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Escribe un mensaje…"
+            placeholder={tr("Escribe un mensaje…", "Type a message…")}
             rows={1}
             className="min-h-[40px] resize-none"
             onKeyDown={(e) => {
@@ -171,8 +177,8 @@ function MobileMessages() {
   return (
     <div className="space-y-3">
       <header>
-        <h1 className="text-xl font-bold tracking-tight">Mensajes</h1>
-        <p className="text-xs text-muted-foreground">Toca una conversación para abrirla</p>
+        <h1 className="text-xl font-bold tracking-tight">{tr("Mensajes", "Messages")}</h1>
+        <p className="text-xs text-muted-foreground">{tr("Toca una conversación para abrirla", "Tap a conversation to open it")}</p>
       </header>
 
       <ul className="space-y-2">
@@ -205,7 +211,7 @@ function MobileMessages() {
           );
         })}
         {list.length === 0 && (
-          <p className="py-8 text-center text-xs text-muted-foreground">No hay conversaciones</p>
+          <p className="py-8 text-center text-xs text-muted-foreground">{tr("No hay conversaciones", "No conversations")}</p>
         )}
       </ul>
     </div>

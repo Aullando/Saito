@@ -7,10 +7,11 @@ import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ATHLETES } from "@/lib/seed";
+import { useTr } from "@/lib/i18n";
 import { ShieldAlert, Stethoscope, Lock, Activity, Filter } from "lucide-react";
 
 export const Route = createFileRoute("/_app/medical/restrictions")({
-  head: () => ({ meta: [{ title: "Salud deportiva · Restricciones operativas — SAITO" }] }),
+  head: () => ({ meta: [{ title: "Sports Health · Operational Restrictions — SAITO" }] }),
   component: () => (
     <RoleGate roles={["medical", "admin"]}>
       <AppLayout>
@@ -102,6 +103,7 @@ const RESTRICTIONS: Restriction[] = ATHLETES.slice(0, 7).map((a, i) => ({
 }));
 
 function RestrictionsPage() {
+  const tr = useTr();
   const [q, setQ] = useState("");
   const [statusF, setStatusF] = useState<"all" | Restriction["status"]>("all");
 
@@ -123,8 +125,8 @@ function RestrictionsPage() {
   return (
     <>
       <PageHeader
-        title="Salud deportiva · Restricciones operativas"
-        subtitle="Registro operativo bajo supervisión profesional. Estados apto / no apto introducidos por personal autorizado."
+        title={tr("Salud deportiva · Restricciones operativas","Sports Health · Operational Restrictions")}
+        subtitle={tr("Registro operativo bajo supervisión profesional. Estados apto / no apto introducidos por personal autorizado.","Operational log under professional supervision. Fit / not fit statuses entered by authorised staff.")}
       />
 
       <MedicalDisclaimer className="mb-4" />
@@ -132,10 +134,9 @@ function RestrictionsPage() {
       <div className="mb-4 flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 text-xs">
         <Lock className="h-4 w-4 shrink-0 text-primary" />
         <span>
-          Solo personal médico autorizado y dirección con permiso explícito ven el detalle. Todos
-          los accesos quedan registrados en{" "}
+          {tr("Solo personal médico autorizado y dirección con permiso explícito ven el detalle. Todos los accesos quedan registrados en", "Only authorised medical staff and management with explicit permission see the detail. All accesses are logged in")}{" "}
           <a className="font-semibold text-primary hover:underline" href="/settings/privacy">
-            Privacidad y seguridad
+            {tr("Privacidad y seguridad","Privacy & security")}
           </a>
           .
         </span>
@@ -145,7 +146,7 @@ function RestrictionsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Restricciones activas
+              {tr("Restricciones activas","Active restrictions")}
             </span>
             <ShieldAlert className="h-4 w-4 text-rose-600" />
           </div>
@@ -154,7 +155,7 @@ function RestrictionsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              En recuperación
+              {tr("En recuperación","Recovering")}
             </span>
             <Activity className="h-4 w-4 text-amber-600" />
           </div>
@@ -163,7 +164,7 @@ function RestrictionsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Apto (mes)
+              {tr("Apto (mes)","Fit (month)")}
             </span>
             <Stethoscope className="h-4 w-4 text-emerald-600" />
           </div>
@@ -175,7 +176,7 @@ function RestrictionsPage() {
         <div className="relative flex-1 min-w-[220px]">
           <Filter className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Buscar deportista o zona…"
+            placeholder={tr("Buscar deportista o zona…","Search athlete or area…")}
             className="pl-9"
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -188,7 +189,7 @@ function RestrictionsPage() {
             size="sm"
             onClick={() => setStatusF(s)}
           >
-            {s === "all" ? "Todas" : s}
+            {s === "all" ? tr("Todas","All") : tr(s, s === "Activa" ? "Active" : s === "En recuperación" ? "Recovering" : "Fit")}
           </Button>
         ))}
       </div>
@@ -198,13 +199,13 @@ function RestrictionsPage() {
           <table className="w-full min-w-[760px] text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="px-5 py-2 font-semibold">Deportista</th>
-                <th className="px-3 py-2 font-semibold">Tipo</th>
-                <th className="px-3 py-2 font-semibold">Zona / motivo</th>
-                <th className="px-3 py-2 font-semibold">Estado</th>
-                <th className="px-3 py-2 font-semibold">Inicio</th>
-                <th className="px-3 py-2 font-semibold">Vuelta prevista</th>
-                <th className="px-3 py-2 font-semibold">Visibilidad</th>
+                <th className="px-5 py-2 font-semibold">{tr("Deportista","Athlete")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Tipo","Type")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Zona / motivo","Area / reason")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Estado","Status")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Inicio","Start")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Vuelta prevista","Expected return")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Visibilidad","Visibility")}</th>
               </tr>
             </thead>
             <tbody>
@@ -228,7 +229,7 @@ function RestrictionsPage() {
                               : "info"
                         }
                       >
-                        {r.type}
+                        {tr(r.type, r.type === "Registro de incidencia" ? "Incident record" : r.type === "Restricción operativa" ? "Operational restriction" : "Follow-up")}
                       </Pill>
                     </td>
                     <td className="px-3 py-3">{r.area}</td>
@@ -242,14 +243,14 @@ function RestrictionsPage() {
                               : "success"
                         }
                       >
-                        {r.status}
+                        {tr(r.status, r.status === "Activa" ? "Active" : r.status === "En recuperación" ? "Recovering" : "Fit")}
                       </Pill>
                     </td>
                     <td className="px-3 py-3 text-xs text-muted-foreground">{r.startDate}</td>
                     <td className="px-3 py-3 text-xs text-muted-foreground">
                       {r.expectedReturn ?? "—"}
                     </td>
-                    <td className="px-3 py-3 text-xs text-muted-foreground">{r.visibility}</td>
+                    <td className="px-3 py-3 text-xs text-muted-foreground">{tr(r.visibility, r.visibility === "Solo médico" ? "Medical only" : r.visibility === "Médico + entrenador" ? "Medical + coach" : "Medical + management")}</td>
                   </tr>
                 );
               })}
@@ -259,8 +260,7 @@ function RestrictionsPage() {
       </Card>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        Las restricciones activas se reflejan en asistencia, calendario y comunicación al staff
-        técnico, sin exponer detalle clínico salvo a personal autorizado.
+        {tr("Las restricciones activas se reflejan en asistencia, calendario y comunicación al staff técnico, sin exponer detalle clínico salvo a personal autorizado.","Active restrictions are reflected in attendance, calendar and technical staff communication, without exposing clinical detail except to authorised personnel.")}
       </p>
     </>
   );
