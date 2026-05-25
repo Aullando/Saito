@@ -27,6 +27,7 @@ import {
 
 import { useCurrentUser, useAuth } from "@/lib/store";
 import { useT } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import type { Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useClub } from "@/clubs/ClubProvider";
@@ -113,6 +114,7 @@ function navItemToItem(n: ClubNavItem): Item {
 export function Sidebar() {
   const user = useCurrentUser();
   const t = useT();
+  const td = useTd();
   const setUser = useAuth((s) => s.setUser);
   const mobileOpen = useAuth((s) => s.mobileNavOpen);
   const setMobileOpen = useAuth((s) => s.setMobileNavOpen);
@@ -218,7 +220,7 @@ export function Sidebar() {
                     }}
                   >
                     <Icon className="shrink-0 h-5 w-5" />
-                    {!collapsed && <span className="truncate">{it.label}</span>}
+                    {!collapsed && <span className="truncate">{td(it.label)}</span>}
                   </Link>
                 </li>
               );
