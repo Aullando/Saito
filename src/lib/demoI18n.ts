@@ -176,7 +176,7 @@ const MAP: Record<string, string> = {
   Sedes: "Venues",
   Socio: "Member",
   Sustituciones: "Substitutions",
-  Vacaciones: "Vacations",
+  // Vacaciones already mapped above
 };
 
 /** Translate a single demo value. Returns the input unchanged when no mapping. */
