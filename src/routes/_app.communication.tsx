@@ -428,6 +428,8 @@ function CircularsTab({
   onArchive: (id: string) => void;
   onWithdraw: (id: string, reason: string) => void;
 }) {
+  const lang = useLang();
+  const tr = useTr();
   const [filter, setFilter] = useState<CircularStatus | "all">("all");
   const filtered = items.filter((c) => (filter === "all" ? true : c.status === filter));
   const counts: Record<CircularStatus | "all", number> = {
@@ -458,14 +460,14 @@ function CircularsTab({
                 : "border-border bg-background text-muted-foreground hover:bg-muted/40"
             }`}
           >
-            {s === "all" ? "Todas" : STATUS_LABELS[s]}
+            {s === "all" ? tr("Todas", "All") : statusLabel(s, lang)}
             <span className="ml-1.5 tabular-nums opacity-70">{counts[s]}</span>
           </button>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState>No hay circulares en este estado.</EmptyState>
+        <EmptyState>{tr("No hay circulares en este estado.", "No circulars in this state.")}</EmptyState>
       ) : (
         <ul className="divide-y divide-border">
           {filtered.map((c) => {
