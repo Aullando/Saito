@@ -490,22 +490,22 @@ function CircularsTab({
                       <span className="inline-flex items-center gap-1">
                         <Users className="h-3 w-3" /> {c.recipientsLabel}
                       </span>
-                      <span className="tabular-nums">{c.recipientsCount} destinatarios</span>
+                      <span className="tabular-nums">{c.recipientsCount} {tr("destinatarios", "recipients")}</span>
                       {c.status !== "draft" && c.status !== "scheduled" && (
                         <span className="tabular-nums">
-                          {c.reads} lecturas ({pct}%)
+                          {c.reads} {tr("lecturas", "reads")} ({pct}%)
                         </span>
                       )}
                       {c.status === "scheduled" && c.scheduledAt && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 font-medium text-sky-700">
                           <CalendarPlus className="h-3 w-3" />
-                          Envío: {formatDateTime(c.scheduledAt)}
+                          {tr("Envío:", "Send:")} {formatDateTime(c.scheduledAt)}
                         </span>
                       )}
                     </div>
                     {c.status === "withdrawn" && c.withdrawReason && (
                       <div className="mt-2 rounded-md border border-rose-200 bg-rose-50/60 px-2 py-1 text-[11px] text-rose-700">
-                        <strong>Motivo retirada:</strong> {c.withdrawReason}
+                        <strong>{tr("Motivo retirada:", "Withdrawal reason:")}</strong> {c.withdrawReason}
                       </div>
                     )}
                   </div>
@@ -522,12 +522,12 @@ function CircularsTab({
                           {c.source === "local" && (
                             <DropdownMenuItem onClick={() => setEditTarget(c)}>
                               <MoreVertical className="mr-2 h-4 w-4" />
-                              Editar
+                              {tr("Editar", "Edit")}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem onClick={() => onPublish(c.id)}>
                             <Send className="mr-2 h-4 w-4" />
-                            Publicar ahora
+                            {tr("Publicar ahora", "Publish now")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
@@ -536,18 +536,18 @@ function CircularsTab({
                             }}
                           >
                             <CalendarPlus className="mr-2 h-4 w-4" />
-                            Programar… <ProposalBadge className="ml-auto" />
+                            {tr("Programar…", "Schedule…")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onClick={() => {
-                              if (!confirm("¿Eliminar este borrador?")) return;
+                              if (!confirm(tr("¿Eliminar este borrador?", "Delete this draft?"))) return;
                               onDeleteDraft(c.id);
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
+                            {tr("Eliminar", "Delete")}
                           </DropdownMenuItem>
                         </>
                       )}
@@ -556,23 +556,23 @@ function CircularsTab({
                           {c.source === "local" && (
                             <DropdownMenuItem onClick={() => setEditTarget(c)}>
                               <MoreVertical className="mr-2 h-4 w-4" />
-                              Editar
+                              {tr("Editar", "Edit")}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem onClick={() => onCancelSchedule(c.id)}>
                             <Undo2 className="mr-2 h-4 w-4" />
-                            Cancelar programación <ProposalBadge className="ml-auto" />
+                            {tr("Cancelar programación", "Cancel schedule")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onClick={() => {
-                              if (!confirm("¿Eliminar esta circular programada?")) return;
+                              if (!confirm(tr("¿Eliminar esta circular programada?", "Delete this scheduled circular?"))) return;
                               onDeleteDraft(c.id);
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
+                            {tr("Eliminar", "Delete")}
                           </DropdownMenuItem>
                         </>
                       )}
@@ -580,7 +580,7 @@ function CircularsTab({
                         <>
                           <DropdownMenuItem onClick={() => onArchive(c.id)}>
                             <Archive className="mr-2 h-4 w-4" />
-                            Archivar <ProposalBadge className="ml-auto" />
+                            {tr("Archivar", "Archive")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-rose-600 focus:text-rose-600"
@@ -590,20 +590,20 @@ function CircularsTab({
                             }}
                           >
                             <Undo2 className="mr-2 h-4 w-4" />
-                            Retirar circular… <ProposalBadge className="ml-auto" />
+                            {tr("Retirar circular…", "Withdraw circular…")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                         </>
                       )}
                       {c.status === "archived" && (
                         <DropdownMenuItem disabled>
                           <Archive className="mr-2 h-4 w-4" />
-                          Sólo consulta
+                          {tr("Sólo consulta", "Read only")}
                         </DropdownMenuItem>
                       )}
                       {c.status === "withdrawn" && (
                         <DropdownMenuItem disabled>
                           <Undo2 className="mr-2 h-4 w-4" />
-                          Consultar motivo
+                          {tr("Consultar motivo", "View reason")}
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>
