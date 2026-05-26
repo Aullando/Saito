@@ -167,16 +167,24 @@ function PaymentsPage() {
     const p = payments.find((p) => p.id === id);
     if (!p) return;
     const a = athletes.find((a) => a.id === p.athlete_id);
-    const html = `<!doctype html><html><head><meta charset="utf-8"><title>Invoice ${p.id}</title>
+    const esc = (s: unknown) =>
+      String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>Invoice ${esc(p.id)}</title>
       <style>body{font-family:Inter,sans-serif;padding:48px;color:#1F2A44}.h{display:flex;justify-content:space-between;border-bottom:2px solid #0074D9;padding-bottom:16px}.t{margin-top:32px;width:100%;border-collapse:collapse}.t td,.t th{padding:8px;text-align:left;border-bottom:1px solid #eee}</style>
-      </head><body><div class="h"><h1 style="color:#0074D9;margin:0">SAITO</h1><div>Invoice #${p.id}</div></div>
-      <p>Athlete: <b>${a?.first_name ?? ""} ${a?.last_name ?? ""}</b></p>
+      </head><body><div class="h"><h1 style="color:#0074D9;margin:0">SAITO</h1><div>Invoice #${esc(p.id)}</div></div>
+      <p>Athlete: <b>${esc(a?.first_name)} ${esc(a?.last_name)}</b></p>
       <table class="t"><tr><th>Subscription</th><th>Date</th><th>Status</th><th style="text-align:right">Amount</th></tr>
-      <tr><td>${p.subscription ?? ""}</td><td>${p.payment_date ?? ""}</td><td>${p.status}</td><td style="text-align:right">€${p.amount}</td></tr></table>
+      <tr><td>${esc(p.subscription)}</td><td>${esc(p.payment_date)}</td><td>${esc(p.status)}</td><td style="text-align:right">€${esc(p.amount)}</td></tr></table>
       <p style="margin-top:32px;font-size:12px;color:#6B7894">Demo invoice — not a fiscal document.</p>
       </body></html>`;
     const w = window.open("", "_blank");
     if (w) {
+      w.document.open();
       w.document.write(html);
       w.document.close();
     }
