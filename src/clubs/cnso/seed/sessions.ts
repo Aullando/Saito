@@ -229,11 +229,16 @@ export type CnsoIncident = {
   ts: string;
   sessionId?: string;
   reportedBy: string;
-  type: "Calle" | "Material" | "Clima" | "Vestuarios" | "Otro";
+  type: "Calle" | "Material" | "Clima" | "Vestuarios" | "Salud" | "Otro";
   severity: "low" | "medium" | "high";
   description: string;
   status: "open" | "in_progress" | "resolved";
   resolvedBy?: string;
+  /** Nadador afectado (solo en incidencias tipo "Salud"). */
+  athleteName?: string;
+  athleteNumber?: string;
+  /** Restricción operativa visible para el entrenador. */
+  operationalRestriction?: string;
 };
 
 export const CNSO_INCIDENTS: CnsoIncident[] = [
@@ -257,6 +262,46 @@ export const CNSO_INCIDENTS: CnsoIncident[] = [
     severity: "low",
     description: "Falta una portería de waterpolo, pedida reposición.",
     status: "open",
+  },
+  {
+    clubId: "cnso",
+    id: "inc-3",
+    ts: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+    reportedBy: "Dra. Elena Roces",
+    type: "Salud",
+    severity: "medium",
+    description:
+      "Dolor en hombro derecho tras serie de mariposa. Sospecha de tendinopatía supraespinoso.",
+    status: "in_progress",
+    athleteName: "Lucía Granda",
+    athleteNumber: "CNSO-04221",
+    operationalRestriction: "Sin mariposa ni paletas 7 días. Patada y brazada suave permitida.",
+  },
+  {
+    clubId: "cnso",
+    id: "inc-4",
+    ts: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+    reportedBy: "Dr. Marco Llamedo",
+    type: "Salud",
+    severity: "high",
+    description: "Otitis externa bilateral confirmada. Reposo de agua hasta revisión.",
+    status: "open",
+    athleteName: "Diego Cifuentes",
+    athleteNumber: "CNSO-03877",
+    operationalRestriction: "Baja en piscina 5 días. Sustituir por trabajo en seco.",
+  },
+  {
+    clubId: "cnso",
+    id: "inc-5",
+    ts: new Date(Date.now() - 1000 * 60 * 60 * 90).toISOString(),
+    reportedBy: "Dra. Elena Roces",
+    type: "Salud",
+    severity: "low",
+    description: "Revisión post-competición Trofeo Villa de Gijón. Apto sin restricciones.",
+    status: "resolved",
+    athleteName: "Sara Noval",
+    athleteNumber: "CNSO-05011",
+    resolvedBy: "Dra. Elena Roces",
   },
 ];
 
