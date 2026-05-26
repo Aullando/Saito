@@ -37,40 +37,57 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useSessionLocal } from "@/lib/sessionLocal";
+import { useLang, useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 
 export const Route = createFileRoute("/_app/medical/$tool")({
   component: MedicalToolPage,
 });
 
-const META: Record<string, { title: string; desc: string; icon: LucideIcon }> = {
-  incidents: {
-    title: "Registro de incidencias",
-    desc: "Registro operativo de molestias y partes — bajo supervisión profesional",
-    icon: AlertTriangle,
-  },
-  treatments: {
-    title: "Planes de tratamiento bajo supervisión",
-    desc: "Pautas activas y finalizadas, supervisadas por profesional sanitario",
-    icon: ClipboardList,
-  },
-  requests: {
-    title: "Solicitudes de cita médica",
-    desc: "Peticiones pendientes de validación por staff médico",
-    icon: CalendarPlus,
-  },
-};
+function buildMeta(tr: (es: string, en: string) => string): Record<
+  string,
+  { title: string; desc: string; icon: LucideIcon }
+> {
+  return {
+    incidents: {
+      title: tr("Registro de incidencias", "Incident Registry"),
+      desc: tr(
+        "Registro operativo de molestias y partes — bajo supervisión profesional",
+        "Operational record of complaints and reports — under professional supervision",
+      ),
+      icon: AlertTriangle,
+    },
+    treatments: {
+      title: tr("Planes de tratamiento bajo supervisión", "Supervised Treatment Plans"),
+      desc: tr(
+        "Pautas activas y finalizadas, supervisadas por profesional sanitario",
+        "Active and completed plans, supervised by a healthcare professional",
+      ),
+      icon: ClipboardList,
+    },
+    requests: {
+      title: tr("Solicitudes de cita médica", "Medical Appointment Requests"),
+      desc: tr(
+        "Peticiones pendientes de validación por staff médico",
+        "Requests pending validation by medical staff",
+      ),
+      icon: CalendarPlus,
+    },
+  };
+}
 
 function MedicalToolPage() {
   const { tool } = Route.useParams();
-  const meta = META[tool];
+  const tr = useTr();
+  const meta = buildMeta(tr)[tool];
   if (!meta) {
     return (
       <div className="container mx-auto max-w-3xl p-6">
         <Link to="/medical/calendar" className="text-xs text-muted-foreground">
-          <ArrowLeft className="mr-1 inline h-3 w-3" /> Volver
+          <ArrowLeft className="mr-1 inline h-3 w-3" /> {tr("Volver", "Back")}
         </Link>
         <div className="mt-4 rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-          Sección no encontrada.
+          {tr("Sección no encontrada.", "Section not found.")}
         </div>
       </div>
     );
@@ -164,6 +181,8 @@ function fitnessClass(s: FitStatus) {
 }
 
 function IncidentsView() {
+  const tr = useTr();
+  const td = useTd();
   const [items, setItems] = useState<Incident[]>(SEED_INCIDENTS);
   const [open, setOpen] = useState(false);
 
@@ -171,19 +190,19 @@ function IncidentsView() {
     <section className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="text-xs text-muted-foreground">
-          {items.length} registros · ordenados por fecha
+          {tr(`${items.length} registros · ordenados por fecha`, `${items.length} records · sorted by date`)}
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-1.5">
-              <Plus className="h-4 w-4" /> Registrar incidencia
+              <Plus className="h-4 w-4" /> {tr("Registrar incidencia", "Log incident")}
             </Button>
           </DialogTrigger>
           <IncidentForm
             onSubmit={(inc) => {
               setItems((s) => [inc, ...s]);
               setOpen(false);
-              toast.success("Incidencia registrada");
+              toast.success(tr("Incidencia registrada", "Incident logged"));
             }}
           />
         </Dialog>
@@ -193,11 +212,11 @@ function IncidentsView() {
         <table className="w-full text-sm">
           <thead className="bg-muted/60 text-left text-[11px] uppercase tracking-wider text-muted-foreground">
             <tr>
-              <th className="px-3 py-2 font-semibold">Atleta</th>
-              <th className="px-3 py-2 font-semibold">Fecha</th>
-              <th className="px-3 py-2 font-semibold">Tipo</th>
-              <th className="px-3 py-2 font-semibold">Estado</th>
-              <th className="px-3 py-2 font-semibold">Responsable</th>
+              <th className="px-3 py-2 font-semibold">{tr("Atleta", "Athlete")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Fecha", "Date")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Tipo", "Type")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Estado", "Status")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Responsable", "Responsible")}</th>
             </tr>
           </thead>
           <tbody>
@@ -205,11 +224,10 @@ function IncidentsView() {
               <tr key={r.id} className="border-t border-border">
                 <td className="px-3 py-2.5 font-medium text-foreground">{r.athlete}</td>
                 <td className="px-3 py-2.5 text-muted-foreground">{r.date}</td>
-                <td className="px-3 py-2.5">{r.type}</td>
+                <td className="px-3 py-2.5">{td(r.type)}</td>
                 <td className="px-3 py-2.5">
-                  <StatusChip>{r.fitness}</StatusChip>
+                  <StatusChip>{td(r.fitness)}</StatusChip>
                 </td>
-
                 <td className="px-3 py-2.5 text-muted-foreground">{r.responsible}</td>
               </tr>
             ))}
@@ -224,15 +242,15 @@ function IncidentsView() {
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold">{r.athlete}</div>
                 <div className="text-[11px] text-muted-foreground">
-                  {r.date} · {r.type}
+                  {r.date} · {td(r.type)}
                 </div>
               </div>
               <span className="shrink-0">
-                <StatusChip>{r.fitness}</StatusChip>
+                <StatusChip>{td(r.fitness)}</StatusChip>
               </span>
             </div>
             <div className="mt-1 text-[11px] text-muted-foreground">
-              Responsable: {r.responsible}
+              {tr("Responsable:", "Responsible:")} {r.responsible}
             </div>
           </li>
         ))}
@@ -242,6 +260,8 @@ function IncidentsView() {
 }
 
 function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
+  const tr = useTr();
+  const td = useTd();
   const [athlete, setAthlete] = useState("");
   const [type, setType] = useState(INCIDENT_TYPES[0]);
   const [description, setDescription] = useState("");
@@ -254,23 +274,28 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
   return (
     <DialogContent className="max-w-lg">
       <DialogHeader>
-        <DialogTitle>Registrar incidencia (salud deportiva)</DialogTitle>
+        <DialogTitle>
+          {tr("Registrar incidencia (salud deportiva)", "Log incident (sports health)")}
+        </DialogTitle>
         <DialogDescription>
-          Registro operativo bajo supervisión profesional. No constituye diagnóstico clínico.
+          {tr(
+            "Registro operativo bajo supervisión profesional. No constituye diagnóstico clínico.",
+            "Operational record under professional supervision. Not a clinical diagnosis.",
+          )}
         </DialogDescription>
       </DialogHeader>
       <div className="space-y-3">
         <div className="grid gap-1.5">
-          <Label htmlFor="ath">Atleta</Label>
+          <Label htmlFor="ath">{tr("Atleta", "Athlete")}</Label>
           <Input
             id="ath"
             value={athlete}
             onChange={(e) => setAthlete(e.target.value.slice(0, 80))}
-            placeholder="Nombre y apellidos"
+            placeholder={tr("Nombre y apellidos", "Full name")}
           />
         </div>
         <div className="grid gap-1.5">
-          <Label>Tipo</Label>
+          <Label>{tr("Tipo", "Type")}</Label>
           <Select value={type} onValueChange={setType}>
             <SelectTrigger>
               <SelectValue />
@@ -278,34 +303,40 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
             <SelectContent>
               {INCIDENT_TYPES.map((t) => (
                 <SelectItem key={t} value={t}>
-                  {t}
+                  {td(t)}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="desc">Descripción operativa</Label>
+          <Label htmlFor="desc">{tr("Descripción operativa", "Operational description")}</Label>
           <Textarea
             id="desc"
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value.slice(0, 500))}
-            placeholder="Descripción del incidente y observaciones."
+            placeholder={tr(
+              "Descripción del incidente y observaciones.",
+              "Description of the incident and observations.",
+            )}
           />
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="rest">Restricción operativa</Label>
+          <Label htmlFor="rest">{tr("Restricción operativa", "Operational restriction")}</Label>
           <Textarea
             id="rest"
             rows={2}
             value={restriction}
             onChange={(e) => setRestriction(e.target.value.slice(0, 300))}
-            placeholder="Ej: sin saltos ni cambios de dirección durante 7 días."
+            placeholder={tr(
+              "Ej: sin saltos ni cambios de dirección durante 7 días.",
+              "E.g.: no jumping or direction changes for 7 days.",
+            )}
           />
         </div>
         <div className="grid gap-1.5">
-          <Label>Estado</Label>
+          <Label>{tr("Estado", "Status")}</Label>
           <div className="flex flex-wrap gap-2">
             {(["Apto", "En revisión", "No apto"] as FitStatus[]).map((s) => {
               const active = fitness === s;
@@ -318,14 +349,14 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
                     active ? fitnessClass(s) : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {s}
+                  {td(s)}
                 </button>
               );
             })}
           </div>
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="att">Adjuntos</Label>
+          <Label htmlFor="att">{tr("Adjuntos", "Attachments")}</Label>
           <div className="flex items-center gap-2">
             <Input
               id="att"
@@ -333,12 +364,15 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
               onChange={(e) => setAttach(e.target.value.slice(0, 120))}
               placeholder="parte_inicial.pdf"
             />
-            <Button type="button" variant="outline" size="icon" aria-label="Adjuntar">
+            <Button type="button" variant="outline" size="icon" aria-label={tr("Adjuntar", "Attach")}>
               <Paperclip className="h-4 w-4" />
             </Button>
           </div>
           <p className="text-[10px] text-muted-foreground">
-            Demo · los archivos solo se referencian en este registro.
+            {tr(
+              "Demo · los archivos solo se referencian en este registro.",
+              "Demo · files are only referenced in this record.",
+            )}
           </p>
         </div>
       </div>
@@ -359,7 +393,7 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
             })
           }
         >
-          Guardar incidencia
+          {tr("Guardar incidencia", "Save incident")}
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -413,6 +447,8 @@ const SEED_TREATMENTS: Treatment[] = [
 ];
 
 function TreatmentsView() {
+  const tr = useTr();
+  const td = useTd();
   const [items, setItems] = useState<Treatment[]>(SEED_TREATMENTS);
   const active = useMemo(() => items.filter((t) => t.status === "active"), [items]);
   const finished = useMemo(() => items.filter((t) => t.status === "finished"), [items]);
@@ -431,14 +467,14 @@ function TreatmentsView() {
       <div>
         <div className="mb-2 flex items-center gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            Activos
+            {tr("Activos", "Active")}
           </h2>
           <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
             {active.length}
           </span>
         </div>
         {active.length === 0 ? (
-          <EmptyBlock label="No hay planes activos." />
+          <EmptyBlock label={tr("No hay planes activos.", "No active plans.")} />
         ) : (
           <ul className="grid gap-2">
             {active.map((t) => (
@@ -447,7 +483,7 @@ function TreatmentsView() {
                 t={t}
                 onFinish={() => {
                   finish(t.id);
-                  toast.success("Plan finalizado");
+                  toast.success(tr("Plan finalizado", "Plan finished"));
                 }}
               />
             ))}
@@ -458,14 +494,14 @@ function TreatmentsView() {
       <div>
         <div className="mb-2 flex items-center gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            Finalizados
+            {tr("Finalizados", "Finished")}
           </h2>
           <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
             {finished.length}
           </span>
         </div>
         {finished.length === 0 ? (
-          <EmptyBlock label="Aún no hay planes finalizados." />
+          <EmptyBlock label={tr("Aún no hay planes finalizados.", "No finished plans yet.")} />
         ) : (
           <ul className="grid gap-2">
             {finished.map((t) => (
@@ -479,6 +515,8 @@ function TreatmentsView() {
 }
 
 function TreatmentCard({ t, onFinish }: { t: Treatment; onFinish?: () => void }) {
+  const tr = useTr();
+  const td = useTd();
   const pct = Math.round((t.sessionsDone / t.sessionsTotal) * 100);
   const finished = t.status === "finished";
   return (
@@ -486,17 +524,17 @@ function TreatmentCard({ t, onFinish }: { t: Treatment; onFinish?: () => void })
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-sm font-semibold">{t.athlete}</div>
-          <div className="text-xs text-muted-foreground">{t.title}</div>
+          <div className="text-xs text-muted-foreground">{td(t.title)}</div>
         </div>
         <span className="shrink-0">
-          <StatusChip>{finished ? "Finalizado" : "Activo"}</StatusChip>
+          <StatusChip>{td(finished ? "Finalizado" : "Activo")}</StatusChip>
         </span>
       </div>
 
       <div className="mt-3">
         <div className="flex items-center justify-between text-[11px] text-muted-foreground">
           <span>
-            Sesión {t.sessionsDone} de {t.sessionsTotal}
+            {tr(`Sesión ${t.sessionsDone} de ${t.sessionsTotal}`, `Session ${t.sessionsDone} of ${t.sessionsTotal}`)}
           </span>
           <span>{pct}%</span>
         </div>
@@ -513,14 +551,14 @@ function TreatmentCard({ t, onFinish }: { t: Treatment; onFinish?: () => void })
           <UserIcon className="h-3.5 w-3.5" /> {t.responsible}
         </span>
         <span className="inline-flex items-center gap-1">
-          <Clock className="h-3.5 w-3.5" /> Próx. revisión: {t.nextReview}
+          <Clock className="h-3.5 w-3.5" /> {tr("Próx. revisión:", "Next review:")} {t.nextReview}
         </span>
       </div>
 
       {!finished && onFinish && (
         <div className="mt-3 flex justify-end">
           <Button size="sm" variant="outline" className="gap-1.5" onClick={onFinish}>
-            <CheckCircle2 className="h-4 w-4" /> Finalizar plan
+            <CheckCircle2 className="h-4 w-4" /> {tr("Finalizar plan", "Finish plan")}
           </Button>
         </div>
       )}
@@ -579,6 +617,9 @@ const SEED_REQUESTS: ApptRequest[] = [
 ];
 
 function RequestsView() {
+  const tr = useTr();
+  const td = useTd();
+  const lang = useLang();
   const [items, setItems] = useState<ApptRequest[]>(SEED_REQUESTS);
   const [creating, setCreating] = useState<ApptRequest | null>(null);
   const storeRequests = useSessionLocal((s) => s.appointmentRequests);
@@ -590,7 +631,7 @@ function RequestsView() {
     reason: r.reason,
     specialty: r.specialty,
     preferred: r.preferredDate ?? "—",
-    requestedAt: new Date(r.createdAt).toLocaleString("es", {
+    requestedAt: new Date(r.createdAt).toLocaleString(lang === "es" ? "es" : "en-US", {
       day: "2-digit",
       month: "2-digit",
       hour: "2-digit",
@@ -614,14 +655,14 @@ function RequestsView() {
       <div>
         <div className="mb-2 flex items-center gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            Pendientes
+            {tr("Pendientes", "Pending")}
           </h2>
           <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
             {pending.length}
           </span>
         </div>
         {pending.length === 0 ? (
-          <EmptyBlock label="No hay solicitudes pendientes." />
+          <EmptyBlock label={tr("No hay solicitudes pendientes.", "No pending requests.")} />
         ) : (
           <ul className="grid gap-2">
             {pending.map((r) => (
@@ -630,19 +671,19 @@ function RequestsView() {
                   <div className="min-w-0">
                     <div className="text-sm font-semibold">{r.athlete}</div>
                     <div className="text-xs text-muted-foreground">
-                      {r.reason} · {r.specialty}
+                      {td(r.reason)} · {td(r.specialty)}
                     </div>
                     <div className="mt-1 text-[11px] text-muted-foreground">
-                      Fecha preferida: {r.preferred} · solicitada {r.requestedAt}
+                      {tr("Fecha preferida:", "Preferred date:")} {r.preferred} · {tr("solicitada", "requested")} {td(r.requestedAt)}
                     </div>
                   </div>
                   <span className="shrink-0">
-                    <StatusChip>Pendiente</StatusChip>
+                    <StatusChip>{td("Pendiente")}</StatusChip>
                   </span>
                 </div>
                 <div className="mt-3 flex justify-end">
                   <Button size="sm" className="gap-1.5" onClick={() => setCreating(r)}>
-                    <Stethoscope className="h-4 w-4" /> Crear cita médica
+                    <Stethoscope className="h-4 w-4" /> {tr("Crear cita médica", "Create appointment")}
                   </Button>
                 </div>
               </li>
@@ -654,14 +695,14 @@ function RequestsView() {
       <div>
         <div className="mb-2 flex items-center gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            Gestionadas
+            {tr("Gestionadas", "Managed")}
           </h2>
           <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
             {managed.length}
           </span>
         </div>
         {managed.length === 0 ? (
-          <EmptyBlock label="Aún no hay solicitudes gestionadas." />
+          <EmptyBlock label={tr("Aún no hay solicitudes gestionadas.", "No managed requests yet.")} />
         ) : (
           <ul className="grid gap-2">
             {managed.map((r) => (
@@ -670,11 +711,11 @@ function RequestsView() {
                   <div className="min-w-0">
                     <div className="text-sm font-semibold">{r.athlete}</div>
                     <div className="text-xs text-muted-foreground">
-                      {r.reason} · cita programada
+                      {td(r.reason)} · {tr("cita programada", "appointment scheduled")}
                     </div>
                   </div>
                   <span className="shrink-0">
-                    <StatusChip>Gestionada</StatusChip>
+                    <StatusChip>{td("Gestionada")}</StatusChip>
                   </span>
                 </div>
               </li>
@@ -690,7 +731,12 @@ function RequestsView() {
             onSubmit={() => {
               markManaged(creating.id);
               setCreating(null);
-              toast.success("Cita creada y solicitud marcada como gestionada");
+              toast.success(
+                tr(
+                  "Cita creada y solicitud marcada como gestionada",
+                  "Appointment created and request marked as managed",
+                ),
+              );
             }}
           />
         )}
@@ -700,6 +746,8 @@ function RequestsView() {
 }
 
 function CreateAppointmentForm({ req, onSubmit }: { req: ApptRequest; onSubmit: () => void }) {
+  const tr = useTr();
+  const td = useTd();
   const [date, setDate] = useState(req.preferred);
   const [time, setTime] = useState("12:00");
   const [staff, setStaff] = useState("J. Romero (fisio)");
@@ -707,40 +755,41 @@ function CreateAppointmentForm({ req, onSubmit }: { req: ApptRequest; onSubmit: 
   return (
     <DialogContent className="max-w-md">
       <DialogHeader>
-        <DialogTitle>Crear cita médica</DialogTitle>
+        <DialogTitle>{tr("Crear cita médica", "Create appointment")}</DialogTitle>
         <DialogDescription>
-          Para {req.athlete} · {req.specialty}. Bajo supervisión profesional.
+          {tr("Para", "For")} {req.athlete} · {td(req.specialty)}.{" "}
+          {tr("Bajo supervisión profesional.", "Under professional supervision.")}
         </DialogDescription>
       </DialogHeader>
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-2">
           <div className="grid gap-1.5">
-            <Label htmlFor="d">Fecha</Label>
+            <Label htmlFor="d">{tr("Fecha", "Date")}</Label>
             <Input id="d" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </div>
           <div className="grid gap-1.5">
-            <Label htmlFor="t">Hora</Label>
+            <Label htmlFor="t">{tr("Hora", "Time")}</Label>
             <Input id="t" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
           </div>
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="s">Responsable</Label>
+          <Label htmlFor="s">{tr("Responsable", "Responsible")}</Label>
           <Input id="s" value={staff} onChange={(e) => setStaff(e.target.value.slice(0, 80))} />
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="n">Notas para el atleta</Label>
+          <Label htmlFor="n">{tr("Notas para el atleta", "Notes for the athlete")}</Label>
           <Textarea
             id="n"
             rows={3}
             value={notes}
             onChange={(e) => setNotes(e.target.value.slice(0, 300))}
-            placeholder="Indicaciones previas, sala, material…"
+            placeholder={tr("Indicaciones previas, sala, material…", "Prior instructions, room, equipment…")}
           />
         </div>
       </div>
       <DialogFooter>
         <Button disabled={!date || !time || !staff.trim()} onClick={onSubmit}>
-          Confirmar cita
+          {tr("Confirmar cita", "Confirm appointment")}
         </Button>
       </DialogFooter>
     </DialogContent>
