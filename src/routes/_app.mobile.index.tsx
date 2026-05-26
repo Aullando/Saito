@@ -39,6 +39,7 @@ const SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
 function MobileHome() {
   const { club } = useClub();
   if (club.id === "gff-demo") return <GffMobileHome />;
+  if (club.id === "cnso") return <CnsoMobileHome />;
   return <DefaultMobileHome />;
 }
 
