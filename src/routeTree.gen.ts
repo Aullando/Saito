@@ -69,6 +69,7 @@ import { Route as AppMedicalToolRouteImport } from './routes/_app.medical.$tool'
 import { Route as AppGffSlugRouteImport } from './routes/_app.gff.$slug'
 import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.payments'
 import { Route as AppEconomicFeesRouteImport } from './routes/_app.economic.fees'
+import { Route as AppCnsoSlugRouteImport } from './routes/_app.cnso.$slug'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -369,6 +370,11 @@ const AppEconomicFeesRoute = AppEconomicFeesRouteImport.update({
   path: '/economic/fees',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCnsoSlugRoute = AppCnsoSlugRouteImport.update({
+  id: '/cnso/$slug',
+  path: '/cnso/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -396,6 +402,7 @@ export interface FileRoutesByFullPath {
   '/privacidad': typeof PublicPrivacidadRoute
   '/producto': typeof PublicProductoRoute
   '/seguridad': typeof PublicSeguridadRoute
+  '/cnso/$slug': typeof AppCnsoSlugRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/gff/$slug': typeof AppGffSlugRoute
@@ -455,6 +462,7 @@ export interface FileRoutesByTo {
   '/privacidad': typeof PublicPrivacidadRoute
   '/producto': typeof PublicProductoRoute
   '/seguridad': typeof PublicSeguridadRoute
+  '/cnso/$slug': typeof AppCnsoSlugRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/gff/$slug': typeof AppGffSlugRoute
@@ -517,6 +525,7 @@ export interface FileRoutesById {
   '/_public/producto': typeof PublicProductoRoute
   '/_public/seguridad': typeof PublicSeguridadRoute
   '/_public/': typeof PublicIndexRoute
+  '/_app/cnso/$slug': typeof AppCnsoSlugRoute
   '/_app/economic/fees': typeof AppEconomicFeesRoute
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
   '/_app/gff/$slug': typeof AppGffSlugRoute
@@ -579,6 +588,7 @@ export interface FileRouteTypes {
     | '/privacidad'
     | '/producto'
     | '/seguridad'
+    | '/cnso/$slug'
     | '/economic/fees'
     | '/economic/payments'
     | '/gff/$slug'
@@ -638,6 +648,7 @@ export interface FileRouteTypes {
     | '/privacidad'
     | '/producto'
     | '/seguridad'
+    | '/cnso/$slug'
     | '/economic/fees'
     | '/economic/payments'
     | '/gff/$slug'
@@ -699,6 +710,7 @@ export interface FileRouteTypes {
     | '/_public/producto'
     | '/_public/seguridad'
     | '/_public/'
+    | '/_app/cnso/$slug'
     | '/_app/economic/fees'
     | '/_app/economic/payments'
     | '/_app/gff/$slug'
@@ -1166,6 +1178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEconomicFeesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/cnso/$slug': {
+      id: '/_app/cnso/$slug'
+      path: '/cnso/$slug'
+      fullPath: '/cnso/$slug'
+      preLoaderRoute: typeof AppCnsoSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -1203,6 +1222,7 @@ interface AppRouteChildren {
   AppOrganizationsRoute: typeof AppOrganizationsRoute
   AppProfileRoute: typeof AppProfileRoute
   AppReportsRoute: typeof AppReportsRoute
+  AppCnsoSlugRoute: typeof AppCnsoSlugRoute
   AppEconomicFeesRoute: typeof AppEconomicFeesRoute
   AppEconomicPaymentsRoute: typeof AppEconomicPaymentsRoute
   AppGffSlugRoute: typeof AppGffSlugRoute
@@ -1231,6 +1251,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppOrganizationsRoute: AppOrganizationsRoute,
   AppProfileRoute: AppProfileRoute,
   AppReportsRoute: AppReportsRoute,
+  AppCnsoSlugRoute: AppCnsoSlugRoute,
   AppEconomicFeesRoute: AppEconomicFeesRoute,
   AppEconomicPaymentsRoute: AppEconomicPaymentsRoute,
   AppGffSlugRoute: AppGffSlugRoute,

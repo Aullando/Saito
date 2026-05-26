@@ -7,6 +7,7 @@ import { useCurrentUser, useData } from "@/lib/store";
 import { useTr } from "@/lib/i18n";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
+import { CnsoDashboard } from "@/clubs/cnso/CnsoDashboard";
 import { GffWorkspace } from "@/clubs/gff/GffWorkspace";
 import {
   Users,
@@ -41,6 +42,7 @@ export const Route = createFileRoute("/_app/dashboard")({
 function DashboardSwitch() {
   const { club } = useClub();
   if (club.id === "rgcc") return <RgccDashboard />;
+  if (club.id === "cnso") return <CnsoDashboard />;
   if (club.id === "gff-demo") return <GffWorkspace view="dashboard" />;
   return <CommandCenter />;
 }
