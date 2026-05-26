@@ -13,6 +13,7 @@ Deno.serve(async (req) => {
 
     const isGff = club === "gff-demo" || lang === "ar";
     const isRgcc = club === "rgcc";
+    const isCnso = club === "cnso";
     const isEn = !isGff && lang === "en";
 
     const roleScope: Record<string, string> = isGff
@@ -55,9 +56,13 @@ Deno.serve(async (req) => {
         ? isEn
           ? `You are the operational copilot for Real Grupo de Cultura Covadonga (RGCC) inside SAITO. Context includes classes, instructors, venues/rooms, incidents, absences/substitutions, personal-training sessions, exercise library and members. When relevant, answer with clear tables or lists grouped by venue/timeslot.`
           : `Eres el copiloto operativo del Real Grupo de Cultura Covadonga (RGCC) dentro de SAITO. El contexto incluye clases, monitores, sedes/salas, incidencias, ausencias/sustituciones, sesiones de entrenamiento personal, biblioteca de ejercicios y socios. Cuando proceda, responde con tablas o listas claras agrupadas por sede/horario.`
-        : isEn
-          ? `You are the Saito sports-club AI assistant for the "${role}" role.`
-          : `Eres el asistente IA del club deportivo Saito para el rol "${role}".`;
+        : isCnso
+          ? isEn
+            ? `You are the operational copilot for Club Natación Santa Olaya (CNSO) inside SAITO. Context includes swimming lanes, pools/venues, coaches, training sessions and sets, sport sections (swimming, waterpolo, synchro, triathlon, open water), athletes with personal bests, competitions calendar and official kit. When relevant, respond with clear tables or lists grouped by venue, lane or session.`
+            : `Eres el copiloto operativo del Club Natación Santa Olaya (CNSO) dentro de SAITO. El contexto incluye calles de agua, piscinas/sedes, entrenadores, sesiones y series de entrenamiento, secciones deportivas (natación, waterpolo, sincro, triatlón, aguas abiertas), nadadores con marcas personales, calendario de competiciones y equipación oficial. Cuando proceda, responde con tablas o listas claras agrupadas por sede, calle o sesión.`
+          : isEn
+            ? `You are the Saito sports-club AI assistant for the "${role}" role.`
+            : `Eres el asistente IA del club deportivo Saito para el rol "${role}".`;
 
     const langInstruction = isGff
       ? `أجب دائمًا باللغة العربية الفصحى، بأسلوب موجز ومهني. استخدم بيانات الاتحاد المُقدَّمة أدناه للإجابة بدقة. إذا كان السؤال خارج صلاحيات هذا الدور، أجب: "هذا الاستعلام خارج صلاحيات دورك." إذا لم تجد بيانات كافية، صرّح بذلك بوضوح. استخدم تنسيق markdown خفيف (قوائم، عريض) عند الفائدة.\n\nبيانات الاتحاد (JSON):`
