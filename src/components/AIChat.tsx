@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import saitoAiLogo from "@/assets/saito-ai.png";
+import { supabase } from "@/integrations/supabase/client";
 import { useClub } from "@/clubs/ClubProvider";
 import {
   buildRgccContextFromIdentity,
