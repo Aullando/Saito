@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useData } from "@/lib/store";
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileTeam } from "@/clubs/gff/GffMobileWorkspace";
+import { CnsoMobileTeam } from "@/clubs/cnso/CnsoMobileWorkspace";
 import { useTr } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/mobile/team")({
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/_app/mobile/team")({
 function MobileTeamRoute() {
   const { club } = useClub();
   if (club.id === "gff-demo") return <GffMobileTeam />;
+  if (club.id === "cnso") return <CnsoMobileTeam />;
   return <MobileTeam />;
 }
 
