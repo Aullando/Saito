@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Construction } from "lucide-react";
 import { useClub } from "@/clubs/ClubProvider";
+import { useCurrentUser } from "@/lib/store";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import { rgccNavItems } from "@/clubs/rgcc/modules";
 import {
