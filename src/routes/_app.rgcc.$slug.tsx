@@ -212,19 +212,7 @@ function ModulePreview({ slug, fallback }: { slug: string; fallback: React.React
         </div>
       );
     case "incidencias":
-      return (
-        <div className="space-y-2">
-          {RGCC_INCIDENTS.map((i) => (
-            <Card key={i.id}>
-              <div className="font-semibold">
-                {td(i.type)} · {td(i.severity)}
-              </div>
-              <div className="text-xs text-muted-foreground">{tr("Reportado por", "Reported by")} {i.reportedBy}</div>
-              <p className="mt-1 text-xs">{td(i.description)}</p>
-            </Card>
-          ))}
-        </div>
-      );
+      return <RgccIncidenciasView />;
     case "vacaciones":
     case "sustituciones":
       return (
