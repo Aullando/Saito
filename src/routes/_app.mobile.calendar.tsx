@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Clock, MapPin, UserCheck, TriangleAlert } fr
 import { useCurrentUser, useData } from "@/lib/store";
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileCalendar } from "@/clubs/gff/GffMobileWorkspace";
+import { useLang, useTr } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/mobile/calendar")({
   component: MobileCalendarRoute,
@@ -28,19 +29,14 @@ const ATHL_MID = "#FFC9D1";
 const ATHL_STRONG = "#F4889A";
 
 const DOW_ES = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
-const MONTHS = [
-  "Enero",
-  "Febrero",
-  "Marzo",
-  "Abril",
-  "Mayo",
-  "Junio",
-  "Julio",
-  "Agosto",
-  "Septiembre",
-  "Octubre",
-  "Noviembre",
-  "Diciembre",
+const DOW_EN = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const MONTHS_ES = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+];
+const MONTHS_EN = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
 ];
 
 const toIso = (d: Date) => d.toISOString().slice(0, 10);
@@ -71,6 +67,8 @@ function buildMonthGrid(year: number, month: number): Date[] {
 function MobileCalendar() {
   const user = useCurrentUser();
   const events = useData((s) => s.events);
+  const lang = useLang();
+  const tr = useTr();
   const isCoach = user?.role === "technical";
   const accent = isCoach ? COACH : ATHL;
   const accentBg = isCoach ? COACH_BG : ATHL_SOFT;
@@ -87,6 +85,8 @@ function MobileCalendar() {
     return m;
   }, [events]);
 
+  const MONTHS = lang === "es" ? MONTHS_ES : MONTHS_EN;
+  const DOW = lang === "es" ? DOW_ES : DOW_EN;
   const todayIso = toIso(new Date());
   const monthLabel = `${MONTHS[cursor.getMonth()]} ${cursor.getFullYear()}`;
   const dayEvents = eventsByDate[selected] ?? [];
@@ -141,7 +141,7 @@ function MobileCalendar() {
                 transition: "all 0.15s",
               }}
             >
-              {v === "week" ? "Semana" : "Mes"}
+              {v === "week" ? tr("Semana", "Week") : tr("Mes", "Month")}
             </button>
           );
         })}
@@ -157,7 +157,7 @@ function MobileCalendar() {
         }}
       >
         <button
-          aria-label="Anterior"
+          aria-label={tr("Anterior", "Previous")}
           onClick={goPrev}
           className="flex h-8 w-8 items-center justify-center rounded-full active:scale-95"
           style={{ color: MUTED }}
@@ -171,7 +171,7 @@ function MobileCalendar() {
           {monthLabel}
         </span>
         <button
-          aria-label="Siguiente"
+          aria-label={tr("Siguiente", "Next")}
           onClick={goNext}
           className="flex h-8 w-8 items-center justify-center rounded-full active:scale-95"
           style={{ color: MUTED }}
@@ -182,7 +182,7 @@ function MobileCalendar() {
 
       {/* Cabecera días de la semana */}
       <div className="grid grid-cols-7 gap-1 px-1">
-        {DOW_ES.map((d) => (
+        {DOW.map((d) => (
           <div
             key={d}
             className="text-center"
@@ -357,6 +357,9 @@ function DaySummary({
   accent: string;
   accentBg: string;
 }) {
+  const lang = useLang();
+  const tr = useTr();
+  const MONTHS = lang === "es" ? MONTHS_ES : MONTHS_EN;
   const d = new Date(date);
   const label = `${d.getDate()} ${MONTHS[d.getMonth()].toLowerCase()}`;
   const first = events[0];
@@ -367,7 +370,7 @@ function DaySummary({
       <section className="space-y-2 pt-1">
         <h2 style={{ color: INK, fontSize: 20, fontWeight: 700 }}>
           {label} <span style={{ color: MUTED }}>|</span>{" "}
-          <span style={{ color: MUTED, fontWeight: 600 }}>Sin eventos</span>
+          <span style={{ color: MUTED, fontWeight: 600 }}>{tr("Sin eventos", "No events")}</span>
         </h2>
         <div
           className="text-center"
@@ -380,7 +383,7 @@ function DaySummary({
             fontSize: 14,
           }}
         >
-          Día libre. Disfruta del descanso.
+          {tr("Día libre. Disfruta del descanso.", "Day off. Enjoy the rest.")}
         </div>
       </section>
     );
@@ -389,12 +392,12 @@ function DaySummary({
   const type = first.type.toLowerCase();
   const typeLabel =
     type.includes("match") || type.includes("partido")
-      ? "Partido"
+      ? tr("Partido", "Match")
       : type.includes("medic") || type.includes("médic")
-        ? "Médico"
+        ? tr("Médico", "Medical")
         : type.includes("event") || type.includes("evento")
-          ? "Evento"
-          : "Entrenamiento";
+          ? tr("Evento", "Event")
+          : tr("Entrenamiento", "Training");
 
   return (
     <section className="space-y-3 pt-1">
@@ -427,7 +430,7 @@ function DaySummary({
             }}
           >
             <UserCheck className="h-4 w-4" style={{ color: MUTED }} />
-            Has sido convocado
+            {tr("Has sido convocado", "You have been called up")}
           </div>
           <Link
             to="/mobile/absence"
@@ -442,7 +445,7 @@ function DaySummary({
               fontWeight: 600,
             }}
           >
-            <TriangleAlert className="h-4 w-4" /> Notificar ausencia
+            <TriangleAlert className="h-4 w-4" /> {tr("Notificar ausencia", "Report absence")}
           </Link>
         </>
       )}
@@ -460,7 +463,9 @@ function DaySummary({
           textAlign: "center",
         }}
       >
-        {isCoach ? "Abrir información de la sesión" : "Aún no hay información sobre la sesión"}
+        {isCoach
+          ? tr("Abrir información de la sesión", "Open session information")
+          : tr("Aún no hay información sobre la sesión", "No session information yet")}
       </Link>
 
       {/* sutil sello del accent para mantener identidad de rol */}
