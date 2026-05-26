@@ -280,18 +280,14 @@ export function AIChat() {
             : lang === "en"
               ? "No AI credits available."
               : "Sin créditos de IA disponibles.";
-        // RGCC fallback local cuando la IA no responde.
+        // RGCC / CNSO fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
-          const local = rgccLocalFallback(
-            role,
-            context as ReturnType<typeof buildRgccContextFromIdentity>,
-            q,
-          );
-          if (local) {
-            setMsgs((m) => [...m, { role: "assistant", content: local }]);
-            setLoading(false);
-            return;
-          }
+          const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q);
+          if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
+        }
+        if (isCnso && cnsoIdentity) {
+          const local = cnsoLocalFallback(role, context as ReturnType<typeof buildCnsoContextFromIdentity>, q);
+          if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
         }
         setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);
         setLoading(false);
