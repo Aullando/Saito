@@ -227,11 +227,16 @@ export type RgccIncident = {
   ts: string;
   sessionId?: string;
   reportedBy: string;
-  type: "Sala" | "Material" | "Clase" | "Otro";
+  type: "Sala" | "Material" | "Clase" | "Salud" | "Otro";
   severity: "low" | "medium" | "high";
   description: string;
   status: "open" | "in_progress" | "resolved";
   resolvedBy?: string;
+  /** Socio/atleta afectado (solo incidencias tipo "Salud"). */
+  athleteName?: string;
+  athleteNumber?: string;
+  /** Restricción operativa visible para el monitor (no clínica). */
+  operationalRestriction?: string;
 };
 
 export const RGCC_INCIDENTS: RgccIncident[] = [
@@ -245,6 +250,33 @@ export const RGCC_INCIDENTS: RgccIncident[] = [
     severity: "medium",
     description: "Falta una correa TRX, hay 13 puestos operativos.",
     status: "open",
+  },
+  {
+    clubId: "rgcc",
+    id: "inc-2",
+    ts: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
+    reportedBy: "Dra. Elena Roces",
+    type: "Salud",
+    severity: "medium",
+    description:
+      "Sobrecarga lumbar tras sesión de funcional. Pendiente prueba de imagen.",
+    status: "in_progress",
+    athleteName: "Marta Solís",
+    athleteNumber: "RGCC-21044",
+    operationalRestriction: "Sin peso muerto ni saltos 10 días. Cardio bajo impacto permitido.",
+  },
+  {
+    clubId: "rgcc",
+    id: "inc-3",
+    ts: new Date(Date.now() - 1000 * 60 * 60 * 30).toISOString(),
+    reportedBy: "Dr. Marco Llamedo",
+    type: "Salud",
+    severity: "high",
+    description: "Esguince grado II tobillo izquierdo en pádel. Inmovilización 3 semanas.",
+    status: "open",
+    athleteName: "Jorge Cifuentes",
+    athleteNumber: "RGCC-18992",
+    operationalRestriction: "Baja en clases con impacto. Apto sólo para piscina y bici estática.",
   },
 ];
 

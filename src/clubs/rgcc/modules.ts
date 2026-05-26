@@ -91,7 +91,7 @@ export const rgccNavItems: ClubNavItem[] = [
     icon: "AlertTriangle",
     to: "/rgcc/$slug",
     slug: "incidencias",
-    allowedRoles: ADMIN_COACH,
+    allowedRoles: [...ADMIN_COACH, "medical"],
   },
   {
     module: "rgcc-salas",
