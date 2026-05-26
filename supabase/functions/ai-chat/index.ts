@@ -13,6 +13,7 @@ Deno.serve(async (req) => {
 
     const isGff = club === "gff-demo" || lang === "ar";
     const isRgcc = club === "rgcc";
+    const isCnso = club === "cnso";
     const isEn = !isGff && lang === "en";
 
     const roleScope: Record<string, string> = isGff
