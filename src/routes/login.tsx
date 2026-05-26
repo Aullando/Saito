@@ -347,7 +347,7 @@ function LoginPage() {
           <ClubPicker value={selectedClub} onChange={setSelectedClub} tagline={meta.tagline} />
         </div>
 
-        {/* Tour guiado: paso N/3 + flechas SAITO → RGCC → GFF */}
+        {/* Tour guiado: SAITO → RGCC → CNSO → GFF */}
         <div className="mb-8 flex items-center justify-center gap-3 text-xs text-muted-foreground">
           <button
             type="button"
