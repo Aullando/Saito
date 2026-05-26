@@ -195,15 +195,19 @@ export function AIChat() {
   const role = u.role;
   const lang = u.language; // "es" | "en"
   const isRgcc = club.id === "rgcc";
+  const isCnso = club.id === "cnso";
   const isGff = club.id === "gff-demo";
   const rgccIdentity = isRgcc ? resolveRgccIdentity(user, roles) : null;
-  const aiScope = rgccIdentity?.scope ?? null;
+  const cnsoIdentity = isCnso ? resolveCnsoIdentity(user, roles) : null;
+  const aiScope = rgccIdentity?.scope ?? cnsoIdentity?.scope ?? null;
   const title = isGff ? (TITLES_AR[role] ?? TITLES[role]) : TITLES[role];
   const suggestions = isGff
     ? (SUGGESTIONS_GFF[role] ?? [])
     : isRgcc
       ? rgccSuggestions(role, user, roles)
-      : ((lang === "en" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
+      : isCnso
+        ? cnsoSuggestions(role, user, roles)
+        : ((lang === "en" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
   const placeholder = isGff ? "اكتب سؤالك…" : lang === "en" ? "Ask something…" : "Pregunta algo…";
   const thinking = isGff ? "جارٍ التفكير…" : lang === "en" ? "Thinking…" : "Pensando…";
   const emptyHint = isGff
