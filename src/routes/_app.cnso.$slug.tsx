@@ -441,6 +441,108 @@ function ModulePreview({ slug, fallback }: { slug: string; fallback: React.React
         </Grid>
       );
 
+    case "direccion":
+      return (
+        <>
+          <Grid>
+            <Card>
+              <div className="text-xs text-muted-foreground">Sedes activas</div>
+              <div className="text-2xl font-bold">
+                {CNSO_VENUES.filter((v) => v.status === "active").length}
+              </div>
+            </Card>
+            <Card>
+              <div className="text-xs text-muted-foreground">Secciones acuáticas</div>
+              <div className="text-2xl font-bold">{CNSO_SECTIONS.length}</div>
+            </Card>
+            <Card>
+              <div className="text-xs text-muted-foreground">Nadadores federados</div>
+              <div className="text-2xl font-bold">
+                {CNSO_SECTIONS.reduce((a, s) => a + s.membersCount, 0).toLocaleString("es-ES")}
+              </div>
+            </Card>
+            <Card>
+              <div className="text-xs text-muted-foreground">Plantilla técnica</div>
+              <div className="text-2xl font-bold">{CNSO_COACHES.length}</div>
+            </Card>
+            <Card>
+              <div className="text-xs text-muted-foreground">Incidencias abiertas</div>
+              <div className="text-2xl font-bold">{CNSO_INCIDENTS.length}</div>
+            </Card>
+            <Card>
+              <div className="text-xs text-muted-foreground">Próximas competiciones</div>
+              <div className="text-2xl font-bold">{CNSO_COMPETITIONS.length}</div>
+            </Card>
+          </Grid>
+          <h3 className="mb-2 mt-6 text-sm font-semibold">Foco de la semana</h3>
+          <div className="space-y-2">
+            {[...CNSO_COMPETITIONS]
+              .sort((a, b) => a.date.localeCompare(b.date))
+              .slice(0, 3)
+              .map((c) => (
+                <Card key={c.id}>
+                  <div className="font-semibold">{c.name}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {c.date} · {c.venue} · {c.swimmersCount} nadadores
+                  </div>
+                  {c.highlight && (
+                    <div className="mt-1 text-[11px] text-primary">{c.highlight}</div>
+                  )}
+                </Card>
+              ))}
+          </div>
+        </>
+      );
+
+    case "copiloto":
+      return (
+        <>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Copiloto operativo CNSO: sugerencias rápidas sobre calle de agua, asistencia y plan
+            semanal. Habla con el asistente desde la cabecera para profundizar.
+          </p>
+          <Grid>
+            <Card>
+              <div className="font-semibold">Asistencia de hoy</div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {CNSO_SESSIONS.reduce((a, s) => a + s.bookings.length, 0)} /{" "}
+                {CNSO_SESSIONS.reduce((a, s) => a + s.capacity, 0)} plazas reservadas
+              </div>
+              <p className="mt-2 text-xs">
+                Revisa las calles con baja ocupación y reasigna grupos antes del próximo turno.
+              </p>
+            </Card>
+            <Card>
+              <div className="font-semibold">Bajas técnicas</div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {CNSO_ABSENCES.length} ausencias activas
+              </div>
+              <p className="mt-2 text-xs">
+                Propón sustituciones automáticas según especialidad (natación, waterpolo, sincro).
+              </p>
+            </Card>
+            <Card>
+              <div className="font-semibold">Incidencias abiertas</div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {CNSO_INCIDENTS.length} en seguimiento
+              </div>
+              <p className="mt-2 text-xs">
+                Prioriza las de severidad alta y notifica al staff médico de guardia.
+              </p>
+            </Card>
+            <Card>
+              <div className="font-semibold">Plan semanal</div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {CNSO_WORKOUTS.length} workouts asignados
+              </div>
+              <p className="mt-2 text-xs">
+                Genera sets de {CNSO_DRILLS.length} drills disponibles según objetivo del grupo.
+              </p>
+            </Card>
+          </Grid>
+        </>
+      );
+
     default:
       return <>{fallback}</>;
   }
