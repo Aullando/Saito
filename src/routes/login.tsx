@@ -28,7 +28,7 @@ export const Route = createFileRoute("/login")({
 });
 
 type ModuleKey = "admin" | "wellbeing" | "coaching" | "sportlife";
-type ClubKey = "saito" | "rgcc" | "gff-demo";
+type ClubKey = "saito" | "rgcc" | "gff-demo" | "cnso";
 
 type DemoProfile = {
   id: string;
@@ -179,10 +179,62 @@ const GFF_PROFILES: DemoProfile[] = [
   },
 ];
 
+const CNSO_PROFILES: DemoProfile[] = [
+  {
+    id: "cnso-mgr",
+    userId: "u-mgr",
+    title: "Dirección CNSO",
+    subtitle: "Dashboard del club, secciones acuáticas y socios",
+    surface: "desktop",
+    module: "admin",
+    icon: Briefcase,
+    to: "/cnso/direccion",
+  },
+  {
+    id: "cnso-adm",
+    userId: "u-adm",
+    title: "Administración",
+    subtitle: "Cuotas, calles, calendario y comunicaciones",
+    surface: "desktop",
+    module: "admin",
+    icon: Wallet,
+    to: "/cnso/socio",
+  },
+  {
+    id: "cnso-med",
+    userId: "u-med",
+    title: "Staff médico",
+    subtitle: "Aptitud, restricciones e incidencias de nadadores",
+    surface: "desktop",
+    module: "wellbeing",
+    icon: Stethoscope,
+    to: "/cnso/incidencias",
+  },
+  {
+    id: "cnso-tec",
+    userId: "u-tec",
+    title: "Entrenador de natación",
+    subtitle: "Calle de agua, sesiones, asistencia y notas",
+    surface: "mobile",
+    module: "coaching",
+    icon: Dumbbell,
+  },
+  {
+    id: "cnso-ath",
+    userId: "u-ath",
+    title: "Nadador / Socio",
+    subtitle: "Mi día, sesiones, marcas y competiciones",
+    surface: "mobile",
+    module: "sportlife",
+    icon: User,
+  },
+];
+
 const PROFILES_BY_CLUB: Record<ClubKey, DemoProfile[]> = {
   saito: SAITO_PROFILES,
   rgcc: RGCC_PROFILES,
   "gff-demo": GFF_PROFILES,
+  cnso: CNSO_PROFILES,
 };
 
 const MODULE_STYLES: Record<
@@ -215,10 +267,10 @@ const MODULE_STYLES: Record<
   },
 };
 
-const CLUB_ORDER: ClubKey[] = ["saito", "rgcc", "gff-demo"];
+const CLUB_ORDER: ClubKey[] = ["saito", "rgcc", "cnso", "gff-demo"];
 
 function isClubKey(v: string | null | undefined): v is ClubKey {
-  return v === "saito" || v === "rgcc" || v === "gff-demo";
+  return v === "saito" || v === "rgcc" || v === "gff-demo" || v === "cnso";
 }
 
 const CLUB_META: Record<ClubKey, { tagline: string; subtitle: string }> = {
@@ -229,6 +281,10 @@ const CLUB_META: Record<ClubKey, { tagline: string; subtitle: string }> = {
   rgcc: {
     tagline: "Real Grupo de Cultura Covadonga",
     subtitle: "Demo multi-sección polideportiva basada en SAITO.",
+  },
+  cnso: {
+    tagline: "Club Natación Santa Olaya",
+    subtitle: "Demo enfocada a natación, waterpolo, sincro, triatlón y aguas abiertas.",
   },
   "gff-demo": {
     tagline: "Gulf Football Federation · Demo",
@@ -291,7 +347,7 @@ function LoginPage() {
           <ClubPicker value={selectedClub} onChange={setSelectedClub} tagline={meta.tagline} />
         </div>
 
-        {/* Tour guiado: paso N/3 + flechas SAITO → RGCC → GFF */}
+        {/* Tour guiado: SAITO → RGCC → CNSO → GFF */}
         <div className="mb-8 flex items-center justify-center gap-3 text-xs text-muted-foreground">
           <button
             type="button"
