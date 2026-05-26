@@ -25,8 +25,15 @@ export const cnsoModules: ClubModulesConfig = {
   ],
 };
 
+// Reglas de visibilidad CNSO (espejo del patrón SAITO/RGCC):
+//  · Dirección / Administración → ADMIN (manager + admin).
+//  · Entrenador (mobile-only en sidebar) → ADMIN_COACH para operativa diaria.
+//  · Staff médico → solo lo suyo: Secciones (contexto nadadores), Incidencias y Copiloto.
+//  · Socio/Atleta (mobile-only) → no aparece en sidebar.
 const ADMIN: import("@/lib/types").Role[] = ["sysadmin", "admin", "manager"];
-const ADMIN_COACH: import("@/lib/types").Role[] = ["sysadmin", "admin", "manager", "technical"];
+const ADMIN_COACH: import("@/lib/types").Role[] = [...ADMIN, "technical"];
+const ADMIN_COACH_MEDICAL: import("@/lib/types").Role[] = [...ADMIN_COACH, "medical"];
+const MEDICAL_OPS: import("@/lib/types").Role[] = [...ADMIN, "technical", "medical"];
 
 /** Sidebar items para CNSO. Todos rutean a `/cnso/$slug` (placeholder con vista
  *  específica por slug). */
@@ -46,6 +53,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "Waves",
     to: "/cnso/$slug",
     slug: "calle-de-agua",
+    allowedRoles: ADMIN_COACH,
   },
   {
     module: "cnso-mi-dia",
@@ -61,6 +69,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "UserCircle",
     to: "/cnso/$slug",
     slug: "socio",
+    allowedRoles: ADMIN,
   },
   {
     module: "cnso-sedes",
@@ -68,6 +77,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "MapPin",
     to: "/cnso/$slug",
     slug: "sedes",
+    allowedRoles: ADMIN,
   },
   {
     module: "cnso-secciones",
@@ -75,6 +85,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "Layers",
     to: "/cnso/$slug",
     slug: "secciones",
+    allowedRoles: ADMIN_COACH_MEDICAL,
   },
   {
     module: "cnso-competiciones",
@@ -82,6 +93,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "Trophy",
     to: "/cnso/$slug",
     slug: "competiciones",
+    allowedRoles: ADMIN_COACH,
   },
   {
     module: "cnso-resumen",
@@ -113,7 +125,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "AlertTriangle",
     to: "/cnso/$slug",
     slug: "incidencias",
-    allowedRoles: ADMIN_COACH,
+    allowedRoles: MEDICAL_OPS,
   },
   {
     module: "cnso-calles",
@@ -145,6 +157,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "Dumbbell",
     to: "/cnso/$slug",
     slug: "tecnificacion",
+    allowedRoles: ADMIN_COACH,
   },
   {
     module: "cnso-formacion",
@@ -152,6 +165,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "BookOpen",
     to: "/cnso/$slug",
     slug: "formacion",
+    allowedRoles: ADMIN_COACH,
   },
   {
     module: "cnso-plus",
@@ -159,6 +173,7 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "Sparkles",
     to: "/cnso/$slug",
     slug: "plus",
+    allowedRoles: ADMIN,
   },
   {
     module: "cnso-copiloto",
@@ -166,6 +181,6 @@ export const cnsoNavItems: ClubNavItem[] = [
     icon: "Bot",
     to: "/cnso/$slug",
     slug: "copiloto",
-    allowedRoles: ADMIN_COACH,
+    allowedRoles: ADMIN_COACH_MEDICAL,
   },
 ];
