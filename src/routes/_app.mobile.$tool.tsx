@@ -34,6 +34,11 @@ import {
   GffMobileHealth,
   GffMobilePerformance,
 } from "@/clubs/gff/GffMobileWorkspace";
+import {
+  CnsoMobileSession,
+  CnsoMobileHealth,
+  CnsoMobilePerformance,
+} from "@/clubs/cnso/CnsoMobileWorkspace";
 import { useLang, useTr } from "@/lib/i18n";
 import { useTd } from "@/lib/demoI18n";
 
@@ -51,6 +56,11 @@ function MobileToolRoute() {
     if (tool === "health") return <GffMobileHealth />;
     if (tool === "performance") return <GffMobilePerformance />;
     // Fallback: render the standard tool inside the workspace.
+  }
+  if (club.id === "cnso") {
+    if (tool === "session") return <CnsoMobileSession />;
+    if (tool === "health") return <CnsoMobileHealth />;
+    if (tool === "performance") return <CnsoMobilePerformance />;
   }
   return <MobileTool />;
 }

@@ -19,6 +19,7 @@ import { useCurrentUser, useData } from "@/lib/store";
 import { useSessionLocal } from "@/lib/sessionLocal";
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileHome } from "@/clubs/gff/GffMobileWorkspace";
+import { CnsoMobileHome } from "@/clubs/cnso/CnsoMobileWorkspace";
 import { useTr, useLang } from "@/lib/i18n";
 
 const DEMO_SESSION_ID = "session-today";
@@ -38,6 +39,7 @@ const SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
 function MobileHome() {
   const { club } = useClub();
   if (club.id === "gff-demo") return <GffMobileHome />;
+  if (club.id === "cnso") return <CnsoMobileHome />;
   return <DefaultMobileHome />;
 }
 
