@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import saitoAiLogo from "@/assets/saito-ai.png";
+import { supabase } from "@/integrations/supabase/client";
 import { useClub } from "@/clubs/ClubProvider";
 import {
   buildRgccContextFromIdentity,
@@ -239,15 +240,26 @@ export function AIChat() {
             ? buildCnsoContextFromIdentity(cnsoIdentity)
             : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+      if (!accessToken) {
+        throw new Error(
+          isGff
+            ? "يجب تسجيل الدخول لاستخدام المساعد."
+            : lang === "en"
+              ? "You must be signed in to use the assistant."
+              : "Debes iniciar sesión para usar el asistente.",
+        );
+      }
       const resp = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${accessToken}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
         },
         body: JSON.stringify({
           messages: next,
-          role,
           context,
           club: club.id,
           aiScope,
