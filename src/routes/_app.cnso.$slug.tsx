@@ -546,3 +546,4 @@ function ModulePreview({ slug, fallback }: { slug: string; fallback: React.React
     default:
       return <>{fallback}</>;
   }
+}
