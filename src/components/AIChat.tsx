@@ -12,6 +12,12 @@ import {
 } from "@/clubs/rgcc/aiContext";
 import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import {
+  buildCnsoContextFromIdentity,
+  cnsoLocalFallback,
+  cnsoSuggestions,
+} from "@/clubs/cnso/aiContext";
+import { resolveCnsoIdentity } from "@/clubs/cnso/identity";
+import {
   gffFederation,
   gffTeams,
   gffPlayers,
@@ -189,15 +195,19 @@ export function AIChat() {
   const role = u.role;
   const lang = u.language; // "es" | "en"
   const isRgcc = club.id === "rgcc";
+  const isCnso = club.id === "cnso";
   const isGff = club.id === "gff-demo";
   const rgccIdentity = isRgcc ? resolveRgccIdentity(user, roles) : null;
-  const aiScope = rgccIdentity?.scope ?? null;
+  const cnsoIdentity = isCnso ? resolveCnsoIdentity(user, roles) : null;
+  const aiScope = rgccIdentity?.scope ?? cnsoIdentity?.scope ?? null;
   const title = isGff ? (TITLES_AR[role] ?? TITLES[role]) : TITLES[role];
   const suggestions = isGff
     ? (SUGGESTIONS_GFF[role] ?? [])
     : isRgcc
       ? rgccSuggestions(role, user, roles)
-      : ((lang === "en" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
+      : isCnso
+        ? cnsoSuggestions(role, user, roles)
+        : ((lang === "en" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
   const placeholder = isGff ? "اكتب سؤالك…" : lang === "en" ? "Ask something…" : "Pregunta algo…";
   const thinking = isGff ? "جارٍ التفكير…" : lang === "en" ? "Thinking…" : "Pensando…";
   const emptyHint = isGff
@@ -225,7 +235,9 @@ export function AIChat() {
         ? buildGffContext(role)
         : isRgcc && rgccIdentity
           ? buildRgccContextFromIdentity(rgccIdentity)
-          : buildContext(role, data);
+          : isCnso && cnsoIdentity
+            ? buildCnsoContextFromIdentity(cnsoIdentity)
+            : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
       const resp = await fetch(url, {
         method: "POST",
@@ -268,18 +280,14 @@ export function AIChat() {
             : lang === "en"
               ? "No AI credits available."
               : "Sin créditos de IA disponibles.";
-        // RGCC fallback local cuando la IA no responde.
+        // RGCC / CNSO fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
-          const local = rgccLocalFallback(
-            role,
-            context as ReturnType<typeof buildRgccContextFromIdentity>,
-            q,
-          );
-          if (local) {
-            setMsgs((m) => [...m, { role: "assistant", content: local }]);
-            setLoading(false);
-            return;
-          }
+          const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q);
+          if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
+        }
+        if (isCnso && cnsoIdentity) {
+          const local = cnsoLocalFallback(role, context as ReturnType<typeof buildCnsoContextFromIdentity>, q);
+          if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
         }
         setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);
         setLoading(false);

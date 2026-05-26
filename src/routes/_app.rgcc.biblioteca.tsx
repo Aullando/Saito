@@ -168,6 +168,8 @@ function Biblioteca() {
 }
 
 function ExerciseCard({ ex }: { ex: RgccExercise }) {
+  const tr = useTr();
+  const td = useTd();
   const img = getRgccExerciseImage(ex.id);
   return (
     <Card className="p-0 overflow-hidden">
