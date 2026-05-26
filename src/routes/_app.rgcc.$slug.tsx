@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Construction } from "lucide-react";
 import { useClub } from "@/clubs/ClubProvider";
+import { useCurrentUser } from "@/lib/store";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import { rgccNavItems } from "@/clubs/rgcc/modules";
 import {
@@ -80,6 +81,92 @@ function Card({ children }: { children: React.ReactNode }) {
 
 function Grid({ children }: { children: React.ReactNode }) {
   return <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{children}</div>;
+}
+
+/**
+ * Incidencias filtradas por rol (mismo patrón que CNSO):
+ *  · medical → sólo Salud con diagnóstico completo.
+ *  · technical → sólo Salud con restricción operativa (sin diagnóstico).
+ *  · admin / manager → sólo incidencias operativas (Sala, Material, Clase…).
+ *  · sysadmin → todo.
+ */
+function RgccIncidenciasView() {
+  const tr = useTr();
+  const td = useTd();
+  const user = useCurrentUser();
+  const role = user?.role ?? "manager";
+  const list = RGCC_INCIDENTS.filter((i) => {
+    const isHealth = i.type === "Salud";
+    if (role === "medical" || role === "technical") return isHealth;
+    if (role === "admin" || role === "manager") return !isHealth;
+    return true;
+  });
+  if (list.length === 0) {
+    return (
+      <div className="rounded-2xl border border-dashed border-border bg-card/40 p-6 text-center text-sm text-muted-foreground">
+        {tr(
+          "No hay incidencias relevantes para tu rol en este momento.",
+          "No incidents relevant to your role right now.",
+        )}
+      </div>
+    );
+  }
+  const showDiagnosis = role === "medical" || role === "sysadmin";
+  return (
+    <div className="space-y-2">
+      {list.map((i) => {
+        const isHealth = i.type === "Salud";
+        const sevClass =
+          i.severity === "high"
+            ? "bg-rose-500/15 text-rose-600"
+            : i.severity === "medium"
+              ? "bg-amber-500/15 text-amber-600"
+              : "bg-emerald-500/15 text-emerald-600";
+        return (
+          <Card key={i.id}>
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="font-semibold">
+                  {td(i.type)}
+                  {isHealth && i.athleteName ? ` · ${i.athleteName}` : ""}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {tr("Reportado por", "Reported by")} {i.reportedBy}
+                  {i.athleteNumber ? ` · ${i.athleteNumber}` : ""}
+                </div>
+              </div>
+              <span
+                className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${sevClass}`}
+              >
+                {td(i.severity)}
+              </span>
+            </div>
+            {isHealth && !showDiagnosis ? (
+              <p className="mt-1 text-xs italic text-muted-foreground">
+                {tr(
+                  "Diagnóstico reservado al staff médico.",
+                  "Diagnosis restricted to medical staff.",
+                )}
+              </p>
+            ) : (
+              <p className="mt-1 text-xs">{td(i.description)}</p>
+            )}
+            {i.operationalRestriction && (
+              <div className="mt-2 rounded-lg bg-primary/5 px-2 py-1.5 text-[11px] text-primary">
+                <span className="font-semibold">
+                  {tr("Restricción operativa: ", "Operational restriction: ")}
+                </span>
+                {td(i.operationalRestriction)}
+              </div>
+            )}
+            <div className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+              {td(i.status)}
+            </div>
+          </Card>
+        );
+      })}
+    </div>
+  );
 }
 
 function ModulePreview({ slug, fallback }: { slug: string; fallback: React.ReactNode }) {
@@ -211,19 +298,7 @@ function ModulePreview({ slug, fallback }: { slug: string; fallback: React.React
         </div>
       );
     case "incidencias":
-      return (
-        <div className="space-y-2">
-          {RGCC_INCIDENTS.map((i) => (
-            <Card key={i.id}>
-              <div className="font-semibold">
-                {td(i.type)} · {td(i.severity)}
-              </div>
-              <div className="text-xs text-muted-foreground">{tr("Reportado por", "Reported by")} {i.reportedBy}</div>
-              <p className="mt-1 text-xs">{td(i.description)}</p>
-            </Card>
-          ))}
-        </div>
-      );
+      return <RgccIncidenciasView />;
     case "vacaciones":
     case "sustituciones":
       return (
