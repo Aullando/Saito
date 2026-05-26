@@ -233,15 +233,46 @@ function ModulePreview({ slug, fallback }: { slug: string; fallback: React.React
     case "incidencias":
       return (
         <div className="space-y-2">
-          {CNSO_INCIDENTS.map((i) => (
-            <Card key={i.id}>
-              <div className="font-semibold">
-                {i.type} · {i.severity}
-              </div>
-              <div className="text-xs text-muted-foreground">Reportado por {i.reportedBy}</div>
-              <p className="mt-1 text-xs">{i.description}</p>
-            </Card>
-          ))}
+          {CNSO_INCIDENTS.map((i) => {
+            const isHealth = i.type === "Salud";
+            const sevClass =
+              i.severity === "high"
+                ? "bg-rose-500/15 text-rose-600"
+                : i.severity === "medium"
+                  ? "bg-amber-500/15 text-amber-600"
+                  : "bg-emerald-500/15 text-emerald-600";
+            return (
+              <Card key={i.id}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-semibold">
+                      {i.type}
+                      {isHealth && i.athleteName ? ` · ${i.athleteName}` : ""}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Reportado por {i.reportedBy}
+                      {i.athleteNumber ? ` · ${i.athleteNumber}` : ""}
+                    </div>
+                  </div>
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${sevClass}`}
+                  >
+                    {i.severity}
+                  </span>
+                </div>
+                <p className="mt-1 text-xs">{i.description}</p>
+                {i.operationalRestriction && (
+                  <div className="mt-2 rounded-lg bg-primary/5 px-2 py-1.5 text-[11px] text-primary">
+                    <span className="font-semibold">Restricción operativa: </span>
+                    {i.operationalRestriction}
+                  </div>
+                )}
+                <div className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+                  {i.status}
+                </div>
+              </Card>
+            );
+          })}
         </div>
       );
 
