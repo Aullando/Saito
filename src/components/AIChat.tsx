@@ -56,26 +56,29 @@ const TITLES_AR: Record<string, string> = {
 };
 
 const SUGGESTIONS: Record<string, string[]> = {
-  sysadmin: ["¿Qué organizaciones tienen IA activada?", "¿Cuántas organizaciones están activas?"],
+  sysadmin: [
+    "¿Qué organizaciones tienen IA activada?",
+    "Activa la IA en la primera organización inactiva",
+  ],
   admin: [
     "¿Qué pagos han fallado esta semana?",
-    "¿Qué deportistas no están aptos?",
-    "¿Qué cuotas tiene Juan Granados?",
+    "Marca como pagado el primer pago pendiente",
+    "Crea una reunión mañana a las 18:00",
   ],
   manager: [
-    "¿Qué grupos entrenan hoy en Valencia?",
-    "¿Pagos fallidos esta semana?",
-    "¿Cuotas de Juan Granados?",
+    "¿Qué grupos entrenan hoy?",
+    "Pagos fallidos esta semana",
+    "Mueve el próximo entrenamiento al jueves",
   ],
   technical: [
     "¿Atletas con estado médico desconocido?",
-    "¿Mis entrenamientos esta semana?",
-    "Resumen de notas de Raul",
+    "Crea un entrenamiento el viernes a las 17:00",
+    "Cancela mi próximo entrenamiento",
   ],
   medical: [
     "¿Qué citas tengo hoy?",
-    "¿Atletas con tratamiento activo?",
-    "¿Deportistas en revisión?",
+    "Programa una cita para revisión la semana que viene",
+    "Marca como apto al primer atleta lesionado",
   ],
 };
 
