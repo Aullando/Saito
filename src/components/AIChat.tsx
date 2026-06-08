@@ -264,6 +264,7 @@ export function AIChat() {
         apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
         Authorization: `Bearer ${accessToken ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       };
+      const toolsPrompt = buildToolsPrompt(role, isGff ? "ar" : lang);
       const resp = await fetch(url, {
         method: "POST",
         headers,
@@ -274,6 +275,7 @@ export function AIChat() {
           aiScope,
           role,
           lang: isGff ? "ar" : lang,
+          toolsPrompt,
         }),
       });
 
