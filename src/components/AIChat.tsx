@@ -37,7 +37,6 @@ import {
   executeAction,
   type ParsedAction,
 } from "@/ai/actions/executor";
-import { ACTION_REGISTRY } from "@/ai/actions/registry";
 import { ActionConfirmDialog } from "@/components/ActionConfirmDialog";
 
 const TITLES: Record<string, string> = {
