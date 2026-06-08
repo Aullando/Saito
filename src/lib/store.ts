@@ -289,8 +289,11 @@ export const useData = create<DataState>()(
       deleteFee: (id) => set((s) => ({ fees: s.fees.filter((f) => f.id !== id) })),
       setPaymentStatus: (id, status) =>
         set((s) => ({ payments: s.payments.map((p) => (p.id === id ? { ...p, status } : p)) })),
-      addAppointment: (a) =>
-        set((s) => ({ appointments: [...s.appointments, { ...a, id: uid("apt") }] })),
+      addAppointment: (a) => {
+        const id = uid("apt");
+        set((s) => ({ appointments: [...s.appointments, { ...a, id }] }));
+        return id;
+      },
       deleteAppointment: (id) =>
         set((s) => ({ appointments: s.appointments.filter((a) => a.id !== id) })),
       addAppointmentNote: (id, note) =>
@@ -298,6 +301,14 @@ export const useData = create<DataState>()(
           appointments: s.appointments.map((a) =>
             a.id === id ? { ...a, notes: (a.notes ? a.notes + "\n" : "") + note } : a,
           ),
+        })),
+      updateAppointment: (id, patch) =>
+        set((s) => ({
+          appointments: s.appointments.map((a) => (a.id === id ? { ...a, ...patch } : a)),
+        })),
+      updateAthlete: (id, patch) =>
+        set((s) => ({
+          athletes: s.athletes.map((a) => (a.id === id ? { ...a, ...patch } : a)),
         })),
       deleteOrganization: (id) =>
         set((s) => ({ organizations: s.organizations.filter((o) => o.id !== id) })),
