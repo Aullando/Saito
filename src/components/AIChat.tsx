@@ -197,6 +197,12 @@ export function AIChat() {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pendingConfirm, setPendingConfirm] = useState<{
+    action: ParsedAction;
+    title: string;
+    description: string;
+    resolve: (confirmed: boolean) => void;
+  } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
