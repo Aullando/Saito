@@ -9,44 +9,39 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    // ---- AuthN/AuthZ: verify caller JWT and resolve role server-side ----
+    const { messages, context, club, lang, role: clientRole } = await req.json();
+
+    // Optional auth: if a JWT is provided, resolve role server-side from user_roles.
+    // Fallback to client-supplied role for the demo (no real auth users).
+    let role: string = typeof clientRole === "string" ? clientRole : "technical";
     const authHeader = req.headers.get("Authorization") ?? "";
     const jwt = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-    if (!jwt) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const SUPABASE_ANON_KEY =
       Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY")!;
-    const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      global: { headers: { Authorization: `Bearer ${jwt}` } },
-    });
-    const { data: userData, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userData?.user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (jwt && SERVICE_ROLE) {
+      try {
+        const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          global: { headers: { Authorization: `Bearer ${jwt}` } },
+        });
+        const { data: userData } = await userClient.auth.getUser();
+        if (userData?.user) {
+          const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
+          const { data: roleRows } = await admin
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", userData.user.id);
+          const roles = (roleRows ?? []).map((r: { role: string }) => r.role);
+          const priority = ["sysadmin", "admin", "manager", "medical", "technical"];
+          const resolved = priority.find((p) => roles.includes(p));
+          if (resolved) role = resolved;
+        }
+      } catch (_e) {
+        // ignore — fall back to client role
+      }
     }
-    const userId = userData.user.id;
-
-    // Resolve role server-side from user_roles (ignore any client-supplied role)
-    const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
-    const { data: roleRows } = await admin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
-    const roles = (roleRows ?? []).map((r: { role: string }) => r.role);
-    const priority = ["sysadmin", "admin", "manager", "medical", "technical"];
-    const role = priority.find((p) => roles.includes(p)) ?? "technical";
-
-    const { messages, context, club, lang } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY no configurado");
