@@ -512,6 +512,13 @@ export function AIChat() {
           </form>
         </div>
       )}
+      <ActionConfirmDialog
+        open={!!pendingConfirm}
+        title={pendingConfirm?.title ?? ""}
+        description={pendingConfirm?.description ?? ""}
+        onConfirm={() => pendingConfirm?.resolve(true)}
+        onCancel={() => pendingConfirm?.resolve(false)}
+      />
     </>
   );
 }
