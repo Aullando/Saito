@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import saitoAiLogo from "@/assets/saito-ai.png";
@@ -28,6 +29,16 @@ import {
   gffAffiliatedClubs,
 } from "@/clubs/gff/seed";
 import { cn } from "@/lib/utils";
+import { buildToolsPrompt } from "@/ai/actions/prompt";
+import {
+  parseActions,
+  stripActionBlocks,
+  canExecute,
+  executeAction,
+  type ParsedAction,
+} from "@/ai/actions/executor";
+import { ACTION_REGISTRY } from "@/ai/actions/registry";
+import { ActionConfirmDialog } from "@/components/ActionConfirmDialog";
 
 const TITLES: Record<string, string> = {
   sysadmin: "SysAdmin AI",
