@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import saitoAiLogo from "@/assets/saito-ai.png";
@@ -28,6 +29,15 @@ import {
   gffAffiliatedClubs,
 } from "@/clubs/gff/seed";
 import { cn } from "@/lib/utils";
+import { buildToolsPrompt } from "@/ai/actions/prompt";
+import {
+  parseActions,
+  stripActionBlocks,
+  canExecute,
+  executeAction,
+  type ParsedAction,
+} from "@/ai/actions/executor";
+import { ActionConfirmDialog } from "@/components/ActionConfirmDialog";
 
 const TITLES: Record<string, string> = {
   sysadmin: "SysAdmin AI",
@@ -46,26 +56,29 @@ const TITLES_AR: Record<string, string> = {
 };
 
 const SUGGESTIONS: Record<string, string[]> = {
-  sysadmin: ["¿Qué organizaciones tienen IA activada?", "¿Cuántas organizaciones están activas?"],
+  sysadmin: [
+    "¿Qué organizaciones tienen IA activada?",
+    "Activa la IA en la primera organización inactiva",
+  ],
   admin: [
     "¿Qué pagos han fallado esta semana?",
-    "¿Qué deportistas no están aptos?",
-    "¿Qué cuotas tiene Juan Granados?",
+    "Marca como pagado el primer pago pendiente",
+    "Crea una reunión mañana a las 18:00",
   ],
   manager: [
-    "¿Qué grupos entrenan hoy en Valencia?",
-    "¿Pagos fallidos esta semana?",
-    "¿Cuotas de Juan Granados?",
+    "¿Qué grupos entrenan hoy?",
+    "Pagos fallidos esta semana",
+    "Mueve el próximo entrenamiento al jueves",
   ],
   technical: [
     "¿Atletas con estado médico desconocido?",
-    "¿Mis entrenamientos esta semana?",
-    "Resumen de notas de Raul",
+    "Crea un entrenamiento el viernes a las 17:00",
+    "Cancela mi próximo entrenamiento",
   ],
   medical: [
     "¿Qué citas tengo hoy?",
-    "¿Atletas con tratamiento activo?",
-    "¿Deportistas en revisión?",
+    "Programa una cita para revisión la semana que viene",
+    "Marca como apto al primer atleta lesionado",
   ],
 };
 
@@ -186,6 +199,12 @@ export function AIChat() {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pendingConfirm, setPendingConfirm] = useState<{
+    action: ParsedAction;
+    title: string;
+    description: string;
+    resolve: (confirmed: boolean) => void;
+  } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -247,6 +266,7 @@ export function AIChat() {
         apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
         Authorization: `Bearer ${accessToken ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       };
+      const toolsPrompt = buildToolsPrompt(role, isGff ? "ar" : lang);
       const resp = await fetch(url, {
         method: "POST",
         headers,
@@ -257,6 +277,7 @@ export function AIChat() {
           aiScope,
           role,
           lang: isGff ? "ar" : lang,
+          toolsPrompt,
         }),
       });
 
@@ -306,6 +327,16 @@ export function AIChat() {
       let started = false;
       let done = false;
 
+      const updateAssistant = (text: string) => {
+        const clean = stripActionBlocks(text);
+        if (!started) {
+          started = true;
+          setMsgs((m) => [...m, { role: "assistant", content: clean }]);
+        } else {
+          setMsgs((m) => m.map((x, i) => (i === m.length - 1 ? { ...x, content: clean } : x)));
+        }
+      };
+
       while (!done) {
         const { done: d, value } = await reader.read();
         if (d) break;
@@ -326,17 +357,50 @@ export function AIChat() {
             const delta = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (delta) {
               acc += delta;
-              if (!started) {
-                started = true;
-                setMsgs((m) => [...m, { role: "assistant", content: acc }]);
-              } else {
-                setMsgs((m) => m.map((x, i) => (i === m.length - 1 ? { ...x, content: acc } : x)));
-              }
+              updateAssistant(acc);
             }
           } catch {
             buf = line + "\n" + buf;
             break;
           }
+        }
+      }
+
+      // Process any action blocks emitted by the assistant.
+      const actions = parseActions(acc);
+      for (const action of actions) {
+        const check = canExecute(action, role);
+        if (!check.ok || !check.def) {
+          setMsgs((m) => [
+            ...m,
+            { role: "assistant", content: `⚠️ ${check.error ?? "Acción no permitida."}` },
+          ]);
+          continue;
+        }
+        const def = check.def;
+        let go = true;
+        if (def.destructive) {
+          go = await new Promise<boolean>((resolve) => {
+            setPendingConfirm({
+              action,
+              title: `Confirmar: ${def.name}`,
+              description: def.preview(action.args),
+              resolve,
+            });
+          });
+          setPendingConfirm(null);
+        }
+        if (!go) {
+          setMsgs((m) => [...m, { role: "assistant", content: `↩️ Acción cancelada: ${def.name}` }]);
+          continue;
+        }
+        const result = executeAction(action);
+        if (result.ok) {
+          toast.success(result.message);
+          setMsgs((m) => [...m, { role: "assistant", content: `✅ ${result.message}` }]);
+        } else {
+          toast.error(result.error);
+          setMsgs((m) => [...m, { role: "assistant", content: `❌ ${result.error}` }]);
         }
       }
     } catch (e) {
@@ -450,6 +514,13 @@ export function AIChat() {
           </form>
         </div>
       )}
+      <ActionConfirmDialog
+        open={!!pendingConfirm}
+        title={pendingConfirm?.title ?? ""}
+        description={pendingConfirm?.description ?? ""}
+        onConfirm={() => pendingConfirm?.resolve(true)}
+        onCancel={() => pendingConfirm?.resolve(false)}
+      />
     </>
   );
 }
