@@ -139,9 +139,11 @@ interface DataState {
   addFee: (f: Omit<Fee, "id">) => void;
   deleteFee: (id: string) => void;
   setPaymentStatus: (id: string, status: Payment["status"]) => void;
-  addAppointment: (a: Omit<MedicalAppointment, "id">) => void;
+  addAppointment: (a: Omit<MedicalAppointment, "id">) => string;
   deleteAppointment: (id: string) => void;
   addAppointmentNote: (id: string, note: string) => void;
+  updateAppointment: (id: string, patch: Partial<Omit<MedicalAppointment, "id">>) => void;
+  updateAthlete: (id: string, patch: Partial<Omit<Athlete, "id">>) => void;
   deleteOrganization: (id: string) => void;
 
   sendMessage: (conversationId: string, msg: Omit<Message, "id" | "createdAt">) => void;
