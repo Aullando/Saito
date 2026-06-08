@@ -105,7 +105,8 @@ Deno.serve(async (req) => {
         ? `ALWAYS reply in English, concise and professional. Use the club data provided below to answer accurately. If the question is outside this role's permissions, reply: "This query is outside your role's permissions." If you don't have enough data, say so clearly. Use light markdown (lists, bold) when helpful.\n\nCLUB DATA (JSON):`
         : `Responde SIEMPRE en español, de forma concisa y profesional. Usa los datos del club que se te proporcionan a continuación para responder con precisión. Si la pregunta queda fuera de los permisos del rol, responde: "Esta consulta queda fuera de los permisos de tu rol."\n\nSi no encuentras datos suficientes, dilo claramente. Usa formato markdown ligero (listas, negritas) cuando ayude a la lectura.\n\nDATOS DEL CLUB (JSON):`;
 
-    const systemPrompt = `${clubIntro} ${roleScope[role] ?? ""}\n\n${langInstruction}\n${JSON.stringify(context).slice(0, 60000)}`;
+    const toolsSection = typeof toolsPrompt === "string" && toolsPrompt.trim() ? `\n\n${toolsPrompt}` : "";
+    const systemPrompt = `${clubIntro} ${roleScope[role] ?? ""}\n\n${langInstruction}\n${JSON.stringify(context).slice(0, 60000)}${toolsSection}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
