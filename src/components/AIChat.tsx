@@ -325,6 +325,16 @@ export function AIChat() {
       let started = false;
       let done = false;
 
+      const updateAssistant = (text: string) => {
+        const clean = stripActionBlocks(text);
+        if (!started) {
+          started = true;
+          setMsgs((m) => [...m, { role: "assistant", content: clean }]);
+        } else {
+          setMsgs((m) => m.map((x, i) => (i === m.length - 1 ? { ...x, content: clean } : x)));
+        }
+      };
+
       while (!done) {
         const { done: d, value } = await reader.read();
         if (d) break;
@@ -345,17 +355,50 @@ export function AIChat() {
             const delta = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (delta) {
               acc += delta;
-              if (!started) {
-                started = true;
-                setMsgs((m) => [...m, { role: "assistant", content: acc }]);
-              } else {
-                setMsgs((m) => m.map((x, i) => (i === m.length - 1 ? { ...x, content: acc } : x)));
-              }
+              updateAssistant(acc);
             }
           } catch {
             buf = line + "\n" + buf;
             break;
           }
+        }
+      }
+
+      // Process any action blocks emitted by the assistant.
+      const actions = parseActions(acc);
+      for (const action of actions) {
+        const check = canExecute(action, role);
+        if (!check.ok || !check.def) {
+          setMsgs((m) => [
+            ...m,
+            { role: "assistant", content: `⚠️ ${check.error ?? "Acción no permitida."}` },
+          ]);
+          continue;
+        }
+        const def = check.def;
+        let go = true;
+        if (def.destructive) {
+          go = await new Promise<boolean>((resolve) => {
+            setPendingConfirm({
+              action,
+              title: `Confirmar: ${def.name}`,
+              description: def.preview(action.args),
+              resolve,
+            });
+          });
+          setPendingConfirm(null);
+        }
+        if (!go) {
+          setMsgs((m) => [...m, { role: "assistant", content: `↩️ Acción cancelada: ${def.name}` }]);
+          continue;
+        }
+        const result = executeAction(action);
+        if (result.ok) {
+          toast.success(result.message);
+          setMsgs((m) => [...m, { role: "assistant", content: `✅ ${result.message}` }]);
+        } else {
+          toast.error(result.error);
+          setMsgs((m) => [...m, { role: "assistant", content: `❌ ${result.error}` }]);
         }
       }
     } catch (e) {
