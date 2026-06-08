@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages, context, club, lang, role: clientRole } = await req.json();
+    const { messages, context, club, lang, role: clientRole, toolsPrompt } = await req.json();
 
     // Optional auth: if a JWT is provided, resolve role server-side from user_roles.
     // Fallback to client-supplied role for the demo (no real auth users).
