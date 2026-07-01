@@ -328,32 +328,22 @@ function LoginPage() {
   const meta = CLUB_META[selectedClub];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Spectacular hero cover */}
-      <div className="relative overflow-hidden bg-[#0b1a35] text-white">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-80"
-          style={{
-            background:
-              "radial-gradient(60% 55% at 15% 20%, rgba(59,130,246,0.55), transparent 60%), radial-gradient(55% 55% at 85% 20%, rgba(236,72,153,0.45), transparent 60%), radial-gradient(65% 60% at 80% 95%, rgba(250,204,21,0.45), transparent 60%), radial-gradient(60% 60% at 10% 95%, rgba(16,185,129,0.5), transparent 60%)",
-          }}
-        />
-        <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-4 py-10 text-center sm:py-14">
+    <div className="min-h-screen bg-background px-4 py-10">
+      <div className="mx-auto max-w-5xl">
+        <header className="mb-8 flex flex-col items-center gap-1 text-center">
           <img
-            src={saitoHero.url}
+            src={saitoFullLogo}
             alt="SAITO"
-            className="w-full max-w-[280px] object-contain drop-shadow-[0_18px_50px_rgba(0,0,0,0.5)] sm:max-w-[420px] md:max-w-[520px]"
+            style={{ height: 44 }}
+            className="shrink-0 object-contain"
           />
-          <span className="mt-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/80">
-            Sport Innovation Hub · powered by Gemini
+          <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            powered by Gemini
           </span>
-          <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">Ver SAITO como…</h1>
-          <p className="mt-1 max-w-2xl text-sm text-white/75">{meta.subtitle}</p>
-        </div>
-      </div>
+          <h1 className="mt-4 text-2xl font-bold tracking-tight">Ver SAITO como…</h1>
+          <p className="text-sm text-muted-foreground">{meta.subtitle}</p>
+        </header>
 
-      <div className="mx-auto max-w-5xl px-4 py-8">
 
 
         <div className="mb-3 flex flex-col items-center gap-3">
