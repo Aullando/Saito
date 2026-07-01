@@ -479,45 +479,6 @@ function EmptyBlock({ label }: { label: string }) {
 
 // ───────────────────── SOLICITUDES DE CITA ─────────────────────
 
-type ApptRequest = {
-  id: string;
-  athlete: string;
-  reason: string;
-  specialty: string;
-  preferred: string;
-  requestedAt: string;
-  status: "pending" | "managed";
-};
-
-const SEED_REQUESTS: ApptRequest[] = [
-  {
-    id: "r1",
-    athlete: "Lucía Martín",
-    reason: "Reconocimiento anual",
-    specialty: "Medicina deportiva",
-    preferred: "2026-05-22",
-    requestedAt: "hoy 09:12",
-    status: "pending",
-  },
-  {
-    id: "r2",
-    athlete: "Pablo Sánchez",
-    reason: "Molestia aductor",
-    specialty: "Fisioterapia",
-    preferred: "2026-05-20",
-    requestedAt: "ayer",
-    status: "pending",
-  },
-  {
-    id: "r3",
-    athlete: "Nadia Abad",
-    reason: "Revisión post-incidencia",
-    specialty: "Medicina deportiva",
-    preferred: "2026-05-23",
-    requestedAt: "hace 2 días",
-    status: "managed",
-  },
-];
 
 function RequestsView() {
   const tr = useTr();
