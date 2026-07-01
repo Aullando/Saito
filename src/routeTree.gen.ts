@@ -11,20 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as EnRouteImport } from './routes/en'
-import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AppRouteImport } from './routes/_app'
-import { Route as PublicIndexRouteImport } from './routes/_public.index'
-import { Route as PublicSeguridadRouteImport } from './routes/_public.seguridad'
-import { Route as PublicProductoRouteImport } from './routes/_public.producto'
-import { Route as PublicPrivacidadRouteImport } from './routes/_public.privacidad'
-import { Route as PublicPreciosRouteImport } from './routes/_public.precios'
-import { Route as PublicMultiClubRouteImport } from './routes/_public.multi-club'
-import { Route as PublicIaRouteImport } from './routes/_public.ia'
-import { Route as PublicCookiesRouteImport } from './routes/_public.cookies'
-import { Route as PublicContactoRouteImport } from './routes/_public.contacto'
-import { Route as PublicClientesRouteImport } from './routes/_public.clientes'
-import { Route as PublicAvisoLegalRouteImport } from './routes/_public.aviso-legal'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppOrganizationsRouteImport } from './routes/_app.organizations'
@@ -36,20 +23,7 @@ import { Route as AppClubRouteImport } from './routes/_app.club'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAttendanceRouteImport } from './routes/_app.attendance'
 import { Route as AppAthletesRouteImport } from './routes/_app.athletes'
-import { Route as PublicEnIndexRouteImport } from './routes/_public.en.index'
 import { Route as AppMobileIndexRouteImport } from './routes/_app.mobile.index'
-import { Route as DemoMobileCoachRouteImport } from './routes/demo.mobile.coach'
-import { Route as DemoMobileAthleteRouteImport } from './routes/demo.mobile.athlete'
-import { Route as PublicEnSeguridadRouteImport } from './routes/_public.en.seguridad'
-import { Route as PublicEnProductoRouteImport } from './routes/_public.en.producto'
-import { Route as PublicEnPrivacidadRouteImport } from './routes/_public.en.privacidad'
-import { Route as PublicEnPreciosRouteImport } from './routes/_public.en.precios'
-import { Route as PublicEnMultiClubRouteImport } from './routes/_public.en.multi-club'
-import { Route as PublicEnIaRouteImport } from './routes/_public.en.ia'
-import { Route as PublicEnCookiesRouteImport } from './routes/_public.en.cookies'
-import { Route as PublicEnContactoRouteImport } from './routes/_public.en.contacto'
-import { Route as PublicEnClientesRouteImport } from './routes/_public.en.clientes'
-import { Route as PublicEnAvisoLegalRouteImport } from './routes/_public.en.aviso-legal'
 import { Route as AppSettingsTeamRouteImport } from './routes/_app.settings.team'
 import { Route as AppSettingsQaRouteImport } from './routes/_app.settings.qa'
 import { Route as AppSettingsPrivacyRouteImport } from './routes/_app.settings.privacy'
@@ -81,73 +55,9 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EnRoute = EnRouteImport.update({
-  id: '/en',
-  path: '/en',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicRoute = PublicRouteImport.update({
-  id: '/_public',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PublicIndexRoute = PublicIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicSeguridadRoute = PublicSeguridadRouteImport.update({
-  id: '/seguridad',
-  path: '/seguridad',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicProductoRoute = PublicProductoRouteImport.update({
-  id: '/producto',
-  path: '/producto',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicPrivacidadRoute = PublicPrivacidadRouteImport.update({
-  id: '/privacidad',
-  path: '/privacidad',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicPreciosRoute = PublicPreciosRouteImport.update({
-  id: '/precios',
-  path: '/precios',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicMultiClubRoute = PublicMultiClubRouteImport.update({
-  id: '/multi-club',
-  path: '/multi-club',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicIaRoute = PublicIaRouteImport.update({
-  id: '/ia',
-  path: '/ia',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicCookiesRoute = PublicCookiesRouteImport.update({
-  id: '/cookies',
-  path: '/cookies',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicContactoRoute = PublicContactoRouteImport.update({
-  id: '/contacto',
-  path: '/contacto',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicClientesRoute = PublicClientesRouteImport.update({
-  id: '/clientes',
-  path: '/clientes',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicAvisoLegalRoute = PublicAvisoLegalRouteImport.update({
-  id: '/aviso-legal',
-  path: '/aviso-legal',
-  getParentRoute: () => PublicRoute,
 } as any)
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
@@ -204,75 +114,10 @@ const AppAthletesRoute = AppAthletesRouteImport.update({
   path: '/athletes',
   getParentRoute: () => AppRoute,
 } as any)
-const PublicEnIndexRoute = PublicEnIndexRouteImport.update({
-  id: '/en/',
-  path: '/en/',
-  getParentRoute: () => PublicRoute,
-} as any)
 const AppMobileIndexRoute = AppMobileIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppMobileRoute,
-} as any)
-const DemoMobileCoachRoute = DemoMobileCoachRouteImport.update({
-  id: '/demo/mobile/coach',
-  path: '/demo/mobile/coach',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoMobileAthleteRoute = DemoMobileAthleteRouteImport.update({
-  id: '/demo/mobile/athlete',
-  path: '/demo/mobile/athlete',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicEnSeguridadRoute = PublicEnSeguridadRouteImport.update({
-  id: '/en/seguridad',
-  path: '/en/seguridad',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnProductoRoute = PublicEnProductoRouteImport.update({
-  id: '/en/producto',
-  path: '/en/producto',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnPrivacidadRoute = PublicEnPrivacidadRouteImport.update({
-  id: '/en/privacidad',
-  path: '/en/privacidad',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnPreciosRoute = PublicEnPreciosRouteImport.update({
-  id: '/en/precios',
-  path: '/en/precios',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnMultiClubRoute = PublicEnMultiClubRouteImport.update({
-  id: '/en/multi-club',
-  path: '/en/multi-club',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnIaRoute = PublicEnIaRouteImport.update({
-  id: '/en/ia',
-  path: '/en/ia',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnCookiesRoute = PublicEnCookiesRouteImport.update({
-  id: '/en/cookies',
-  path: '/en/cookies',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnContactoRoute = PublicEnContactoRouteImport.update({
-  id: '/en/contacto',
-  path: '/en/contacto',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnClientesRoute = PublicEnClientesRouteImport.update({
-  id: '/en/clientes',
-  path: '/en/clientes',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicEnAvisoLegalRoute = PublicEnAvisoLegalRouteImport.update({
-  id: '/en/aviso-legal',
-  path: '/en/aviso-legal',
-  getParentRoute: () => PublicRoute,
 } as any)
 const AppSettingsTeamRoute = AppSettingsTeamRouteImport.update({
   id: '/settings/team',
@@ -377,8 +222,7 @@ const AppCnsoSlugRoute = AppCnsoSlugRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof PublicIndexRoute
-  '/en': typeof EnRoute
+  '/': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/athletes': typeof AppAthletesRoute
@@ -392,16 +236,6 @@ export interface FileRoutesByFullPath {
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRoute
-  '/aviso-legal': typeof PublicAvisoLegalRoute
-  '/clientes': typeof PublicClientesRoute
-  '/contacto': typeof PublicContactoRoute
-  '/cookies': typeof PublicCookiesRoute
-  '/ia': typeof PublicIaRoute
-  '/multi-club': typeof PublicMultiClubRoute
-  '/precios': typeof PublicPreciosRoute
-  '/privacidad': typeof PublicPrivacidadRoute
-  '/producto': typeof PublicProductoRoute
-  '/seguridad': typeof PublicSeguridadRoute
   '/cnso/$slug': typeof AppCnsoSlugRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
@@ -422,24 +256,10 @@ export interface FileRoutesByFullPath {
   '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/qa': typeof AppSettingsQaRoute
   '/settings/team': typeof AppSettingsTeamRoute
-  '/en/aviso-legal': typeof PublicEnAvisoLegalRoute
-  '/en/clientes': typeof PublicEnClientesRoute
-  '/en/contacto': typeof PublicEnContactoRoute
-  '/en/cookies': typeof PublicEnCookiesRoute
-  '/en/ia': typeof PublicEnIaRoute
-  '/en/multi-club': typeof PublicEnMultiClubRoute
-  '/en/precios': typeof PublicEnPreciosRoute
-  '/en/privacidad': typeof PublicEnPrivacidadRoute
-  '/en/producto': typeof PublicEnProductoRoute
-  '/en/seguridad': typeof PublicEnSeguridadRoute
-  '/demo/mobile/athlete': typeof DemoMobileAthleteRoute
-  '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/mobile/': typeof AppMobileIndexRoute
-  '/en/': typeof PublicEnIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof PublicIndexRoute
-  '/en': typeof PublicEnIndexRoute
+  '/': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/athletes': typeof AppAthletesRoute
@@ -452,16 +272,6 @@ export interface FileRoutesByTo {
   '/organizations': typeof AppOrganizationsRoute
   '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRoute
-  '/aviso-legal': typeof PublicAvisoLegalRoute
-  '/clientes': typeof PublicClientesRoute
-  '/contacto': typeof PublicContactoRoute
-  '/cookies': typeof PublicCookiesRoute
-  '/ia': typeof PublicIaRoute
-  '/multi-club': typeof PublicMultiClubRoute
-  '/precios': typeof PublicPreciosRoute
-  '/privacidad': typeof PublicPrivacidadRoute
-  '/producto': typeof PublicProductoRoute
-  '/seguridad': typeof PublicSeguridadRoute
   '/cnso/$slug': typeof AppCnsoSlugRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
@@ -482,25 +292,11 @@ export interface FileRoutesByTo {
   '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/qa': typeof AppSettingsQaRoute
   '/settings/team': typeof AppSettingsTeamRoute
-  '/en/aviso-legal': typeof PublicEnAvisoLegalRoute
-  '/en/clientes': typeof PublicEnClientesRoute
-  '/en/contacto': typeof PublicEnContactoRoute
-  '/en/cookies': typeof PublicEnCookiesRoute
-  '/en/ia': typeof PublicEnIaRoute
-  '/en/multi-club': typeof PublicEnMultiClubRoute
-  '/en/precios': typeof PublicEnPreciosRoute
-  '/en/privacidad': typeof PublicEnPrivacidadRoute
-  '/en/producto': typeof PublicEnProductoRoute
-  '/en/seguridad': typeof PublicEnSeguridadRoute
-  '/demo/mobile/athlete': typeof DemoMobileAthleteRoute
-  '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/mobile': typeof AppMobileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
-  '/_public': typeof PublicRouteWithChildren
-  '/en': typeof EnRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_app/athletes': typeof AppAthletesRoute
@@ -514,17 +310,6 @@ export interface FileRoutesById {
   '/_app/organizations': typeof AppOrganizationsRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/reports': typeof AppReportsRoute
-  '/_public/aviso-legal': typeof PublicAvisoLegalRoute
-  '/_public/clientes': typeof PublicClientesRoute
-  '/_public/contacto': typeof PublicContactoRoute
-  '/_public/cookies': typeof PublicCookiesRoute
-  '/_public/ia': typeof PublicIaRoute
-  '/_public/multi-club': typeof PublicMultiClubRoute
-  '/_public/precios': typeof PublicPreciosRoute
-  '/_public/privacidad': typeof PublicPrivacidadRoute
-  '/_public/producto': typeof PublicProductoRoute
-  '/_public/seguridad': typeof PublicSeguridadRoute
-  '/_public/': typeof PublicIndexRoute
   '/_app/cnso/$slug': typeof AppCnsoSlugRoute
   '/_app/economic/fees': typeof AppEconomicFeesRoute
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
@@ -545,26 +330,12 @@ export interface FileRoutesById {
   '/_app/settings/privacy': typeof AppSettingsPrivacyRoute
   '/_app/settings/qa': typeof AppSettingsQaRoute
   '/_app/settings/team': typeof AppSettingsTeamRoute
-  '/_public/en/aviso-legal': typeof PublicEnAvisoLegalRoute
-  '/_public/en/clientes': typeof PublicEnClientesRoute
-  '/_public/en/contacto': typeof PublicEnContactoRoute
-  '/_public/en/cookies': typeof PublicEnCookiesRoute
-  '/_public/en/ia': typeof PublicEnIaRoute
-  '/_public/en/multi-club': typeof PublicEnMultiClubRoute
-  '/_public/en/precios': typeof PublicEnPreciosRoute
-  '/_public/en/privacidad': typeof PublicEnPrivacidadRoute
-  '/_public/en/producto': typeof PublicEnProductoRoute
-  '/_public/en/seguridad': typeof PublicEnSeguridadRoute
-  '/demo/mobile/athlete': typeof DemoMobileAthleteRoute
-  '/demo/mobile/coach': typeof DemoMobileCoachRoute
   '/_app/mobile/': typeof AppMobileIndexRoute
-  '/_public/en/': typeof PublicEnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/en'
     | '/login'
     | '/signup'
     | '/athletes'
@@ -578,16 +349,6 @@ export interface FileRouteTypes {
     | '/organizations'
     | '/profile'
     | '/reports'
-    | '/aviso-legal'
-    | '/clientes'
-    | '/contacto'
-    | '/cookies'
-    | '/ia'
-    | '/multi-club'
-    | '/precios'
-    | '/privacidad'
-    | '/producto'
-    | '/seguridad'
     | '/cnso/$slug'
     | '/economic/fees'
     | '/economic/payments'
@@ -608,24 +369,10 @@ export interface FileRouteTypes {
     | '/settings/privacy'
     | '/settings/qa'
     | '/settings/team'
-    | '/en/aviso-legal'
-    | '/en/clientes'
-    | '/en/contacto'
-    | '/en/cookies'
-    | '/en/ia'
-    | '/en/multi-club'
-    | '/en/precios'
-    | '/en/privacidad'
-    | '/en/producto'
-    | '/en/seguridad'
-    | '/demo/mobile/athlete'
-    | '/demo/mobile/coach'
     | '/mobile/'
-    | '/en/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/en'
     | '/login'
     | '/signup'
     | '/athletes'
@@ -638,16 +385,6 @@ export interface FileRouteTypes {
     | '/organizations'
     | '/profile'
     | '/reports'
-    | '/aviso-legal'
-    | '/clientes'
-    | '/contacto'
-    | '/cookies'
-    | '/ia'
-    | '/multi-club'
-    | '/precios'
-    | '/privacidad'
-    | '/producto'
-    | '/seguridad'
     | '/cnso/$slug'
     | '/economic/fees'
     | '/economic/payments'
@@ -668,24 +405,10 @@ export interface FileRouteTypes {
     | '/settings/privacy'
     | '/settings/qa'
     | '/settings/team'
-    | '/en/aviso-legal'
-    | '/en/clientes'
-    | '/en/contacto'
-    | '/en/cookies'
-    | '/en/ia'
-    | '/en/multi-club'
-    | '/en/precios'
-    | '/en/privacidad'
-    | '/en/producto'
-    | '/en/seguridad'
-    | '/demo/mobile/athlete'
-    | '/demo/mobile/coach'
     | '/mobile'
   id:
     | '__root__'
     | '/_app'
-    | '/_public'
-    | '/en'
     | '/login'
     | '/signup'
     | '/_app/athletes'
@@ -699,17 +422,6 @@ export interface FileRouteTypes {
     | '/_app/organizations'
     | '/_app/profile'
     | '/_app/reports'
-    | '/_public/aviso-legal'
-    | '/_public/clientes'
-    | '/_public/contacto'
-    | '/_public/cookies'
-    | '/_public/ia'
-    | '/_public/multi-club'
-    | '/_public/precios'
-    | '/_public/privacidad'
-    | '/_public/producto'
-    | '/_public/seguridad'
-    | '/_public/'
     | '/_app/cnso/$slug'
     | '/_app/economic/fees'
     | '/_app/economic/payments'
@@ -730,30 +442,13 @@ export interface FileRouteTypes {
     | '/_app/settings/privacy'
     | '/_app/settings/qa'
     | '/_app/settings/team'
-    | '/_public/en/aviso-legal'
-    | '/_public/en/clientes'
-    | '/_public/en/contacto'
-    | '/_public/en/cookies'
-    | '/_public/en/ia'
-    | '/_public/en/multi-club'
-    | '/_public/en/precios'
-    | '/_public/en/privacidad'
-    | '/_public/en/producto'
-    | '/_public/en/seguridad'
-    | '/demo/mobile/athlete'
-    | '/demo/mobile/coach'
     | '/_app/mobile/'
-    | '/_public/en/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
-  PublicRoute: typeof PublicRouteWithChildren
-  EnRoute: typeof EnRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
-  DemoMobileAthleteRoute: typeof DemoMobileAthleteRoute
-  DemoMobileCoachRoute: typeof DemoMobileCoachRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -772,103 +467,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/en': {
-      id: '/en'
-      path: '/en'
-      fullPath: '/en'
-      preLoaderRoute: typeof EnRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public': {
-      id: '/_public'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof PublicRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app': {
       id: '/_app'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_public/': {
-      id: '/_public/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof PublicIndexRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/seguridad': {
-      id: '/_public/seguridad'
-      path: '/seguridad'
-      fullPath: '/seguridad'
-      preLoaderRoute: typeof PublicSeguridadRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/producto': {
-      id: '/_public/producto'
-      path: '/producto'
-      fullPath: '/producto'
-      preLoaderRoute: typeof PublicProductoRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/privacidad': {
-      id: '/_public/privacidad'
-      path: '/privacidad'
-      fullPath: '/privacidad'
-      preLoaderRoute: typeof PublicPrivacidadRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/precios': {
-      id: '/_public/precios'
-      path: '/precios'
-      fullPath: '/precios'
-      preLoaderRoute: typeof PublicPreciosRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/multi-club': {
-      id: '/_public/multi-club'
-      path: '/multi-club'
-      fullPath: '/multi-club'
-      preLoaderRoute: typeof PublicMultiClubRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/ia': {
-      id: '/_public/ia'
-      path: '/ia'
-      fullPath: '/ia'
-      preLoaderRoute: typeof PublicIaRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/cookies': {
-      id: '/_public/cookies'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof PublicCookiesRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/contacto': {
-      id: '/_public/contacto'
-      path: '/contacto'
-      fullPath: '/contacto'
-      preLoaderRoute: typeof PublicContactoRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/clientes': {
-      id: '/_public/clientes'
-      path: '/clientes'
-      fullPath: '/clientes'
-      preLoaderRoute: typeof PublicClientesRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/aviso-legal': {
-      id: '/_public/aviso-legal'
-      path: '/aviso-legal'
-      fullPath: '/aviso-legal'
-      preLoaderRoute: typeof PublicAvisoLegalRouteImport
-      parentRoute: typeof PublicRoute
     }
     '/_app/reports': {
       id: '/_app/reports'
@@ -947,103 +551,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAthletesRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_public/en/': {
-      id: '/_public/en/'
-      path: '/en'
-      fullPath: '/en/'
-      preLoaderRoute: typeof PublicEnIndexRouteImport
-      parentRoute: typeof PublicRoute
-    }
     '/_app/mobile/': {
       id: '/_app/mobile/'
       path: '/'
       fullPath: '/mobile/'
       preLoaderRoute: typeof AppMobileIndexRouteImport
       parentRoute: typeof AppMobileRoute
-    }
-    '/demo/mobile/coach': {
-      id: '/demo/mobile/coach'
-      path: '/demo/mobile/coach'
-      fullPath: '/demo/mobile/coach'
-      preLoaderRoute: typeof DemoMobileCoachRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/mobile/athlete': {
-      id: '/demo/mobile/athlete'
-      path: '/demo/mobile/athlete'
-      fullPath: '/demo/mobile/athlete'
-      preLoaderRoute: typeof DemoMobileAthleteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public/en/seguridad': {
-      id: '/_public/en/seguridad'
-      path: '/en/seguridad'
-      fullPath: '/en/seguridad'
-      preLoaderRoute: typeof PublicEnSeguridadRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/producto': {
-      id: '/_public/en/producto'
-      path: '/en/producto'
-      fullPath: '/en/producto'
-      preLoaderRoute: typeof PublicEnProductoRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/privacidad': {
-      id: '/_public/en/privacidad'
-      path: '/en/privacidad'
-      fullPath: '/en/privacidad'
-      preLoaderRoute: typeof PublicEnPrivacidadRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/precios': {
-      id: '/_public/en/precios'
-      path: '/en/precios'
-      fullPath: '/en/precios'
-      preLoaderRoute: typeof PublicEnPreciosRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/multi-club': {
-      id: '/_public/en/multi-club'
-      path: '/en/multi-club'
-      fullPath: '/en/multi-club'
-      preLoaderRoute: typeof PublicEnMultiClubRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/ia': {
-      id: '/_public/en/ia'
-      path: '/en/ia'
-      fullPath: '/en/ia'
-      preLoaderRoute: typeof PublicEnIaRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/cookies': {
-      id: '/_public/en/cookies'
-      path: '/en/cookies'
-      fullPath: '/en/cookies'
-      preLoaderRoute: typeof PublicEnCookiesRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/contacto': {
-      id: '/_public/en/contacto'
-      path: '/en/contacto'
-      fullPath: '/en/contacto'
-      preLoaderRoute: typeof PublicEnContactoRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/clientes': {
-      id: '/_public/en/clientes'
-      path: '/en/clientes'
-      fullPath: '/en/clientes'
-      preLoaderRoute: typeof PublicEnClientesRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/en/aviso-legal': {
-      id: '/_public/en/aviso-legal'
-      path: '/en/aviso-legal'
-      fullPath: '/en/aviso-legal'
-      preLoaderRoute: typeof PublicEnAvisoLegalRouteImport
-      parentRoute: typeof PublicRoute
     }
     '/_app/settings/team': {
       id: '/_app/settings/team'
@@ -1270,67 +783,10 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
-interface PublicRouteChildren {
-  PublicAvisoLegalRoute: typeof PublicAvisoLegalRoute
-  PublicClientesRoute: typeof PublicClientesRoute
-  PublicContactoRoute: typeof PublicContactoRoute
-  PublicCookiesRoute: typeof PublicCookiesRoute
-  PublicIaRoute: typeof PublicIaRoute
-  PublicMultiClubRoute: typeof PublicMultiClubRoute
-  PublicPreciosRoute: typeof PublicPreciosRoute
-  PublicPrivacidadRoute: typeof PublicPrivacidadRoute
-  PublicProductoRoute: typeof PublicProductoRoute
-  PublicSeguridadRoute: typeof PublicSeguridadRoute
-  PublicIndexRoute: typeof PublicIndexRoute
-  PublicEnAvisoLegalRoute: typeof PublicEnAvisoLegalRoute
-  PublicEnClientesRoute: typeof PublicEnClientesRoute
-  PublicEnContactoRoute: typeof PublicEnContactoRoute
-  PublicEnCookiesRoute: typeof PublicEnCookiesRoute
-  PublicEnIaRoute: typeof PublicEnIaRoute
-  PublicEnMultiClubRoute: typeof PublicEnMultiClubRoute
-  PublicEnPreciosRoute: typeof PublicEnPreciosRoute
-  PublicEnPrivacidadRoute: typeof PublicEnPrivacidadRoute
-  PublicEnProductoRoute: typeof PublicEnProductoRoute
-  PublicEnSeguridadRoute: typeof PublicEnSeguridadRoute
-  PublicEnIndexRoute: typeof PublicEnIndexRoute
-}
-
-const PublicRouteChildren: PublicRouteChildren = {
-  PublicAvisoLegalRoute: PublicAvisoLegalRoute,
-  PublicClientesRoute: PublicClientesRoute,
-  PublicContactoRoute: PublicContactoRoute,
-  PublicCookiesRoute: PublicCookiesRoute,
-  PublicIaRoute: PublicIaRoute,
-  PublicMultiClubRoute: PublicMultiClubRoute,
-  PublicPreciosRoute: PublicPreciosRoute,
-  PublicPrivacidadRoute: PublicPrivacidadRoute,
-  PublicProductoRoute: PublicProductoRoute,
-  PublicSeguridadRoute: PublicSeguridadRoute,
-  PublicIndexRoute: PublicIndexRoute,
-  PublicEnAvisoLegalRoute: PublicEnAvisoLegalRoute,
-  PublicEnClientesRoute: PublicEnClientesRoute,
-  PublicEnContactoRoute: PublicEnContactoRoute,
-  PublicEnCookiesRoute: PublicEnCookiesRoute,
-  PublicEnIaRoute: PublicEnIaRoute,
-  PublicEnMultiClubRoute: PublicEnMultiClubRoute,
-  PublicEnPreciosRoute: PublicEnPreciosRoute,
-  PublicEnPrivacidadRoute: PublicEnPrivacidadRoute,
-  PublicEnProductoRoute: PublicEnProductoRoute,
-  PublicEnSeguridadRoute: PublicEnSeguridadRoute,
-  PublicEnIndexRoute: PublicEnIndexRoute,
-}
-
-const PublicRouteWithChildren =
-  PublicRoute._addFileChildren(PublicRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
-  PublicRoute: PublicRouteWithChildren,
-  EnRoute: EnRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
-  DemoMobileAthleteRoute: DemoMobileAthleteRoute,
-  DemoMobileCoachRoute: DemoMobileCoachRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
