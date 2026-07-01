@@ -6,6 +6,7 @@ import {
   TriangleAlert,
   Activity,
   CalendarPlus,
+  Check,
   ChevronDown,
   X,
   Star,
