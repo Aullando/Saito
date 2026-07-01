@@ -1285,14 +1285,3 @@ function ArchivedTab({
   );
 }
 
-// ────── utils ──────
-
-function extractRecipientsCount(label: string): number | null {
-  const m = label.match(/(\d+)\s+destinatari/);
-  return m ? Number(m[1]) : null;
-}
-
-function guessAthleteName(title: string): string | null {
-  const m = title.match(/·\s*(.+)$/);
-  return m ? m[1].trim() : null;
-}
