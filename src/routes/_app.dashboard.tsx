@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
-import { PageHeader, Card, Pill } from "@/components/ui-kit";
+import { PageHeader, Card } from "@/components/ui-kit";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useTr } from "@/lib/i18n";
 import { useClub } from "@/clubs/ClubProvider";
@@ -28,6 +28,17 @@ import {
   Clock,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import {
+  fmtMoney,
+  todayISO,
+  weekRange,
+  stableHash,
+  eventTone,
+  Kpi,
+  SectionHeader,
+  Empty,
+  Pill,
+} from "@/features/dashboard/helpers";
 
 export const Route = createFileRoute("/_app/dashboard")({
   component: () => (
@@ -46,33 +57,6 @@ function DashboardSwitch() {
   if (club.id === "gff-demo") return <GffWorkspace view="dashboard" />;
   return <CommandCenter />;
 }
-
-// ---------- Helpers ----------
-const fmtMoney = (n: number) =>
-  new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 0,
-  }).format(n);
-
-const todayISO = () => new Date().toISOString().slice(0, 10);
-
-function weekRange() {
-  const d = new Date();
-  const day = (d.getDay() + 6) % 7; // Monday=0
-  const start = new Date(d);
-  start.setDate(d.getDate() - day);
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(start.getDate() + 6);
-  return {
-    start: start.toISOString().slice(0, 10),
-    end: end.toISOString().slice(0, 10),
-  };
-}
-
-// Deterministic helper to derive a stable fake percentage from an array length
-const stableHash = (n: number, salt = 7) => Math.abs(Math.sin(n * 9301 + salt) * 10000) % 1;
 
 // ---------- Command Center ----------
 function CommandCenter() {
