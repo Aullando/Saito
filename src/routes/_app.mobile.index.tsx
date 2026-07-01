@@ -2,15 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
-  Clock,
-  MapPin,
   ArrowRight,
   TriangleAlert,
   Activity,
   CalendarPlus,
   ChevronDown,
   X,
-  Check,
   Star,
   Sparkles,
   Trophy,
@@ -20,21 +17,28 @@ import { useSessionLocal } from "@/lib/sessionLocal";
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileHome } from "@/clubs/gff/GffMobileWorkspace";
 import { CnsoMobileHome } from "@/clubs/cnso/CnsoMobileWorkspace";
-import { useTr, useLang } from "@/lib/i18n";
+import { useTr } from "@/lib/i18n";
+import {
+  ATHL,
+  AbsenceModal,
+  CARD_BORDER,
+  COACH,
+  Ev,
+  GroupSelector,
+  INK,
+  MUTED,
+  RatingCard,
+  SHADOW,
+  SOFT_BG,
+  Stars,
+  TodayCard,
+} from "@/features/mobile/homeUi";
 
 const DEMO_SESSION_ID = "session-today";
 
 export const Route = createFileRoute("/_app/mobile/")({
   component: MobileHome,
 });
-
-const INK = "#21324A";
-const MUTED = "#66758A";
-const SOFT_BG = "#EEF3F8";
-const CARD_BORDER = "#DDE6F0";
-const ATHL = "#F12F4A";
-const COACH = "#00A74D";
-const SHADOW = "0 4px 16px rgba(33, 50, 74, 0.06)";
 
 function MobileHome() {
   const { club } = useClub();
@@ -53,8 +57,6 @@ function DefaultMobileHome() {
 
   return isCoach ? <CoachHome event={todayEvent} /> : <AthleteHome event={todayEvent} />;
 }
-
-type Ev = ReturnType<typeof useData.getState>["events"][number] | undefined;
 
 /* ─────────────── Card de "Hoy" compartida ─────────────── */
 function TodayCard({
