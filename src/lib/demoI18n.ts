@@ -1,6 +1,7 @@
 // Runtime translation layer for demo data values.
 // Seeds remain in Spanish; this helper translates known strings on render.
 // Proper names (people, venues, club) are intentionally NOT translated.
+import { useCallback } from "react";
 import { useLang } from "./i18n";
 import type { Lang } from "./types";
 
@@ -251,10 +252,10 @@ export function td(value: string | undefined | null, lang: Lang): string {
   return MAP[value] ?? value;
 }
 
-/** Hook variant. */
+/** Hook variant. Stable identity per language for downstream memoization. */
 export function useTd() {
   const lang = useLang();
-  return (value: string | undefined | null) => td(value, lang);
+  return useCallback((value: string | undefined | null) => td(value, lang), [lang]);
 }
 
 /** Translate the schedule strings ("L–V 07:00–23:00 · S–D 08:00–22:00"). */
