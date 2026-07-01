@@ -38,7 +38,7 @@ const getAttOptions = (tr: (es: string, en: string) => string) => [
   { key: "injured" as AttStatus, label: tr("Lesion.", "Injured"), cls: "bg-violet-100 text-violet-800 border-violet-200" },
 ];
 
-function Attendance() {
+export function Attendance() {
   const tr = useTr();
   const ATT_OPTIONS = getAttOptions(tr);
   const athletes = useDemoAthletes();
@@ -116,7 +116,7 @@ function Attendance() {
 }
 
 // ───────── CONVOCATORIA ─────────
-function CallUp() {
+export function CallUp() {
   const tr = useTr();
   const athletes = useDemoAthletes(14);
   const saveCallup = useSessionLocal((s) => s.saveCallup);
@@ -187,7 +187,7 @@ function CallUp() {
 }
 
 // ───────── NOTAS ─────────
-function Notes() {
+export function Notes() {
   const tr = useTr();
   const lang = useLang();
   const addNote = useSessionLocal((s) => s.addNote);
@@ -267,7 +267,7 @@ function Notes() {
 }
 
 // ───────── VALORACIONES ─────────
-function Ratings() {
+export function Ratings() {
   const tr = useTr();
   const saveRating = useSessionLocal((s) => s.saveRating);
   const [rpe, setRpe] = useState(6);
@@ -333,7 +333,7 @@ function Ratings() {
 
 // ───────── IA SESIÓN ─────────
 type AIBlock = { title: string; items: string[] };
-function AISession() {
+export function AISession() {
   const tr = useTr();
   const td = useTd();
   const acceptAIBlock = useSessionLocal((s) => s.acceptAIBlock);
@@ -471,7 +471,7 @@ function AISession() {
 
 // ───────── AUSENCIA ─────────
 const ABSENCE_REASONS = ["Enfermedad", "Lesión", "Estudios", "Trabajo", "Personal", "Otro"];
-function Absence() {
+export function Absence() {
   const tr = useTr();
   const td = useTd();
   const user = useCurrentUser();
@@ -533,7 +533,7 @@ function Absence() {
 
 // ───────── SOLICITAR CITA ─────────
 const SPECIALTIES = ["Fisioterapia", "Medicina deportiva", "Nutrición", "Psicología"];
-function RequestAppointment() {
+export function RequestAppointment() {
   const tr = useTr();
   const td = useTd();
   const user = useCurrentUser();
@@ -609,7 +609,7 @@ function RequestAppointment() {
 }
 
 // ───────── SESSION INFO / FEEDBACK / HEALTH / TREATMENT / PERFORMANCE / NOTIFICATIONS ─────────
-function SessionInfo() {
+export function SessionInfo() {
   const tr = useTr();
   const td = useTd();
   const athletes = useData((s) => s.athletes).slice(0, 8);
@@ -790,7 +790,7 @@ function SessionInfo() {
   );
 }
 
-function Feedback() {
+export function Feedback() {
   const tr = useTr();
   const user = useCurrentUser();
   const sendFeedback = useSessionLocal((s) => s.sendFeedback);
@@ -838,7 +838,7 @@ function Feedback() {
   );
 }
 
-function Health() {
+export function Health() {
   const tr = useTr();
   const td = useTd();
   return (
@@ -881,7 +881,7 @@ function Health() {
   );
 }
 
-function Treatment() {
+export function Treatment() {
   const tr = useTr();
   return (
     <div className="space-y-3">
@@ -903,7 +903,7 @@ function Treatment() {
   );
 }
 
-function Performance() {
+export function Performance() {
   const tr = useTr();
   const td = useTd();
   return (
@@ -950,7 +950,7 @@ function Performance() {
   );
 }
 
-function Notifications() {
+export function Notifications() {
   const td = useTd();
   const items = [
     { id: "n1", title: "Nuevo mensaje del entrenador", time: "hace 12 min" },
