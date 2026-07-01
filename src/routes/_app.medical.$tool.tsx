@@ -348,49 +348,6 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
 
 // ───────────────────── PLANES DE TRATAMIENTO ─────────────────────
 
-type Treatment = {
-  id: string;
-  athlete: string;
-  title: string;
-  responsible: string;
-  sessionsDone: number;
-  sessionsTotal: number;
-  nextReview: string;
-  status: "active" | "finished";
-};
-
-const SEED_TREATMENTS: Treatment[] = [
-  {
-    id: "t1",
-    athlete: "Alejandro Ruiz",
-    title: "Protocolo tobillo · 4 semanas",
-    responsible: "J. Romero (fisio)",
-    sessionsDone: 5,
-    sessionsTotal: 12,
-    nextReview: "2026-05-22",
-    status: "active",
-  },
-  {
-    id: "t2",
-    athlete: "Marta Domínguez",
-    title: "Readaptación isquiotibial",
-    responsible: "J. Romero (fisio)",
-    sessionsDone: 2,
-    sessionsTotal: 8,
-    nextReview: "2026-05-20",
-    status: "active",
-  },
-  {
-    id: "t3",
-    athlete: "Hugo López",
-    title: "Recuperación contusión rodilla",
-    responsible: "Dra. M. Vidal",
-    sessionsDone: 6,
-    sessionsTotal: 6,
-    nextReview: "—",
-    status: "finished",
-  },
-];
 
 function TreatmentsView() {
   const tr = useTr();
