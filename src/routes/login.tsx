@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import saitoHero from "@/assets/saito-hero.png.asset.json";
 import saitoFullLogo from "@/assets/brand/saito-logo-frase.png";
 import { useAuth as useLocalAuth } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
