@@ -1,125 +1,63 @@
-# SAITO
+# SAITO — Demo Interactiva
 
-Aplicación de gestión multi-club construida sobre **TanStack Start** + **Lovable Cloud**.
+Plataforma multi-club para gestión deportiva. **Este repositorio es una demo comercial**: sin backend real, sin billing, sin datos de producción. Todo el estado vive en el navegador (Zustand + localStorage) y los seeds son ficticios.
 
-> Este proyecto está optimizado para ejecutarse en [Lovable](https://lovable.dev) y para
-> instalarse localmente con **npm**. No depende de Bun, pnpm ni yarn.
+## Acceso
 
----
+- **URL**: la que sirva la preview / hosting
+- **Contraseña del gate**: `SIHSAITO`
+- Tras el gate se cae en `/login`, donde se elige **club** y **rol**.
 
-## Requisitos
+## Clubes incluidos
 
-- Node.js ≥ 20
-- npm ≥ 10 (declarado en `package.json` con `"packageManager": "npm@10"`)
+| Club | Slug | Perfil |
+|---|---|---|
+| **SAITO** | `saito-demo` | Club deportivo multi-sección (atletismo, fútbol, natación, baloncesto, gimnasia) |
+| **RGCC — Real Grupo Cultura Covadonga** | `rgcc` | Club social multidisciplinar con salas, fitness, escuelas |
+| **CNSO — Club Natación Santa Olaya** | `cnso` | Club de natación (calles de agua, competición, tecnificación) |
+| **GFF — Gulf Football Federation** | `gff-demo` | Federación en árabe/inglés para presentación internacional |
 
-## Instalación local
+## Roles
 
-```bash
-npm ci
-npm run dev
+Cada rol ve **solo su superficie**. Se demuestra explícitamente:
+
+- **Dirección (manager)** — vista completa del club
+- **Administración (admin)** — socios, cuotas, pagos, comunicación
+- **Staff médico** — incidencias sanitarias con diagnóstico, restricciones, calendario médico
+- **Entrenador (technical)** — mobile-only: sesiones, drills, restricciones operativas **sin** diagnóstico
+- **Atleta / Nadador** — mobile-only: su día, sus marcas, sus mensajes
+
+## Idiomas
+
+Selector ES/EN en la topbar (AR/EN para GFF). Toda la UI **y** los datos demo cambian de idioma en tiempo real.
+
+## IA (Copiloto)
+
+- Chat contextual conectado a `ai-chat` (edge function con Lovable AI Gateway).
+- Ejecuta **14 acciones reales** sobre el estado demo: marcar pagos, mover eventos, cambiar estado médico, enviar mensajes, etc.
+- El rol activo determina qué acciones puede pedir.
+
+## Estructura
+
+```
+src/
+  routes/           Rutas TanStack (una por módulo)
+  clubs/            Perfil por club: sidebar, seed, aiContext, mobile workspace
+  components/       UI compartida (Sidebar, Topbar, AIChat, PasswordGate…)
+  lib/              i18n, demoI18n, store, tipos, seeds
+supabase/functions/
+  ai-chat/          Copiloto conversacional con tool calls
 ```
 
-La app arranca en `http://localhost:5173` (puerto por defecto de Vite).
+## Recorrido comercial recomendado
 
-## Scripts disponibles
+1. **Login → SAITO → Dirección** — dashboard, KPIs, calendario, comunicación.
+2. **Cambiar a rol médico** — mostrar filtrado (solo salud, con diagnóstico).
+3. **Cambiar a rol entrenador (móvil)** — mismas incidencias sin diagnóstico.
+4. **Selector de club → CNSO** — mismo esqueleto, otro deporte, otro branding.
+5. **Copiloto** — "marca como pagado el próximo pago pendiente".
+6. **Toggle EN** — todo se traduce, incluidos seeds.
 
-| Script | Descripción |
-|---|---|
-| `npm run dev` | Servidor de desarrollo Vite |
-| `npm run build` | Build de producción |
-| `npm run lint` | ESLint |
-| `npm run format` | Prettier |
-| `npm test` | Tests unitarios (Vitest) |
-| `npm run test:e2e` | Tests E2E (Playwright). Requiere `npx playwright install chromium` la primera vez |
+## Fuera del alcance MVP
 
----
-
-## Variables de entorno
-
-**No se versiona ningún `.env` real.** El archivo `.env` está en `.gitignore`. Solo
-`.env.example` se mantiene en el repositorio como plantilla y documentación.
-
-En **Lovable** las variables se configuran desde el panel de entorno (Lovable Cloud →
-Settings, o Workspace → Build Secrets para variables de build). En local, copia
-`.env.example` a `.env` y rellénalo.
-
-### Reglas de seguridad
-
-- Las variables con prefijo `VITE_*` se inyectan en el bundle del navegador y son
-  **públicas**. Cualquier visitante puede leerlas en DevTools.
-- **Nunca** pongas una `SERVICE_ROLE_KEY` (ni cualquier secreto del servidor) en una
-  variable `VITE_*`. Solo claves *publishable / anon* son aceptables ahí.
-- Los secretos reales (service role, claves de proveedores externos) viven en
-  Supabase Edge Function secrets / Lovable Cloud secrets.
-
-### Configuración recomendada
-
-**Preview comercial (público, sin contraseña):**
-
-```env
-VITE_DEMO_MODE=true
-VITE_SHOW_DATA_SOURCE_BADGE=true
-VITE_ENABLE_PASSWORD_GATE=false
-```
-
-**Demo privada (gate por contraseña):**
-
-```env
-VITE_DEMO_MODE=true
-VITE_SHOW_DATA_SOURCE_BADGE=true
-VITE_ENABLE_PASSWORD_GATE=true
-VITE_DEMO_PASSWORD=change-me
-```
-
-**Producción real:**
-
-```env
-VITE_DEMO_MODE=false
-VITE_SHOW_DATA_SOURCE_BADGE=false
-VITE_ENABLE_PASSWORD_GATE=false
-# + claves Supabase reales
-```
-
----
-
-## Modo demo vs modo producción
-
-El proyecto puede correr **sin backend configurado** gracias al modo demo:
-
-- `VITE_DEMO_MODE=true` (o sin definir): cuando una query falla o no hay datos, se
-  muestran datos seed para que la demo siga viéndose completa. El badge
-  `Demo · Datos demo` aparece si `VITE_SHOW_DATA_SOURCE_BADGE=true`.
-- `VITE_DEMO_MODE=false`: las queries que fallen muestran error / estado vacío.
-  **Nunca** se sirven datos seed silenciosamente como si fueran reales. El badge
-  cambia a `Producción · Datos reales`.
-
-Helpers en `src/lib/appMode.ts` y `src/lib/demoFallback.ts`.
-
-## PasswordGate
-
-El componente `src/components/PasswordGate.tsx`:
-
-- Está **desactivado por defecto**. Solo se activa con
-  `VITE_ENABLE_PASSWORD_GATE=true`.
-- Si está activo, lee la contraseña **exclusivamente** de `VITE_DEMO_PASSWORD`.
-  **No existe contraseña por defecto** (`"hola"` ha sido eliminado): si
-  `VITE_DEMO_PASSWORD` no está definida, el gate bloquea el acceso y muestra
-  un error de configuración explícito.
-- **No es seguridad real**, solo gating de demo. La contraseña viaja al cliente.
-
-## Rutas de la App móvil
-
-- `/mobile` es la **única App móvil oficial** (frame 390px, sin sidebar,
-  navegación inferior). Entrenador en verde Coaching (#00A74D), Atleta en rojo
-  Sport Life (#F12F4A).
-- `/demo/mobile/coach` y `/demo/mobile/athlete` están **deprecadas** y
-  redirigen a `/mobile` fijando el rol correspondiente. No mantener
-  experiencias alternativas en esas rutas.
-
----
-
-## Despliegue
-
-El despliegue se hace desde Lovable con el botón **Publish**. Los cambios de
-backend (edge functions, migraciones) se despliegan automáticamente; los cambios
-de frontend requieren pulsar "Update" en el diálogo de publish.
+WFC, Stripe real, billing SaaS, reporting avanzado, panel DPO, IA médica clínica, alta médica automática, recurrencias complejas. Ver `docs/mvp-spec.md`.
