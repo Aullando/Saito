@@ -41,6 +41,14 @@ import {
   Layers,
 } from "lucide-react";
 import type { Role } from "@/lib/types";
+import {
+  DAY_NAMES_ES,
+  DAY_NAMES_EN,
+  categoryName,
+  Section,
+  RoleCard,
+  Stat,
+} from "@/features/club/helpers";
 
 export const Route = createFileRoute("/_app/club")({
   component: () => (
@@ -51,9 +59,6 @@ export const Route = createFileRoute("/_app/club")({
     </RoleGate>
   ),
 });
-
-const DAY_NAMES_ES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-const DAY_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function ClubPage() {
   const tr = useTr();
