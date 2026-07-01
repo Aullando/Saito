@@ -39,6 +39,17 @@ import {
 import { useSessionLocal } from "@/lib/sessionLocal";
 import { useLang, useTr } from "@/lib/i18n";
 import { useTd } from "@/lib/demoI18n";
+import {
+  type FitStatus,
+  type Incident,
+  type Treatment,
+  type ApptRequest,
+  INCIDENT_TYPES,
+  SEED_INCIDENTS,
+  SEED_TREATMENTS,
+  SEED_REQUESTS,
+  fitnessClass,
+} from "@/features/medical/toolData";
 
 export const Route = createFileRoute("/_app/medical/$tool")({
   component: MedicalToolPage,
