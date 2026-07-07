@@ -209,14 +209,14 @@ export function Sidebar() {
                     onClick={() => setMobileOpen(false)}
                     className={cn(
                       "flex items-center gap-3 px-3 text-[13px] font-medium transition-colors",
-                      active ? "" : "hover:bg-[#EEF3F8]",
+                      active ? "shadow-sm" : "hover:bg-[#EEF3F8]",
                       it.indent && !collapsed && "ml-4 text-[12px]",
                     )}
                     style={{
                       height: 44,
-                      borderRadius: 14,
-                      background: active ? "var(--accent, #EAF4FF)" : undefined,
-                      color: active ? "var(--accent-foreground, #0054A4)" : "#66758A",
+                      borderRadius: 999,
+                      background: active ? "var(--primary, #0067C9)" : undefined,
+                      color: active ? "#FFFFFF" : "#66758A",
                     }}
                   >
                     <Icon className="shrink-0 h-5 w-5" />

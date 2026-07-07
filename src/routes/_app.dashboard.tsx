@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card } from "@/components/ui-kit";
+import { CopilotoCard, DEFAULT_ADMIN_SUGGESTIONS } from "@/components/CopilotoCard";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useTr } from "@/lib/i18n";
 import { useClub } from "@/clubs/ClubProvider";
@@ -267,9 +268,15 @@ function CommandCenter() {
             : ""
         }
       />
+      {(user?.role === "admin" || user?.role === "manager") && (
+        <section className="mb-4">
+          <CopilotoCard suggestions={DEFAULT_ADMIN_SUGGESTIONS} />
+        </section>
+      )}
 
       {/* Headline KPIs */}
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+
         <Kpi
           icon={Users}
           label={tr("Deportistas activos", "Active athletes")}
