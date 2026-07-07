@@ -705,3 +705,142 @@ function ClubPage() {
     </>
   );
 }
+
+// ─────────────────────────────────────────────────────────────
+// Hero superior — clona la captura 1 del SAITO real:
+// Card "Usuarios y permisos" + Card "Instalaciones" + Copiloto.
+// ─────────────────────────────────────────────────────────────
+function ClubHero({
+  usersByRole,
+  facilities,
+  totalFacilities,
+}: {
+  usersByRole: {
+    managers: number;
+    admins: number;
+    medical: number;
+    technical: number;
+    athletes: number;
+    tutors: number;
+  };
+  facilities: { id: string; name: string; location: string }[];
+  totalFacilities: number;
+}) {
+  const tr = useTr();
+  return (
+    <div className="mb-6 space-y-4">
+      <div className="grid gap-4 lg:grid-cols-2">
+        {/* Usuarios y permisos */}
+        <div
+          className="rounded-3xl border bg-card p-6 shadow-sm"
+          style={{ borderColor: "#E4EAF2" }}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <h2 className="text-2xl font-bold tracking-tight">
+              {tr("Usuarios y permisos", "Users and permissions")}
+            </h2>
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm"
+              style={{ background: "var(--primary, #0067C9)" }}
+            >
+              <Plus className="h-4 w-4" />
+              {tr("Nueva alta", "New")}
+            </button>
+          </div>
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <RolePillTag
+              icon={Stethoscope}
+              label={tr("Staff médico", "Medical staff")}
+              count={usersByRole.medical}
+            />
+            <RolePillTag
+              icon={Wrench}
+              label={tr("Staff técnico", "Technical staff")}
+              count={usersByRole.technical}
+            />
+            <RolePillTag
+              icon={Users}
+              label={tr("Deportistas", "Athletes")}
+              count={usersByRole.athletes}
+            />
+            <button
+              type="button"
+              className="rounded-full bg-muted px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted/70"
+            >
+              {tr("Ver todos", "View all")}
+            </button>
+          </div>
+        </div>
+
+        {/* Instalaciones */}
+        <div
+          className="rounded-3xl border bg-card p-6 shadow-sm"
+          style={{ borderColor: "#E4EAF2" }}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <h2 className="text-2xl font-bold tracking-tight">
+              {tr("Instalaciones", "Facilities")}
+            </h2>
+            <button
+              type="button"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-white shadow-sm"
+              style={{ background: "var(--primary, #0067C9)" }}
+              aria-label={tr("Añadir instalación", "Add facility")}
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
+          <ul className="mt-5 space-y-3">
+            {facilities.length === 0 ? (
+              <li className="text-sm text-muted-foreground">
+                {tr("No hay instalaciones registradas.", "No facilities registered.")}
+              </li>
+            ) : (
+              facilities.map((f) => (
+                <li
+                  key={f.id}
+                  className="flex items-center gap-2 text-base font-medium text-foreground"
+                >
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span>{f.name}</span>
+                </li>
+              ))
+            )}
+            {totalFacilities > facilities.length && (
+              <li className="text-xs text-muted-foreground">
+                +{totalFacilities - facilities.length}{" "}
+                {tr("más", "more")}
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+
+      {/* Copiloto */}
+      <CopilotoCard suggestions={DEFAULT_ADMIN_SUGGESTIONS} />
+    </div>
+  );
+}
+
+function RolePillTag({
+  icon: Icon,
+  label,
+  count,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  count: number;
+}) {
+  return (
+    <span
+      className="inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium"
+      style={{ borderColor: "#E4EAF2", color: "#0F1B3D" }}
+    >
+      <Icon className="h-4 w-4 text-muted-foreground" />
+      {label}
+      <span className="text-xs font-semibold text-muted-foreground">{count}</span>
+    </span>
+  );
+}
+
