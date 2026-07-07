@@ -149,12 +149,20 @@ export function Topbar() {
             className="flex items-center gap-1 sm:gap-1.5 rounded-full bg-card pl-1 pr-1.5 sm:pr-2 py-1 shadow-sm hover:bg-muted"
             aria-label="Switch role"
           >
-            <span className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center overflow-hidden rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
-              {avatar ? (
-                <img src={avatar} alt={user.name} className="h-full w-full object-cover" />
-              ) : (
-                user.initials
-              )}
+            <span
+              className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full p-[2px]"
+              style={{
+                background:
+                  "conic-gradient(from 0deg, #F12F4A, #FDB113, #00A74D, #0067C9, #8A2BE2, #F12F4A)",
+              }}
+            >
+              <span className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-card text-[11px] font-bold text-foreground">
+                {avatar ? (
+                  <img src={avatar} alt={user.name} className="h-full w-full object-cover" />
+                ) : (
+                  user.initials
+                )}
+              </span>
             </span>
             <span className="hidden md:inline text-xs font-medium">
               {ROLE_LABEL[user.role] ?? user.role}
