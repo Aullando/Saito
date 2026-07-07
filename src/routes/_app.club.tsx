@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card, Pill } from "@/components/ui-kit";
+import { CopilotoCard, DEFAULT_ADMIN_SUGGESTIONS } from "@/components/CopilotoCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
