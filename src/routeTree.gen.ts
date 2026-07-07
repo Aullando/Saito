@@ -46,6 +46,7 @@ import { Route as AppMedicalToolRouteImport } from './routes/_app.medical.$tool'
 import { Route as AppGffSlugRouteImport } from './routes/_app.gff.$slug'
 import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.payments'
 import { Route as AppEconomicFeesRouteImport } from './routes/_app.economic.fees'
+import { Route as AppEconomicDemoRouteImport } from './routes/_app.economic.demo'
 import { Route as AppCnsoSlugRouteImport } from './routes/_app.cnso.$slug'
 import { Route as AppCalendarDemoRouteImport } from './routes/_app.calendar.demo'
 import { Route as AppMedicalAthletesIdRouteImport } from './routes/_app.medical.athletes.$id'
@@ -235,6 +236,11 @@ const AppEconomicFeesRoute = AppEconomicFeesRouteImport.update({
   path: '/economic/fees',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEconomicDemoRoute = AppEconomicDemoRouteImport.update({
+  id: '/economic/demo',
+  path: '/economic/demo',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCnsoSlugRoute = AppCnsoSlugRouteImport.update({
   id: '/cnso/$slug',
   path: '/cnso/$slug',
@@ -268,6 +274,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AppReportsRoute
   '/calendar/demo': typeof AppCalendarDemoRoute
   '/cnso/$slug': typeof AppCnsoSlugRoute
+  '/economic/demo': typeof AppEconomicDemoRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/gff/$slug': typeof AppGffSlugRoute
@@ -308,6 +315,7 @@ export interface FileRoutesByTo {
   '/reports': typeof AppReportsRoute
   '/calendar/demo': typeof AppCalendarDemoRoute
   '/cnso/$slug': typeof AppCnsoSlugRoute
+  '/economic/demo': typeof AppEconomicDemoRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/gff/$slug': typeof AppGffSlugRoute
@@ -351,6 +359,7 @@ export interface FileRoutesById {
   '/_app/reports': typeof AppReportsRoute
   '/_app/calendar/demo': typeof AppCalendarDemoRoute
   '/_app/cnso/$slug': typeof AppCnsoSlugRoute
+  '/_app/economic/demo': typeof AppEconomicDemoRoute
   '/_app/economic/fees': typeof AppEconomicFeesRoute
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
   '/_app/gff/$slug': typeof AppGffSlugRoute
@@ -394,6 +403,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/calendar/demo'
     | '/cnso/$slug'
+    | '/economic/demo'
     | '/economic/fees'
     | '/economic/payments'
     | '/gff/$slug'
@@ -434,6 +444,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/calendar/demo'
     | '/cnso/$slug'
+    | '/economic/demo'
     | '/economic/fees'
     | '/economic/payments'
     | '/gff/$slug'
@@ -476,6 +487,7 @@ export interface FileRouteTypes {
     | '/_app/reports'
     | '/_app/calendar/demo'
     | '/_app/cnso/$slug'
+    | '/_app/economic/demo'
     | '/_app/economic/fees'
     | '/_app/economic/payments'
     | '/_app/gff/$slug'
@@ -769,6 +781,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEconomicFeesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/economic/demo': {
+      id: '/_app/economic/demo'
+      path: '/economic/demo'
+      fullPath: '/economic/demo'
+      preLoaderRoute: typeof AppEconomicDemoRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/cnso/$slug': {
       id: '/_app/cnso/$slug'
       path: '/cnso/$slug'
@@ -840,6 +859,7 @@ interface AppRouteChildren {
   AppProfileRoute: typeof AppProfileRoute
   AppReportsRoute: typeof AppReportsRoute
   AppCnsoSlugRoute: typeof AppCnsoSlugRoute
+  AppEconomicDemoRoute: typeof AppEconomicDemoRoute
   AppEconomicFeesRoute: typeof AppEconomicFeesRoute
   AppEconomicPaymentsRoute: typeof AppEconomicPaymentsRoute
   AppGffSlugRoute: typeof AppGffSlugRoute
@@ -872,6 +892,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProfileRoute: AppProfileRoute,
   AppReportsRoute: AppReportsRoute,
   AppCnsoSlugRoute: AppCnsoSlugRoute,
+  AppEconomicDemoRoute: AppEconomicDemoRoute,
   AppEconomicFeesRoute: AppEconomicFeesRoute,
   AppEconomicPaymentsRoute: AppEconomicPaymentsRoute,
   AppGffSlugRoute: AppGffSlugRoute,
