@@ -76,7 +76,7 @@ function buildItems(role: Role, tr: (k: keyof typeof import("@/lib/i18n").STR) =
         { to: "/economic/fees", label: tr("fees_and_rates"), icon: Receipt },
         { to: "/economic/fees", label: tr("apply_fee"), icon: Wallet, indent: true },
         { to: "/economic/payments", label: tr("payment_status_nav"), icon: Wallet },
-        { to: "/calendar", label: tr("club_calendar"), icon: CalendarDays },
+        { to: "/calendar/demo", label: tr("club_calendar"), icon: CalendarDays },
         { to: "/communication", label: tr("circulars"), icon: Megaphone },
       ];
 
