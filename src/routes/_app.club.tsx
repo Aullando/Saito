@@ -425,7 +425,15 @@ function ClubPage() {
         }
       />
 
+      {/* Hero — replica exacta de la captura 1 SAITO real */}
+      <ClubHero
+        usersByRole={usersByRole}
+        facilities={facilities.slice(0, 3)}
+        totalFacilities={facilities.length}
+      />
+
       <div className="space-y-6">
+
         {/* 1. Usuarios y permisos */}
         <Section title={tr("Usuarios y permisos", "Users and permissions")} icon={ShieldCheck}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
