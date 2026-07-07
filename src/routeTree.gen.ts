@@ -39,6 +39,7 @@ import { Route as AppMobileMessagesRouteImport } from './routes/_app.mobile.mess
 import { Route as AppMobileCalendarRouteImport } from './routes/_app.mobile.calendar'
 import { Route as AppMobileToolRouteImport } from './routes/_app.mobile.$tool'
 import { Route as AppMedicalRestrictionsRouteImport } from './routes/_app.medical.restrictions'
+import { Route as AppMedicalPanelRouteImport } from './routes/_app.medical.panel'
 import { Route as AppMedicalCalendarRouteImport } from './routes/_app.medical.calendar'
 import { Route as AppMedicalToolRouteImport } from './routes/_app.medical.$tool'
 import { Route as AppGffSlugRouteImport } from './routes/_app.gff.$slug'
@@ -196,6 +197,11 @@ const AppMedicalRestrictionsRoute = AppMedicalRestrictionsRouteImport.update({
   path: '/medical/restrictions',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMedicalPanelRoute = AppMedicalPanelRouteImport.update({
+  id: '/medical/panel',
+  path: '/medical/panel',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppMedicalCalendarRoute = AppMedicalCalendarRouteImport.update({
   id: '/medical/calendar',
   path: '/medical/calendar',
@@ -248,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/gff/$slug': typeof AppGffSlugRoute
   '/medical/$tool': typeof AppMedicalToolRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
+  '/medical/panel': typeof AppMedicalPanelRoute
   '/medical/restrictions': typeof AppMedicalRestrictionsRoute
   '/mobile/$tool': typeof AppMobileToolRoute
   '/mobile/calendar': typeof AppMobileCalendarRoute
@@ -284,6 +291,7 @@ export interface FileRoutesByTo {
   '/gff/$slug': typeof AppGffSlugRoute
   '/medical/$tool': typeof AppMedicalToolRoute
   '/medical/calendar': typeof AppMedicalCalendarRoute
+  '/medical/panel': typeof AppMedicalPanelRoute
   '/medical/restrictions': typeof AppMedicalRestrictionsRoute
   '/mobile/$tool': typeof AppMobileToolRoute
   '/mobile/calendar': typeof AppMobileCalendarRoute
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/_app/gff/$slug': typeof AppGffSlugRoute
   '/_app/medical/$tool': typeof AppMedicalToolRoute
   '/_app/medical/calendar': typeof AppMedicalCalendarRoute
+  '/_app/medical/panel': typeof AppMedicalPanelRoute
   '/_app/medical/restrictions': typeof AppMedicalRestrictionsRoute
   '/_app/mobile/$tool': typeof AppMobileToolRoute
   '/_app/mobile/calendar': typeof AppMobileCalendarRoute
@@ -362,6 +371,7 @@ export interface FileRouteTypes {
     | '/gff/$slug'
     | '/medical/$tool'
     | '/medical/calendar'
+    | '/medical/panel'
     | '/medical/restrictions'
     | '/mobile/$tool'
     | '/mobile/calendar'
@@ -398,6 +408,7 @@ export interface FileRouteTypes {
     | '/gff/$slug'
     | '/medical/$tool'
     | '/medical/calendar'
+    | '/medical/panel'
     | '/medical/restrictions'
     | '/mobile/$tool'
     | '/mobile/calendar'
@@ -436,6 +447,7 @@ export interface FileRouteTypes {
     | '/_app/gff/$slug'
     | '/_app/medical/$tool'
     | '/_app/medical/calendar'
+    | '/_app/medical/panel'
     | '/_app/medical/restrictions'
     | '/_app/mobile/$tool'
     | '/_app/mobile/calendar'
@@ -672,6 +684,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMedicalRestrictionsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/medical/panel': {
+      id: '/_app/medical/panel'
+      path: '/medical/panel'
+      fullPath: '/medical/panel'
+      preLoaderRoute: typeof AppMedicalPanelRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/medical/calendar': {
       id: '/_app/medical/calendar'
       path: '/medical/calendar'
@@ -757,6 +776,7 @@ interface AppRouteChildren {
   AppGffSlugRoute: typeof AppGffSlugRoute
   AppMedicalToolRoute: typeof AppMedicalToolRoute
   AppMedicalCalendarRoute: typeof AppMedicalCalendarRoute
+  AppMedicalPanelRoute: typeof AppMedicalPanelRoute
   AppMedicalRestrictionsRoute: typeof AppMedicalRestrictionsRoute
   AppRgccSlugRoute: typeof AppRgccSlugRoute
   AppRgccBibliotecaRoute: typeof AppRgccBibliotecaRoute
@@ -786,6 +806,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGffSlugRoute: AppGffSlugRoute,
   AppMedicalToolRoute: AppMedicalToolRoute,
   AppMedicalCalendarRoute: AppMedicalCalendarRoute,
+  AppMedicalPanelRoute: AppMedicalPanelRoute,
   AppMedicalRestrictionsRoute: AppMedicalRestrictionsRoute,
   AppRgccSlugRoute: AppRgccSlugRoute,
   AppRgccBibliotecaRoute: AppRgccBibliotecaRoute,
