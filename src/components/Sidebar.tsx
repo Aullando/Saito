@@ -82,6 +82,7 @@ function buildItems(role: Role, tr: (k: keyof typeof import("@/lib/i18n").STR) =
     // Staff médico
     case "medical":
       return [
+        { to: "/medical/panel", label: "Panel médico", icon: LayoutGrid },
         { to: "/medical/calendar", label: tr("medical_agenda"), icon: Stethoscope },
         { to: "/athletes", label: tr("athletes_nav"), icon: Users },
         { to: "/medical/restrictions", label: tr("restrictions"), icon: Activity },
