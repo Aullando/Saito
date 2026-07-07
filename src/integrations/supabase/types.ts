@@ -889,6 +889,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_role_in_org: {
+        Args: {
+          _org_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_conv_participant: {
         Args: { _conv_id: string; _user_id: string }
         Returns: boolean
