@@ -67,6 +67,7 @@ function buildItems(role: Role, tr: (k: keyof typeof import("@/lib/i18n").STR) =
       return [
         { to: "/club", label: tr("organization"), icon: Building2 },
         { to: "/settings/team", label: tr("users"), icon: UserPlus },
+        { to: "/tutela/formacion", label: "Tutela · Formación", icon: ShieldCheck, indent: true },
         { to: "/club", label: tr("sections_nav"), icon: Layers, indent: true },
         { to: "/club", label: tr("categories_nav"), icon: Layers, indent: true },
         { to: "/club", label: tr("groups_nav"), icon: Users, indent: true },
@@ -78,6 +79,7 @@ function buildItems(role: Role, tr: (k: keyof typeof import("@/lib/i18n").STR) =
         { to: "/calendar", label: tr("club_calendar"), icon: CalendarDays },
         { to: "/communication", label: tr("circulars"), icon: Megaphone },
       ];
+
 
     // Staff médico
     case "medical":

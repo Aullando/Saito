@@ -25,6 +25,7 @@ import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAttendanceRouteImport } from './routes/_app.attendance'
 import { Route as AppAthletesRouteImport } from './routes/_app.athletes'
 import { Route as AppMobileIndexRouteImport } from './routes/_app.mobile.index'
+import { Route as AppTutelaFormacionRouteImport } from './routes/_app.tutela.formacion'
 import { Route as AppSettingsTeamRouteImport } from './routes/_app.settings.team'
 import { Route as AppSettingsQaRouteImport } from './routes/_app.settings.qa'
 import { Route as AppSettingsPrivacyRouteImport } from './routes/_app.settings.privacy'
@@ -126,6 +127,11 @@ const AppMobileIndexRoute = AppMobileIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppMobileRoute,
+} as any)
+const AppTutelaFormacionRoute = AppTutelaFormacionRouteImport.update({
+  id: '/tutela/formacion',
+  path: '/tutela/formacion',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsTeamRoute = AppSettingsTeamRouteImport.update({
   id: '/settings/team',
@@ -275,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/qa': typeof AppSettingsQaRoute
   '/settings/team': typeof AppSettingsTeamRoute
+  '/tutela/formacion': typeof AppTutelaFormacionRoute
   '/mobile/': typeof AppMobileIndexRoute
   '/medical/athletes/$id': typeof AppMedicalAthletesIdRoute
 }
@@ -313,6 +320,7 @@ export interface FileRoutesByTo {
   '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/qa': typeof AppSettingsQaRoute
   '/settings/team': typeof AppSettingsTeamRoute
+  '/tutela/formacion': typeof AppTutelaFormacionRoute
   '/mobile': typeof AppMobileIndexRoute
   '/medical/athletes/$id': typeof AppMedicalAthletesIdRoute
 }
@@ -354,6 +362,7 @@ export interface FileRoutesById {
   '/_app/settings/privacy': typeof AppSettingsPrivacyRoute
   '/_app/settings/qa': typeof AppSettingsQaRoute
   '/_app/settings/team': typeof AppSettingsTeamRoute
+  '/_app/tutela/formacion': typeof AppTutelaFormacionRoute
   '/_app/mobile/': typeof AppMobileIndexRoute
   '/_app/medical/athletes/$id': typeof AppMedicalAthletesIdRoute
 }
@@ -395,6 +404,7 @@ export interface FileRouteTypes {
     | '/settings/privacy'
     | '/settings/qa'
     | '/settings/team'
+    | '/tutela/formacion'
     | '/mobile/'
     | '/medical/athletes/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -433,6 +443,7 @@ export interface FileRouteTypes {
     | '/settings/privacy'
     | '/settings/qa'
     | '/settings/team'
+    | '/tutela/formacion'
     | '/mobile'
     | '/medical/athletes/$id'
   id:
@@ -473,6 +484,7 @@ export interface FileRouteTypes {
     | '/_app/settings/privacy'
     | '/_app/settings/qa'
     | '/_app/settings/team'
+    | '/_app/tutela/formacion'
     | '/_app/mobile/'
     | '/_app/medical/athletes/$id'
   fileRoutesById: FileRoutesById
@@ -597,6 +609,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/mobile/'
       preLoaderRoute: typeof AppMobileIndexRouteImport
       parentRoute: typeof AppMobileRoute
+    }
+    '/_app/tutela/formacion': {
+      id: '/_app/tutela/formacion'
+      path: '/tutela/formacion'
+      fullPath: '/tutela/formacion'
+      preLoaderRoute: typeof AppTutelaFormacionRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/settings/team': {
       id: '/_app/settings/team'
@@ -805,6 +824,7 @@ interface AppRouteChildren {
   AppSettingsPrivacyRoute: typeof AppSettingsPrivacyRoute
   AppSettingsQaRoute: typeof AppSettingsQaRoute
   AppSettingsTeamRoute: typeof AppSettingsTeamRoute
+  AppTutelaFormacionRoute: typeof AppTutelaFormacionRoute
   AppMedicalAthletesIdRoute: typeof AppMedicalAthletesIdRoute
 }
 
@@ -836,6 +856,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsPrivacyRoute: AppSettingsPrivacyRoute,
   AppSettingsQaRoute: AppSettingsQaRoute,
   AppSettingsTeamRoute: AppSettingsTeamRoute,
+  AppTutelaFormacionRoute: AppTutelaFormacionRoute,
   AppMedicalAthletesIdRoute: AppMedicalAthletesIdRoute,
 }
 
