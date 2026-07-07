@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
-import { Button } from "@/components/ui/button";
 import { CalendarClock, AlertTriangle, Activity, Briefcase } from "lucide-react";
+
 
 export const Route = createFileRoute("/_app/medical/panel")({
   head: () => ({ meta: [{ title: "Panel médico — SAITO" }] }),
