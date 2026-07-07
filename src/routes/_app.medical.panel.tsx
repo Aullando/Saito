@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
-import { Button } from "@/components/ui/button";
 import { CalendarClock, AlertTriangle, Activity, Briefcase } from "lucide-react";
+
 
 export const Route = createFileRoute("/_app/medical/panel")({
   head: () => ({ meta: [{ title: "Panel médico — SAITO" }] }),
@@ -98,12 +98,15 @@ function MedicalPanelPage() {
                   <div className="font-semibold text-[#0F1B2D]">{r.name}</div>
                   <div className="text-sm text-[#6B7A90]">{r.detail}</div>
                 </div>
-                <Button
-                  className="text-white rounded-full px-5"
+                <Link
+                  to="/medical/athletes/$id"
+                  params={{ id: r.id }}
+                  className="inline-flex items-center text-white rounded-full px-5 h-10 font-medium hover:opacity-90"
                   style={{ background: AMBER }}
                 >
                   Atender
-                </Button>
+                </Link>
+
               </li>
             ))}
           </ul>

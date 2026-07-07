@@ -46,6 +46,7 @@ import { Route as AppGffSlugRouteImport } from './routes/_app.gff.$slug'
 import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.payments'
 import { Route as AppEconomicFeesRouteImport } from './routes/_app.economic.fees'
 import { Route as AppCnsoSlugRouteImport } from './routes/_app.cnso.$slug'
+import { Route as AppMedicalAthletesIdRouteImport } from './routes/_app.medical.athletes.$id'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -232,6 +233,11 @@ const AppCnsoSlugRoute = AppCnsoSlugRouteImport.update({
   path: '/cnso/$slug',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMedicalAthletesIdRoute = AppMedicalAthletesIdRouteImport.update({
+  id: '/medical/athletes/$id',
+  path: '/medical/athletes/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -270,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/settings/qa': typeof AppSettingsQaRoute
   '/settings/team': typeof AppSettingsTeamRoute
   '/mobile/': typeof AppMobileIndexRoute
+  '/medical/athletes/$id': typeof AppMedicalAthletesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -307,6 +314,7 @@ export interface FileRoutesByTo {
   '/settings/qa': typeof AppSettingsQaRoute
   '/settings/team': typeof AppSettingsTeamRoute
   '/mobile': typeof AppMobileIndexRoute
+  '/medical/athletes/$id': typeof AppMedicalAthletesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -347,6 +355,7 @@ export interface FileRoutesById {
   '/_app/settings/qa': typeof AppSettingsQaRoute
   '/_app/settings/team': typeof AppSettingsTeamRoute
   '/_app/mobile/': typeof AppMobileIndexRoute
+  '/_app/medical/athletes/$id': typeof AppMedicalAthletesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -387,6 +396,7 @@ export interface FileRouteTypes {
     | '/settings/qa'
     | '/settings/team'
     | '/mobile/'
+    | '/medical/athletes/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -424,6 +434,7 @@ export interface FileRouteTypes {
     | '/settings/qa'
     | '/settings/team'
     | '/mobile'
+    | '/medical/athletes/$id'
   id:
     | '__root__'
     | '/'
@@ -463,6 +474,7 @@ export interface FileRouteTypes {
     | '/_app/settings/qa'
     | '/_app/settings/team'
     | '/_app/mobile/'
+    | '/_app/medical/athletes/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -733,6 +745,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCnsoSlugRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/medical/athletes/$id': {
+      id: '/_app/medical/athletes/$id'
+      path: '/medical/athletes/$id'
+      fullPath: '/medical/athletes/$id'
+      preLoaderRoute: typeof AppMedicalAthletesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -786,6 +805,7 @@ interface AppRouteChildren {
   AppSettingsPrivacyRoute: typeof AppSettingsPrivacyRoute
   AppSettingsQaRoute: typeof AppSettingsQaRoute
   AppSettingsTeamRoute: typeof AppSettingsTeamRoute
+  AppMedicalAthletesIdRoute: typeof AppMedicalAthletesIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -816,6 +836,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsPrivacyRoute: AppSettingsPrivacyRoute,
   AppSettingsQaRoute: AppSettingsQaRoute,
   AppSettingsTeamRoute: AppSettingsTeamRoute,
+  AppMedicalAthletesIdRoute: AppMedicalAthletesIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
