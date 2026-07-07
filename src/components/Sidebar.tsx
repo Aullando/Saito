@@ -73,12 +73,13 @@ function buildItems(role: Role, tr: (k: keyof typeof import("@/lib/i18n").STR) =
         { to: "/club", label: tr("groups_nav"), icon: Users, indent: true },
         { to: "/calendar", label: tr("schedules"), icon: CalendarClock, indent: true },
         { to: "/settings/team", label: tr("tutors"), icon: Users, indent: true },
-        { to: "/economic/fees", label: tr("fees_and_rates"), icon: Receipt },
-        { to: "/economic/fees", label: tr("apply_fee"), icon: Wallet, indent: true },
+        { to: "/economic/demo", label: tr("fees_and_rates"), icon: Receipt },
+        { to: "/economic/demo", label: tr("apply_fee"), icon: Wallet, indent: true },
         { to: "/economic/payments", label: tr("payment_status_nav"), icon: Wallet },
         { to: "/calendar/demo", label: tr("club_calendar"), icon: CalendarDays },
-        { to: "/communication", label: tr("circulars"), icon: Megaphone },
+        { to: "/communication/demo", label: tr("circulars"), icon: Megaphone },
       ];
+
 
 
     // Staff médico

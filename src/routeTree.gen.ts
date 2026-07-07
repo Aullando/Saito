@@ -46,6 +46,8 @@ import { Route as AppMedicalToolRouteImport } from './routes/_app.medical.$tool'
 import { Route as AppGffSlugRouteImport } from './routes/_app.gff.$slug'
 import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.payments'
 import { Route as AppEconomicFeesRouteImport } from './routes/_app.economic.fees'
+import { Route as AppEconomicDemoRouteImport } from './routes/_app.economic.demo'
+import { Route as AppCommunicationDemoRouteImport } from './routes/_app.communication.demo'
 import { Route as AppCnsoSlugRouteImport } from './routes/_app.cnso.$slug'
 import { Route as AppCalendarDemoRouteImport } from './routes/_app.calendar.demo'
 import { Route as AppMedicalAthletesIdRouteImport } from './routes/_app.medical.athletes.$id'
@@ -235,6 +237,16 @@ const AppEconomicFeesRoute = AppEconomicFeesRouteImport.update({
   path: '/economic/fees',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEconomicDemoRoute = AppEconomicDemoRouteImport.update({
+  id: '/economic/demo',
+  path: '/economic/demo',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCommunicationDemoRoute = AppCommunicationDemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => AppCommunicationRoute,
+} as any)
 const AppCnsoSlugRoute = AppCnsoSlugRouteImport.update({
   id: '/cnso/$slug',
   path: '/cnso/$slug',
@@ -259,7 +271,7 @@ export interface FileRoutesByFullPath {
   '/attendance': typeof AppAttendanceRoute
   '/calendar': typeof AppCalendarRouteWithChildren
   '/club': typeof AppClubRoute
-  '/communication': typeof AppCommunicationRoute
+  '/communication': typeof AppCommunicationRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/mobile': typeof AppMobileRouteWithChildren
   '/onboarding': typeof AppOnboardingRoute
@@ -268,6 +280,8 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AppReportsRoute
   '/calendar/demo': typeof AppCalendarDemoRoute
   '/cnso/$slug': typeof AppCnsoSlugRoute
+  '/communication/demo': typeof AppCommunicationDemoRoute
+  '/economic/demo': typeof AppEconomicDemoRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/gff/$slug': typeof AppGffSlugRoute
@@ -300,7 +314,7 @@ export interface FileRoutesByTo {
   '/attendance': typeof AppAttendanceRoute
   '/calendar': typeof AppCalendarRouteWithChildren
   '/club': typeof AppClubRoute
-  '/communication': typeof AppCommunicationRoute
+  '/communication': typeof AppCommunicationRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/onboarding': typeof AppOnboardingRoute
   '/organizations': typeof AppOrganizationsRoute
@@ -308,6 +322,8 @@ export interface FileRoutesByTo {
   '/reports': typeof AppReportsRoute
   '/calendar/demo': typeof AppCalendarDemoRoute
   '/cnso/$slug': typeof AppCnsoSlugRoute
+  '/communication/demo': typeof AppCommunicationDemoRoute
+  '/economic/demo': typeof AppEconomicDemoRoute
   '/economic/fees': typeof AppEconomicFeesRoute
   '/economic/payments': typeof AppEconomicPaymentsRoute
   '/gff/$slug': typeof AppGffSlugRoute
@@ -342,7 +358,7 @@ export interface FileRoutesById {
   '/_app/attendance': typeof AppAttendanceRoute
   '/_app/calendar': typeof AppCalendarRouteWithChildren
   '/_app/club': typeof AppClubRoute
-  '/_app/communication': typeof AppCommunicationRoute
+  '/_app/communication': typeof AppCommunicationRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/mobile': typeof AppMobileRouteWithChildren
   '/_app/onboarding': typeof AppOnboardingRoute
@@ -351,6 +367,8 @@ export interface FileRoutesById {
   '/_app/reports': typeof AppReportsRoute
   '/_app/calendar/demo': typeof AppCalendarDemoRoute
   '/_app/cnso/$slug': typeof AppCnsoSlugRoute
+  '/_app/communication/demo': typeof AppCommunicationDemoRoute
+  '/_app/economic/demo': typeof AppEconomicDemoRoute
   '/_app/economic/fees': typeof AppEconomicFeesRoute
   '/_app/economic/payments': typeof AppEconomicPaymentsRoute
   '/_app/gff/$slug': typeof AppGffSlugRoute
@@ -394,6 +412,8 @@ export interface FileRouteTypes {
     | '/reports'
     | '/calendar/demo'
     | '/cnso/$slug'
+    | '/communication/demo'
+    | '/economic/demo'
     | '/economic/fees'
     | '/economic/payments'
     | '/gff/$slug'
@@ -434,6 +454,8 @@ export interface FileRouteTypes {
     | '/reports'
     | '/calendar/demo'
     | '/cnso/$slug'
+    | '/communication/demo'
+    | '/economic/demo'
     | '/economic/fees'
     | '/economic/payments'
     | '/gff/$slug'
@@ -476,6 +498,8 @@ export interface FileRouteTypes {
     | '/_app/reports'
     | '/_app/calendar/demo'
     | '/_app/cnso/$slug'
+    | '/_app/communication/demo'
+    | '/_app/economic/demo'
     | '/_app/economic/fees'
     | '/_app/economic/payments'
     | '/_app/gff/$slug'
@@ -769,6 +793,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEconomicFeesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/economic/demo': {
+      id: '/_app/economic/demo'
+      path: '/economic/demo'
+      fullPath: '/economic/demo'
+      preLoaderRoute: typeof AppEconomicDemoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/communication/demo': {
+      id: '/_app/communication/demo'
+      path: '/demo'
+      fullPath: '/communication/demo'
+      preLoaderRoute: typeof AppCommunicationDemoRouteImport
+      parentRoute: typeof AppCommunicationRoute
+    }
     '/_app/cnso/$slug': {
       id: '/_app/cnso/$slug'
       path: '/cnso/$slug'
@@ -805,6 +843,17 @@ const AppCalendarRouteWithChildren = AppCalendarRoute._addFileChildren(
   AppCalendarRouteChildren,
 )
 
+interface AppCommunicationRouteChildren {
+  AppCommunicationDemoRoute: typeof AppCommunicationDemoRoute
+}
+
+const AppCommunicationRouteChildren: AppCommunicationRouteChildren = {
+  AppCommunicationDemoRoute: AppCommunicationDemoRoute,
+}
+
+const AppCommunicationRouteWithChildren =
+  AppCommunicationRoute._addFileChildren(AppCommunicationRouteChildren)
+
 interface AppMobileRouteChildren {
   AppMobileToolRoute: typeof AppMobileToolRoute
   AppMobileCalendarRoute: typeof AppMobileCalendarRoute
@@ -832,7 +881,7 @@ interface AppRouteChildren {
   AppAttendanceRoute: typeof AppAttendanceRoute
   AppCalendarRoute: typeof AppCalendarRouteWithChildren
   AppClubRoute: typeof AppClubRoute
-  AppCommunicationRoute: typeof AppCommunicationRoute
+  AppCommunicationRoute: typeof AppCommunicationRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppMobileRoute: typeof AppMobileRouteWithChildren
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -840,6 +889,7 @@ interface AppRouteChildren {
   AppProfileRoute: typeof AppProfileRoute
   AppReportsRoute: typeof AppReportsRoute
   AppCnsoSlugRoute: typeof AppCnsoSlugRoute
+  AppEconomicDemoRoute: typeof AppEconomicDemoRoute
   AppEconomicFeesRoute: typeof AppEconomicFeesRoute
   AppEconomicPaymentsRoute: typeof AppEconomicPaymentsRoute
   AppGffSlugRoute: typeof AppGffSlugRoute
@@ -864,7 +914,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAttendanceRoute: AppAttendanceRoute,
   AppCalendarRoute: AppCalendarRouteWithChildren,
   AppClubRoute: AppClubRoute,
-  AppCommunicationRoute: AppCommunicationRoute,
+  AppCommunicationRoute: AppCommunicationRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppMobileRoute: AppMobileRouteWithChildren,
   AppOnboardingRoute: AppOnboardingRoute,
@@ -872,6 +922,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProfileRoute: AppProfileRoute,
   AppReportsRoute: AppReportsRoute,
   AppCnsoSlugRoute: AppCnsoSlugRoute,
+  AppEconomicDemoRoute: AppEconomicDemoRoute,
   AppEconomicFeesRoute: AppEconomicFeesRoute,
   AppEconomicPaymentsRoute: AppEconomicPaymentsRoute,
   AppGffSlugRoute: AppGffSlugRoute,
