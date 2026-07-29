@@ -28,17 +28,19 @@ export const Route = createFileRoute("/_app/profile")({
 function ProfilePage() {
   const t = useT();
   const navigate = useNavigate();
-  const qc = useQueryClient();
-  const { user, profile, roles, signOut, refresh } = useAuth();
+  const { user, profile, roles, signOut } = useAuth();
   const setAvatar = useUiAuth((s) => s.setAvatar);
   const removeAvatar = useUiAuth((s) => s.removeAvatar);
+  const setUserName = useUiAuth((s) => s.setUserName);
+  const setLangOverride = useUiAuth((s) => s.setLangOverride);
   const avatar = useUserAvatar(user?.id);
   const fileRef = useRef<HTMLInputElement>(null);
   const lang = useLang();
+  const demo = isDemoMode();
 
   const orgQ = useQuery({
     queryKey: ["organization", profile?.organization_id],
-    enabled: !!profile?.organization_id,
+    enabled: !!profile?.organization_id && !demo,
     queryFn: async () => {
       const { data } = await supabase
         .from("organizations")
@@ -49,29 +51,15 @@ function ProfilePage() {
     },
   });
 
-  const setLang = useMutation({
-    mutationFn: async (newLang: "es" | "en") => {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ language: newLang })
-        .eq("id", user!.id);
-      if (error) throw error;
-    },
-    onSuccess: async () => {
-      await refresh();
-      qc.invalidateQueries();
-    },
-  });
+  const applyName = (name: string) => {
+    if (!user || !name.trim()) return;
+    setUserName(user.id, name.trim());
+    toast.success(lang === "es" ? "Nombre actualizado" : lang === "sr" ? "Ime ažurirano" : "Name updated");
+  };
 
-  const setName = useMutation({
-    mutationFn: async (full_name: string) => {
-      const { error } = await supabase.from("profiles").update({ full_name }).eq("id", user!.id);
-      if (error) throw error;
-    },
-    onSuccess: async () => {
-      await refresh();
-    },
-  });
+  const applyLang = (newLang: "es" | "en" | "sr") => {
+    setLangOverride(newLang);
+  };
 
   const [editingName, setEditingName] = useState(false);
   const [draftName, setDraftName] = useState(profile?.full_name ?? "");
