@@ -45,6 +45,7 @@ import type { Role } from "@/lib/types";
 import {
   DAY_NAMES_ES,
   DAY_NAMES_EN,
+  DAY_NAMES_SR,
   categoryName,
   Section,
   RoleCard,
