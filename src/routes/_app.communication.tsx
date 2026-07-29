@@ -35,6 +35,7 @@ import { useCommLocal, type CircularStatus, type LocalCircular } from "@/lib/com
 import { formatDateTime } from "@/lib/format";
 import { toast } from "sonner";
 import { useTr, useLang } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import type { Lang } from "@/lib/types";
 import {
   Archive,
@@ -77,6 +78,7 @@ export const Route = createFileRoute("/_app/communication")({
 
 function CommunicationPage() {
   const tr = useTr();
+  const td = useTd();
   const { conversations, users, athletes, sendMessage, addAppointment } = useData();
   const {
     archivedConvs,
@@ -113,11 +115,12 @@ function CommunicationPage() {
       for (const m of c.messages) {
         const recipientsCount = extractRecipientsCount(m.targetLabel) ?? c.participants.length;
         const overridden = circularStatus[m.id];
+        const content = td(m.content);
         items.push({
           id: m.id,
-          title: m.content.slice(0, 80) + (m.content.length > 80 ? "…" : ""),
-          body: m.content,
-          recipientsLabel: m.targetLabel,
+          title: content.slice(0, 80) + (content.length > 80 ? "…" : ""),
+          body: content,
+          recipientsLabel: td(m.targetLabel),
           recipientsCount,
           reads: Math.max(0, Math.min(recipientsCount, Math.round(recipientsCount * 0.78))),
           createdAt: m.createdAt,
@@ -128,7 +131,7 @@ function CommunicationPage() {
       }
     }
     return items;
-  }, [conversations, circularStatus, withdrawReasons]);
+  }, [conversations, circularStatus, withdrawReasons, td]);
 
   const allCirculars: CircularItem[] = useMemo(() => {
     const localItems: CircularItem[] = localCirculars.map((c: LocalCircular) => ({
@@ -824,6 +827,7 @@ function ConversationsTab({
   onSend: (id: string, content: string) => void;
   emptyLabel: string;
 }) {
+  const td = useTd();
   const [activeId, setActiveId] = useState<string | null>(conversations[0]?.id ?? null);
   const active = conversations.find((c) => c.id === activeId) ?? conversations[0] ?? null;
   const [draft, setDraft] = useState("");
@@ -863,7 +867,7 @@ function ConversationsTab({
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="truncate text-sm font-medium">{c.title}</span>
+                      <span className="truncate text-sm font-medium">{td(c.title)}</span>
                       {c.unreadCount > 0 && (
                         <span className="rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground tabular-nums">
                           {c.unreadCount}
@@ -872,7 +876,7 @@ function ConversationsTab({
                     </div>
                     {last && (
                       <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
-                        {last.content}
+                        {td(last.content)}
                       </div>
                     )}
                     <div className="mt-0.5 text-[11px] text-muted-foreground tabular-nums">
@@ -913,7 +917,7 @@ function ConversationsTab({
           <>
             <div className="flex items-start justify-between gap-2 border-b border-border px-5 py-4">
               <div>
-                <div className="text-base font-semibold">{active.title}</div>
+                <div className="text-base font-semibold">{td(active.title)}</div>
                 <div className="text-xs text-muted-foreground">
                   <Pill>{active.type}</Pill>{" "}
                   <span className="ml-1">{active.participants.length} participantes</span>
@@ -945,7 +949,7 @@ function ConversationsTab({
                         · {formatDateTime(m.createdAt)}
                       </span>
                     </div>
-                    <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{m.content}</div>
+                    <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{td(m.content)}</div>
                   </div>
                 </div>
               ))}
@@ -1017,6 +1021,7 @@ function MedicalRequestsTab({
   ) => void;
   onArchive: (id: string) => void;
 }) {
+  const td = useTd();
   const [target, setTarget] = useState<Conversation | null>(null);
   const medics = users.filter((u) => u.role === "medical");
 
@@ -1053,10 +1058,10 @@ function MedicalRequestsTab({
                       {last ? formatDateTime(last.createdAt) : ""}
                     </span>
                   </div>
-                  <div className="mt-1 text-sm font-semibold text-foreground">{r.title}</div>
+                  <div className="mt-1 text-sm font-semibold text-foreground">{td(r.title)}</div>
                   {last && (
                     <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                      {last.content}
+                      {td(last.content)}
                     </div>
                   )}
                   {athleteName && (
@@ -1241,6 +1246,7 @@ function ArchivedTab({
   onUnarchive: (id: string) => void;
   onHide: (id: string) => void;
 }) {
+  const td = useTd();
   if (conversations.length === 0) {
     return (
       <div className="saito-card p-0">
@@ -1258,11 +1264,11 @@ function ArchivedTab({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <Pill>{c.type}</Pill>
-                  <span className="truncate text-sm font-medium">{c.title}</span>
+                  <span className="truncate text-sm font-medium">{td(c.title)}</span>
                 </div>
                 {last && (
                   <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
-                    {last.content} · {formatDateTime(last.createdAt)}
+                    {td(last.content)} · {formatDateTime(last.createdAt)}
                   </div>
                 )}
               </div>

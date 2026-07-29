@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { useAuth } from "@/lib/auth";
 import { useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import { ATHLETES, GROUPS, EVENTS, SECTIONS } from "@/lib/seed";
 import { Check, X, Minus, CalendarCheck, Users, ShieldAlert } from "lucide-react";
 
@@ -66,6 +67,7 @@ const STATUS_META: Record<
 function AttendancePage() {
   const { profile } = useAuth();
   const tr = useTr();
+  const td = useTd();
   const [eventId, setEventId] = useState(NEXT_TRAININGS[0]?.id ?? "");
   const [groupFilter, setGroupFilter] = useState<string>("all");
 
@@ -111,7 +113,7 @@ function AttendancePage() {
             <SelectContent>
               {NEXT_TRAININGS.map((e) => (
                 <SelectItem key={e.id} value={e.id}>
-                  {e.date} · {e.startTime} · {e.title}
+                  {e.date} · {e.startTime} · {td(e.title)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -167,7 +169,7 @@ function AttendancePage() {
         <div className="flex items-center justify-between border-b border-border px-5 py-3">
           <div>
             <div className="text-sm font-semibold">
-              {event?.title} · {event?.date} {event?.startTime}
+              {td(event?.title)} · {event?.date} {event?.startTime}
             </div>
             <div className="text-xs text-muted-foreground">{group?.name ?? "—"}</div>
           </div>
