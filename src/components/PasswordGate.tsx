@@ -19,7 +19,8 @@ const detectLang = (): Lang => {
 const COPY: Record<Lang, {
   misTitle: string; misBody: (env: ReactNode, envPass: ReactNode) => ReactNode;
   hero: string; tagline: string; badge: string; title: string;
-  intro: string; placeholder: string; wrong: string; submit: string;
+  intro: string; placeholder: string; wrong: string; submit: string; submitting: string;
+  langLabel: string;
 }> = {
   es: {
     misTitle: "Acceso bloqueado: configuración incompleta",
@@ -32,6 +33,8 @@ const COPY: Record<Lang, {
     placeholder: "Contraseña",
     wrong: "Contraseña incorrecta.",
     submit: "Entrar",
+    submitting: "Entrando…",
+    langLabel: "Idioma",
   },
   en: {
     misTitle: "Access blocked: incomplete configuration",
@@ -44,6 +47,8 @@ const COPY: Record<Lang, {
     placeholder: "Password",
     wrong: "Incorrect password.",
     submit: "Enter",
+    submitting: "Entering…",
+    langLabel: "Language",
   },
   sr: {
     misTitle: "Pristup blokiran: konfiguracija nije potpuna",
@@ -56,6 +61,8 @@ const COPY: Record<Lang, {
     placeholder: "Lozinka",
     wrong: "Netačna lozinka.",
     submit: "Uđi",
+    submitting: "Ulazak…",
+    langLabel: "Jezik",
   },
 };
 
@@ -72,6 +79,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
   const [unlocked, setUnlocked] = useState(!ENABLED);
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const initialLang = useMemo<Lang>(() => storedLang ?? detectLang(), []); // eslint-disable-line react-hooks/exhaustive-deps
   const [lang, setLang] = useState<Lang>(initialLang);
   const c = COPY[lang];
@@ -112,13 +120,16 @@ export function PasswordGate({ children }: { children: ReactNode }) {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
     if (PASSWORD && value === PASSWORD) {
+      setSubmitting(true);
       try {
         sessionStorage.setItem(STORAGE_KEY, "1");
       } catch {
         /* ignore */
       }
-      setUnlocked(true);
+      // Breve delay para que el spinner sea perceptible y la transición fluya.
+      setTimeout(() => setUnlocked(true), 350);
     } else {
       setError(true);
     }
@@ -128,7 +139,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
     <div className="relative min-h-screen w-full overflow-hidden bg-[#0b1a35] text-white" lang={lang}>
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-70"
+        className="pointer-events-none absolute inset-0 opacity-60 md:opacity-70"
         style={{
           background:
             "radial-gradient(60% 45% at 15% 20%, rgba(59,130,246,0.55), transparent 60%), radial-gradient(55% 45% at 85% 15%, rgba(236,72,153,0.45), transparent 60%), radial-gradient(60% 55% at 80% 90%, rgba(250,204,21,0.45), transparent 60%), radial-gradient(55% 55% at 10% 90%, rgba(16,185,129,0.5), transparent 60%)",
@@ -139,41 +150,21 @@ export function PasswordGate({ children }: { children: ReactNode }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(11,26,53,0.2) 0%, rgba(11,26,53,0.55) 100%)",
+            "linear-gradient(180deg, rgba(11,26,53,0.35) 0%, rgba(11,26,53,0.7) 100%)",
         }}
       />
 
-      <div className="absolute right-4 top-4 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-white/10 p-1 backdrop-blur-md">
-        {(["es", "en", "sr"] as Lang[]).map((l) => (
-          <button
-            key={l}
-            type="button"
-            onClick={() => pickLang(l)}
-            aria-pressed={lang === l}
-            className={
-              "rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-widest transition " +
-              (lang === l
-                ? "bg-white text-[#0b1a35] shadow"
-                : "text-white/70 hover:text-white")
-            }
-          >
-            {l}
-          </button>
-        ))}
-      </div>
-
-
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-10 px-6 py-12 md:grid md:grid-cols-2 md:gap-16">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-8 px-5 py-10 sm:gap-10 sm:px-6 sm:py-12 md:grid md:grid-cols-2 md:gap-16">
         <div className="flex w-full flex-col items-center text-center md:items-start md:text-left">
           <img
             src={saitoHero.url}
             alt={c.hero}
-            className="w-full max-w-[520px] object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.45)] md:max-w-none"
+            className="w-full max-w-[280px] object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.45)] sm:max-w-[420px] md:max-w-none"
           />
-          <p className="mt-6 text-sm font-medium uppercase tracking-[0.32em] text-white/70">
+          <p className="mt-5 text-xs font-medium uppercase tracking-[0.32em] text-white/70 sm:mt-6 sm:text-sm">
             {c.tagline}
           </p>
-          <h2 className="mt-3 text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-4xl">
+          <h2 className="mt-3 text-xl font-semibold leading-tight text-white sm:text-2xl md:text-4xl">
             {SUBHEADS[lang]}
           </h2>
         </div>
@@ -181,8 +172,30 @@ export function PasswordGate({ children }: { children: ReactNode }) {
         <div className="w-full max-w-md md:justify-self-end">
           <form
             onSubmit={onSubmit}
-            className="w-full space-y-5 rounded-3xl border border-white/15 bg-white/10 p-7 shadow-2xl backdrop-blur-xl"
+            className="w-full space-y-5 rounded-3xl border border-white/15 bg-white/10 p-6 shadow-2xl backdrop-blur-xl sm:p-7 animate-in fade-in slide-in-from-bottom-2 duration-500"
           >
+            <div
+              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 p-1"
+              role="group"
+              aria-label={c.langLabel}
+            >
+              {(["es", "en", "sr"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => pickLang(l)}
+                  aria-pressed={lang === l}
+                  className={
+                    "min-h-[36px] rounded-full px-3 text-[11px] font-semibold uppercase tracking-widest transition " +
+                    (lang === l
+                      ? "bg-white text-[#0b1a35] shadow"
+                      : "text-white/70 hover:text-white")
+                  }
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
             <div>
               <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-white/80">
                 {c.badge}
@@ -194,11 +207,12 @@ export function PasswordGate({ children }: { children: ReactNode }) {
               type="password"
               autoFocus
               value={value}
+              disabled={submitting}
               onChange={(e) => {
                 setValue(e.target.value);
                 setError(false);
               }}
-              className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 outline-none transition focus:border-white/60 focus:bg-white/15"
+              className="w-full min-h-[48px] rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 outline-none transition focus:border-white/60 focus:bg-white/15 disabled:opacity-60"
               placeholder={c.placeholder}
             />
             {error && (
@@ -206,13 +220,20 @@ export function PasswordGate({ children }: { children: ReactNode }) {
             )}
             <button
               type="submit"
-              className="group relative w-full overflow-hidden rounded-xl px-4 py-3 text-sm font-semibold text-[#0b1a35] shadow-lg transition hover:shadow-xl"
+              disabled={submitting}
+              className="group relative flex w-full min-h-[48px] items-center justify-center gap-2 overflow-hidden rounded-xl px-4 py-3 text-sm font-semibold text-[#0b1a35] shadow-lg transition hover:shadow-xl disabled:opacity-80"
               style={{
                 background:
                   "linear-gradient(90deg, #f59e0b 0%, #ec4899 35%, #6366f1 70%, #10b981 100%)",
               }}
             >
-              {c.submit}
+              {submitting && (
+                <span
+                  aria-hidden
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-[#0b1a35]/40 border-t-[#0b1a35]"
+                />
+              )}
+              <span>{submitting ? c.submitting : c.submit}</span>
             </button>
             <p className="text-center text-[11px] text-white/50">
               © {new Date().getFullYear()} SAITO · Sport Innovation Hub
