@@ -437,22 +437,27 @@ function AnalyticsTab() {
 // ─── Control Horas ─────────────────────────────────────────────────────────
 
 function ControlHorasTab() {
+  const tr = useTr();
   const total = +RGCC_COACHES.reduce((s, c) => s + c.totalHours, 0).toFixed(1);
   const contract = RGCC_COACHES.reduce((s, c) => s + c.contractedHours, 0);
   const diff = +(total - contract).toFixed(1);
   return (
     <Card>
       <div className="mb-3">
-        <h2 className="text-lg font-semibold">Control de horas global</h2>
+        <h2 className="text-lg font-semibold">{tr("Control de horas global", "Global hours control", "Globalna kontrola sati")}</h2>
         <p className="text-xs text-muted-foreground">
-          Resumen semanal · {RGCC_MEMBERS.length} socios activos
+          {tr(
+            `Resumen semanal · ${RGCC_MEMBERS.length} socios activos`,
+            `Weekly summary · ${RGCC_MEMBERS.length} active members`,
+            `Nedeljni pregled · ${RGCC_MEMBERS.length} aktivnih članova`,
+          )}
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Stat label="Producción total" value={`${total}h`} />
-        <Stat label="Contrato total" value={`${contract}h`} />
+        <Stat label={tr("Producción total", "Total production", "Ukupna produkcija")} value={`${total}h`} />
+        <Stat label={tr("Contrato total", "Total contract", "Ukupan ugovor")} value={`${contract}h`} />
         <Stat
-          label="Diferencia"
+          label={tr("Diferencia", "Difference", "Razlika")}
           value={`${diff > 0 ? "+" : ""}${diff}h`}
           tone={diff > 0 ? "warning" : "success"}
         />
@@ -460,6 +465,7 @@ function ControlHorasTab() {
     </Card>
   );
 }
+
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
