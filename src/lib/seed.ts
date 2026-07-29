@@ -730,6 +730,51 @@ export const CONVERSATIONS: Conversation[] = [
       },
     ],
   },
+  {
+    id: "conv-circ-instalaciones",
+    title: "Circulares",
+    type: "circular",
+    participants: Array.from({ length: 32 }, (_, i) => `p-${i}`),
+    unreadCount: 1,
+    messages: [
+      {
+        id: "cinst-1",
+        authorId: carla,
+        authorRole: "manager",
+        targetLabel: "Todo el club (32 destinatarios)",
+        content:
+          "El sábado la Pista de Atletismo estará cerrada por mantenimiento. Los entrenamientos se trasladan al Pabellón Polideportivo.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 2, 14, 20),
+      },
+      {
+        id: "cinst-2",
+        authorId: carlos,
+        authorRole: "admin",
+        targetLabel: "Familias en competición (18 destinatarios)",
+        content:
+          "Recordatorio: presentación de equipos de competición el próximo viernes a las 18:30. Se ruega puntualidad.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 1, 10, 0),
+      },
+    ],
+  },
+  {
+    id: "conv-baloncesto-cadete",
+    title: "Baloncesto · Cadete Competición",
+    type: "group",
+    participants: ["u-tec", "p-fam-5", "p-fam-6", "p-fam-7"],
+    unreadCount: 0,
+    messages: [
+      {
+        id: "b-m1",
+        authorId: pol,
+        authorRole: "technical",
+        targetLabel: "Cadete Competición (4 destinatarios)",
+        content:
+          "Convocatoria del partido del sábado. Concentración a las 10:15 en el pabellón.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 1, 20, 15),
+      },
+    ],
+  },
 ];
 
 // ───────── Citas médicas ─────────
