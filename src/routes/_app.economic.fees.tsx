@@ -337,6 +337,7 @@ function FeeTable({
   lang: "es" | "en" | "sr";
   onDelete: (id: string) => void;
 }) {
+  const td = useTd();
   if (rows.length === 0) return <EmptyState>—</EmptyState>;
   return (
     <div className="overflow-x-auto">
