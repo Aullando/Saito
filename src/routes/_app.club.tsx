@@ -120,7 +120,7 @@ function ClubPage() {
       );
     });
     return out;
-  }, [events, tr]);
+  }, [events, lang]);
 
 
   // ───── Staff por grupo (heurística: técnicos repartidos por sección) ─────
