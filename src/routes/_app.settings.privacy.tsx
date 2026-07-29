@@ -3,6 +3,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
+import { useLang } from "@/lib/i18n";
 import { useData, AI_MODULE_KEYS, type AiModuleKey } from "@/lib/store";
 import {
   ShieldCheck, Users, Activity, Building2, Clock, Brain,
