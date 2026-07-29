@@ -73,7 +73,8 @@ function PrivacyMockup() {
   const t = (es: string, en: string, sr?: string) =>
     lang === "es" ? es : lang === "sr" ? (sr ?? en) : en;
 
-  const [aiState, setAiState] = useState(AI_MODULES_BASE);
+  const aiModules = useData((s) => s.aiModules);
+  const setAiModule = useData((s) => s.setAiModule);
 
   return (
     <>
