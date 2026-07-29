@@ -2,16 +2,18 @@ import type { ClubConfig, ClubModuleId } from "./types";
 import { saitoClub } from "./saito";
 import { rgccClub } from "./rgcc";
 import { gffClub } from "./gff";
-import { cnsoClub } from "./cnso";
 
+// CNSO ha sido eliminado. RGCC y GFF permanecen registrados (rutas y código
+// activos) pero ocultos de los selectores visibles — solo SAITO se expone.
 export const CLUBS: Record<string, ClubConfig> = {
   [saitoClub.id]: saitoClub,
   [rgccClub.id]: rgccClub,
   [gffClub.id]: gffClub,
-  [cnsoClub.id]: cnsoClub,
 };
 
 export const DEFAULT_CLUB_ID = saitoClub.id;
+/** Clubes visibles en la UI (selectores). El resto se resuelven vía slug de org. */
+export const VISIBLE_CLUB_IDS: string[] = [saitoClub.id];
 
 /**
  * Resolve a club config by its stable id (which matches the org slug in DB).
