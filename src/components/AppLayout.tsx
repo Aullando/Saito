@@ -39,7 +39,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
       className="min-h-screen overflow-x-hidden"
       data-role={user.role}
       style={{ background: "#F7F9FC", ...roleStyle }}
+    >
       <Topbar />
+
 
       <Sidebar />
       <div className="transition-[padding] duration-200">
