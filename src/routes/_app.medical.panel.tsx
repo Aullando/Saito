@@ -3,6 +3,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import { CalendarClock, AlertTriangle, Activity, Briefcase } from "lucide-react";
+import { useTr } from "@/lib/i18n";
 
 
 export const Route = createFileRoute("/_app/medical/panel")({
@@ -58,36 +59,34 @@ function RainbowDot({ size = 32 }: { size?: number }) {
   );
 }
 
-const APPOINTMENT_REQUESTS = [
-  { id: "1", name: "Bruno CANO", detail: "Fisioterapia · hoy 12:40" },
-  { id: "2", name: "Vera MOLINS", detail: "Revisión · hoy 11:05" },
-];
-
-const NON_APT = [{ id: "1", name: "Iker BALDA", detail: "Cadete · Grupo Norte" }];
-
 function MedicalPanelPage() {
+  const tr = useTr();
+  const APPOINTMENT_REQUESTS = [
+    { id: "1", name: "Bruno CANO", detail: tr("Fisioterapia · hoy 12:40", "Physiotherapy · today 12:40", "Fizioterapija · danas 12:40") },
+    { id: "2", name: "Vera MOLINS", detail: tr("Revisión · hoy 11:05", "Check-up · today 11:05", "Pregled · danas 11:05") },
+  ];
+  const NON_APT = [{ id: "1", name: "Iker BALDA", detail: tr("Cadete · Grupo Norte", "Cadet · North Group", "Kadet · Severna grupa") }];
+
   return (
     <div className="p-8 space-y-6 max-w-[1400px]">
-      <h1 className="text-3xl font-semibold text-[#0F1B2D]">Panel médico</h1>
+      <h1 className="text-3xl font-semibold text-[#0F1B2D]">{tr("Panel médico", "Medical panel", "Medicinski panel")}</h1>
 
-      {/* KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Kpi value={3} label="Citas hoy" Icon={CalendarClock} />
-        <Kpi value={2} label="Solicitudes por atender" Icon={AlertTriangle} />
-        <Kpi value={1} label="Deportistas no aptos" Icon={Activity} />
-        <Kpi value={6} label="Planes activos" Icon={Briefcase} />
+        <Kpi value={3} label={tr("Citas hoy", "Appointments today", "Termini danas")} Icon={CalendarClock} />
+        <Kpi value={2} label={tr("Solicitudes por atender", "Requests to review", "Zahtevi za obradu")} Icon={AlertTriangle} />
+        <Kpi value={1} label={tr("Deportistas no aptos", "Unfit athletes", "Nesposobni sportisti")} Icon={Activity} />
+        <Kpi value={6} label={tr("Planes activos", "Active plans", "Aktivni planovi")} Icon={Briefcase} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Solicitudes */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E4EAF2]">
           <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-lg font-semibold text-[#0F1B2D]">Solicitudes de cita</h2>
+            <h2 className="text-lg font-semibold text-[#0F1B2D]">{tr("Solicitudes de cita", "Appointment requests", "Zahtevi za termin")}</h2>
             <span
               className="text-xs font-medium px-2.5 py-1 rounded-full"
               style={{ background: AMBER_SOFT, color: "#B45309" }}
             >
-              {APPOINTMENT_REQUESTS.length} pendientes
+              {APPOINTMENT_REQUESTS.length} {tr("pendientes", "pending", "na čekanju")}
             </span>
           </div>
           <ul className="divide-y divide-[#EEF1F6]">
@@ -104,7 +103,7 @@ function MedicalPanelPage() {
                   className="inline-flex items-center text-white rounded-full px-5 h-10 font-medium hover:opacity-90"
                   style={{ background: AMBER }}
                 >
-                  Atender
+                  {tr("Atender", "Attend", "Obradi")}
                 </Link>
 
               </li>
@@ -112,9 +111,8 @@ function MedicalPanelPage() {
           </ul>
         </div>
 
-        {/* No aptos */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E4EAF2]">
-          <h2 className="text-lg font-semibold text-[#0F1B2D] mb-4">Deportistas no aptos</h2>
+          <h2 className="text-lg font-semibold text-[#0F1B2D] mb-4">{tr("Deportistas no aptos", "Unfit athletes", "Nesposobni sportisti")}</h2>
           <ul className="divide-y divide-[#EEF1F6]">
             {NON_APT.map((r) => (
               <li key={r.id} className="flex items-center gap-3 py-3">
@@ -126,13 +124,13 @@ function MedicalPanelPage() {
                 <span
                   className="text-xs font-medium px-3 py-1 rounded-full border border-[#E4EAF2] text-[#6B7A90]"
                 >
-                  No apto
+                  {tr("No apto", "Unfit", "Nesposoban")}
                 </span>
               </li>
             ))}
           </ul>
           <p className="text-center text-sm text-[#8A98AE] mt-6">
-            El resto del grupo está apto para competir.
+            {tr("El resto del grupo está apto para competir.", "The rest of the group is fit to compete.", "Ostatak grupe je spreman za takmičenje.")}
           </p>
         </div>
       </div>
@@ -140,8 +138,8 @@ function MedicalPanelPage() {
       <MedicalDisclaimer />
 
       <div className="text-sm text-[#6B7A90]">
-        <Link to="/medical/calendar" className="underline mr-4">Ver agenda</Link>
-        <Link to="/medical/restrictions" className="underline">Ver restricciones</Link>
+        <Link to="/medical/calendar" className="underline mr-4">{tr("Ver agenda", "View calendar", "Prikaži kalendar")}</Link>
+        <Link to="/medical/restrictions" className="underline">{tr("Ver restricciones", "View restrictions", "Prikaži ograničenja")}</Link>
       </div>
     </div>
   );
