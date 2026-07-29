@@ -22,7 +22,7 @@ function QAPage() {
   const tr = useTr();
 
   const ROUTES: { area: string; path: string; role: string; status: Status; note?: string }[] = [
-    { area: tr("Login por rol", "Role-based login", "Prijava po ulozi"), path: "/login", role: tr("público", "public", "javno"), status: "ok" },
+    { area: tr("Entrada directa (gate de contraseña + selector ES/EN/SR)", "Direct entry (password gate + ES/EN/SR selector)", "Direktan ulaz (lozinka + ES/EN/SR izbor)"), path: "/", role: tr("público", "public", "javno"), status: "ok", note: tr("Solo SAITO. El idioma elegido en el gate se persiste.", "SAITO only. Language picked at the gate persists.", "Samo SAITO. Jezik izabran na ulazu ostaje.") },
     { area: "Dashboard", path: "/dashboard", role: "admin · manager · technical · medical", status: "ok" },
     { area: tr("Club / instalaciones", "Club / facilities", "Klub / objekti"), path: "/club", role: "admin · manager", status: "ok" },
     { area: tr("Deportistas (filtros + ficha)", "Athletes (filters + profile)", "Sportisti (filteri + profil)"), path: "/athletes", role: "admin · manager · technical · medical", status: "ok" },
