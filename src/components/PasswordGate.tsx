@@ -143,6 +143,26 @@ export function PasswordGate({ children }: { children: ReactNode }) {
         }}
       />
 
+      <div className="absolute right-4 top-4 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-white/10 p-1 backdrop-blur-md">
+        {(["es", "en", "sr"] as Lang[]).map((l) => (
+          <button
+            key={l}
+            type="button"
+            onClick={() => pickLang(l)}
+            aria-pressed={lang === l}
+            className={
+              "rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-widest transition " +
+              (lang === l
+                ? "bg-white text-[#0b1a35] shadow"
+                : "text-white/70 hover:text-white")
+            }
+          >
+            {l}
+          </button>
+        ))}
+      </div>
+
+
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-10 px-6 py-12 md:grid md:grid-cols-2 md:gap-16">
         <div className="flex w-full flex-col items-center text-center md:items-start md:text-left">
           <img
