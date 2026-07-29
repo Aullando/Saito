@@ -1,15 +1,18 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth as useUiAuth, useUserAvatar } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { useT, useLang } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
+import { isDemoMode } from "@/lib/appMode";
 import { Camera } from "lucide-react";
 
 export const Route = createFileRoute("/_app/profile")({
