@@ -224,9 +224,9 @@ export function AIChat() {
   const suggestions = isGff
     ? (SUGGESTIONS_GFF[role] ?? [])
     : isRgcc
-      ? rgccSuggestions(role, user, roles)
+      ? rgccSuggestions(role, user, roles, lang)
       : isCnso
-        ? cnsoSuggestions(role, user, roles)
+        ? cnsoSuggestions(role, user, roles, lang)
         : ((lang === "en" || lang === "sr" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
   const placeholder = isGff
     ? "اكتب سؤالك…"
@@ -326,11 +326,11 @@ export function AIChat() {
                 : "Sin créditos de IA disponibles.";
         // RGCC / CNSO fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
-          const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q);
+          const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q, lang);
           if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
         }
         if (isCnso && cnsoIdentity) {
-          const local = cnsoLocalFallback(role, context as ReturnType<typeof buildCnsoContextFromIdentity>, q);
+          const local = cnsoLocalFallback(role, context as ReturnType<typeof buildCnsoContextFromIdentity>, q, lang);
           if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
         }
         setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);
@@ -426,7 +426,7 @@ export function AIChat() {
       if (isRgcc && rgccIdentity) {
         try {
           const ctx = buildRgccContextFromIdentity(rgccIdentity);
-          const local = rgccLocalFallback(role, ctx, q);
+          const local = rgccLocalFallback(role, ctx, q, lang);
           if (local) {
             setMsgs((m) => [...m, { role: "assistant", content: local }]);
             return;

@@ -49,7 +49,8 @@ Deno.serve(async (req) => {
     const isGff = club === "gff-demo" || lang === "ar";
     const isRgcc = club === "rgcc";
     const isCnso = club === "cnso";
-    const isEn = !isGff && lang === "en";
+    const isSr = !isGff && lang === "sr";
+    const isEn = !isGff && !isSr && lang === "en";
 
     const roleScope: Record<string, string> = isGff
       ? {
@@ -62,7 +63,18 @@ Deno.serve(async (req) => {
           medical:
             "تصل فقط إلى البيانات الطبية: المواعيد، الحالة الطبية للاعبين، العلاجات. لا تصل إلى المعلومات الاقتصادية.",
         }
-      : isEn
+      : isSr
+        ? {
+            sysadmin: "Imate potpun pristup organizacijama, korisnicima i sistemskim podacima.",
+            admin: "Imate pristup podacima kluba: sportisti, plaćanja, članarine, kalendar, medicinski podaci.",
+            manager:
+              "Imate pristup operacijama kluba: sportisti, plaćanja, članarine, kalendar. NE pristupate detaljnim osetljivim medicinskim podacima.",
+            technical:
+              "Pristupate samo sportskim podacima: sportisti, grupe, treninzi, učinak. NE pristupate ekonomskim informacijama.",
+            medical:
+              "Pristupate samo medicinskim podacima: pregledi, medicinski status sportista, tretmani. NE pristupate ekonomskim informacijama.",
+          }
+        : isEn
         ? {
             sysadmin: "You have full access to organizations, users and system data.",
             admin:
@@ -88,20 +100,28 @@ Deno.serve(async (req) => {
     const clubIntro = isGff
       ? `أنت المساعد الذكي لاتحاد كرة القدم الخليجي (GFF) داخل منصة SAITO، للدور "${role}". يشمل السياق المنتخبات الوطنية، اللاعبين، الجهاز الفني، المباريات، المعسكرات، التقويم الدولي، والأندية المنتسبة. عند الحاجة استخدم جداول أو قوائم واضحة.`
       : isRgcc
-        ? isEn
+        ? isSr
+          ? `Vi ste operativni kopilot Real Grupo de Cultura Covadonga (RGCC) unutar SAITO platforme. Kontekst uključuje časove, trenere, objekte/sale, incidente, odsustva/zamene, personalne treninge, biblioteku vežbi i članove. Kada je relevantno, odgovarajte jasnim tabelama ili listama grupisanim po objektu/terminu.`
+          : isEn
           ? `You are the operational copilot for Real Grupo de Cultura Covadonga (RGCC) inside SAITO. Context includes classes, instructors, venues/rooms, incidents, absences/substitutions, personal-training sessions, exercise library and members. When relevant, answer with clear tables or lists grouped by venue/timeslot.`
           : `Eres el copiloto operativo del Real Grupo de Cultura Covadonga (RGCC) dentro de SAITO. El contexto incluye clases, monitores, sedes/salas, incidencias, ausencias/sustituciones, sesiones de entrenamiento personal, biblioteca de ejercicios y socios. Cuando proceda, responde con tablas o listas claras agrupadas por sede/horario.`
         : isCnso
-          ? isEn
+          ? isSr
+            ? `Vi ste operativni kopilot Club Natación Santa Olaya (CNSO) unutar SAITO platforme. Kontekst uključuje plivačke staze, bazene/objekte, trenere, sesije treninga i serije, sportske sekcije (plivanje, vaterpolo, sinhrono plivanje, triatlon, otvorene vode), plivače sa ličnim rekordima, kalendar takmičenja i zvaničnu opremu. Kada je relevantno, odgovarajte jasnim tabelama ili listama grupisanim po objektu, stazi ili sesiji.`
+            : isEn
             ? `You are the operational copilot for Club Natación Santa Olaya (CNSO) inside SAITO. Context includes swimming lanes, pools/venues, coaches, training sessions and sets, sport sections (swimming, waterpolo, synchro, triathlon, open water), athletes with personal bests, competitions calendar and official kit. When relevant, respond with clear tables or lists grouped by venue, lane or session.`
             : `Eres el copiloto operativo del Club Natación Santa Olaya (CNSO) dentro de SAITO. El contexto incluye calles de agua, piscinas/sedes, entrenadores, sesiones y series de entrenamiento, secciones deportivas (natación, waterpolo, sincro, triatlón, aguas abiertas), nadadores con marcas personales, calendario de competiciones y equipación oficial. Cuando proceda, responde con tablas o listas claras agrupadas por sede, calle o sesión.`
-          : isEn
-            ? `You are the Saito sports-club AI assistant for the "${role}" role.`
-            : `Eres el asistente IA del club deportivo Saito para el rol "${role}".`;
+          : isSr
+            ? `Vi ste SAITO AI asistent za sportski klub, za ulogu "${role}".`
+            : isEn
+              ? `You are the Saito sports-club AI assistant for the "${role}" role.`
+              : `Eres el asistente IA del club deportivo Saito para el rol "${role}".`;
 
     const langInstruction = isGff
       ? `أجب دائمًا باللغة العربية الفصحى، بأسلوب موجز ومهني. استخدم بيانات الاتحاد المُقدَّمة أدناه للإجابة بدقة. إذا كان السؤال خارج صلاحيات هذا الدور، أجب: "هذا الاستعلام خارج صلاحيات دورك." إذا لم تجد بيانات كافية، صرّح بذلك بوضوح. استخدم تنسيق markdown خفيف (قوائم، عريض) عند الفائدة.\n\nبيانات الاتحاد (JSON):`
-      : isEn
+      : isSr
+        ? `UVEK odgovarajte na srpskom jeziku (LATINICA — nikada ćirilica), sažeto i profesionalno. Koristite podatke kluba date u nastavku da odgovorite precizno. Ako je pitanje van dozvola ove uloge, odgovorite: "Ovaj upit je van dozvola vaše uloge." Ako nemate dovoljno podataka, jasno to navedite. Koristite lagani markdown (liste, podebljano) kada pomaže čitanju.\n\nPODACI KLUBA (JSON):`
+        : isEn
         ? `ALWAYS reply in English, concise and professional. Use the club data provided below to answer accurately. If the question is outside this role's permissions, reply: "This query is outside your role's permissions." If you don't have enough data, say so clearly. Use light markdown (lists, bold) when helpful.\n\nCLUB DATA (JSON):`
         : `Responde SIEMPRE en español, de forma concisa y profesional. Usa los datos del club que se te proporcionan a continuación para responder con precisión. Si la pregunta queda fuera de los permisos del rol, responde: "Esta consulta queda fuera de los permisos de tu rol."\n\nSi no encuentras datos suficientes, dilo claramente. Usa formato markdown ligero (listas, negritas) cuando ayude a la lectura.\n\nDATOS DEL CLUB (JSON):`;
 

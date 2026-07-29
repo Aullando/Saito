@@ -144,29 +144,69 @@ export function rgccSuggestions(
   role: Role | string,
   user?: RgccUserLike,
   rolesArg?: Role[],
+  lang: "es" | "en" | "sr" = "es",
 ): string[] {
   const roles = (rolesArg ?? [role as Role]).filter(Boolean) as Role[];
   const id = resolveRgccIdentity(user, roles);
-  if (id.scope === "coordinacion") {
-    return [
-      "¿Qué clases hay hoy y cuáles van llenas?",
-      "¿Hay clases sin monitor asignado?",
-      "Resumen de incidencias abiertas",
-      "¿Qué monitores están sobre su límite de horas?",
-    ];
-  }
-  if (id.scope === "monitor") {
-    return [
-      "¿Qué clases tengo hoy?",
-      "¿Tengo sesiones de entrenamiento personal pendientes?",
-      "¿Cuántas horas llevo esta semana?",
-    ];
-  }
-  return [
-    "¿Cuáles son mis próximas reservas?",
-    "¿Qué clases hay disponibles esta tarde?",
-    "Recomiéndame una rutina sencilla",
-  ];
+  const dict = {
+    coordinacion: {
+      es: [
+        "¿Qué clases hay hoy y cuáles van llenas?",
+        "¿Hay clases sin monitor asignado?",
+        "Resumen de incidencias abiertas",
+        "¿Qué monitores están sobre su límite de horas?",
+      ],
+      en: [
+        "Which classes are today and which are full?",
+        "Are there classes without an assigned coach?",
+        "Summary of open incidents",
+        "Which coaches are over their hours limit?",
+      ],
+      sr: [
+        "Koji časovi su danas i koji su popunjeni?",
+        "Ima li časova bez dodeljenog trenera?",
+        "Pregled otvorenih incidenata",
+        "Koji treneri su prekoračili limit sati?",
+      ],
+    },
+    monitor: {
+      es: [
+        "¿Qué clases tengo hoy?",
+        "¿Tengo sesiones de entrenamiento personal pendientes?",
+        "¿Cuántas horas llevo esta semana?",
+      ],
+      en: [
+        "Which classes do I have today?",
+        "Do I have pending personal training sessions?",
+        "How many hours have I logged this week?",
+      ],
+      sr: [
+        "Koje časove imam danas?",
+        "Imam li zakazanih personalnih sesija?",
+        "Koliko sati sam odradio ove nedelje?",
+      ],
+    },
+    socio: {
+      es: [
+        "¿Cuáles son mis próximas reservas?",
+        "¿Qué clases hay disponibles esta tarde?",
+        "Recomiéndame una rutina sencilla",
+      ],
+      en: [
+        "What are my upcoming bookings?",
+        "Which classes are available this afternoon?",
+        "Recommend me a simple routine",
+      ],
+      sr: [
+        "Koje su moje sledeće rezervacije?",
+        "Koji časovi su dostupni popodne?",
+        "Preporuči mi jednostavnu rutinu",
+      ],
+    },
+  } as const;
+  const scope =
+    id.scope === "coordinacion" ? "coordinacion" : id.scope === "monitor" ? "monitor" : "socio";
+  return [...dict[scope][lang]];
 }
 
 /** Resolver determinista local — fallback rápido cuando la IA no responde. */
@@ -174,13 +214,46 @@ export function rgccLocalFallback(
   _role: string,
   ctx: ReturnType<typeof buildRgccContextFromIdentity>,
   q: string,
+  lang: "es" | "en" | "sr" = "es",
 ): string | null {
   const text = q.toLowerCase();
-  if (/clases?.*(hoy|del d[ií]a)/.test(text) && "clasesHoy" in ctx) {
+  const T = {
+    es: {
+      todayHead: (n: number) => `**Clases de hoy (${n}):**\n`,
+      noToday: "No hay clases programadas hoy.",
+      noCoach: (n: number) => `Hay ${n} clase(s) sin monitor.`,
+      allCoach: "No hay clases sin monitor hoy. ✅",
+      openInc: (n: number) => `Hay ${n} incidencia(s) abierta(s).`,
+      noInc: "Sin incidencias abiertas.",
+      bookN: (n: number) => `Tienes ${n} reserva(s).`,
+      noBook: "No tienes reservas próximas.",
+    },
+    en: {
+      todayHead: (n: number) => `**Today's classes (${n}):**\n`,
+      noToday: "No classes scheduled today.",
+      noCoach: (n: number) => `There are ${n} class(es) without a coach.`,
+      allCoach: "No classes without a coach today. ✅",
+      openInc: (n: number) => `There are ${n} open incident(s).`,
+      noInc: "No open incidents.",
+      bookN: (n: number) => `You have ${n} booking(s).`,
+      noBook: "You have no upcoming bookings.",
+    },
+    sr: {
+      todayHead: (n: number) => `**Današnji časovi (${n}):**\n`,
+      noToday: "Nema zakazanih časova danas.",
+      noCoach: (n: number) => `Postoji ${n} čas(ova) bez trenera.`,
+      allCoach: "Nema časova bez trenera danas. ✅",
+      openInc: (n: number) => `Postoji ${n} otvoreni incident(a).`,
+      noInc: "Nema otvorenih incidenata.",
+      bookN: (n: number) => `Imate ${n} rezervaciju(e).`,
+      noBook: "Nemate narednih rezervacija.",
+    },
+  }[lang];
+  if (/clases?.*(hoy|del d[ií]a)|today.*class|class.*today|danas/.test(text) && "clasesHoy" in ctx) {
     const list = (ctx as Record<string, unknown>).clasesHoy as ReturnType<typeof compactSession>[];
-    if (!list?.length) return "No hay clases programadas hoy.";
+    if (!list?.length) return T.noToday;
     return (
-      `**Clases de hoy (${list.length}):**\n` +
+      T.todayHead(list.length) +
       list
         .map(
           (c) =>
@@ -189,21 +262,17 @@ export function rgccLocalFallback(
         .join("\n")
     );
   }
-  if (/sin monitor/.test(text) && "clasesSinMonitor" in ctx) {
+  if (/sin monitor|without.*coach|bez trenera/.test(text) && "clasesSinMonitor" in ctx) {
     const list = (ctx as Record<string, unknown>).clasesSinMonitor as unknown[];
-    return list?.length
-      ? `Hay ${list.length} clase(s) sin monitor.`
-      : "No hay clases sin monitor hoy. ✅";
+    return list?.length ? T.noCoach(list.length) : T.allCoach;
   }
-  if (/incidenc/.test(text) && "incidencias" in ctx) {
+  if (/incidenc|incident/.test(text) && "incidencias" in ctx) {
     const list = (ctx as Record<string, unknown>).incidencias as unknown[];
-    return list?.length
-      ? `Hay ${list.length} incidencia(s) abierta(s).`
-      : "Sin incidencias abiertas.";
+    return list?.length ? T.openInc(list.length) : T.noInc;
   }
-  if ("misReservas" in ctx && /reserv/.test(text)) {
+  if ("misReservas" in ctx && /reserv|book|rezerv/.test(text)) {
     const list = (ctx as Record<string, unknown>).misReservas as unknown[];
-    return list?.length ? `Tienes ${list.length} reserva(s).` : "No tienes reservas próximas.";
+    return list?.length ? T.bookN(list.length) : T.noBook;
   }
   return null;
 }

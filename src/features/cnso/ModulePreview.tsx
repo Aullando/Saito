@@ -1,4 +1,5 @@
 import { useCurrentUser } from "@/lib/store";
+import { useTd } from "@/lib/demoI18n";
 import { Card, Grid } from "@/features/clubModule/helpers";
 import {
   CNSO_VENUES,
@@ -86,6 +87,7 @@ export function IncidenciasView() {
   );
 }
 export function ModulePreview({ slug, fallback }: { slug: string; fallback: React.ReactNode }) {
+  const td = useTd();
   switch (slug) {
     case "sedes":
       return (
@@ -145,7 +147,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                 <div className="min-w-0">
                   <div className="font-semibold truncate">{s.name}</div>
                   <div className="text-xs text-muted-foreground">
-                    {s.category} · {s.venueLabel}
+                    {td(s.category)} · {s.venueLabel}
                   </div>
                 </div>
                 <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
@@ -301,7 +303,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <Card key={s.id}>
                 <div className="font-semibold">{s.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  {s.level} · {s.totalMeters.toLocaleString("es-ES")} m
+                  {td(s.level)} · {s.totalMeters.toLocaleString("es-ES")} m
                 </div>
                 <p className="mt-1 text-xs">{s.goal}</p>
                 <ul className="mt-2 space-y-0.5 text-[11px] text-muted-foreground">
@@ -320,7 +322,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <Card key={d.id}>
                 <div className="font-semibold">{d.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  {d.category} · {d.group}
+                  {td(d.category)} · {d.group}
                 </div>
                 <div className="mt-1 text-xs">
                   {d.equipment} · {d.dose}
@@ -345,14 +347,14 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                   <div className="min-w-0">
                     <div className="font-semibold truncate">{c.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {c.date} · {c.venue} · {c.discipline}
+                      {c.date} · {c.venue} · {td(c.discipline)}
                     </div>
                     {c.highlight && (
                       <div className="mt-1 text-[11px] text-primary">{c.highlight}</div>
                     )}
                   </div>
                   <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                    {c.category}
+                    {td(c.category)}
                   </span>
                 </div>
                 <div className="mt-1 text-[11px] text-muted-foreground">
