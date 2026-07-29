@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import saitoHero from "@/assets/saito-hero.png.asset.json";
+import videoEs from "@/assets/saito-presentacion-es.mp4.asset.json";
 import { useAuth as useLocalAuth } from "@/lib/store";
+
+// TODO: reemplazar por vídeo EN cuando esté disponible; ahora usa ES como fallback.
+const VIDEO_BY_LANG: Record<"es" | "en" | "sr", string> = {
+  es: videoEs.url,
+  en: videoEs.url,
+  sr: videoEs.url,
+};
 
 const STORAGE_KEY = "site-password-ok";
 const PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "SIHSAITO";
