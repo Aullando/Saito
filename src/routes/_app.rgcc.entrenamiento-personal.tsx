@@ -205,28 +205,30 @@ function WorkoutCard({
   workout: RgccWorkout;
   showAthleteView?: boolean;
 }) {
+  const tr = useTr();
+  const td = useTd();
   const tone =
     w.status === "completed" ? "success" : w.status === "in_progress" ? "info" : "warning";
   return (
     <Card>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="font-semibold leading-tight">{w.title}</div>
+          <div className="font-semibold leading-tight">{td(w.title)}</div>
           <div className="mt-1 text-xs text-muted-foreground">
-            {showAthleteView ? `Coach ${w.coachName}` : `${w.memberNumber} · ${w.coachName}`}
+            {showAthleteView ? `${tr("Monitor", "Coach", "Trener")} ${w.coachName}` : `${w.memberNumber} · ${w.coachName}`}
           </div>
         </div>
         <div className="flex flex-col items-end gap-1">
-          <Pill tone={tone as never}>{w.status}</Pill>
+          <Pill tone={tone as never}>{td(w.status)}</Pill>
           {w.source === "ai" && (
             <Pill tone="info">
               <Sparkles className="mr-1 inline h-3 w-3" />
-              IA
+              {tr("IA", "AI", "AI")}
             </Pill>
           )}
         </div>
       </div>
-      <p className="mt-2 text-xs text-muted-foreground">{w.goal}</p>
+      <p className="mt-2 text-xs text-muted-foreground">{td(w.goal)}</p>
       <ul className="mt-3 space-y-1.5">
         {w.blocks.map((b, i) => {
           const ex = b.exerciseId ? RGCC_EXERCISES.find((e) => e.id === b.exerciseId) : undefined;
@@ -237,7 +239,7 @@ function WorkoutCard({
                 {img ? (
                   <img
                     src={img}
-                    alt={b.name}
+                    alt={td(b.name)}
                     className="h-full w-full object-cover"
                     loading="lazy"
                   />
@@ -248,18 +250,19 @@ function WorkoutCard({
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="truncate text-xs font-medium">{b.name}</div>
+                <div className="truncate text-xs font-medium">{td(b.name)}</div>
                 <div className="text-[10px] text-muted-foreground">
                   {b.dose}
-                  {b.rest ? ` · descanso ${b.rest}` : ""}
-                  {ex?.category ? ` · ${ex.category}` : ""}
+                  {b.rest ? ` · ${tr("descanso", "rest", "pauza")} ${b.rest}` : ""}
+                  {ex?.category ? ` · ${td(ex.category)}` : ""}
                 </div>
               </div>
             </li>
           );
         })}
       </ul>
-      {w.notes && <p className="mt-2 text-xs italic text-muted-foreground">"{w.notes}"</p>}
+      {w.notes && <p className="mt-2 text-xs italic text-muted-foreground">"{td(w.notes)}"</p>}
     </Card>
   );
 }
+
