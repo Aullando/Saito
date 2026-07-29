@@ -157,6 +157,7 @@ function KpiCard({ label, value }: { label: string; value: number }) {
 }
 
 function PtSessionCard({ session: s }: { session: RgccPtSession }) {
+  const td = useTd();
   const routine = RGCC_ROUTINES.find((r) => r.id === s.routineId);
   const tone =
     s.status === "confirmed"
@@ -178,23 +179,24 @@ function PtSessionCard({ session: s }: { session: RgccPtSession }) {
             <User className="mr-1 inline h-3 w-3" /> {s.coachName}
           </div>
         </div>
-        <Pill tone={tone as never}>{s.status}</Pill>
+        <Pill tone={tone as never}>{td(s.status)}</Pill>
       </div>
       {routine && (
         <div className="mt-3 rounded-lg bg-muted/40 p-3">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-medium">{routine.name}</span>
+            <span className="font-medium">{td(routine.name)}</span>
             <span className="text-muted-foreground">
-              {routine.durationMin} min · {routine.level}
+              {routine.durationMin} min · {td(routine.level)}
             </span>
           </div>
-          <div className="mt-1 text-[11px] text-muted-foreground">{routine.goal}</div>
+          <div className="mt-1 text-[11px] text-muted-foreground">{td(routine.goal)}</div>
         </div>
       )}
-      {s.notes && <p className="mt-2 text-xs italic text-muted-foreground">"{s.notes}"</p>}
+      {s.notes && <p className="mt-2 text-xs italic text-muted-foreground">"{td(s.notes)}"</p>}
     </Card>
   );
 }
+
 
 function WorkoutCard({
   workout: w,
