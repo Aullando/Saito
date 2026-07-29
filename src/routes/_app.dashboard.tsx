@@ -256,6 +256,7 @@ function CommandCenter() {
         text: tr(
           `Cita médica · ${who} · ${nextAppt.reason}`,
           `Medical appointment · ${who} · ${nextAppt.reason}`,
+          `Medicinski pregled · ${who} · ${nextAppt.reason}`,
         ),
         time: `${nextAppt.date} ${nextAppt.time}`,
         tone: "warning",
