@@ -195,7 +195,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <div className="mt-1 text-xs">
                 {tr("Monitor", "Coach", "Trener")}: {m.coachName} · {tr("Nivel", "Level", "Nivo")} {m.level}
               </div>
-              <div className="mt-1 text-[11px] text-muted-foreground line-clamp-2">{m.goal}</div>
+              <div className="mt-1 text-[11px] text-muted-foreground line-clamp-2">{td(m.goal)}</div>
             </Card>
           ))}
         </Grid>
