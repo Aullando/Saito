@@ -66,12 +66,20 @@ const SUBHEADS: Record<Lang, string> = {
 };
 
 export function PasswordGate({ children }: { children: ReactNode }) {
+  const storedLang = useLocalAuth((s) => s.langOverride) as Lang | null | undefined;
+  const setLangOverride = useLocalAuth((s) => s.setLangOverride);
   const [ready, setReady] = useState(false);
   const [unlocked, setUnlocked] = useState(!ENABLED);
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
-  const lang = useMemo(detectLang, []);
+  const initialLang = useMemo<Lang>(() => storedLang ?? detectLang(), []); // eslint-disable-line react-hooks/exhaustive-deps
+  const [lang, setLang] = useState<Lang>(initialLang);
   const c = COPY[lang];
+
+  const pickLang = (l: Lang) => {
+    setLang(l);
+    try { setLangOverride(l); } catch { /* ignore */ }
+  };
 
   useEffect(() => {
     if (!ENABLED) {
