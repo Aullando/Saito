@@ -233,11 +233,12 @@ function SectionTitle({ icon: Icon, title }: { icon: React.ComponentType<{ class
   );
 }
 
-function PermBadge({ level, lang }: { level: "full" | "limited" | "none"; lang: "es" | "en" }) {
+function PermBadge({ level, lang }: { level: "full" | "limited" | "none"; lang: "es" | "en" | "sr" }) {
+  const pick = (es: string, en: string, sr: string) => (lang === "es" ? es : lang === "sr" ? sr : en);
   const map = {
-    full: { label: lang === "es" ? "Completo" : "Full", cls: "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
-    limited: { label: lang === "es" ? "Limitado" : "Limited", cls: "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400" },
-    none: { label: lang === "es" ? "Sin acceso" : "None", cls: "border-border bg-muted text-muted-foreground" },
+    full: { label: pick("Completo", "Full", "Potpuno"), cls: "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
+    limited: { label: pick("Limitado", "Limited", "Ograničeno"), cls: "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400" },
+    none: { label: pick("Sin acceso", "None", "Bez pristupa"), cls: "border-border bg-muted text-muted-foreground" },
   } as const;
   const v = map[level];
   return <span className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-medium ${v.cls}`}>{v.label}</span>;
