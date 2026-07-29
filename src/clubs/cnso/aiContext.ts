@@ -160,29 +160,68 @@ export function cnsoSuggestions(
   role: Role | string,
   user?: CnsoUserLike,
   rolesArg?: Role[],
+  lang: "es" | "en" | "sr" = "es",
 ): string[] {
   const roles = (rolesArg ?? [role as Role]).filter(Boolean) as Role[];
   const id = resolveCnsoIdentity(user, roles);
-  if (id.scope === "direccion") {
-    return [
-      "¿Qué sesiones de calle hay hoy y cuáles van llenas?",
-      "¿Hay calles fuera de servicio o incidencias abiertas?",
-      "¿Qué entrenadores están sobre el límite de horas?",
-      "Resumen de próximas competiciones",
-    ];
-  }
-  if (id.scope === "tecnico") {
-    return [
-      "¿Qué sesiones tengo hoy en la calle?",
-      "¿Cuántas horas llevo esta semana?",
-      "¿Tengo sesiones de tecnificación pendientes?",
-    ];
-  }
-  return [
-    "¿Cuáles son mis próximas reservas?",
-    "¿Qué set me toca hoy?",
-    "¿Cuándo es mi próxima competición?",
-  ];
+  const dict = {
+    direccion: {
+      es: [
+        "¿Qué sesiones de calle hay hoy y cuáles van llenas?",
+        "¿Hay calles fuera de servicio o incidencias abiertas?",
+        "¿Qué entrenadores están sobre el límite de horas?",
+        "Resumen de próximas competiciones",
+      ],
+      en: [
+        "Which lane sessions are today and which are full?",
+        "Any lanes out of service or open incidents?",
+        "Which coaches are over their hours limit?",
+        "Summary of upcoming competitions",
+      ],
+      sr: [
+        "Koje sesije po stazama su danas i koje su popunjene?",
+        "Ima li staza van funkcije ili otvorenih incidenata?",
+        "Koji treneri su prekoračili limit sati?",
+        "Pregled narednih takmičenja",
+      ],
+    },
+    tecnico: {
+      es: [
+        "¿Qué sesiones tengo hoy en la calle?",
+        "¿Cuántas horas llevo esta semana?",
+        "¿Tengo sesiones de tecnificación pendientes?",
+      ],
+      en: [
+        "Which sessions do I have on the lane today?",
+        "How many hours have I logged this week?",
+        "Do I have any pending development sessions?",
+      ],
+      sr: [
+        "Koje sesije imam danas na stazi?",
+        "Koliko sati sam odradio ove nedelje?",
+        "Imam li nezavršenih razvojnih sesija?",
+      ],
+    },
+    socio: {
+      es: [
+        "¿Cuáles son mis próximas reservas?",
+        "¿Qué set me toca hoy?",
+        "¿Cuándo es mi próxima competición?",
+      ],
+      en: [
+        "What are my upcoming bookings?",
+        "Which set is scheduled for me today?",
+        "When is my next competition?",
+      ],
+      sr: [
+        "Koje su moje sledeće rezervacije?",
+        "Koji set imam danas?",
+        "Kada je moje sledeće takmičenje?",
+      ],
+    },
+  } as const;
+  const scope = id.scope === "direccion" ? "direccion" : id.scope === "tecnico" ? "tecnico" : "socio";
+  return dict[scope][lang];
 }
 
 /** Resolver determinista local — fallback rápido cuando la IA no responde. */
