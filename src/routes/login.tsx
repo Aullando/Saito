@@ -5,6 +5,7 @@ import { useAuth as useLocalAuth } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { useActiveClubStore } from "@/clubs/activeClub";
 import { CLUBS } from "@/clubs/registry";
+import { useTr, useLang } from "@/lib/i18n";
 import saitoMark from "@/assets/brand/saito-iso.svg";
 import {
   Briefcase,
@@ -35,12 +36,22 @@ type DemoProfile = {
   userId: string;
   title: string;
   subtitle: string;
+  title_en?: string;
+  subtitle_en?: string;
+  title_sr?: string;
+  subtitle_sr?: string;
   surface: "desktop" | "mobile";
   module: ModuleKey;
   icon: LucideIcon;
   /** Optional route override; otherwise dashboard/mobile by surface. */
   to?: string;
 };
+
+function pickProfile(p: DemoProfile, lang: "es" | "en" | "sr"): DemoProfile {
+  if (lang === "en") return { ...p, title: p.title_en ?? p.title, subtitle: p.subtitle_en ?? p.subtitle };
+  if (lang === "sr") return { ...p, title: p.title_sr ?? p.title_en ?? p.title, subtitle: p.subtitle_sr ?? p.subtitle_en ?? p.subtitle };
+  return p;
+}
 
 const SAITO_PROFILES: DemoProfile[] = [
   {
