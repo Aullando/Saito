@@ -53,6 +53,9 @@ export const Route = createFileRoute("/_app/dashboard")({
 
 function DashboardSwitch() {
   const { club } = useClub();
+  // Ramas dormidas: RGCC y GFF están ocultos en VISIBLE_CLUB_IDS y bloqueados
+  // por normalizeOverride en activeClub. Para reactivarlos, añadirlos de nuevo
+  // a VISIBLE_CLUB_IDS en src/clubs/registry.ts.
   if (club.id === "rgcc") return <RgccDashboard />;
   if (club.id === "gff-demo") return <GffWorkspace view="dashboard" />;
   return <CommandCenter />;

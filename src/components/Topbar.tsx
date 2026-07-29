@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Moon, Sun, Search, Menu, ChevronDown, X } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
@@ -8,15 +9,19 @@ import { NotificationsBell } from "./NotificationsBell";
 import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
 import { useClub } from "@/clubs/ClubProvider";
+
 import { cn } from "@/lib/utils";
 
-const ROLE_LABEL: Record<string, string> = {
-  sysadmin: "SysAdmin",
-  admin: "Admin",
-  manager: "Manager",
-  technical: "Technical",
-  medical: "Medical",
-  athlete: "Atleta",
+// Perfiles SAITO expuestos en el selector de rol de la demo.
+const SAITO_ROLE_IDS = new Set(["u-mgr", "u-adm", "u-med", "u-tec", "u-ath"]);
+
+const ROLE_LABEL: Record<string, { es: string; en: string; sr: string }> = {
+  sysadmin: { es: "SysAdmin", en: "SysAdmin", sr: "SysAdmin" },
+  admin: { es: "Administración", en: "Admin", sr: "Administracija" },
+  manager: { es: "Dirección", en: "Manager", sr: "Direkcija" },
+  technical: { es: "Entrenador", en: "Coach", sr: "Trener" },
+  medical: { es: "Staff médico", en: "Medical staff", sr: "Medicinsko osoblje" },
+  athlete: { es: "Deportista", en: "Athlete", sr: "Sportista" },
 };
 
 export function Topbar() {
@@ -25,6 +30,9 @@ export function Topbar() {
   const avatar = useUserAvatar(user?.id ?? "");
   const setMobileNavOpen = useAuth((s) => s.setMobileNavOpen);
   const setUser = useAuth((s) => s.setUser);
+  const navigate = useNavigate();
+  const roleLabel = (role: string) =>
+    ROLE_LABEL[role]?.[user?.language ?? "en"] ?? role;
   const collapsed = useAuth((s) => s.sidebarCollapsed);
   const setLangOverride = useAuth((s) => s.setLangOverride);
   const { club, availableClubs } = useClub();
@@ -160,7 +168,7 @@ export function Topbar() {
               </span>
             </span>
             <span className="hidden md:inline text-xs font-medium">
-              {ROLE_LABEL[user.role] ?? user.role}
+              {roleLabel(user.role)}
             </span>
             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
@@ -170,12 +178,18 @@ export function Topbar() {
                 {lang === "es" ? "Cambiar de rol" : lang === "sr" ? "Promeni ulogu" : "Switch role"}
               </div>
               <ul className="max-h-80 overflow-y-auto pb-1">
-                {DEMO_USERS.filter((u) => ROLE_LABEL[u.role]).map((u) => (
+                {DEMO_USERS.filter((u) => SAITO_ROLE_IDS.has(u.id)).map((u) => (
                   <li key={u.id}>
                     <button
                       onClick={() => {
                         setUser(u.id);
                         setOpen(false);
+                        // Perfiles de superficie móvil aterrizan en /mobile
+                        if (u.role === "athlete" || u.role === "technical") {
+                          navigate({ to: "/mobile" });
+                        } else {
+                          navigate({ to: "/dashboard" });
+                        }
                       }}
                       className={cn(
                         "flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-muted",
@@ -188,7 +202,7 @@ export function Topbar() {
                       <span className="min-w-0 flex-1">
                         <span className="block truncate font-medium">{u.name}</span>
                         <span className="block truncate text-[11px] text-muted-foreground">
-                          {ROLE_LABEL[u.role]} · {u.language.toUpperCase()}
+                          {roleLabel(u.role)} · {u.language.toUpperCase()}
                         </span>
                       </span>
                     </button>
@@ -209,7 +223,9 @@ export function Topbar() {
               placeholder={
                 user.language === "es"
                   ? `Buscar en ${club.brand.name}`
-                  : `Search ${club.brand.name}`
+                  : user.language === "sr"
+                    ? `Pretraga u ${club.brand.name}`
+                    : `Search ${club.brand.name}`
               }
               className="h-10 w-full rounded-full border border-border bg-card pl-10 pr-10 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
