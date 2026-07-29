@@ -33,7 +33,7 @@ function useDemoAthletes(limit = 12) {
 // ───────── ASISTENCIA ─────────
 type AttStatus = "present" | "absent" | "justified" | "injured";
 
-const getAttOptions = (tr: (es: string, en: string) => string) => [
+const getAttOptions = (tr: (es: string, en: string, sr?: string) => string) => [
   { key: "present" as AttStatus, label: tr("Presente", "Present", "Prisutan"), cls: "bg-emerald-100 text-emerald-800 border-emerald-200" },
   { key: "absent" as AttStatus, label: tr("Ausente", "Absent", "Odsutan"), cls: "bg-rose-100 text-rose-800 border-rose-200" },
   { key: "justified" as AttStatus, label: tr("Justif.", "Excused", "Opravd."), cls: "bg-amber-100 text-amber-800 border-amber-200" },

@@ -55,7 +55,7 @@ export const Route = createFileRoute("/_app/medical/$tool")({
   component: MedicalToolPage,
 });
 
-function buildMeta(tr: (es: string, en: string) => string): Record<
+function buildMeta(tr: (es: string, en: string, sr?: string) => string): Record<
   string,
   { title: string; desc: string; icon: LucideIcon }
 > {
