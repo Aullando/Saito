@@ -17,7 +17,7 @@ import { useCurrentUser, useData } from "@/lib/store";
 import { useSessionLocal } from "@/lib/sessionLocal";
 import { useClub } from "@/clubs/ClubProvider";
 import { GffMobileHome } from "@/clubs/gff/GffMobileWorkspace";
-import { CnsoMobileHome } from "@/clubs/cnso/CnsoMobileWorkspace";
+
 import { useTr } from "@/lib/i18n";
 import {
   ATHL,
