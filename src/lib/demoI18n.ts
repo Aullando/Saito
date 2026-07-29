@@ -330,6 +330,67 @@ const MAP: Record<string, Tri> = {
 
   // ─── Personal absence reason ──────────────────────────────────────────────
   Personal: { en: "Personal", sr: "Lično" },
+
+  // ─── RGCC exercise categories ─────────────────────────────────────────────
+  Fuerza: { en: "Strength", sr: "Snaga" },
+  Core: { en: "Core", sr: "Kor" },
+  Metabólico: { en: "Metabolic", sr: "Metabolički" },
+  Cardio: { en: "Cardio", sr: "Kardio" },
+  Movilidad: { en: "Mobility", sr: "Pokretljivost" },
+  Prevención: { en: "Prevention", sr: "Prevencija" },
+  Reeducación: { en: "Rehab", sr: "Rehabilitacija" },
+  "Técnica deportiva": { en: "Sport technique", sr: "Sportska tehnika" },
+
+  // ─── Levels (RGCC + CNSO) ─────────────────────────────────────────────────
+  Inicial: { en: "Beginner", sr: "Početni" },
+  Intermedio: { en: "Intermediate", sr: "Srednji" },
+  Avanzado: { en: "Advanced", sr: "Napredni" },
+  Iniciación: { en: "Beginner", sr: "Početni" },
+  Perfeccionamiento: { en: "Improvement", sr: "Usavršavanje" },
+  Élite: { en: "Elite", sr: "Elitni" },
+
+  // ─── CNSO disciplines ─────────────────────────────────────────────────────
+  Waterpolo: { en: "Water polo", sr: "Vaterpolo" },
+  Sincro: { en: "Synchro", sr: "Sinhrono plivanje" },
+  "Natación Artística": { en: "Artistic Swimming", sr: "Umetničko plivanje" },
+  "Aguas Abiertas": { en: "Open Water", sr: "Otvorene vode" },
+  "Aguas abiertas": { en: "Open water", sr: "Otvorene vode" },
+  Triatlón: { en: "Triathlon", sr: "Triatlon" },
+  Saltos: { en: "Diving", sr: "Skokovi u vodu" },
+
+  // ─── CNSO drill categories ────────────────────────────────────────────────
+  "Técnica crol": { en: "Freestyle technique", sr: "Tehnika kraula" },
+  "Técnica espalda": { en: "Backstroke technique", sr: "Tehnika leđnog" },
+  "Técnica braza": { en: "Breaststroke technique", sr: "Tehnika prsnog" },
+  "Técnica mariposa": { en: "Butterfly technique", sr: "Tehnika delfin" },
+  "Salidas y virajes": { en: "Starts & turns", sr: "Startovi i okreti" },
+  Patada: { en: "Kick", sr: "Nožni rad" },
+  Tracción: { en: "Pull", sr: "Vučenje" },
+  Seco: { en: "Dryland", sr: "Suvi trening" },
+
+  // ─── CNSO competition categories ──────────────────────────────────────────
+  Regional: { en: "Regional", sr: "Regionalno" },
+  Nacional: { en: "National", sr: "Nacionalno" },
+  Internacional: { en: "International", sr: "Međunarodno" },
+  Máster: { en: "Masters", sr: "Masters" },
+  Trofeo: { en: "Trophy", sr: "Trofej" },
+
+  // ─── CNSO section categories ──────────────────────────────────────────────
+  Competición: { en: "Competition", sr: "Takmičenje" },
+  Escuela: { en: "School", sr: "Škola" },
+  Adultos: { en: "Adults", sr: "Odrasli" },
+  Especial: { en: "Special", sr: "Posebno" },
+  "Multi-deporte": { en: "Multi-sport", sr: "Multi-sport" },
+
+  // ─── CNSO section names (short reused labels) ─────────────────────────────
+  "Primer Equipo": { en: "First Team", sr: "Prvi tim" },
+  "Tecnificación CNSO": { en: "CNSO Development", sr: "CNSO razvojni program" },
+  "Grupo Máster": { en: "Masters Group", sr: "Masters grupa" },
+  "Natación Adaptada": { en: "Adapted Swimming", sr: "Adaptirano plivanje" },
+  "Escuela · Prebenjamín": { en: "School · Pre-benjamin", sr: "Škola · pretpočetnici" },
+  "Escuela · Benjamín": { en: "School · Benjamin", sr: "Škola · početnici" },
+  "Escuela · Alevín": { en: "School · Alevín", sr: "Škola · mlađi kadeti" },
+  "Escuela · Infantil": { en: "School · Youth", sr: "Škola · kadeti" },
 };
 
 /** Translate a single demo value. Returns the input unchanged when no mapping. */
