@@ -194,7 +194,7 @@ function ExerciseCard({ ex }: { ex: RgccExercise }) {
         </div>
         <div className="mt-2 flex flex-wrap gap-1 text-[11px]">
           <span className="rounded-full bg-muted px-2 py-0.5">{ex.equipment}</span>
-          <span className="rounded-full bg-muted px-2 py-0.5">{ex.level}</span>
+          <span className="rounded-full bg-muted px-2 py-0.5">{td(ex.level)}</span>
           <span className="rounded-full bg-primary/10 px-2 py-0.5 text-primary">{ex.dose}</span>
         </div>
         {ex.cues && <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{ex.cues}</p>}
