@@ -426,7 +426,7 @@ export function AIChat() {
       if (isRgcc && rgccIdentity) {
         try {
           const ctx = buildRgccContextFromIdentity(rgccIdentity);
-          const local = rgccLocalFallback(role, ctx, q);
+          const local = rgccLocalFallback(role, ctx, q, lang);
           if (local) {
             setMsgs((m) => [...m, { role: "assistant", content: local }]);
             return;
