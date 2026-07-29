@@ -69,6 +69,29 @@ function QAPage() {
         )}
       />
 
+      <Card className="mb-6 flex flex-wrap items-center justify-between gap-4 p-5">
+        <div>
+          <div className="text-sm font-semibold">
+            {tr("Reiniciar demo", "Reset demo", "Resetuj demo")}
+          </div>
+          <div className="mt-1 text-xs text-muted-foreground">
+            {tr(
+              "Restaura los datos originales y limpia cambios de esta sesión. Ideal antes de una reunión.",
+              "Restores original data and clears this session's changes. Ideal before a meeting.",
+              "Vraća originalne podatke i briše promene ove sesije. Idealno pre sastanka.",
+            )}
+          </div>
+        </div>
+        <ResetDemoDialog
+          trigger={
+            <Button variant="outline" className="gap-2">
+              <RotateCcw className="h-4 w-4" />
+              {tr("Reiniciar demo", "Reset demo", "Resetuj demo")}
+            </Button>
+          }
+        />
+      </Card>
+
       <div className="grid gap-4 sm:grid-cols-3">
         <Card className="p-4">
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
