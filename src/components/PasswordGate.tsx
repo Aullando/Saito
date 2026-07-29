@@ -94,6 +94,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
   const initialLang = useMemo<Lang>(() => storedLang ?? detectLang(), []); // eslint-disable-line react-hooks/exhaustive-deps
   const [lang, setLang] = useState<Lang>(initialLang);
   const c = COPY[lang];
