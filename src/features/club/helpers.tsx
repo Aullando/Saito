@@ -3,6 +3,7 @@ import { Card } from "@/components/ui-kit";
 
 export const DAY_NAMES_ES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 export const DAY_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+export const DAY_NAMES_SR = ["Ned", "Pon", "Uto", "Sre", "Čet", "Pet", "Sub"];
 
 export function categoryName(categories: { id: string; name: string }[], id: string) {
   return categories.find((c) => c.id === id)?.name ?? "";
