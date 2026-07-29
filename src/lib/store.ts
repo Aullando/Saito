@@ -187,6 +187,11 @@ interface DataState {
     status: "present" | "absent" | "doubt" | "injured",
   ) => void;
 
+  addIncident: (i: Omit<Incident, "id">) => string;
+  deleteIncident: (id: string) => void;
+  setAiModule: (key: AiModuleKey, on: boolean) => void;
+  setMobileAbsence: (userId: string, notified: boolean) => void;
+
   reset: () => void;
 }
 
@@ -204,6 +209,9 @@ const initial = () => ({
   conversations: CONVERSATIONS,
   appointments: MEDICAL_APPOINTMENTS,
   attendance: {} as Record<string, Record<string, "present" | "absent" | "doubt" | "injured">>,
+  incidents: SEED_INCIDENTS,
+  aiModules: { ...AI_MODULES_INITIAL },
+  mobileAbsences: {} as Record<string, boolean>,
 });
 
 const uid = (p: string) => `${p}-${Math.random().toString(36).slice(2, 8)}`;
