@@ -226,19 +226,25 @@ function AttendancePage() {
             </thead>
             <tbody>
               {roster.map((a) => {
-                const s = seededStatus(a.id, event?.id ?? "");
+                const s = statusOf(a.id);
                 const meta = STATUS_META[s];
                 const Icon = meta.icon;
+                const overridden = Boolean(evAttendance[a.id]);
                 return (
                   <tr key={a.id} className="border-t border-border">
                     <td className="px-5 py-2.5 font-medium">
                       {a.firstName} {a.lastName}
                     </td>
                     <td className="px-3 py-2.5">
-                      <span className={`inline-flex items-center gap-1.5 ${meta.cls}`}>
+                      <button
+                        type="button"
+                        onClick={() => cycle(a.id)}
+                        title={tr("Click para cambiar estado", "Click to change status", "Klikni da promeniš status")}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-1 transition hover:bg-muted ${meta.cls} ${overridden ? "border-current/40" : "border-transparent"}`}
+                      >
                         <Icon className="h-4 w-4" />
                         <span className="text-xs font-semibold">{tr(meta.label, meta.labelEn)}</span>
-                      </span>
+                      </button>
                     </td>
                     <td className="px-3 py-2.5 text-xs text-muted-foreground">
                       {s === "present" || s === "doubt"
@@ -248,11 +254,13 @@ function AttendancePage() {
                           : "—"}
                     </td>
                     <td className="px-3 py-2.5 text-xs text-muted-foreground">
-                      {s === "doubt"
-                        ? tr("Pendiente confirmar", "Pending confirmation", "Čeka potvrdu")
-                        : s === "injured"
-                          ? tr("Restricción activa", "Active restriction", "Aktivno ograničenje")
-                          : ""}
+                      {overridden
+                        ? tr("Editado en esta sesión", "Edited in this session", "Izmenjeno u ovoj sesiji")
+                        : s === "doubt"
+                          ? tr("Pendiente confirmar", "Pending confirmation", "Čeka potvrdu")
+                          : s === "injured"
+                            ? tr("Restricción activa", "Active restriction", "Aktivno ograničenje")
+                            : ""}
                     </td>
                   </tr>
                 );
