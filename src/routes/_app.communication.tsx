@@ -949,7 +949,7 @@ function ConversationsTab({
                         · {formatDateTime(m.createdAt)}
                       </span>
                     </div>
-                    <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{m.content}</div>
+                    <div className="mt-1 rounded-2xl bg-muted px-3 py-2 text-sm">{td(m.content)}</div>
                   </div>
                 </div>
               ))}
