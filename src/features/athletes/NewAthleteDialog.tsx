@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { useT, useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import { isDemoMode } from "@/lib/appMode";
 import { useData } from "@/lib/store";
 import type { SectionRow, CategoryRow, GroupRow } from "./data";

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import type { SectionRow, CategoryRow, GroupRow } from "./data";
 
 export interface AthletesFiltersProps {
