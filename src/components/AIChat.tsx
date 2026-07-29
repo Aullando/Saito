@@ -14,12 +14,6 @@ import {
 } from "@/clubs/rgcc/aiContext";
 import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import {
-  buildCnsoContextFromIdentity,
-  cnsoLocalFallback,
-  cnsoSuggestions,
-} from "@/clubs/cnso/aiContext";
-import { resolveCnsoIdentity } from "@/clubs/cnso/identity";
-import {
   gffFederation,
   gffTeams,
   gffPlayers,
@@ -215,19 +209,16 @@ export function AIChat() {
   const role = u.role;
   const lang = u.language; // "es" | "en" | "sr"
   const isRgcc = club.id === "rgcc";
-  const isCnso = club.id === "cnso";
+  const isCnso = false;
   const isGff = club.id === "gff-demo";
   const rgccIdentity = isRgcc ? resolveRgccIdentity(user, roles) : null;
-  const cnsoIdentity = isCnso ? resolveCnsoIdentity(user, roles) : null;
-  const aiScope = rgccIdentity?.scope ?? cnsoIdentity?.scope ?? null;
+  const aiScope = rgccIdentity?.scope ?? null;
   const title = isGff ? (TITLES_AR[role] ?? TITLES[role]) : TITLES[role];
   const suggestions = isGff
     ? (SUGGESTIONS_GFF[role] ?? [])
     : isRgcc
       ? rgccSuggestions(role, user, roles, lang)
-      : isCnso
-        ? cnsoSuggestions(role, user, roles, lang)
-        : ((lang === "en" || lang === "sr" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
+      : ((lang === "en" || lang === "sr" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
   const placeholder = isGff
     ? "اكتب سؤالك…"
     : lang === "en" ? "Ask something…"
@@ -267,9 +258,7 @@ export function AIChat() {
         ? buildGffContext(role)
         : isRgcc && rgccIdentity
           ? buildRgccContextFromIdentity(rgccIdentity)
-          : isCnso && cnsoIdentity
-            ? buildCnsoContextFromIdentity(cnsoIdentity)
-            : buildContext(role, data);
+          : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData?.session?.access_token;
@@ -324,13 +313,9 @@ export function AIChat() {
               : lang === "sr"
                 ? "Nema dostupnih AI kredita."
                 : "Sin créditos de IA disponibles.";
-        // RGCC / CNSO fallback local cuando la IA no responde.
+        // RGCC fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
           const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q, lang);
-          if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
-        }
-        if (isCnso && cnsoIdentity) {
-          const local = cnsoLocalFallback(role, context as ReturnType<typeof buildCnsoContextFromIdentity>, q, lang);
           if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
         }
         setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);

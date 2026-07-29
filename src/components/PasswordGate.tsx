@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import saitoHero from "@/assets/saito-hero.png.asset.json";
+import { useAuth as useLocalAuth } from "@/lib/store";
 
 const STORAGE_KEY = "site-password-ok";
 const PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "SIHSAITO";
@@ -65,12 +66,20 @@ const SUBHEADS: Record<Lang, string> = {
 };
 
 export function PasswordGate({ children }: { children: ReactNode }) {
+  const storedLang = useLocalAuth((s) => s.langOverride) as Lang | null | undefined;
+  const setLangOverride = useLocalAuth((s) => s.setLangOverride);
   const [ready, setReady] = useState(false);
   const [unlocked, setUnlocked] = useState(!ENABLED);
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
-  const lang = useMemo(detectLang, []);
+  const initialLang = useMemo<Lang>(() => storedLang ?? detectLang(), []); // eslint-disable-line react-hooks/exhaustive-deps
+  const [lang, setLang] = useState<Lang>(initialLang);
   const c = COPY[lang];
+
+  const pickLang = (l: Lang) => {
+    setLang(l);
+    try { setLangOverride(l); } catch { /* ignore */ }
+  };
 
   useEffect(() => {
     if (!ENABLED) {
@@ -133,6 +142,26 @@ export function PasswordGate({ children }: { children: ReactNode }) {
             "linear-gradient(180deg, rgba(11,26,53,0.2) 0%, rgba(11,26,53,0.55) 100%)",
         }}
       />
+
+      <div className="absolute right-4 top-4 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-white/10 p-1 backdrop-blur-md">
+        {(["es", "en", "sr"] as Lang[]).map((l) => (
+          <button
+            key={l}
+            type="button"
+            onClick={() => pickLang(l)}
+            aria-pressed={lang === l}
+            className={
+              "rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-widest transition " +
+              (lang === l
+                ? "bg-white text-[#0b1a35] shadow"
+                : "text-white/70 hover:text-white")
+            }
+          >
+            {l}
+          </button>
+        ))}
+      </div>
+
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-10 px-6 py-12 md:grid md:grid-cols-2 md:gap-16">
         <div className="flex w-full flex-col items-center text-center md:items-start md:text-left">

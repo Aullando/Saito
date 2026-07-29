@@ -23,11 +23,6 @@ import {
   GffMobileHealth,
   GffMobilePerformance,
 } from "@/clubs/gff/GffMobileWorkspace";
-import {
-  CnsoMobileSession,
-  CnsoMobileHealth,
-  CnsoMobilePerformance,
-} from "@/clubs/cnso/CnsoMobileWorkspace";
 import { useTr } from "@/lib/i18n";
 import {
   Attendance,
@@ -56,11 +51,6 @@ function MobileToolRoute() {
     if (tool === "session") return <GffMobileSession />;
     if (tool === "health") return <GffMobileHealth />;
     if (tool === "performance") return <GffMobilePerformance />;
-  }
-  if (club.id === "cnso") {
-    if (tool === "session") return <CnsoMobileSession />;
-    if (tool === "health") return <CnsoMobileHealth />;
-    if (tool === "performance") return <CnsoMobilePerformance />;
   }
   return <MobileTool />;
 }
