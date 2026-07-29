@@ -174,7 +174,7 @@ function ProfilePage() {
                     <Button
                       size="sm"
                       onClick={() => {
-                        setName.mutate(draftName);
+                        applyName(draftName);
                         setEditingName(false);
                       }}
                     >
@@ -205,31 +205,32 @@ function ProfilePage() {
               control={
                 <select
                   value={lang}
-                  onChange={(e) => setLang.mutate(e.target.value as "es" | "en")}
+                  onChange={(e) => applyLang(e.target.value as "es" | "en" | "sr")}
                   className="rounded-md border border-border bg-background px-2 py-1 text-sm"
                 >
                   <option value="es">Español</option>
                   <option value="en">English</option>
+                  <option value="sr">Srpski</option>
                 </select>
               }
             />
             <SettingRow
               label={t("change_password")}
               control={
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="rounded-full"
-                  onClick={async () => {
-                    if (!user.email) return;
-                    await supabase.auth.resetPasswordForEmail(user.email, {
-                      redirectTo: `${window.location.origin}/reset-password`,
-                    });
-                    alert(lang === "es" ? "Email enviado" : "Email sent");
-                  }}
-                >
-                  {t("change_password")}
-                </Button>
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span tabIndex={0}>
+                        <Button size="sm" variant="outline" className="rounded-full opacity-60" disabled>
+                          {t("change_password")}
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {lang === "es" ? "Disponible en producción" : lang === "sr" ? "Dostupno u produkciji" : "Available in production"}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               }
             />
           </div>
