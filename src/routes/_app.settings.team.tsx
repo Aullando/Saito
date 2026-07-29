@@ -42,6 +42,8 @@ function TeamPage() {
   const qc = useQueryClient();
   const { profile, user: me } = useAuth();
   const orgId = profile?.organization_id ?? null;
+  const demo = isDemoMode();
+  const prodOnly = tr("Disponible en producción", "Available in production", "Dostupno u produkciji");
 
   const membersQ = useQuery({
     queryKey: ["team", orgId],
