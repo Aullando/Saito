@@ -264,8 +264,9 @@ function CommandCenter() {
         subtitle={
           user
             ? tr(
-                `Hola, ${user.name.split(" ")[0]} — visión global del club hoy`,
+                `Hola, ${user.name.split(" ")[0]} — resumen del club de hoy`,
                 `Hello, ${user.name.split(" ")[0]} — today's club overview`,
+                `Zdravo, ${user.name.split(" ")[0]} — današnji pregled kluba`,
               )
             : ""
         }
