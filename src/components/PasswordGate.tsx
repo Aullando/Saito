@@ -250,9 +250,53 @@ export function PasswordGate({ children }: { children: ReactNode }) {
               )}
               <span>{submitting ? c.submitting : c.submit}</span>
             </button>
+            <button
+              type="button"
+              onClick={() => setVideoOpen(true)}
+              className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-current">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              <span>{c.watchVideo}</span>
+            </button>
             <p className="text-center text-[11px] text-white/50">
               © {new Date().getFullYear()} SAITO · Sport Innovation Hub
             </p>
+          </form>
+        </div>
+      </div>
+
+      {videoOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={c.watchVideo}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 animate-in fade-in duration-200"
+          onClick={() => setVideoOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-4xl overflow-hidden rounded-2xl bg-black shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setVideoOpen(false)}
+              aria-label={c.closeVideo}
+              className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
+            >
+              ✕
+            </button>
+            <video
+              src={VIDEO_BY_LANG[lang]}
+              controls
+              autoPlay
+              playsInline
+              className="block h-auto max-h-[85vh] w-full bg-black"
+            />
+          </div>
+        </div>
+      )}
           </form>
         </div>
       </div>
