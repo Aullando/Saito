@@ -44,37 +44,38 @@ function PtGate() {
 
 // ─── Admin / Manager ────────────────────────────────────────────────────────
 function PtCockpit() {
+  const tr = useTr();
   return (
     <>
       <PageHeader
-        title="Entrenamiento Personal"
-        subtitle="Sesiones del día y entrenamientos asignados a socios."
+        title={tr("Entrenamiento Personal", "Personal Training", "Personalni trening")}
+        subtitle={tr("Sesiones del día y entrenamientos asignados a socios.", "Today's sessions and workouts assigned to members.", "Današnje sesije i treninzi dodeljeni članovima.")}
         actions={
           <Link
             to="/rgcc/biblioteca"
             className="rounded-full bg-primary px-3 py-1.5 text-sm text-primary-foreground hover:opacity-90"
           >
             <Dumbbell className="mr-1 inline h-4 w-4" />
-            Abrir Biblioteca
+            {tr("Abrir Biblioteca", "Open Library", "Otvori biblioteku")}
           </Link>
         }
       />
 
       <div className="mb-6 grid gap-3 sm:grid-cols-4">
-        <KpiCard label="Sesiones hoy" value={RGCC_PT_SESSIONS.length} />
+        <KpiCard label={tr("Sesiones hoy", "Sessions today", "Sesije danas")} value={RGCC_PT_SESSIONS.length} />
         <KpiCard
-          label="Confirmadas"
+          label={tr("Confirmadas", "Confirmed", "Potvrđene")}
           value={RGCC_PT_SESSIONS.filter((s) => s.status === "confirmed").length}
         />
         <KpiCard
-          label="Pendientes"
+          label={tr("Pendientes", "Pending", "Na čekanju")}
           value={RGCC_PT_SESSIONS.filter((s) => s.status === "pending").length}
         />
-        <KpiCard label="Asignaciones activas" value={RGCC_WORKOUTS.length} />
+        <KpiCard label={tr("Asignaciones activas", "Active assignments", "Aktivne dodele")} value={RGCC_WORKOUTS.length} />
       </div>
 
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        Agenda EP
+        {tr("Agenda EP", "PT agenda", "PT agenda")}
       </h2>
       <div className="mb-8 grid gap-3 lg:grid-cols-2">
         {RGCC_PT_SESSIONS.map((s) => (
@@ -83,7 +84,7 @@ function PtCockpit() {
       </div>
 
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        Asignaciones recientes
+        {tr("Asignaciones recientes", "Recent assignments", "Nedavne dodele")}
       </h2>
       <div className="grid gap-3 lg:grid-cols-2">
         {RGCC_WORKOUTS.map((w) => (
@@ -96,15 +97,16 @@ function PtCockpit() {
 
 // ─── Coach view ─────────────────────────────────────────────────────────────
 function PtCoach({ name }: { name: string }) {
+  const tr = useTr();
   const mine = useMemo(() => RGCC_PT_SESSIONS.filter((s) => name && s.coachName === name), [name]);
   return (
     <>
       <PageHeader
-        title="Mis sesiones EP"
-        subtitle={`Hola ${name || "monitor"}, este es tu programa de entrenamiento personal.`}
+        title={tr("Mis sesiones EP", "My PT sessions", "Moje PT sesije")}
+        subtitle={tr(`Hola ${name || "monitor"}, este es tu programa de entrenamiento personal.`, `Hello ${name || "coach"}, here is your personal training programme.`, `Zdravo ${name || "treneru"}, ovo je vaš program personalnog treninga.`)}
       />
       {mine.length === 0 ? (
-        <EmptyState>No tienes sesiones EP programadas.</EmptyState>
+        <EmptyState>{tr("No tienes sesiones EP programadas.", "You have no PT sessions scheduled.", "Nemate zakazane PT sesije.")}</EmptyState>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
           {mine.map((s) => (
@@ -118,6 +120,7 @@ function PtCoach({ name }: { name: string }) {
 
 // ─── Member view ────────────────────────────────────────────────────────────
 function PtMember({ memberNumber, memberName }: { memberNumber: string; memberName: string }) {
+  const tr = useTr();
   // SEGURIDAD: solo workouts asignados al socio actual.
   const mine = useMemo(
     () => RGCC_WORKOUTS.filter((w) => memberNumber && w.memberNumber === memberNumber),
@@ -126,11 +129,11 @@ function PtMember({ memberNumber, memberName }: { memberNumber: string; memberNa
   return (
     <>
       <PageHeader
-        title="Mi entrenamiento"
-        subtitle={`Hola ${memberName || "socio"}, aquí tienes tus rutinas asignadas.`}
+        title={tr("Mi entrenamiento", "My training", "Moj trening")}
+        subtitle={tr(`Hola ${memberName || "socio"}, aquí tienes tus rutinas asignadas.`, `Hello ${memberName || "member"}, here are your assigned routines.`, `Zdravo ${memberName || "člane"}, evo vaših dodeljenih rutina.`)}
       />
       {mine.length === 0 ? (
-        <EmptyState>No tienes entrenamientos asignados.</EmptyState>
+        <EmptyState>{tr("No tienes entrenamientos asignados.", "You have no assigned workouts.", "Nemate dodeljene treninge.")}</EmptyState>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
           {mine.map((w) => (
@@ -141,6 +144,7 @@ function PtMember({ memberNumber, memberName }: { memberNumber: string; memberNa
     </>
   );
 }
+
 
 // ─── Building blocks ────────────────────────────────────────────────────────
 function KpiCard({ label, value }: { label: string; value: number }) {
