@@ -1246,6 +1246,7 @@ function ArchivedTab({
   onUnarchive: (id: string) => void;
   onHide: (id: string) => void;
 }) {
+  const td = useTd();
   if (conversations.length === 0) {
     return (
       <div className="saito-card p-0">
