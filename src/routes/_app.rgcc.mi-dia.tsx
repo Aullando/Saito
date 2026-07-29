@@ -12,6 +12,8 @@ import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import { RgccGuard } from "@/clubs/rgcc/RgccGuard";
 import { RGCC_SESSIONS, RGCC_PT_SESSIONS, RGCC_VENUES, RGCC_MEMBERS } from "@/clubs/rgcc/seed";
 import { Clock, PlayCircle, Users, MapPin, AlertTriangle, CalendarOff, Check } from "lucide-react";
+import { useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 
 export const Route = createFileRoute("/_app/rgcc/mi-dia")({
   component: () => (
