@@ -732,6 +732,7 @@ function ClubHero({
   totalFacilities: number;
 }) {
   const tr = useTr();
+  const td = useTd();
   return (
     <div className="mb-6 space-y-4">
       <div className="grid gap-4 lg:grid-cols-2">
