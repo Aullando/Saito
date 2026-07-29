@@ -32,6 +32,9 @@ import { DEMO_ATHLETES_MIN_ROWS, DEMO_MEDICAL_APPOINTMENTS_ROWS } from "@/lib/de
 import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { demoOrEmpty } from "@/lib/demoFallback";
+import { isDemoMode } from "@/lib/appMode";
+import { useData } from "@/lib/store";
+import { useDemoAppointmentRows } from "@/lib/demoStoreRows";
 
 export const Route = createFileRoute("/_app/medical/calendar")({
   component: () => (
@@ -62,10 +65,14 @@ function MedicalCalendarPage() {
   const { user, profile } = useAuth();
   const orgId = profile?.organization_id;
   const qc = useQueryClient();
+  const demo = isDemoMode();
+  const storeAppts = useDemoAppointmentRows();
+  const addAppointmentStore = useData((s) => s.addAppointment);
+  const deleteAppointmentStore = useData((s) => s.deleteAppointment);
 
   const athletesQ = useQuery({
     queryKey: ["athletes_min", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("athletes")
@@ -77,7 +84,7 @@ function MedicalCalendarPage() {
   });
   const apptQ = useQuery({
     queryKey: ["medical_appointments", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("medical_appointments")
@@ -91,7 +98,9 @@ function MedicalCalendarPage() {
   });
 
   const athletes = demoOrEmpty(athletesQ.data, DEMO_ATHLETES_MIN_ROWS);
-  const appointments = demoOrEmpty(apptQ.data, DEMO_MEDICAL_APPOINTMENTS_ROWS) as DBAppt[];
+  const appointments = (demo
+    ? storeAppts
+    : demoOrEmpty(apptQ.data, DEMO_MEDICAL_APPOINTMENTS_ROWS)) as DBAppt[];
 
   const addAppt = useMutation({
     mutationFn: async (a: {
@@ -100,6 +109,18 @@ function MedicalCalendarPage() {
       appointment_time: string;
       reason: string;
     }) => {
+      if (demo) {
+        addAppointmentStore({
+          athleteId: a.athlete_id,
+          staffId: user?.id ?? "u-med",
+          date: a.appointment_date,
+          time: a.appointment_time,
+          reason: a.reason,
+          status: "Scheduled",
+          notes: "",
+        });
+        return;
+      }
       const { error } = await supabase.from("medical_appointments").insert({
         organization_id: orgId!,
         athlete_id: a.athlete_id,
@@ -112,19 +133,26 @@ function MedicalCalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t("save"));
+      toast.success(tr("Cita creada", "Appointment created", "Termin je kreiran"));
       qc.invalidateQueries({ queryKey: ["medical_appointments", orgId] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: () => toast.error(tr("No se pudo crear", "Could not create", "Kreiranje nije uspelo")),
   });
 
   const delAppt = useMutation({
     mutationFn: async (id: string) => {
+      if (demo) {
+        deleteAppointmentStore(id);
+        return;
+      }
       const { error } = await supabase.from("medical_appointments").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["medical_appointments", orgId] }),
-    onError: (e: Error) => toast.error(e.message),
+    onSuccess: () => {
+      toast.success(tr("Cita eliminada", "Appointment deleted", "Termin je obrisan"));
+      qc.invalidateQueries({ queryKey: ["medical_appointments", orgId] });
+    },
+    onError: () => toast.error(tr("No se pudo eliminar", "Could not delete", "Brisanje nije uspelo")),
   });
 
   const [cursor, setCursor] = useState(() => new Date());
