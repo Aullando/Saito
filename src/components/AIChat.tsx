@@ -313,13 +313,9 @@ export function AIChat() {
               : lang === "sr"
                 ? "Nema dostupnih AI kredita."
                 : "Sin créditos de IA disponibles.";
-        // RGCC / CNSO fallback local cuando la IA no responde.
+        // RGCC fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
           const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q, lang);
-          if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
-        }
-        if (isCnso && cnsoIdentity) {
-          const local = cnsoLocalFallback(role, context as ReturnType<typeof buildCnsoContextFromIdentity>, q, lang);
           if (local) { setMsgs((m) => [...m, { role: "assistant", content: local }]); setLoading(false); return; }
         }
         setMsgs((m) => [...m, { role: "assistant", content: errMsg }]);
