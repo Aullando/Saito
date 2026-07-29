@@ -30,6 +30,24 @@ import {
   MEDICAL_APPOINTMENTS,
   ALL_USERS,
 } from "./seed";
+import { SEED_INCIDENTS, type Incident } from "@/features/medical/toolData";
+
+// Stable keys for AI-per-module toggles (matches labels in privacy page).
+export const AI_MODULE_KEYS = [
+  "summaries_communication",
+  "suggestions_fees",
+  "assistant_medical",
+  "family_communications",
+  "sports_performance",
+] as const;
+export type AiModuleKey = (typeof AI_MODULE_KEYS)[number];
+const AI_MODULES_INITIAL: Record<AiModuleKey, boolean> = {
+  summaries_communication: true,
+  suggestions_fees: true,
+  assistant_medical: false,
+  family_communications: true,
+  sports_performance: false,
+};
 
 interface AuthState {
   currentUserId: string | null;
