@@ -1264,11 +1264,11 @@ function ArchivedTab({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <Pill>{c.type}</Pill>
-                  <span className="truncate text-sm font-medium">{c.title}</span>
+                  <span className="truncate text-sm font-medium">{td(c.title)}</span>
                 </div>
                 {last && (
                   <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
-                    {last.content} · {formatDateTime(last.createdAt)}
+                    {td(last.content)} · {formatDateTime(last.createdAt)}
                   </div>
                 )}
               </div>
