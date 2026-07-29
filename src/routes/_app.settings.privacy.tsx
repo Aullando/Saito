@@ -58,13 +58,14 @@ const RETENTION = [
   { area: "Logs de acceso sensible", area_en: "Sensitive access logs", area_sr: "Logovi osetljivog pristupa", period: "12 meses", period_en: "12 months", period_sr: "12 meseci", basis: "Auditoría y seguridad", basis_en: "Audit and security", basis_sr: "Revizija i bezbednost" },
 ];
 
-const AI_MODULES_BASE = [
-  { module: "Resúmenes en comunicación", module_en: "Summaries in communication", module_sr: "Sažeci u komunikaciji", on: true },
-  { module: "Sugerencias en cuotas y pagos", module_en: "Suggestions in fees and payments", module_sr: "Predlozi za članarine i plaćanja", on: true },
-  { module: "Asistente en módulo médico", module_en: "Assistant in medical module", module_sr: "Asistent u medicinskom modulu", on: false },
-  { module: "Generación de comunicados a familias", module_en: "Generation of family communications", module_sr: "Generisanje komunikacije sa porodicama", on: true },
-  { module: "Análisis de rendimiento deportivo", module_en: "Sports performance analysis", module_sr: "Analiza sportskog učinka", on: false },
+const AI_MODULES_META: { key: AiModuleKey; module: string; module_en: string; module_sr: string }[] = [
+  { key: "summaries_communication", module: "Resúmenes en comunicación", module_en: "Summaries in communication", module_sr: "Sažeci u komunikaciji" },
+  { key: "suggestions_fees", module: "Sugerencias en cuotas y pagos", module_en: "Suggestions in fees and payments", module_sr: "Predlozi za članarine i plaćanja" },
+  { key: "assistant_medical", module: "Asistente en módulo médico", module_en: "Assistant in medical module", module_sr: "Asistent u medicinskom modulu" },
+  { key: "family_communications", module: "Generación de comunicados a familias", module_en: "Generation of family communications", module_sr: "Generisanje komunikacije sa porodicama" },
+  { key: "sports_performance", module: "Análisis de rendimiento deportivo", module_en: "Sports performance analysis", module_sr: "Analiza sportskog učinka" },
 ];
+void AI_MODULE_KEYS;
 
 function PrivacyMockup() {
   const { profile } = useAuth();
