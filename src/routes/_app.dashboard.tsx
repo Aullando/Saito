@@ -6,6 +6,8 @@ import { PageHeader, Card } from "@/components/ui-kit";
 import { CopilotoCard, DEFAULT_ADMIN_SUGGESTIONS } from "@/components/CopilotoCard";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
+import { typeLabel } from "@/features/calendar/helpers";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
 
