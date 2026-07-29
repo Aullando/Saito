@@ -258,28 +258,33 @@ function isClubKey(v: string | null | undefined): v is ClubKey {
   return v === "saito" || v === "rgcc" || v === "gff-demo" || v === "cnso";
 }
 
-const CLUB_META: Record<ClubKey, { tagline: string; subtitle: string }> = {
-  saito: {
-    tagline: "Plataforma deportiva SAITO",
-    subtitle: "Elige tu rol. Cada rol entra al canal correcto: escritorio o móvil.",
+type ClubMeta = { tagline: string; subtitle: string };
+const CLUB_META: Record<"es" | "en" | "sr", Record<ClubKey, ClubMeta>> = {
+  es: {
+    saito: { tagline: "Plataforma deportiva SAITO", subtitle: "Elige tu rol. Cada rol entra al canal correcto: escritorio o móvil." },
+    rgcc: { tagline: "Real Grupo de Cultura Covadonga", subtitle: "Demo multi-sección polideportiva basada en SAITO." },
+    cnso: { tagline: "Club Natación Santa Olaya", subtitle: "Demo enfocada a natación, waterpolo, sincro, triatlón y aguas abiertas." },
+    "gff-demo": { tagline: "Gulf Football Federation · Demo", subtitle: "Federación ficticia. Workspace internacional en árabe RTL." },
   },
-  rgcc: {
-    tagline: "Real Grupo de Cultura Covadonga",
-    subtitle: "Demo multi-sección polideportiva basada en SAITO.",
+  en: {
+    saito: { tagline: "SAITO sports platform", subtitle: "Pick your role. Each role opens the right channel: desktop or mobile." },
+    rgcc: { tagline: "Real Grupo de Cultura Covadonga", subtitle: "Multi-sport demo based on SAITO." },
+    cnso: { tagline: "Club Natación Santa Olaya", subtitle: "Demo focused on swimming, water polo, synchro, triathlon and open water." },
+    "gff-demo": { tagline: "Gulf Football Federation · Demo", subtitle: "Fictional federation. International RTL Arabic workspace." },
   },
-  cnso: {
-    tagline: "Club Natación Santa Olaya",
-    subtitle: "Demo enfocada a natación, waterpolo, sincro, triatlón y aguas abiertas.",
-  },
-  "gff-demo": {
-    tagline: "Gulf Football Federation · Demo",
-    subtitle: "Federación ficticia. Workspace internacional en árabe RTL.",
+  sr: {
+    saito: { tagline: "SAITO sportska platforma", subtitle: "Izaberite ulogu. Svaka uloga otvara odgovarajući kanal: desktop ili mobilni." },
+    rgcc: { tagline: "Real Grupo de Cultura Covadonga", subtitle: "Višesportska demo bazirana na SAITO." },
+    cnso: { tagline: "Club Natación Santa Olaya", subtitle: "Demo fokusirana na plivanje, vaterpolo, sinhrono, triatlon i otvorene vode." },
+    "gff-demo": { tagline: "Gulf Football Federation · Demo", subtitle: "Fiktivna federacija. Internacionalni RTL arapski radni prostor." },
   },
 };
 
 function LoginPage() {
   useAuth();
   const navigate = useNavigate();
+  const tr = useTr();
+  const lang = useLang();
   const setUser = useLocalAuth((s) => s.setUser);
   const switchClub = useActiveClubStore((s) => s.switchClub);
   const activeClubId = useActiveClubStore((s) => s.overrideClubId);
@@ -290,10 +295,6 @@ function LoginPage() {
   const idx = CLUB_ORDER.indexOf(selectedClub);
   const prevClub = idx > 0 ? CLUB_ORDER[idx - 1] : null;
   const nextClub = idx >= 0 && idx < CLUB_ORDER.length - 1 ? CLUB_ORDER[idx + 1] : null;
-
-  // No auto-redirect: la página /login es el selector de demo y debe
-  // mantenerse hasta que el comercial elija un perfil explícitamente.
-
 
   const enter = (p: DemoProfile) => {
     switchClub(selectedClub);
@@ -306,10 +307,10 @@ function LoginPage() {
     else navigate({ to: "/dashboard" });
   };
 
-  const profiles = PROFILES_BY_CLUB[selectedClub];
+  const profiles = PROFILES_BY_CLUB[selectedClub].map((p) => pickProfile(p, lang));
   const desktop = profiles.filter((p) => p.surface === "desktop");
   const mobile = profiles.filter((p) => p.surface === "mobile");
-  const meta = CLUB_META[selectedClub];
+  const meta = CLUB_META[lang][selectedClub];
 
   return (
     <div className="min-h-screen bg-background px-4 py-10">
@@ -324,14 +325,14 @@ function LoginPage() {
           <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
             powered by Gemini
           </span>
-          <h1 className="mt-4 text-2xl font-bold tracking-tight">Ver SAITO como…</h1>
+          <h1 className="mt-4 text-2xl font-bold tracking-tight">{tr("Ver SAITO como…", "View SAITO as…", "Pogledajte SAITO kao…")}</h1>
           <p className="text-sm text-muted-foreground">{meta.subtitle}</p>
         </header>
 
 
 
         <div className="mb-3 flex flex-col items-center gap-3">
-          <ClubPicker value={selectedClub} onChange={setSelectedClub} tagline={meta.tagline} />
+          <ClubPicker value={selectedClub} onChange={setSelectedClub} tagline={meta.tagline} tr={tr} />
         </div>
 
         {/* Tour guiado: SAITO → RGCC → CNSO → GFF */}
@@ -341,9 +342,9 @@ function LoginPage() {
             onClick={() => prevClub && setSelectedClub(prevClub)}
             disabled={!prevClub}
             className="flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 font-medium hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="Entidad anterior"
+            aria-label={tr("Entidad anterior", "Previous entity", "Prethodni entitet")}
           >
-            ← Anterior
+            ← {tr("Anterior", "Previous", "Prethodno")}
           </button>
           <div className="flex items-center gap-1.5" aria-hidden="true">
             {CLUB_ORDER.map((id, i) => (
@@ -356,24 +357,24 @@ function LoginPage() {
             ))}
           </div>
           <span className="font-medium">
-            Paso {idx + 1} de {CLUB_ORDER.length}
+            {tr("Paso", "Step", "Korak")} {idx + 1} {tr("de", "of", "od")} {CLUB_ORDER.length}
           </span>
           <button
             type="button"
             onClick={() => nextClub && setSelectedClub(nextClub)}
             disabled={!nextClub}
             className="flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 font-medium hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="Siguiente entidad"
+            aria-label={tr("Siguiente entidad", "Next entity", "Sledeći entitet")}
           >
-            Siguiente →
+            {tr("Siguiente", "Next", "Sledeće")} →
           </button>
         </div>
 
         {desktop.length > 0 && (
           <ChannelSection
             icon={Monitor}
-            title="WebApp · Escritorio"
-            description="Gestión y operaciones. Sidebar + topbar."
+            title={tr("WebApp · Escritorio", "WebApp · Desktop", "WebApp · Desktop")}
+            description={tr("Gestión y operaciones. Sidebar + topbar.", "Management and operations. Sidebar + topbar.", "Upravljanje i operacije. Bočna traka + gornja traka.")}
           >
             <div
               className={
@@ -381,7 +382,7 @@ function LoginPage() {
               }
             >
               {desktop.map((p) => (
-                <ProfileCard key={p.id} profile={p} onSelect={enter} />
+                <ProfileCard key={p.id} profile={p} onSelect={enter} tr={tr} />
               ))}
             </div>
           </ChannelSection>
@@ -390,13 +391,13 @@ function LoginPage() {
         {mobile.length > 0 && (
           <ChannelSection
             icon={Smartphone}
-            title="App móvil"
-            description="Frame 390 px. Solo entrenador y atleta."
+            title={tr("App móvil", "Mobile app", "Mobilna aplikacija")}
+            description={tr("Frame 390 px. Solo entrenador y atleta.", "Frame 390 px. Coach and athlete only.", "Frame 390 px. Samo trener i sportista.")}
             className="mt-10"
           >
             <div className="grid gap-3 sm:grid-cols-2">
               {mobile.map((p) => (
-                <ProfileCard key={p.id} profile={p} onSelect={enter} />
+                <ProfileCard key={p.id} profile={p} onSelect={enter} tr={tr} />
               ))}
             </div>
           </ChannelSection>
