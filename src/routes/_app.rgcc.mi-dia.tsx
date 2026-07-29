@@ -40,6 +40,8 @@ function MiDiaGate() {
 // ─── Monitor ────────────────────────────────────────────────────────────────
 
 function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: boolean }) {
+  const tr = useTr();
+  const td = useTd();
   const today = new Date().toISOString().slice(0, 10);
   const ahora = new Date().toTimeString().slice(0, 5);
 
@@ -63,44 +65,51 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
   const [checkedIn, setCheckedIn] = useState<Record<string, boolean>>({});
   const doCheckIn = (id: string) => {
     setCheckedIn((p) => ({ ...p, [id]: true }));
-    toast.success("Check-in registrado");
+    toast.success(tr("Check-in registrado", "Check-in registered", "Check-in zabeležen"));
   };
 
   return (
     <>
-      <PageHeader title="Mi Día" subtitle={`${monitorName || "Monitor"} · ${today}`} />
+      <PageHeader title={tr("Mi Día", "My Day", "Moj dan")} subtitle={`${monitorName || tr("Monitor", "Coach", "Trener")} · ${today}`} />
 
       {/* Hero */}
       <Card className="bg-foreground text-background">
         <div className="text-[10.5px] uppercase tracking-[0.2em] opacity-60 font-bold">
-          Hola {monitorName || "monitor"}
+          {tr(`Hola ${monitorName || "monitor"}`, `Hello ${monitorName || "coach"}`, `Zdravo ${monitorName || "treneru"}`)}
         </div>
         <div className="mt-1 text-xl font-bold">
-          Tienes {misClases.length} clase{misClases.length === 1 ? "" : "s"} hoy · {horas}h
-          producción
+          {tr(
+            `Tienes ${misClases.length} clase${misClases.length === 1 ? "" : "s"} hoy · ${horas}h producción`,
+            `You have ${misClases.length} class${misClases.length === 1 ? "" : "es"} today · ${horas}h production`,
+            `Imate ${misClases.length} časova danas · ${horas}h produkcije`,
+          )}
         </div>
         <div className="text-sm opacity-70 mt-1">
-          {misEp.length} sesión EP asignada{misEp.length === 1 ? "" : "s"}
+          {tr(
+            `${misEp.length} sesión EP asignada${misEp.length === 1 ? "" : "s"}`,
+            `${misEp.length} PT session${misEp.length === 1 ? "" : "s"} assigned`,
+            `${misEp.length} PT sesija dodeljeno`,
+          )}
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <button
-            onClick={() => toast.success("Solicitud de ausencia enviada (demo)")}
+            onClick={() => toast.success(tr("Solicitud de ausencia enviada (demo)", "Absence request sent (demo)", "Zahtev za odsustvo poslat (demo)"))}
             className="h-8 px-3 rounded-md bg-background/10 text-background text-xs font-bold flex items-center gap-1.5 hover:bg-background/20"
           >
-            <CalendarOff className="h-3.5 w-3.5" /> Solicitar ausencia
+            <CalendarOff className="h-3.5 w-3.5" /> {tr("Solicitar ausencia", "Request absence", "Zatraži odsustvo")}
           </button>
           <button
-            onClick={() => toast.success("Incidencia registrada (demo)")}
+            onClick={() => toast.success(tr("Incidencia registrada (demo)", "Incident logged (demo)", "Incident zabeležen (demo)"))}
             className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs font-bold flex items-center gap-1.5 hover:opacity-90"
           >
-            <AlertTriangle className="h-3.5 w-3.5" /> Reportar incidencia
+            <AlertTriangle className="h-3.5 w-3.5" /> {tr("Reportar incidencia", "Report incident", "Prijavi incident")}
           </button>
           {isAdmin && (
             <Link
               to="/rgcc/clases"
               className="h-8 px-3 rounded-md bg-background text-foreground text-xs font-bold flex items-center gap-1.5 hover:opacity-90"
             >
-              Ir al cockpit
+              {tr("Ir al cockpit", "Go to cockpit", "Idi u kokpit")}
             </Link>
           )}
         </div>
@@ -112,10 +121,10 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
             <div className="min-w-0">
               <div className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold flex items-center gap-1.5">
-                <Clock className="h-3 w-3" /> Próxima clase · ahora {ahora}
+                <Clock className="h-3 w-3" /> {tr("Próxima clase · ahora", "Next class · now", "Sledeći čas · sada")} {ahora}
               </div>
               <div className="mt-1 text-xl font-bold leading-tight truncate">
-                {proxima.activity}
+                {td(proxima.activity)}
               </div>
               <div className="text-sm text-muted-foreground mt-1">
                 <span className="font-bold tabular-nums">{proxima.time}</span> ·{" "}
@@ -127,20 +136,20 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
                 </span>
                 <span>·</span>
                 <span>{proxima.durationMin} min</span>
-                {proxima.substituteCoach === monitorName && <Pill tone="info">Sustitución</Pill>}
+                {proxima.substituteCoach === monitorName && <Pill tone="info">{tr("Sustitución", "Substitution", "Zamena")}</Pill>}
               </div>
             </div>
             <div className="flex md:flex-col gap-2 md:justify-center">
               {checkedIn[proxima.id] ? (
                 <div className="text-xs uppercase tracking-wider font-bold text-success flex items-center gap-1.5">
-                  <Check className="h-3.5 w-3.5" /> Check-in OK
+                  <Check className="h-3.5 w-3.5" /> {tr("Check-in OK", "Check-in OK", "Check-in OK")}
                 </div>
               ) : (
                 <button
                   onClick={() => doCheckIn(proxima.id)}
                   className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
                 >
-                  <PlayCircle className="h-4 w-4" /> Check-in
+                  <PlayCircle className="h-4 w-4" /> {tr("Check-in", "Check-in", "Check-in")}
                 </button>
               )}
             </div>
@@ -160,14 +169,14 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
                     <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-bold truncate">
                       {c.time} · {sede?.name} · {c.roomLabel}
                     </div>
-                    <div className="text-base font-bold truncate">{c.activity}</div>
-                    {c.substituteCoach === monitorName && <Pill tone="info">Sustitución</Pill>}
+                    <div className="text-base font-bold truncate">{td(c.activity)}</div>
+                    {c.substituteCoach === monitorName && <Pill tone="info">{tr("Sustitución", "Substitution", "Zamena")}</Pill>}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <span className="text-xs tabular-nums text-muted-foreground">
                       {c.bookings.length}/{c.capacity}
                     </span>
-                    <Pill tone={c.status === "confirmed" ? "success" : "info"}>{c.status}</Pill>
+                    <Pill tone={c.status === "confirmed" ? "success" : "info"}>{td(c.status)}</Pill>
                   </div>
                 </div>
               </Card>
@@ -176,7 +185,7 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
           {misClases.length === 0 && (
             <Card>
               <p className="text-sm text-muted-foreground text-center py-6">
-                No tienes clases hoy.
+                {tr("No tienes clases hoy.", "No classes today.", "Nema časova danas.")}
               </p>
             </Card>
           )}
@@ -184,18 +193,18 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
 
         <Card>
           <div className="mb-3">
-            <h2 className="text-lg font-semibold">Mis sesiones EP</h2>
-            <p className="text-xs text-muted-foreground">{misEp.length} programada(s)</p>
+            <h2 className="text-lg font-semibold">{tr("Mis sesiones EP", "My PT sessions", "Moje PT sesije")}</h2>
+            <p className="text-xs text-muted-foreground">{misEp.length} {tr("programada(s)", "scheduled", "zakazano")}</p>
           </div>
           <ul className="space-y-2">
             {misEp.length === 0 && (
-              <li className="text-sm text-muted-foreground">Sin sesiones EP asignadas.</li>
+              <li className="text-sm text-muted-foreground">{tr("Sin sesiones EP asignadas.", "No PT sessions assigned.", "Nema dodeljenih PT sesija.")}</li>
             )}
             {misEp.map((e) => (
               <li key={e.id} className="flex items-center gap-2 text-sm">
                 <span className="font-bold tabular-nums w-12">{e.time}</span>
                 <span className="flex-1 truncate">{e.memberName}</span>
-                <Pill tone={e.status === "done" ? "success" : "info"}>{e.status}</Pill>
+                <Pill tone={e.status === "done" ? "success" : "info"}>{td(e.status)}</Pill>
               </li>
             ))}
           </ul>
@@ -206,6 +215,7 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
 }
 
 // ─── Socio ──────────────────────────────────────────────────────────────────
+
 
 function MiDiaSocio({ memberNumber, memberName }: { memberNumber: string; memberName: string }) {
   const today = new Date().toISOString().slice(0, 10);
