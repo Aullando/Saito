@@ -142,15 +142,16 @@ function TeamPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const { DEMO_USERS } = demo ? require("@/lib/seed") as typeof import("@/lib/seed") : { DEMO_USERS: [] as never[] };
   const members = demo
-    ? (DEMO_USERS as { id: string; email: string; name: string; role: RoleName }[]).map((u) => ({
-        id: u.id,
-        email: u.email,
-        full_name: u.name,
-        avatar_url: null as string | null,
-        roles: [u.role] as RoleName[],
-      }))
+    ? DEMO_USERS
+        .filter((u) => u.role !== "athlete")
+        .map((u) => ({
+          id: u.id,
+          email: u.email,
+          full_name: u.name,
+          avatar_url: null as string | null,
+          roles: (ALL_ROLES as readonly string[]).includes(u.role) ? [u.role as RoleName] : [],
+        }))
     : membersQ.data ?? [];
 
   return (
