@@ -240,6 +240,7 @@ function CommandCenter() {
         text: tr(
           `Nuevo mensaje en “${lastConv.title}”`,
           `New message in “${lastConv.title}”`,
+          `Nova poruka u „${lastConv.title}”`,
         ),
         time: lastConv.m.createdAt.slice(0, 10),
         tone: "info",
