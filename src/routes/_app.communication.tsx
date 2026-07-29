@@ -115,11 +115,12 @@ function CommunicationPage() {
       for (const m of c.messages) {
         const recipientsCount = extractRecipientsCount(m.targetLabel) ?? c.participants.length;
         const overridden = circularStatus[m.id];
+        const content = td(m.content);
         items.push({
           id: m.id,
-          title: m.content.slice(0, 80) + (m.content.length > 80 ? "…" : ""),
-          body: m.content,
-          recipientsLabel: m.targetLabel,
+          title: content.slice(0, 80) + (content.length > 80 ? "…" : ""),
+          body: content,
+          recipientsLabel: td(m.targetLabel),
           recipientsCount,
           reads: Math.max(0, Math.min(recipientsCount, Math.round(recipientsCount * 0.78))),
           createdAt: m.createdAt,
@@ -130,7 +131,7 @@ function CommunicationPage() {
       }
     }
     return items;
-  }, [conversations, circularStatus, withdrawReasons]);
+  }, [conversations, circularStatus, withdrawReasons, td]);
 
   const allCirculars: CircularItem[] = useMemo(() => {
     const localItems: CircularItem[] = localCirculars.map((c: LocalCircular) => ({
