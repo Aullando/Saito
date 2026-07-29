@@ -10,6 +10,8 @@ export type CnsoVenue = CnsoTag & {
   address: string;
   zone: string;
   description: string;
+  description_en?: string;
+  description_sr?: string;
   photo: string;
   schedule: string;
   services: string[];
@@ -26,6 +28,10 @@ export const CNSO_VENUES: CnsoVenue[] = [
     zone: "Gijón · Las Mestas",
     description:
       "Sede principal con piscina olímpica de 50 m, vaso de 25 m, foso de saltos y gimnasio de preparación física.",
+    description_en:
+      "Main venue with an Olympic 50 m pool, a 25 m pool, a diving pit and a strength & conditioning gym.",
+    description_sr:
+      "Glavni objekat sa olimpijskim bazenom od 50 m, bazenom od 25 m, bazenom za skokove i teretanom za kondicionu pripremu.",
     photo:
       "https://cnsantaolaya.org/wp-content/uploads/2023/08/portada-piscina-mestas.jpg",
     schedule: "L–V 06:30–22:30 · S 08:00–21:00 · D 09:00–14:30",
@@ -48,6 +54,10 @@ export const CNSO_VENUES: CnsoVenue[] = [
     zone: "Gijón · Roces",
     description:
       "Vaso de 25 m utilizado como sede secundaria para la escuela deportiva y grupos de tecnificación.",
+    description_en:
+      "25 m pool used as a secondary venue for the sports school and development groups.",
+    description_sr:
+      "Bazen 25 m koji se koristi kao sekundarni objekat za sportsku školu i razvojne grupe.",
     photo:
       "https://cnsantaolaya.org/wp-content/uploads/2023/08/tejerona.jpg",
     schedule: "L–V 16:00–22:00 · S 09:00–14:00",
@@ -63,6 +73,10 @@ export const CNSO_VENUES: CnsoVenue[] = [
     zone: "Anexo Las Mestas",
     description:
       "Sala de preparación física en seco para fuerza, core, movilidad y prevención de lesiones.",
+    description_en:
+      "Dryland conditioning room for strength, core, mobility and injury-prevention work.",
+    description_sr:
+      "Sala za suvi trening za snagu, kor, pokretljivost i prevenciju povreda.",
     photo:
       "https://cnsantaolaya.org/wp-content/uploads/2023/08/logotipo_squali.png",
     schedule: "L–V 07:00–22:00 · S 09:00–13:00",
@@ -78,6 +92,10 @@ export const CNSO_VENUES: CnsoVenue[] = [
     zone: "Gijón · Playa",
     description:
       "Entrenamientos de aguas abiertas para triatlón y travesías de pretemporada.",
+    description_en:
+      "Open-water sessions for triathlon and pre-season distance swims.",
+    description_sr:
+      "Treninzi u otvorenim vodama za triatlon i pretsezonska duga plivanja.",
     photo:
       "https://cnsantaolaya.org/wp-content/uploads/2023/08/aguas-abiertas.jpg",
     schedule: "Sáb. 09:30–11:30 (temporada mayo–septiembre)",

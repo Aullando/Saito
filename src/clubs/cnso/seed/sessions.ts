@@ -14,6 +14,8 @@ export type CnsoSession = {
   time: string; // HH:MM
   durationMin: number;
   activity: string;
+  activity_en?: string;
+  activity_sr?: string;
   venueId: string;
   roomId: string;
   roomLabel: string;
@@ -24,6 +26,8 @@ export type CnsoSession = {
   waitlist: string[];
   status: "scheduled" | "confirmed" | "completed" | "cancelled";
   changeNote?: string;
+  changeNote_en?: string;
+  changeNote_sr?: string;
 };
 
 export const CNSO_SESSIONS: CnsoSession[] = [
@@ -34,6 +38,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "06:30",
     durationMin: 120,
     activity: "Primer Equipo · Aeróbico extensivo",
+    activity_en: "First Team · Extensive aerobic",
+    activity_sr: "Prvi tim · Ekstenzivni aerobni",
     venueId: "s-mestas",
     roomId: "c-50-1",
     roomLabel: "Calle 1 (50 m)",
@@ -50,6 +56,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "06:30",
     durationMin: 120,
     activity: "Primer Equipo · Velocidad",
+    activity_en: "First Team · Speed",
+    activity_sr: "Prvi tim · Brzina",
     venueId: "s-mestas",
     roomId: "c-50-2",
     roomLabel: "Calle 2 (50 m)",
@@ -66,6 +74,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "08:30",
     durationMin: 60,
     activity: "Squali · Fuerza seca",
+    activity_en: "Squali · Dryland strength",
+    activity_sr: "Squali · Snaga na suvom",
     venueId: "s-squali",
     roomId: "sq-fuerza",
     roomLabel: "Squali Fuerza",
@@ -82,6 +92,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "17:00",
     durationMin: 60,
     activity: "Escuela Benjamín · 4 estilos",
+    activity_en: "Benjamín School · 4 strokes",
+    activity_sr: "Škola početnika · 4 stila",
     venueId: "s-mestas",
     roomId: "v-25",
     roomLabel: "Vaso 25 m",
@@ -98,6 +110,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "18:00",
     durationMin: 60,
     activity: "Escuela Alevín · Técnica crol",
+    activity_en: "Alevín School · Freestyle technique",
+    activity_sr: "Škola mlađih kadeta · Tehnika kraula",
     venueId: "s-mestas",
     roomId: "c-50-3",
     roomLabel: "Calle 3 (50 m)",
@@ -114,6 +128,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "19:00",
     durationMin: 90,
     activity: "Tecnificación · Series umbral",
+    activity_en: "Development · Threshold sets",
+    activity_sr: "Razvojni program · Pragovske serije",
     venueId: "s-mestas",
     roomId: "c-50-4",
     roomLabel: "Calle 4 (50 m)",
@@ -130,6 +146,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "20:00",
     durationMin: 75,
     activity: "Grupo Máster",
+    activity_en: "Masters Group",
+    activity_sr: "Masters grupa",
     venueId: "s-mestas",
     roomId: "c-50-5",
     roomLabel: "Calle 5 (50 m)",
@@ -146,6 +164,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "20:00",
     durationMin: 75,
     activity: "Waterpolo · Senior",
+    activity_en: "Water polo · Senior",
+    activity_sr: "Vaterpolo · Seniori",
     venueId: "s-mestas",
     roomId: "c-50-7",
     roomLabel: "Calle 7 + 8",
@@ -162,6 +182,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "19:30",
     durationMin: 60,
     activity: "Natación Artística · Figuras",
+    activity_en: "Artistic Swimming · Figures",
+    activity_sr: "Umetničko plivanje · Figure",
     venueId: "s-mestas",
     roomId: "v-25",
     roomLabel: "Vaso 25 m",
@@ -178,6 +200,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "18:30",
     durationMin: 75,
     activity: "Saltos · Trampolín 1 m",
+    activity_en: "Diving · 1 m springboard",
+    activity_sr: "Skokovi · Odskočna daska 1 m",
     venueId: "s-mestas",
     roomId: "f-saltos",
     roomLabel: "Foso de saltos",
@@ -194,6 +218,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "06:30",
     durationMin: 120,
     activity: "Primer Equipo · Aeróbico medio",
+    activity_en: "First Team · Middle aerobic",
+    activity_sr: "Prvi tim · Srednji aerobni",
     venueId: "s-mestas",
     roomId: "c-50-1",
     roomLabel: "Calle 1 (50 m)",
@@ -210,6 +236,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     time: "07:30",
     durationMin: 60,
     activity: "Triatlón · Aguas abiertas",
+    activity_en: "Triathlon · Open water",
+    activity_sr: "Triatlon · Otvorene vode",
     venueId: "s-playa",
     roomId: "pl-aa",
     roomLabel: "San Lorenzo · zona acotada",
@@ -219,6 +247,8 @@ export const CNSO_SESSIONS: CnsoSession[] = [
     waitlist: [],
     status: "scheduled",
     changeNote: "Sólo si oleaje ≤ 1 m. Verificar punto de salida.",
+    changeNote_en: "Only if swell ≤ 1 m. Confirm the start point.",
+    changeNote_sr: "Samo ako je talas ≤ 1 m. Potvrditi mesto starta.",
   },
 ];
 
@@ -232,6 +262,8 @@ export type CnsoIncident = {
   type: "Calle" | "Material" | "Clima" | "Vestuarios" | "Salud" | "Otro";
   severity: "low" | "medium" | "high";
   description: string;
+  description_en?: string;
+  description_sr?: string;
   status: "open" | "in_progress" | "resolved";
   resolvedBy?: string;
   /** Nadador afectado (solo en incidencias tipo "Salud"). */
@@ -239,6 +271,8 @@ export type CnsoIncident = {
   athleteNumber?: string;
   /** Restricción operativa visible para el entrenador. */
   operationalRestriction?: string;
+  operationalRestriction_en?: string;
+  operationalRestriction_sr?: string;
 };
 
 export const CNSO_INCIDENTS: CnsoIncident[] = [
@@ -251,6 +285,8 @@ export const CNSO_INCIDENTS: CnsoIncident[] = [
     type: "Calle",
     severity: "medium",
     description: "Calle 6 fuera de uso por reparación de corchera.",
+    description_en: "Lane 6 out of service due to lane-line repair.",
+    description_sr: "Staza 6 van upotrebe zbog popravke razdelnika.",
     status: "in_progress",
   },
   {
@@ -261,6 +297,8 @@ export const CNSO_INCIDENTS: CnsoIncident[] = [
     type: "Material",
     severity: "low",
     description: "Falta una portería de waterpolo, pedida reposición.",
+    description_en: "Missing one water-polo goal; replacement requested.",
+    description_sr: "Nedostaje jedan vaterpolo gol; naručena zamena.",
     status: "open",
   },
   {
@@ -272,10 +310,16 @@ export const CNSO_INCIDENTS: CnsoIncident[] = [
     severity: "medium",
     description:
       "Dolor en hombro derecho tras serie de mariposa. Sospecha de tendinopatía supraespinoso.",
+    description_en:
+      "Right shoulder pain after a butterfly set. Suspected supraspinatus tendinopathy.",
+    description_sr:
+      "Bol u desnom ramenu nakon serije delfina. Sumnja na tendinopatiju supraspinatusa.",
     status: "in_progress",
     athleteName: "Lucía Granda",
     athleteNumber: "CNSO-04221",
     operationalRestriction: "Sin mariposa ni paletas 7 días. Patada y brazada suave permitida.",
+    operationalRestriction_en: "No butterfly or paddles for 7 days. Easy kick and stroke allowed.",
+    operationalRestriction_sr: "Bez delfina i lopatica 7 dana. Dozvoljeni lagani udarci nogama i zaveslaji.",
   },
   {
     clubId: "cnso",
@@ -285,10 +329,14 @@ export const CNSO_INCIDENTS: CnsoIncident[] = [
     type: "Salud",
     severity: "high",
     description: "Otitis externa bilateral confirmada. Reposo de agua hasta revisión.",
+    description_en: "Bilateral external otitis confirmed. Out of water until follow-up.",
+    description_sr: "Potvrđen obostrani spoljni otitis. Bez vode do sledećeg pregleda.",
     status: "open",
     athleteName: "Diego Cifuentes",
     athleteNumber: "CNSO-03877",
     operationalRestriction: "Baja en piscina 5 días. Sustituir por trabajo en seco.",
+    operationalRestriction_en: "Out of the pool for 5 days. Replace with dryland work.",
+    operationalRestriction_sr: "Van bazena 5 dana. Zameniti radom na suvom.",
   },
   {
     clubId: "cnso",
@@ -298,6 +346,8 @@ export const CNSO_INCIDENTS: CnsoIncident[] = [
     type: "Salud",
     severity: "low",
     description: "Revisión post-competición Trofeo Villa de Gijón. Apto sin restricciones.",
+    description_en: "Post-competition review, Villa de Gijón Trophy. Fit with no restrictions.",
+    description_sr: "Pregled nakon takmičenja, trofej Vilja de Hihon. Sposoban, bez ograničenja.",
     status: "resolved",
     athleteName: "Sara Noval",
     athleteNumber: "CNSO-05011",
@@ -314,6 +364,8 @@ export type CnsoAbsence = {
   to: string;
   reason: "Vacaciones" | "Enfermedad" | "Formación" | "Asuntos propios";
   detail?: string;
+  detail_en?: string;
+  detail_sr?: string;
   status: "requested" | "approved" | "rejected";
   ts: string;
 };
@@ -327,6 +379,8 @@ export const CNSO_ABSENCES: CnsoAbsence[] = [
     to: today(),
     reason: "Formación",
     detail: "Clinic RFEN sobre saltos en Madrid.",
+    detail_en: "RFEN diving clinic in Madrid.",
+    detail_sr: "RFEN klinika za skokove u Madridu.",
     status: "approved",
     ts: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
   },

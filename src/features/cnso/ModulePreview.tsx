@@ -1,5 +1,6 @@
 import { useCurrentUser } from "@/lib/store";
-import { useTd } from "@/lib/demoI18n";
+import { useTd, useTdField } from "@/lib/demoI18n";
+import { useLang } from "@/lib/i18n";
 import { Card, Grid } from "@/features/clubModule/helpers";
 import {
   CNSO_VENUES,
@@ -19,6 +20,7 @@ import {
 } from "@/clubs/cnso/seed";
 
 export function IncidenciasView() {
+  const tdf = useTdField();
   const user = useCurrentUser();
   const role = user?.role ?? "manager";
   const list = CNSO_INCIDENTS.filter((i) => {
@@ -69,12 +71,12 @@ export function IncidenciasView() {
                 Diagnóstico reservado al staff médico.
               </p>
             ) : (
-              <p className="mt-1 text-xs">{i.description}</p>
+              <p className="mt-1 text-xs">{tdf(i, "description")}</p>
             )}
             {i.operationalRestriction && (
               <div className="mt-2 rounded-lg bg-primary/5 px-2 py-1.5 text-[11px] text-primary">
                 <span className="font-semibold">Restricción operativa: </span>
-                {i.operationalRestriction}
+                {tdf(i, "operationalRestriction")}
               </div>
             )}
             <div className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
@@ -88,6 +90,8 @@ export function IncidenciasView() {
 }
 export function ModulePreview({ slug, fallback }: { slug: string; fallback: React.ReactNode }) {
   const td = useTd();
+  const tdf = useTdField();
+  const lang = useLang();
   switch (slug) {
     case "sedes":
       return (
@@ -95,8 +99,8 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           {CNSO_VENUES.map((v) => (
             <Card key={v.id}>
               <div className="font-semibold">{v.name}</div>
-              <div className="text-xs text-muted-foreground">{v.zone}</div>
-              <p className="mt-2 line-clamp-3 text-xs">{v.description}</p>
+              <div className="text-xs text-muted-foreground">{td(v.zone)}</div>
+              <p className="mt-2 line-clamp-3 text-xs">{tdf(v, "description")}</p>
               <div className="mt-2 text-[11px] text-muted-foreground">{v.schedule}</div>
               <div className="mt-2 flex flex-wrap gap-1">
                 {v.services.slice(0, 4).map((s) => (
@@ -104,7 +108,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                     key={s}
                     className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary"
                   >
-                    {s}
+                    {td(s)}
                   </span>
                 ))}
               </div>
@@ -119,7 +123,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           {CNSO_ROOMS.map((r) => (
             <Card key={r.id}>
               <div className="flex items-center justify-between">
-                <span className="font-semibold">{r.name}</span>
+                <span className="font-semibold">{td(r.name)}</span>
                 <span
                   className={`rounded-full px-2 py-0.5 text-[10px] ${
                     r.status === "incident"
@@ -127,11 +131,11 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                       : "bg-emerald-500/15 text-emerald-600"
                   }`}
                 >
-                  {r.status}
+                  {td(r.status)}
                 </span>
               </div>
               <div className="text-xs text-muted-foreground">
-                {r.type} · aforo {r.capacity}
+                {td(r.type)} · aforo {r.capacity}
               </div>
             </Card>
           ))}
@@ -145,7 +149,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
             <Card key={s.id}>
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <div className="font-semibold truncate">{s.name}</div>
+                  <div className="font-semibold truncate">{td(s.name)}</div>
                   <div className="text-xs text-muted-foreground">
                     {td(s.category)} · {s.venueLabel}
                   </div>
@@ -154,7 +158,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                   {s.membersCount}
                 </span>
               </div>
-              <p className="mt-2 text-xs">{s.description}</p>
+              <p className="mt-2 text-xs">{tdf(s, "description")}</p>
               <div className="mt-2 text-[11px] text-muted-foreground">Resp.: {s.responsible}</div>
             </Card>
           ))}
@@ -167,12 +171,12 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           {CNSO_COACHES.map((c) => (
             <Card key={c.id}>
               <div className="font-semibold">{c.name}</div>
-              <div className="text-xs text-muted-foreground">{c.specialty}</div>
+              <div className="text-xs text-muted-foreground">{td(c.specialty)}</div>
               <div className="mt-1 text-xs">
                 Contrato: {c.contractedHours}h · Total: {c.totalHours}h
               </div>
               <div className="mt-1 text-[11px] uppercase tracking-wide text-primary">
-                {c.status}
+                {td(c.status)}
               </div>
             </Card>
           ))}
@@ -188,14 +192,14 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                 {m.firstName} {m.lastName}
               </div>
               <div className="text-xs text-muted-foreground">
-                {m.memberNumber} · {m.activity}
+                {m.memberNumber} · {tdf(m, "activity")}
               </div>
               <div className="mt-1 text-xs">
-                Entrenador: {m.coachName} · Nivel {m.level}
+                Entrenador: {m.coachName} · Nivel {td(m.level)}
               </div>
               {m.goal && (
                 <div className="mt-1 text-[11px] text-muted-foreground line-clamp-2">
-                  {m.goal}
+                  {tdf(m, "goal")}
                 </div>
               )}
               {m.bestTimes[0] && (
@@ -217,20 +221,20 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <div className="font-semibold">
-                    {s.time} · {s.activity}
+                    {s.time} · {tdf(s, "activity")}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {s.roomLabel} · {s.primaryCoach}
+                    {td(s.roomLabel)} · {s.primaryCoach}
                   </div>
                   {s.changeNote && (
-                    <div className="mt-1 text-[11px] text-amber-600">{s.changeNote}</div>
+                    <div className="mt-1 text-[11px] text-amber-600">{tdf(s, "changeNote")}</div>
                   )}
                 </div>
                 <div className="text-right text-xs">
                   <div>
                     {s.bookings.length}/{s.capacity}
                   </div>
-                  <div className="text-[10px] uppercase tracking-wide text-primary">{s.status}</div>
+                  <div className="text-[10px] uppercase tracking-wide text-primary">{td(s.status)}</div>
                 </div>
               </div>
             </Card>
@@ -253,8 +257,8 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <div className="text-xs text-muted-foreground">
                 {a.from} → {a.to}
               </div>
-              {a.detail && <p className="mt-1 text-xs">{a.detail}</p>}
-              <div className="mt-1 text-[11px] uppercase text-primary">{a.status}</div>
+              {a.detail && <p className="mt-1 text-xs">{tdf(a, "detail")}</p>}
+              <div className="mt-1 text-[11px] uppercase text-primary">{td(a.status)}</div>
             </Card>
           ))}
         </div>
@@ -271,9 +275,9 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                   {s.time} · {s.memberName}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Entrenador: {s.coachName} · {s.status}
+                  Entrenador: {s.coachName} · {td(s.status)}
                 </div>
-                {s.notes && <p className="mt-1 text-xs">{s.notes}</p>}
+                {s.notes && <p className="mt-1 text-xs">{tdf(s, "notes")}</p>}
               </Card>
             ))}
           </div>
@@ -281,12 +285,12 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           <div className="space-y-2">
             {CNSO_WORKOUTS.map((w) => (
               <Card key={w.id}>
-                <div className="font-semibold">{w.title}</div>
+                <div className="font-semibold">{tdf(w, "title")}</div>
                 <div className="text-xs text-muted-foreground">
-                  {w.memberNumber} · {w.coachName} · {w.status}
+                  {w.memberNumber} · {w.coachName} · {td(w.status)}
                 </div>
                 <div className="mt-1 text-xs">
-                  {w.blocks.length} bloques · origen {w.source}
+                  {w.blocks.length} bloques · origen {td(w.source)}
                 </div>
               </Card>
             ))}
@@ -299,20 +303,28 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
         <>
           <h3 className="mb-2 text-sm font-semibold">Sets tipo</h3>
           <Grid>
-            {CNSO_SETS.map((s) => (
-              <Card key={s.id}>
-                <div className="font-semibold">{s.name}</div>
-                <div className="text-xs text-muted-foreground">
-                  {td(s.level)} · {s.totalMeters.toLocaleString("es-ES")} m
-                </div>
-                <p className="mt-1 text-xs">{s.goal}</p>
-                <ul className="mt-2 space-y-0.5 text-[11px] text-muted-foreground">
-                  {s.blocks.slice(0, 3).map((b) => (
-                    <li key={b}>· {b}</li>
-                  ))}
-                </ul>
-              </Card>
-            ))}
+            {CNSO_SETS.map((s) => {
+              const blocks =
+                (lang !== "es" &&
+                  (s as { blocks_en?: string[]; blocks_sr?: string[] })[
+                    `blocks_${lang}` as "blocks_en" | "blocks_sr"
+                  ]) ||
+                s.blocks;
+              return (
+                <Card key={s.id}>
+                  <div className="font-semibold">{tdf(s, "name")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {td(s.level)} · {s.totalMeters.toLocaleString("es-ES")} m
+                  </div>
+                  <p className="mt-1 text-xs">{tdf(s, "goal")}</p>
+                  <ul className="mt-2 space-y-0.5 text-[11px] text-muted-foreground">
+                    {blocks.slice(0, 3).map((b, i) => (
+                      <li key={i}>· {b}</li>
+                    ))}
+                  </ul>
+                </Card>
+              );
+            })}
           </Grid>
           <h3 className="mb-2 mt-6 text-sm font-semibold">
             Catálogo de drills técnicos ({CNSO_DRILLS.length})
@@ -320,15 +332,15 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           <Grid>
             {CNSO_DRILLS.map((d) => (
               <Card key={d.id}>
-                <div className="font-semibold">{d.name}</div>
+                <div className="font-semibold">{tdf(d, "name")}</div>
                 <div className="text-xs text-muted-foreground">
-                  {td(d.category)} · {d.group}
+                  {td(d.category)} · {tdf(d, "group")}
                 </div>
                 <div className="mt-1 text-xs">
-                  {d.equipment} · {d.dose}
+                  {tdf(d, "equipment")} · {d.dose}
                 </div>
                 {d.cues && (
-                  <div className="mt-1 text-[11px] text-muted-foreground">“{d.cues}”</div>
+                  <div className="mt-1 text-[11px] text-muted-foreground">“{tdf(d, "cues")}”</div>
                 )}
               </Card>
             ))}
@@ -345,12 +357,12 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <Card key={c.id}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="font-semibold truncate">{c.name}</div>
+                    <div className="font-semibold truncate">{tdf(c, "name")}</div>
                     <div className="text-xs text-muted-foreground">
-                      {c.date} · {c.venue} · {td(c.discipline)}
+                      {c.date} · {tdf(c, "venue")} · {td(c.discipline)}
                     </div>
                     {c.highlight && (
-                      <div className="mt-1 text-[11px] text-primary">{c.highlight}</div>
+                      <div className="mt-1 text-[11px] text-primary">{tdf(c, "highlight")}</div>
                     )}
                   </div>
                   <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
@@ -376,8 +388,8 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <Card key={k.id}>
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="font-semibold">{k.name}</div>
-                    <div className="text-xs text-muted-foreground">{k.category}</div>
+                    <div className="font-semibold">{td(k.name)}</div>
+                    <div className="text-xs text-muted-foreground">{td(k.category)}</div>
                   </div>
                   {k.mandatory && (
                     <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-600">
@@ -386,7 +398,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                   )}
                 </div>
                 <div className="mt-1 text-[11px] text-muted-foreground">
-                  Tallas: {k.sizes.join(", ")}
+                  Tallas: {k.sizes.map((s) => td(s)).join(", ")}
                 </div>
               </Card>
             ))}
@@ -477,12 +489,12 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               .slice(0, 3)
               .map((c) => (
                 <Card key={c.id}>
-                  <div className="font-semibold">{c.name}</div>
+                  <div className="font-semibold">{tdf(c, "name")}</div>
                   <div className="text-xs text-muted-foreground">
-                    {c.date} · {c.venue} · {c.swimmersCount} nadadores
+                    {c.date} · {tdf(c, "venue")} · {c.swimmersCount} nadadores
                   </div>
                   {c.highlight && (
-                    <div className="mt-1 text-[11px] text-primary">{c.highlight}</div>
+                    <div className="mt-1 text-[11px] text-primary">{tdf(c, "highlight")}</div>
                   )}
                 </Card>
               ))}
