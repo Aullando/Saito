@@ -147,7 +147,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                 <div className="min-w-0">
                   <div className="font-semibold truncate">{s.name}</div>
                   <div className="text-xs text-muted-foreground">
-                    {s.category} · {s.venueLabel}
+                    {td(s.category)} · {s.venueLabel}
                   </div>
                 </div>
                 <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
