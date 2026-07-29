@@ -35,6 +35,7 @@ import { useCommLocal, type CircularStatus, type LocalCircular } from "@/lib/com
 import { formatDateTime } from "@/lib/format";
 import { toast } from "sonner";
 import { useTr, useLang } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import type { Lang } from "@/lib/types";
 import {
   Archive,
