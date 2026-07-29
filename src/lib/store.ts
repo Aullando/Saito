@@ -36,14 +36,14 @@ interface AuthState {
   avatars: Record<string, string>;
   mobileNavOpen: boolean;
   sidebarCollapsed: boolean;
-  langOverride: "es" | "en" | null;
+  langOverride: "es" | "en" | "sr" | null;
   setUser: (id: string | null) => void;
   setAvatar: (id: string, dataUrl: string) => void;
   removeAvatar: (id: string) => void;
   setMobileNavOpen: (open: boolean) => void;
   setSidebarCollapsed: (v: boolean) => void;
   toggleSidebarCollapsed: () => void;
-  setLangOverride: (lang: "es" | "en" | null) => void;
+  setLangOverride: (lang: "es" | "en" | "sr" | null) => void;
 }
 
 export const useAuth = create<AuthState>()(
