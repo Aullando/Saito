@@ -29,9 +29,13 @@ export function getDataSourceMode(): DataSourceMode {
   return isDemoMode() ? "demo" : "production";
 }
 
-export function getDataSourceLabel(locale: "es" | "en" = "es"): string {
+export function getDataSourceLabel(locale: "es" | "en" | "sr" = "es"): string {
   if (isDemoMode()) {
-    return locale === "en" ? "Demo · Demo data" : "Demo · Datos demo";
+    if (locale === "en") return "Demo · Demo data";
+    if (locale === "sr") return "Demo · Demo podaci";
+    return "Demo · Datos demo";
   }
-  return locale === "en" ? "Production · Real data" : "Producción · Datos reales";
+  if (locale === "en") return "Production · Real data";
+  if (locale === "sr") return "Produkcija · Stvarni podaci";
+  return "Producción · Datos reales";
 }

@@ -20,22 +20,33 @@ export interface Occurrence {
   date: string;
 }
 
-export const typeOptions = (lang: Lang): { value: CalendarEventType; label: string }[] =>
-  lang === "es"
-    ? [
-        { value: "training", label: "Entrenamiento" },
-        { value: "match", label: "Competición" },
-        { value: "medical", label: "Cita médica" },
-        { value: "club", label: "Evento de club" },
-        { value: "payment", label: "Vencimiento de pago" },
-      ]
-    : [
-        { value: "training", label: "Training" },
-        { value: "match", label: "Competition" },
-        { value: "medical", label: "Medical appointment" },
-        { value: "club", label: "Club event" },
-        { value: "payment", label: "Payment due" },
-      ];
+const pickLang = <T,>(lang: Lang, es: T, en: T, sr: T): T =>
+  lang === "es" ? es : lang === "sr" ? sr : en;
+
+export const typeOptions = (lang: Lang): { value: CalendarEventType; label: string }[] => {
+  const es = [
+    { value: "training" as const, label: "Entrenamiento" },
+    { value: "match" as const, label: "Competición" },
+    { value: "medical" as const, label: "Cita médica" },
+    { value: "club" as const, label: "Evento de club" },
+    { value: "payment" as const, label: "Vencimiento de pago" },
+  ];
+  const en = [
+    { value: "training" as const, label: "Training" },
+    { value: "match" as const, label: "Competition" },
+    { value: "medical" as const, label: "Medical appointment" },
+    { value: "club" as const, label: "Club event" },
+    { value: "payment" as const, label: "Payment due" },
+  ];
+  const sr = [
+    { value: "training" as const, label: "Trening" },
+    { value: "match" as const, label: "Takmičenje" },
+    { value: "medical" as const, label: "Medicinski termin" },
+    { value: "club" as const, label: "Događaj kluba" },
+    { value: "payment" as const, label: "Rok plaćanja" },
+  ];
+  return pickLang(lang, es, en, sr);
+};
 
 export const typeLabel = (type: string, lang: Lang): string => {
   const es: Record<string, string> = {
@@ -54,7 +65,15 @@ export const typeLabel = (type: string, lang: Lang): string => {
     club: "Club event",
     payment: "Payment due",
   };
-  return (lang === "es" ? es : en)[type] ?? type;
+  const sr: Record<string, string> = {
+    training: "Trening",
+    match: "Takmičenje",
+    medical: "Medicinski termin",
+    meeting: "Sastanak",
+    club: "Događaj kluba",
+    payment: "Rok plaćanja",
+  };
+  return pickLang(lang, es, en, sr)[type] ?? type;
 };
 
 export const TYPE_STYLE: Record<string, string> = {
@@ -74,24 +93,33 @@ export const ROLE_TYPE_FILTER: Record<string, CalendarEventType[]> = {
   athlete: ["training", "match", "medical", "club"],
 };
 
-export const roleOptions = (lang: Lang): { value: string; label: string }[] =>
-  lang === "es"
-    ? [
-        { value: "all", label: "Todos los roles" },
-        { value: "manager", label: "Gestor / Dirección" },
-        { value: "admin", label: "Administración" },
-        { value: "medical", label: "Staff médico" },
-        { value: "technical", label: "Entrenador" },
-        { value: "athlete", label: "Atleta" },
-      ]
-    : [
-        { value: "all", label: "All roles" },
-        { value: "manager", label: "Manager / Direction" },
-        { value: "admin", label: "Administration" },
-        { value: "medical", label: "Medical staff" },
-        { value: "technical", label: "Coach" },
-        { value: "athlete", label: "Athlete" },
-      ];
+export const roleOptions = (lang: Lang): { value: string; label: string }[] => {
+  const es = [
+    { value: "all", label: "Todos los roles" },
+    { value: "manager", label: "Gestor / Dirección" },
+    { value: "admin", label: "Administración" },
+    { value: "medical", label: "Staff médico" },
+    { value: "technical", label: "Entrenador" },
+    { value: "athlete", label: "Atleta" },
+  ];
+  const en = [
+    { value: "all", label: "All roles" },
+    { value: "manager", label: "Manager / Direction" },
+    { value: "admin", label: "Administration" },
+    { value: "medical", label: "Medical staff" },
+    { value: "technical", label: "Coach" },
+    { value: "athlete", label: "Athlete" },
+  ];
+  const sr = [
+    { value: "all", label: "Sve uloge" },
+    { value: "manager", label: "Menadžer / Uprava" },
+    { value: "admin", label: "Administracija" },
+    { value: "medical", label: "Medicinsko osoblje" },
+    { value: "technical", label: "Trener" },
+    { value: "athlete", label: "Sportista" },
+  ];
+  return pickLang(lang, es, en, sr);
+};
 
 export function TypeBadge({ type }: { type: string }) {
   const lang = useLang();
