@@ -375,7 +375,7 @@ function AnalyticsTab() {
       </Card>
 
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Evolución horas producción</h2>
+        <h2 className="mb-2 text-lg font-semibold">{tr("Evolución horas producción", "Production hours evolution", "Evolucija sati produkcije")}</h2>
         <div className="h-64">
           <ResponsiveContainer>
             <LineChart data={evol}>
