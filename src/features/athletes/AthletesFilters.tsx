@@ -91,7 +91,7 @@ export function AthletesFilters({
           <SelectItem value="all">{t("all_sections")}</SelectItem>
           {sections.map((s) => (
             <SelectItem key={s.id} value={s.id}>
-              {s.name}
+              {td(s.name)}
             </SelectItem>
           ))}
         </SelectContent>
@@ -112,7 +112,7 @@ export function AthletesFilters({
             .filter((c) => secF === "all" || c.section_id === secF)
             .map((c) => (
               <SelectItem key={c.id} value={c.id}>
-                {c.name}
+                {td(c.name)}
               </SelectItem>
             ))}
         </SelectContent>
@@ -132,7 +132,7 @@ export function AthletesFilters({
               )
               .map((g) => (
                 <SelectItem key={g.id} value={g.id}>
-                  {g.name}
+                  {td(g.name)}
                 </SelectItem>
               ))}
           </SelectContent>

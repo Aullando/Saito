@@ -230,7 +230,7 @@ function PaymentsPage() {
             <SelectItem value="all">{t("all_sections")}</SelectItem>
             {sections.map((s) => (
               <SelectItem key={s.id} value={s.id}>
-                {s.name}
+                {td(s.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -249,7 +249,7 @@ function PaymentsPage() {
             <SelectItem value="all">{t("all_categories")}</SelectItem>
             {categories.map((c) => (
               <SelectItem key={c.id} value={c.id}>
-                {c.name}
+                {td(c.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -321,10 +321,10 @@ function PaymentsPage() {
                     </td>
                     <td className="px-5 py-3">{p.subscription ?? "—"}</td>
                     <td className="px-5 py-3 text-muted-foreground">
-                      {sections.find((s) => s.id === p.section_id)?.name}
+                      {td(sections.find((s) => s.id === p.section_id)?.name ?? "")}
                     </td>
                     <td className="px-5 py-3 text-muted-foreground">
-                      {categories.find((c) => c.id === p.category_id)?.name}
+                      {td(categories.find((c) => c.id === p.category_id)?.name ?? "")}
                     </td>
                     <td className="px-5 py-3 tabular-nums">{formatMoneyEs(Number(p.amount))}</td>
                     <td className="px-5 py-3">

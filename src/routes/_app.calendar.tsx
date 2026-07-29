@@ -622,7 +622,7 @@ function CalendarPage() {
                           <SelectContent>
                             {groups.map((g) => (
                               <SelectItem key={g.id} value={g.id}>
-                                {g.name}
+                                {td(g.name)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -722,7 +722,7 @@ function CalendarPage() {
             <SelectItem value="all">{t("all_sections")}</SelectItem>
             {sections.map((s) => (
               <SelectItem key={s.id} value={s.id}>
-                {s.name}
+                {td(s.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -743,7 +743,7 @@ function CalendarPage() {
               .filter((c) => secF === "all" || c.section_id === secF)
               .map((c) => (
                 <SelectItem key={c.id} value={c.id}>
-                  {c.name}
+                  {td(c.name)}
                 </SelectItem>
               ))}
           </SelectContent>
@@ -762,7 +762,7 @@ function CalendarPage() {
               )
               .map((g) => (
                 <SelectItem key={g.id} value={g.id}>
-                  {g.name}
+                  {td(g.name)}
                 </SelectItem>
               ))}
           </SelectContent>
@@ -977,7 +977,7 @@ function CalendarPage() {
                             </div>
                             <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
                               <TypeBadge type={o.event.type} />
-                              {group && <span>· {group.name}</span>}
+                              {group && <span>· {td(group.name)}</span>}
                               {facilityFor(o.event) && <span>· {facilityFor(o.event)}</span>}
                             </div>
                           </div>
@@ -1378,7 +1378,7 @@ function CalendarPage() {
                     <SelectContent>
                       {groups.map((g) => (
                         <SelectItem key={g.id} value={g.id}>
-                          {g.name}
+                          {td(g.name)}
                         </SelectItem>
                       ))}
                     </SelectContent>

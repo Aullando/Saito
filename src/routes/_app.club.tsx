@@ -232,7 +232,7 @@ function ClubPage() {
                       <SelectContent>
                         {sections.map((s) => (
                           <SelectItem key={s.id} value={s.id}>
-                            {s.name}
+                            {td(s.name)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -290,7 +290,7 @@ function ClubPage() {
                       <SelectContent>
                         {sections.map((s) => (
                           <SelectItem key={s.id} value={s.id}>
-                            {s.name}
+                            {td(s.name)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -311,7 +311,7 @@ function ClubPage() {
                           .filter((c) => c.sectionId === newGroup.sectionId)
                           .map((c) => (
                             <SelectItem key={c.id} value={c.id}>
-                              {c.name}
+                              {td(c.name)}
                             </SelectItem>
                           ))}
                       </SelectContent>
@@ -399,7 +399,7 @@ function ClubPage() {
                       <SelectContent>
                         {sections.map((s) => (
                           <SelectItem key={s.id} value={s.id}>
-                            {s.name}
+                            {td(s.name)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -488,7 +488,7 @@ function ClubPage() {
               <Card key={f.id} className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="font-semibold text-slate-900">{f.name}</div>
+                    <div className="font-semibold text-slate-900">{td(f.name)}</div>
                     <div className="mt-0.5 flex items-center gap-1 text-xs text-slate-500">
                       <MapPin className="h-3 w-3" /> {f.location}
                     </div>
@@ -508,7 +508,7 @@ function ClubPage() {
                 <div className="flex flex-wrap gap-1.5">
                   {f.sportSections.map((sid) => {
                     const s = sections.find((x) => x.id === sid);
-                    return s ? <Pill key={sid}>{s.name}</Pill> : null;
+                    return s ? <Pill key={sid}>{td(s.name)}</Pill> : null;
                   })}
                 </div>
 
@@ -539,7 +539,7 @@ function ClubPage() {
               <Card key={s.id} className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <div className="font-semibold text-slate-900">{s.name}</div>
+                    <div className="font-semibold text-slate-900">{td(s.name)}</div>
                     <div className="text-xs text-slate-500">{tr("Sección deportiva", "Sports section", "Sportska sekcija")}</div>
                   </div>
                   <button
@@ -548,8 +548,8 @@ function ClubPage() {
                       if (
                         confirm(
                           tr(
-                            `Eliminar la sección "${s.name}" y todos sus grupos?`,
-                            `Delete section "${s.name}" and all its groups?`,
+                            `Eliminar la sección "${td(s.name)}" y todos sus grupos?`,
+                            `Delete section "${td(s.name)}" and all its groups?`,
                           ),
                         )
                       ) {
@@ -581,7 +581,7 @@ function ClubPage() {
               return (
                 <Card key={s.id} className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="font-semibold text-slate-900">{s.name}</div>
+                    <div className="font-semibold text-slate-900">{td(s.name)}</div>
                     <span className="text-xs text-slate-400">
                       {tr(`${cats.length} categorías`, `${cats.length} categories`, `${cats.length} kategorija`)}
                     </span>
@@ -597,14 +597,14 @@ function ClubPage() {
                         key={c.id}
                         className="group inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
                       >
-                        {c.name}
+                        {td(c.name)}
                         <button
                           onClick={() => {
                             if (
                               confirm(
                                 tr(
-                                  `Eliminar la categoría "${c.name}"?`,
-                                  `Delete category "${c.name}"?`,
+                                  `Eliminar la categoría "${td(c.name)}"?`,
+                                  `Delete category "${td(c.name)}"?`,
                                 ),
                               )
                             ) {
@@ -639,7 +639,7 @@ function ClubPage() {
                 <Card key={g.id} className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <div className="font-semibold text-slate-900">{g.name}</div>
+                      <div className="font-semibold text-slate-900">{td(g.name)}</div>
                       <div className="text-xs text-slate-500">
                         {sec?.name ?? "—"} · {cat?.name ?? "—"}
                       </div>
@@ -649,7 +649,7 @@ function ClubPage() {
                       onClick={() => {
                         if (
                           confirm(
-                            tr(`Eliminar el grupo "${g.name}"?`, `Delete group "${g.name}"?`, `Obrisati grupu "${g.name}"?`),
+                            tr(`Eliminar el grupo "${td(g.name)}"?`, `Delete group "${td(g.name)}"?`, `Obrisati grupu "${td(g.name)}"?`),
                           )
                         ) {
                           deleteGroup(g.id);
@@ -808,7 +808,7 @@ function ClubHero({
                   className="flex items-center gap-2 text-base font-medium text-foreground"
                 >
                   <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span>{f.name}</span>
+                  <span>{td(f.name)}</span>
                 </li>
               ))
             )}

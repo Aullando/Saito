@@ -197,7 +197,7 @@ function FeesPage() {
               onClick={() => setActiveSec(s.id)}
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${isActive ? "bg-primary text-primary-foreground shadow-sm" : "bg-card text-foreground hover:bg-muted border border-border"}`}
             >
-              {s.name}
+              {td(s.name)}
             </button>
           );
         })}
@@ -360,7 +360,7 @@ function FeeTable({
         <tbody>
           {rows.map((f) => (
             <tr key={f.id} className="border-t border-border hover:bg-muted/30">
-              <td className="px-2 py-2.5 font-medium">{f.name}</td>
+              <td className="px-2 py-2.5 font-medium">{td(f.name)}</td>
               <td className="px-2 py-2.5">{formatMoneyEs(Number(f.amount))}</td>
               {kind === "fee" ? (
                 <td className="px-2 py-2.5">{frequencyLabel(f.frequency as "Monthly", lang)}</td>

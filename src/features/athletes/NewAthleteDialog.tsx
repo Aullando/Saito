@@ -140,7 +140,7 @@ export function NewAthleteDialog({ orgId, sections, categories, groups }: NewAth
               <SelectContent>
                 {sections.map((s) => (
                   <SelectItem key={s.id} value={s.id}>
-                    {s.name}
+                    {td(s.name)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -160,7 +160,7 @@ export function NewAthleteDialog({ orgId, sections, categories, groups }: NewAth
                   .filter((c) => c.section_id === newAth.sectionId)
                   .map((c) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.name}
+                      {td(c.name)}
                     </SelectItem>
                   ))}
               </SelectContent>
@@ -180,7 +180,7 @@ export function NewAthleteDialog({ orgId, sections, categories, groups }: NewAth
                   .filter((g) => g.category_id === newAth.categoryId)
                   .map((g) => (
                     <SelectItem key={g.id} value={g.id}>
-                      {g.name}
+                      {td(g.name)}
                     </SelectItem>
                   ))}
               </SelectContent>
