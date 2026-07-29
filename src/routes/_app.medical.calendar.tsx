@@ -97,7 +97,10 @@ function MedicalCalendarPage() {
     },
   });
 
-  const athletes = demoOrEmpty(athletesQ.data, DEMO_ATHLETES_MIN_ROWS);
+  const storeAthletes = useData((s) => s.athletes);
+  const athletes = demo
+    ? storeAthletes.map((a) => ({ id: a.id, first_name: a.firstName, last_name: a.lastName }))
+    : demoOrEmpty(athletesQ.data, DEMO_ATHLETES_MIN_ROWS);
   const appointments = (demo
     ? storeAppts
     : demoOrEmpty(apptQ.data, DEMO_MEDICAL_APPOINTMENTS_ROWS)) as DBAppt[];
