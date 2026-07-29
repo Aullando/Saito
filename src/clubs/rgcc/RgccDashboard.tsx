@@ -36,22 +36,28 @@ import {
   Legend,
 } from "recharts";
 
-const TABS = ["Resumen", "Analytics", "Control Horas"] as const;
-type Tab = (typeof TABS)[number];
+const TAB_KEYS = ["resumen", "analytics", "control-horas"] as const;
+type Tab = (typeof TAB_KEYS)[number];
 
 export function RgccDashboard() {
+  const tr = useTr();
   const { club } = useClub();
-  const [tab, setTab] = useState<Tab>("Resumen");
+  const [tab, setTab] = useState<Tab>("resumen");
+  const labels: Record<Tab, string> = {
+    resumen: tr("Resumen", "Overview", "Pregled"),
+    analytics: tr("Analytics", "Analytics", "Analitika"),
+    "control-horas": tr("Control Horas", "Hours Control", "Kontrola sati"),
+  };
 
   return (
     <>
       <PageHeader
         title={`Dashboard · ${club.brand.shortName}`}
-        subtitle="Resumen operativo del club"
+        subtitle={tr("Resumen operativo del club", "Club operations overview", "Operativni pregled kluba")}
       />
 
       <div className="mb-5 flex items-center gap-1 border-b border-border overflow-x-auto">
-        {TABS.map((t) => (
+        {TAB_KEYS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -61,18 +67,19 @@ export function RgccDashboard() {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {t}
+            {labels[t]}
             {tab === t && <span className="absolute left-2 right-2 bottom-0 h-[2px] bg-primary" />}
           </button>
         ))}
       </div>
 
-      {tab === "Resumen" && <ResumenTab />}
-      {tab === "Analytics" && <AnalyticsTab />}
-      {tab === "Control Horas" && <ControlHorasTab />}
+      {tab === "resumen" && <ResumenTab />}
+      {tab === "analytics" && <AnalyticsTab />}
+      {tab === "control-horas" && <ControlHorasTab />}
     </>
   );
 }
+
 
 // ─── Resumen ────────────────────────────────────────────────────────────────
 
