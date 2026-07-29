@@ -36,7 +36,7 @@ interface AuthState {
   avatars: Record<string, string>;
   mobileNavOpen: boolean;
   sidebarCollapsed: boolean;
-  langOverride: "es" | "en" | null;
+  langOverride: "es" | "en" | "sr" | null;
   setUser: (id: string | null) => void;
   setAvatar: (id: string, dataUrl: string) => void;
   removeAvatar: (id: string) => void;
