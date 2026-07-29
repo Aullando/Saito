@@ -204,6 +204,24 @@ export function Topbar() {
                   </li>
                 ))}
               </ul>
+              <div className="border-t border-border p-2">
+                <ResetDemoDialog
+                  trigger={
+                    <button
+                      type="button"
+                      onClick={() => setOpen(false)}
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-amber-700 hover:bg-amber-50 dark:text-amber-300 dark:hover:bg-amber-950/40"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      {lang === "es"
+                        ? "Reiniciar demo"
+                        : lang === "sr"
+                          ? "Resetuj demo"
+                          : "Reset demo"}
+                    </button>
+                  }
+                />
+              </div>
             </div>
           )}
         </div>
