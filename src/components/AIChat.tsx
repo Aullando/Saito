@@ -14,12 +14,6 @@ import {
 } from "@/clubs/rgcc/aiContext";
 import { resolveRgccIdentity } from "@/clubs/rgcc/identity";
 import {
-  buildCnsoContextFromIdentity,
-  cnsoLocalFallback,
-  cnsoSuggestions,
-} from "@/clubs/cnso/aiContext";
-import { resolveCnsoIdentity } from "@/clubs/cnso/identity";
-import {
   gffFederation,
   gffTeams,
   gffPlayers,
