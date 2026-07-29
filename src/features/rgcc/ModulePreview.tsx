@@ -266,7 +266,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           <div className="space-y-2">
             {RGCC_WORKOUTS.map((w) => (
               <Card key={w.id}>
-                <div className="font-semibold">{w.title}</div>
+                <div className="font-semibold">{td(w.title)}</div>
                 <div className="text-xs text-muted-foreground">
                   {w.memberNumber} · {w.coachName} · {td(w.status)}
                 </div>
@@ -275,6 +275,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                 </div>
               </Card>
             ))}
+
           </div>
         </>
       );
