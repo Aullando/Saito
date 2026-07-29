@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useData } from "@/lib/store";
-import { useTr } from "@/lib/i18n";
+import { useTr, useLang } from "@/lib/i18n";
 import { toast } from "sonner";
 import {
   Plus,
@@ -45,6 +45,7 @@ import type { Role } from "@/lib/types";
 import {
   DAY_NAMES_ES,
   DAY_NAMES_EN,
+  DAY_NAMES_SR,
   categoryName,
   Section,
   RoleCard,
@@ -63,6 +64,7 @@ export const Route = createFileRoute("/_app/club")({
 
 function ClubPage() {
   const tr = useTr();
+  const lang = useLang();
   const sections = useData((s) => s.sections);
   const categories = useData((s) => s.categories);
   const groups = useData((s) => s.groups);
@@ -97,7 +99,7 @@ function ClubPage() {
 
   // ───── Horario semanal por grupo (derivado de events training) ─────
   const groupSchedules = useMemo(() => {
-    const DAY_NAMES = tr("es", "en", "sr") === "es" ? DAY_NAMES_ES : DAY_NAMES_EN;
+    const DAY_NAMES = lang === "es" ? DAY_NAMES_ES : lang === "sr" ? DAY_NAMES_SR : DAY_NAMES_EN;
     const map = new Map<string, Set<string>>();
     for (const e of events) {
       if (e.type !== "training" || !e.groupId) continue;
@@ -118,7 +120,7 @@ function ClubPage() {
       );
     });
     return out;
-  }, [events, tr]);
+  }, [events, lang]);
 
 
   // ───── Staff por grupo (heurística: técnicos repartidos por sección) ─────

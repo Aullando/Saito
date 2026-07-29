@@ -213,7 +213,7 @@ export function AIChat() {
 
   if (!u) return null;
   const role = u.role;
-  const lang = u.language; // "es" | "en"
+  const lang = u.language; // "es" | "en" | "sr"
   const isRgcc = club.id === "rgcc";
   const isCnso = club.id === "cnso";
   const isGff = club.id === "gff-demo";
@@ -228,18 +228,30 @@ export function AIChat() {
       : isCnso
         ? cnsoSuggestions(role, user, roles)
         : ((lang === "en" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
-  const placeholder = isGff ? "اكتب سؤالك…" : lang === "en" ? "Ask something…" : "Pregunta algo…";
-  const thinking = isGff ? "جارٍ التفكير…" : lang === "en" ? "Thinking…" : "Pensando…";
+  const placeholder = isGff
+    ? "اكتب سؤالك…"
+    : lang === "en" ? "Ask something…"
+    : lang === "sr" ? "Postavite pitanje…"
+    : "Pregunta algo…";
+  const thinking = isGff
+    ? "جارٍ التفكير…"
+    : lang === "en" ? "Thinking…"
+    : lang === "sr" ? "Razmišljam…"
+    : "Pensando…";
   const emptyHint = isGff
     ? "مساعد ذكاء اصطناعي سياقي مع وصول إلى بيانات الاتحاد. اسأل ما تشاء:"
     : lang === "en"
       ? "Contextual AI assistant with access to club data. Ask anything:"
-      : "Asistente IA contextual con acceso a los datos del club. Pregunta lo que quieras:";
+      : lang === "sr"
+        ? "Kontekstualni AI asistent sa pristupom podacima kluba. Pitajte bilo šta:"
+        : "Asistente IA contextual con acceso a los datos del club. Pregunta lo que quieras:";
   const connError = isGff
     ? "خطأ في الاتصال بالذكاء الاصطناعي."
     : lang === "en"
       ? "AI connection error."
-      : "Error de conexión con la IA.";
+      : lang === "sr"
+        ? "Greška u vezi sa AI."
+        : "Error de conexión con la IA.";
 
   const ask = async (q: string) => {
     if (!q.trim() || loading) return;
@@ -287,7 +299,9 @@ export function AIChat() {
           ? "خطأ في الاتصال بالذكاء الاصطناعي."
           : lang === "en"
             ? "Could not contact the AI."
-            : "Error al contactar la IA.";
+            : lang === "sr"
+              ? "Nije moguće kontaktirati AI."
+              : "Error al contactar la IA.";
         try {
           const j = JSON.parse(errTxt);
           if (j.error) errMsg = j.error;
@@ -299,13 +313,17 @@ export function AIChat() {
             ? "طلبات كثيرة جدًا. انتظر لحظة."
             : lang === "en"
               ? "Too many requests. Try again shortly."
-              : "Demasiadas peticiones. Espera un momento.";
+              : lang === "sr"
+                ? "Previše zahteva. Pokušajte ponovo za trenutak."
+                : "Demasiadas peticiones. Espera un momento.";
         if (resp.status === 402)
           errMsg = isGff
             ? "لا توجد أرصدة ذكاء اصطناعي."
             : lang === "en"
               ? "No AI credits available."
-              : "Sin créditos de IA disponibles.";
+              : lang === "sr"
+                ? "Nema dostupnih AI kredita."
+                : "Sin créditos de IA disponibles.";
         // RGCC / CNSO fallback local cuando la IA no responde.
         if (isRgcc && rgccIdentity) {
           const local = rgccLocalFallback(role, context as ReturnType<typeof buildRgccContextFromIdentity>, q);
