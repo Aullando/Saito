@@ -52,10 +52,6 @@ function MobileToolRoute() {
     if (tool === "health") return <GffMobileHealth />;
     if (tool === "performance") return <GffMobilePerformance />;
   }
-    if (tool === "session") return <CnsoMobileSession />;
-    if (tool === "health") return <CnsoMobileHealth />;
-    if (tool === "performance") return <CnsoMobilePerformance />;
-  }
   return <MobileTool />;
 }
 
