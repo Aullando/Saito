@@ -131,7 +131,7 @@ function Biblioteca() {
                 <div>
                   <div className="font-semibold">{r.name}</div>
                   <div className="text-xs text-muted-foreground">
-                    {r.level} · {r.durationMin} min
+                    {td(r.level)} · {r.durationMin} min
                   </div>
                 </div>
                 <Pill tone="info">{r.exerciseIds.length} {tr("ej.", "ex.", "vež.")}</Pill>
