@@ -401,7 +401,7 @@ function CalendarPage() {
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
-  const monthLabel = cursor.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+  const monthLabel = cursor.toLocaleDateString(lang === "sr" ? "sr-Latn-RS" : lang === "en" ? "en-GB" : "es-ES", { month: "long", year: "numeric" });
 
   const grid = useMemo(() => buildMonthGrid(year, month), [year, month]);
 
@@ -845,7 +845,7 @@ function CalendarPage() {
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <span className="min-w-[200px] text-center text-sm font-medium capitalize">
-            {dayCursor.toLocaleDateString(undefined, {
+            {dayCursor.toLocaleDateString(lang === "sr" ? "sr-Latn-RS" : lang === "en" ? "en-GB" : "es-ES", {
               weekday: "long",
               day: "numeric",
               month: "long",
