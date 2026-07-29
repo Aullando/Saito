@@ -141,6 +141,9 @@ interface DataState {
   conversations: Conversation[];
   appointments: MedicalAppointment[];
   attendance: Record<string, Record<string, "present" | "absent" | "doubt" | "injured">>;
+  incidents: Incident[];
+  aiModules: Record<AiModuleKey, boolean>;
+  mobileAbsences: Record<string, boolean>; // athleteUserId -> notified today
 
   addOrganization: (o: Omit<Organization, "id" | "createdAt" | "updatedAt">) => string;
   updateOrganization: (id: string, patch: Partial<Omit<Organization, "id" | "createdAt">>) => void;
