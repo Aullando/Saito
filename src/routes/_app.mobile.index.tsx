@@ -62,8 +62,11 @@ function DefaultMobileHome() {
 /* ─────────────── ATHLETE HOME ─────────────── */
 function AthleteHome({ event }: { event: Ev }) {
   const tr = useTr();
+  const user = useCurrentUser();
   const [absenceOpen, setAbsenceOpen] = useState(false);
-  const [absenceNotified, setAbsenceNotified] = useState(false);
+  const absenceNotified = useData((s) => (user ? !!s.mobileAbsences[user.id] : false));
+  const setMobileAbsence = useData((s) => s.setMobileAbsence);
+  const notifyAbsence = useSessionLocal((s) => s.notifyAbsence);
   const [improveOpen, setImproveOpen] = useState(false);
 
   return (
@@ -93,7 +96,7 @@ function AthleteHome({ event }: { event: Ev }) {
             <Check className="h-4 w-4" /> {tr("Ausencia notificada", "Absence notified", "Odsustvo prijavljeno")}
           </span>
           <button
-            onClick={() => setAbsenceNotified(false)}
+            onClick={() => user && setMobileAbsence(user.id, false)}
             className="text-[12px] font-semibold underline"
           >
             {tr("Deshacer", "Undo", "Poništi")}
