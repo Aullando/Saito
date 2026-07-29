@@ -527,6 +527,7 @@ function StatCard({ label, value, color }: { label: string; value: number; color
 // TEAM — grupo / convocatoria del entrenador con nadadores
 // ============================================================================
 export function CnsoMobileTeam() {
+  const tdf = useTdField();
   const user = useCurrentUser();
   const isCoach = user?.role === "technical" || user?.role === "manager";
   const coach = getDemoCoach();
