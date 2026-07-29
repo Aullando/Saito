@@ -221,7 +221,7 @@ export function cnsoSuggestions(
     },
   } as const;
   const scope = id.scope === "direccion" ? "direccion" : id.scope === "tecnico" ? "tecnico" : "socio";
-  return dict[scope][lang];
+  return [...dict[scope][lang]];
 }
 
 /** Resolver determinista local — fallback rápido cuando la IA no responde. */
