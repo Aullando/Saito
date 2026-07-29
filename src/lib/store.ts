@@ -43,7 +43,7 @@ interface AuthState {
   setMobileNavOpen: (open: boolean) => void;
   setSidebarCollapsed: (v: boolean) => void;
   toggleSidebarCollapsed: () => void;
-  setLangOverride: (lang: "es" | "en" | null) => void;
+  setLangOverride: (lang: "es" | "en" | "sr" | null) => void;
 }
 
 export const useAuth = create<AuthState>()(

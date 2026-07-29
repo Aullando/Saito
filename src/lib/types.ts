@@ -1,5 +1,5 @@
 export type Role = "sysadmin" | "admin" | "manager" | "technical" | "medical" | "athlete";
-export type Lang = "en" | "es";
+export type Lang = "en" | "es" | "sr";
 
 export interface User {
   id: string;
