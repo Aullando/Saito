@@ -354,7 +354,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                     )}
                   </div>
                   <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                    {c.category}
+                    {td(c.category)}
                   </span>
                 </div>
                 <div className="mt-1 text-[11px] text-muted-foreground">
