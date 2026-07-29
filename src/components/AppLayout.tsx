@@ -4,7 +4,7 @@ import { Topbar } from "./Topbar";
 import { AIChat } from "./AIChat";
 import { DataSourceBadge } from "./DataSourceBadge";
 import { WorkspaceFrame } from "./WorkspaceFrame";
-import { DemoBar } from "./DemoBar";
+
 import { useCurrentUser, useAuth } from "@/lib/store";
 import { Navigate } from "@tanstack/react-router";
 
@@ -40,8 +40,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
       data-role={user.role}
       style={{ background: "#F7F9FC", ...roleStyle }}
     >
-      <DemoBar />
       <Topbar />
+
+
       <Sidebar />
       <div className="transition-[padding] duration-200">
         <div className="hidden md:block" style={{ paddingLeft: collapsed ? 72 : 264 }}>
