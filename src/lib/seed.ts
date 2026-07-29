@@ -442,10 +442,16 @@ export const EVENTS: CalendarEvent[] = (() => {
     0: [], // Domingo descanso
   };
 
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day);
-    const dow = date.getDay();
+  // Rango de 6 semanas: 14 días antes a 28 días después de hoy.
+  // Cubre el mes actual con margen para que semana/mes se vean llenos
+  // sin importar en qué día caiga hoy.
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
+  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 28);
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    const dow = cursor.getDay();
     const items = trainings[dow] ?? [];
+    const dayDate = new Date(cursor);
 
     items.forEach((item) => {
       const grp = GROUPS.find((g) => g.id === item.gid);
@@ -453,7 +459,7 @@ export const EVENTS: CalendarEvent[] = (() => {
       const isMatch = item.title.startsWith("Partido");
       evs.push({
         id: `ev-${id++}`,
-        date: iso(date),
+        date: iso(dayDate),
         startTime: item.time,
         title: item.title,
         sectionId: grp.sectionId,
@@ -463,23 +469,24 @@ export const EVENTS: CalendarEvent[] = (() => {
       });
     });
 
-    // Reunión técnica un lunes al mes
-    if (dow === 1 && day <= 7) {
+    // Reunión técnica el primer lunes de cada mes que caiga en el rango
+    if (dow === 1 && dayDate.getDate() <= 7) {
       evs.push({
         id: `ev-${id++}`,
-        date: iso(date),
+        date: iso(dayDate),
         startTime: "20:30",
         title: "Reunión de coordinación técnica",
         type: "meeting",
       });
     }
+
+    cursor.setDate(cursor.getDate() + 1);
   }
 
-  // Algunas citas médicas dispersas
-  const medDays = [5, 12, 19, 26].filter((d) => d <= daysInMonth);
-  medDays.forEach((d) => {
-    const date = new Date(year, month, d);
-    const ath = ATHLETES[d % ATHLETES.length];
+  // Citas médicas dispersas: cada ~7 días en el rango.
+  for (let offset = -10; offset <= 24; offset += 7) {
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset);
+    const ath = ATHLETES[(Math.abs(offset) + 3) % ATHLETES.length];
     evs.push({
       id: `ev-${id++}`,
       date: iso(date),
@@ -489,6 +496,23 @@ export const EVENTS: CalendarEvent[] = (() => {
       athleteId: ath.id,
       staffId: "u-med",
       type: "medical",
+    });
+  }
+
+  // Eventos de club puntuales (asamblea, jornada de puertas abiertas)
+  const clubEvents: Array<{ offset: number; time: string; title: string }> = [
+    { offset: -7, time: "19:00", title: "Asamblea de socios" },
+    { offset: 10, time: "10:00", title: "Jornada de puertas abiertas" },
+    { offset: 21, time: "18:30", title: "Presentación equipos de competición" },
+  ];
+  clubEvents.forEach((e) => {
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + e.offset);
+    evs.push({
+      id: `ev-${id++}`,
+      date: iso(date),
+      startTime: e.time,
+      title: e.title,
+      type: "meeting",
     });
   });
 
