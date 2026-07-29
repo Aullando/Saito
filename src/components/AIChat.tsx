@@ -258,9 +258,7 @@ export function AIChat() {
         ? buildGffContext(role)
         : isRgcc && rgccIdentity
           ? buildRgccContextFromIdentity(rgccIdentity)
-          : isCnso && cnsoIdentity
-            ? buildCnsoContextFromIdentity(cnsoIdentity)
-            : buildContext(role, data);
+          : buildContext(role, data);
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData?.session?.access_token;
