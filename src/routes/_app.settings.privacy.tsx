@@ -107,7 +107,7 @@ function PrivacyMockup() {
             <tbody>
               {PERMISSIONS.map((p) => (
                 <tr key={p.key} className="border-t border-border">
-                  <td className="px-3 py-2.5 font-medium">{lang === "es" ? p.label_es : p.label_en}</td>
+                  <td className="px-3 py-2.5 font-medium">{lang === "es" ? p.label_es : lang === "sr" ? p.label_sr : p.label_en}</td>
                   {ROLES.map((r) => (
                     <td key={r} className="px-3 py-2.5"><PermBadge level={p.matrix[r]} lang={lang} /></td>
                   ))}
@@ -139,8 +139,9 @@ function PrivacyMockup() {
                   <td className="px-3 py-2">
                     <span className="rounded-full border border-border px-2 py-0.5 text-[11px] uppercase tracking-wider">{l.role}</span>
                   </td>
-                  <td className="px-3 py-2">{lang === "es" ? l.action : l.action_en}</td>
-                  <td className="px-3 py-2 text-muted-foreground">{lang === "es" ? l.area : l.area_en}</td>
+                  <td className="px-3 py-2">{lang === "es" ? l.action : lang === "sr" ? l.action_sr : l.action_en}</td>
+                  <td className="px-3 py-2 text-muted-foreground">{lang === "es" ? l.area : lang === "sr" ? l.area_sr : l.area_en}</td>
+
                 </tr>
               ))}
             </tbody>
@@ -157,7 +158,7 @@ function PrivacyMockup() {
                 <h4 className="text-sm font-semibold">{s.name}</h4>
                 <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-primary">{s.region}</span>
               </div>
-              <p className="mt-1.5 text-xs text-muted-foreground">{lang === "es" ? s.purpose : s.purpose_en}</p>
+              <p className="mt-1.5 text-xs text-muted-foreground">{lang === "es" ? s.purpose : lang === "sr" ? s.purpose_sr : s.purpose_en}</p>
               <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 {t("Contrato de encargado firmado", "DPA signed")}
@@ -181,9 +182,10 @@ function PrivacyMockup() {
             <tbody>
               {RETENTION.map((r) => (
                 <tr key={r.area} className="border-t border-border">
-                  <td className="px-3 py-2.5 font-medium">{lang === "es" ? r.area : r.area_en}</td>
-                  <td className="px-3 py-2.5">{lang === "es" ? r.period : r.period_en}</td>
-                  <td className="px-3 py-2.5 text-muted-foreground">{lang === "es" ? r.basis : r.basis_en}</td>
+                  <td className="px-3 py-2.5 font-medium">{lang === "es" ? r.area : lang === "sr" ? r.area_sr : r.area_en}</td>
+                  <td className="px-3 py-2.5">{lang === "es" ? r.period : lang === "sr" ? r.period_sr : r.period_en}</td>
+                  <td className="px-3 py-2.5 text-muted-foreground">{lang === "es" ? r.basis : lang === "sr" ? r.basis_sr : r.basis_en}</td>
+
                 </tr>
               ))}
             </tbody>
@@ -204,7 +206,7 @@ function PrivacyMockup() {
             <div key={m.module} className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
               <div className="flex items-center gap-3">
                 {m.on ? <Eye className="h-4 w-4 text-primary" /> : <XCircle className="h-4 w-4 text-muted-foreground" />}
-                <span className="text-sm font-medium">{lang === "es" ? m.module : m.module_en}</span>
+                <span className="text-sm font-medium">{lang === "es" ? m.module : lang === "sr" ? m.module_sr : m.module_en}</span>
               </div>
               <button
                 type="button"
