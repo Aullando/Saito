@@ -401,7 +401,7 @@ function CalendarPage() {
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
-  const monthLabel = cursor.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+  const monthLabel = cursor.toLocaleDateString(lang === "sr" ? "sr-Latn-RS" : lang === "en" ? "en-GB" : "es-ES", { month: "long", year: "numeric" });
 
   const grid = useMemo(() => buildMonthGrid(year, month), [year, month]);
 
@@ -622,7 +622,7 @@ function CalendarPage() {
                           <SelectContent>
                             {groups.map((g) => (
                               <SelectItem key={g.id} value={g.id}>
-                                {g.name}
+                                {td(g.name)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -722,7 +722,7 @@ function CalendarPage() {
             <SelectItem value="all">{t("all_sections")}</SelectItem>
             {sections.map((s) => (
               <SelectItem key={s.id} value={s.id}>
-                {s.name}
+                {td(s.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -743,7 +743,7 @@ function CalendarPage() {
               .filter((c) => secF === "all" || c.section_id === secF)
               .map((c) => (
                 <SelectItem key={c.id} value={c.id}>
-                  {c.name}
+                  {td(c.name)}
                 </SelectItem>
               ))}
           </SelectContent>
@@ -762,7 +762,7 @@ function CalendarPage() {
               )
               .map((g) => (
                 <SelectItem key={g.id} value={g.id}>
-                  {g.name}
+                  {td(g.name)}
                 </SelectItem>
               ))}
           </SelectContent>
@@ -845,7 +845,7 @@ function CalendarPage() {
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <span className="min-w-[200px] text-center text-sm font-medium capitalize">
-            {dayCursor.toLocaleDateString(undefined, {
+            {dayCursor.toLocaleDateString(lang === "sr" ? "sr-Latn-RS" : lang === "en" ? "en-GB" : "es-ES", {
               weekday: "long",
               day: "numeric",
               month: "long",
@@ -977,7 +977,7 @@ function CalendarPage() {
                             </div>
                             <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
                               <TypeBadge type={o.event.type} />
-                              {group && <span>· {group.name}</span>}
+                              {group && <span>· {td(group.name)}</span>}
                               {facilityFor(o.event) && <span>· {facilityFor(o.event)}</span>}
                             </div>
                           </div>
@@ -1378,7 +1378,7 @@ function CalendarPage() {
                     <SelectContent>
                       {groups.map((g) => (
                         <SelectItem key={g.id} value={g.id}>
-                          {g.name}
+                          {td(g.name)}
                         </SelectItem>
                       ))}
                     </SelectContent>

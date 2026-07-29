@@ -167,7 +167,7 @@ function AttendancePage() {
               <SelectItem value="all">{tr("Grupo de la sesión", "Session group", "Grupa sesije")}</SelectItem>
               {GROUPS.map((g) => (
                 <SelectItem key={g.id} value={g.id}>
-                  {g.name}
+                  {td(g.name)}
                 </SelectItem>
               ))}
             </SelectContent>

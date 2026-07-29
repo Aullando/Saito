@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import type { SectionRow, CategoryRow, GroupRow } from "./data";
 
 export interface AthletesFiltersProps {
@@ -48,6 +49,7 @@ export function AthletesFilters({
   isMedical,
 }: AthletesFiltersProps) {
   const t = useT();
+  const td = useTd();
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2">
       <div className="relative">
@@ -89,7 +91,7 @@ export function AthletesFilters({
           <SelectItem value="all">{t("all_sections")}</SelectItem>
           {sections.map((s) => (
             <SelectItem key={s.id} value={s.id}>
-              {s.name}
+              {td(s.name)}
             </SelectItem>
           ))}
         </SelectContent>
@@ -110,7 +112,7 @@ export function AthletesFilters({
             .filter((c) => secF === "all" || c.section_id === secF)
             .map((c) => (
               <SelectItem key={c.id} value={c.id}>
-                {c.name}
+                {td(c.name)}
               </SelectItem>
             ))}
         </SelectContent>
@@ -130,7 +132,7 @@ export function AthletesFilters({
               )
               .map((g) => (
                 <SelectItem key={g.id} value={g.id}>
-                  {g.name}
+                  {td(g.name)}
                 </SelectItem>
               ))}
           </SelectContent>

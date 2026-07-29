@@ -171,7 +171,7 @@ function MedicalCalendarPage() {
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
-  const monthLabel = cursor.toLocaleDateString(lang === "es" ? "es" : "en", { month: "long", year: "numeric" });
+  const monthLabel = cursor.toLocaleDateString(lang === "sr" ? "sr-Latn-RS" : lang === "en" ? "en-GB" : "es-ES", { month: "long", year: "numeric" });
   const grid = useMemo(() => buildMonthGrid(year, month), [year, month]);
   const filtered = appointments.filter((a) => athF === "all" || a.athlete_id === athF);
   const fmtTime = (t: string | null) => (t ? t.slice(0, 5) : "");

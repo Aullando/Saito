@@ -6,6 +6,8 @@ import { PageHeader, Card } from "@/components/ui-kit";
 import { CopilotoCard, DEFAULT_ADMIN_SUGGESTIONS } from "@/components/CopilotoCard";
 import { useCurrentUser, useData } from "@/lib/store";
 import { useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
+import { typeLabel } from "@/features/calendar/helpers";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
 
@@ -65,6 +67,7 @@ function DashboardSwitch() {
 function CommandCenter() {
   const user = useCurrentUser();
   const tr = useTr();
+  const td = useTd();
   const athletes = useData((s) => s.athletes);
   const sections = useData((s) => s.sections);
   const groups = useData((s) => s.groups);
@@ -381,7 +384,7 @@ function CommandCenter() {
                   <div className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <span className="text-[10px] font-semibold uppercase">
                       {new Date(e.date).toLocaleDateString(
-                        user?.language === "en" ? "en-GB" : "es-ES",
+                        user?.language === "en" ? "en-GB" : user?.language === "sr" ? "sr-Latn-RS" : "es-ES",
                         { month: "short" },
                       )}
                     </span>
@@ -390,12 +393,12 @@ function CommandCenter() {
                     </span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold">{e.title}</div>
+                    <div className="truncate text-sm font-semibold">{td(e.title)}</div>
                     <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       {e.startTime}
                       <span>·</span>
-                      <span className="capitalize">{e.type}</span>
+                      <span>{typeLabel(e.type, user?.language ?? "es")}</span>
                     </div>
                   </div>
                   <Pill tone={eventTone(e.type)}>{e.type}</Pill>
