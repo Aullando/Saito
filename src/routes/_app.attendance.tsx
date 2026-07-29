@@ -173,7 +173,7 @@ function AttendancePage() {
             </SelectContent>
           </Select>
         </div>
-        <Button variant="outline">{tr("Enviar recordatorio al grupo", "Send reminder to group", "Pošalji podsetnik grupi")}</Button>
+        <Button variant="outline" onClick={sendReminder}>{tr("Enviar recordatorio al grupo", "Send reminder to group", "Pošalji podsetnik grupi")}</Button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
