@@ -403,8 +403,20 @@ export const useData = create<DataState>()(
           },
         })),
 
+      addIncident: (i) => {
+        const id = uid("inc");
+        set((s) => ({ incidents: [{ ...i, id }, ...s.incidents] }));
+        return id;
+      },
+      deleteIncident: (id) =>
+        set((s) => ({ incidents: s.incidents.filter((x) => x.id !== id) })),
+      setAiModule: (key, on) =>
+        set((s) => ({ aiModules: { ...s.aiModules, [key]: on } })),
+      setMobileAbsence: (userId, notified) =>
+        set((s) => ({ mobileAbsences: { ...s.mobileAbsences, [userId]: notified } })),
+
       reset: () => set(initial()),
     }),
-    { name: "saito-data", version: 10 },
+    { name: "saito-data", version: 11 },
   ),
 );
