@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Moon, Sun, Search, Menu, ChevronDown, X } from "lucide-react";
+import { Moon, Sun, Search, Menu, ChevronDown, X, RotateCcw } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
 import { NotificationsBell } from "./NotificationsBell";
+import { ResetDemoDialog } from "./ResetDemoDialog";
 // import { ClubSwitcher } from "./ClubSwitcher"; // re-mount here to reactivate multi-club demo
 import { useTheme } from "@/lib/theme";
 import { useClub } from "@/clubs/ClubProvider";
