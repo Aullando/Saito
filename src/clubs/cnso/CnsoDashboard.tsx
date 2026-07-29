@@ -449,12 +449,12 @@ function CompeticionesTab() {
             .map((c) => (
               <li key={c.id} className="flex items-center justify-between gap-3 py-3">
                 <div className="min-w-0">
-                  <div className="text-sm font-semibold truncate">{c.name}</div>
+                  <div className="text-sm font-semibold truncate">{tdf(c, "name")}</div>
                   <div className="text-xs text-muted-foreground">
-                    {c.date} · {c.venue} · {c.discipline}
+                    {c.date} · {tdf(c, "venue")} · {c.discipline}
                   </div>
                   {c.highlight && (
-                    <div className="text-[11px] text-primary mt-0.5">{c.highlight}</div>
+                    <div className="text-[11px] text-primary mt-0.5">{tdf(c, "highlight")}</div>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
