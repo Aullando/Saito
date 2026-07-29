@@ -20,6 +20,8 @@ import {
 } from "@/clubs/rgcc/seed";
 import { getRgccExerciseImage } from "@/clubs/rgcc/exerciseImages";
 import { Clock, Dumbbell, User, Sparkles, ListChecks } from "lucide-react";
+import { useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 
 export const Route = createFileRoute("/_app/rgcc/entrenamiento-personal")({
   component: () => (
