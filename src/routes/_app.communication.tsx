@@ -917,7 +917,7 @@ function ConversationsTab({
           <>
             <div className="flex items-start justify-between gap-2 border-b border-border px-5 py-4">
               <div>
-                <div className="text-base font-semibold">{active.title}</div>
+                <div className="text-base font-semibold">{td(active.title)}</div>
                 <div className="text-xs text-muted-foreground">
                   <Pill>{active.type}</Pill>{" "}
                   <span className="ml-1">{active.participants.length} participantes</span>
