@@ -277,9 +277,17 @@ function AthleteHome({ event }: { event: Ev }) {
       {absenceOpen && (
         <AbsenceModal
           onClose={() => setAbsenceOpen(false)}
-          onConfirm={() => {
+          onConfirm={(reason?: string) => {
             setAbsenceOpen(false);
-            setAbsenceNotified(true);
+            if (user) {
+              setMobileAbsence(user.id, true);
+              notifyAbsence({
+                sessionId: event?.id ?? "session-today",
+                athleteId: user.id,
+                athleteName: user.name,
+                reason: reason || tr("Sin motivo indicado", "No reason given", "Bez navedenog razloga"),
+              });
+            }
             toast.success(tr("Ausencia notificada al entrenador", "Absence reported to coach", "Odsustvo prijavljeno treneru"));
           }}
         />
