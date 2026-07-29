@@ -1,4 +1,5 @@
 import { useCurrentUser } from "@/lib/store";
+import { useTd } from "@/lib/demoI18n";
 import { Card, Grid } from "@/features/clubModule/helpers";
 import {
   CNSO_VENUES,
