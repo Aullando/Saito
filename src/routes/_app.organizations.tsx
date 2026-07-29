@@ -18,6 +18,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Plus } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
 import { useLang } from "@/lib/i18n";
+import { toast } from "sonner";
+import { isDemoMode } from "@/lib/appMode";
+import { useData } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
+import { useDemoOrgRows } from "@/lib/demoStoreRows";
 
 export const Route = createFileRoute("/_app/organizations")({
   component: () => (
@@ -67,6 +72,14 @@ function OrganizationsPage() {
       };
 
   const qc = useQueryClient();
+  const demo = isDemoMode();
+  const { profile } = useAuth();
+  const activeOrgId = profile?.organization_id ?? null;
+  const storeOrgs = useDemoOrgRows();
+  const addOrgStore = useData((s) => s.addOrganization);
+  const updateOrgStore = useData((s) => s.updateOrganization);
+  const deleteOrgStore = useData((s) => s.deleteOrganization);
+
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState<Org | null>(null);
@@ -76,6 +89,7 @@ function OrganizationsPage() {
 
   const orgsQ = useQuery({
     queryKey: ["organizations"],
+    enabled: !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("organizations").select("*").order("created_at", { ascending: false });
@@ -86,32 +100,71 @@ function OrganizationsPage() {
 
   const addOrg = useMutation({
     mutationFn: async (input: { name: string; slug: string; language: string }) => {
+      if (demo) {
+        addOrgStore({
+          name: input.name,
+          slug: input.slug,
+          language: input.language,
+          status: "Active",
+          aiEnabled: true,
+        });
+        return;
+      }
       const { error } = await supabase.from("organizations").insert(input);
       if (error) throw error;
     },
     onSuccess: () => {
+      toast.success(lang === "en" ? "Organization created" : lang === "sr" ? "Organizacija je kreirana" : "Organización creada");
       qc.invalidateQueries({ queryKey: ["organizations"] });
       setOpen(false); setName(""); setSlug(""); setLanguage("es");
     },
+    onError: () => toast.error(lang === "en" ? "Could not create" : lang === "sr" ? "Kreiranje nije uspelo" : "No se pudo crear"),
   });
 
   const updateOrg = useMutation({
     mutationFn: async (input: { id: string; patch: Partial<Org> }) => {
+      if (demo) {
+        updateOrgStore(input.id, {
+          name: input.patch.name,
+          slug: input.patch.slug,
+          language: input.patch.language,
+        });
+        return;
+      }
       const { error } = await supabase.from("organizations").update(input.patch).eq("id", input.id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["organizations"] }),
+    onError: () => toast.error(lang === "en" ? "Could not update" : lang === "sr" ? "Ažuriranje nije uspelo" : "No se pudo actualizar"),
   });
 
   const delOrg = useMutation({
     mutationFn: async (id: string) => {
+      if (id === activeOrgId) {
+        throw new Error(
+          lang === "en"
+            ? "Cannot delete the active organization."
+            : lang === "sr"
+              ? "Aktivna organizacija ne može biti obrisana."
+              : "No puedes eliminar la organización activa.",
+        );
+      }
+      if (demo) {
+        deleteOrgStore(id);
+        return;
+      }
       const { error } = await supabase.from("organizations").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ["organizations"] }); setDetail(null); },
+    onSuccess: () => {
+      toast.success(lang === "en" ? "Organization deleted" : lang === "sr" ? "Organizacija je obrisana" : "Organización eliminada");
+      qc.invalidateQueries({ queryKey: ["organizations"] });
+      setDetail(null);
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 
-  const orgs = orgsQ.data ?? [];
+  const orgs = demo ? storeOrgs : (orgsQ.data ?? []);
   const totalPages = Math.max(1, Math.ceil(orgs.length / PAGE_SIZE));
   const paged = orgs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
