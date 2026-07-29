@@ -153,6 +153,21 @@ function TeamPage() {
           "Upravljajte članovima organizacije i njihovim ulogama.",
         )}
         actions={
+          demo ? (
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span tabIndex={0}>
+                    <Button className="rounded-full opacity-60" disabled>
+                      <Plus className="mr-1 h-4 w-4" />
+                      {tr("Invitar", "Invite", "Pozovi")}
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>{prodOnly}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="rounded-full">
@@ -218,8 +233,19 @@ function TeamPage() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+          )
         }
       />
+
+      {demo && (
+        <div className="mb-4 rounded-2xl border border-dashed border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
+          {tr(
+            "Modo demo: la gestión de invitaciones, roles y bajas requiere el backend real. Se muestra la lista de miembros de la organización SAITO como referencia.",
+            "Demo mode: managing invitations, roles and removals requires the real backend. The SAITO organization member list is shown for reference.",
+            "Demo režim: upravljanje pozivima, ulogama i uklanjanjem zahteva pravi backend. Prikazana je lista članova SAITO organizacije kao referenca.",
+          )}
+        </div>
+      )}
 
       <Card className="p-0">
         <div className="overflow-x-auto">
