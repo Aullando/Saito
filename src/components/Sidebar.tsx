@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 import { useCurrentUser, useAuth } from "@/lib/store";
-import { useT } from "@/lib/i18n";
+import { useT, useTr } from "@/lib/i18n";
 import { useTd } from "@/lib/demoI18n";
 import type { Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -118,6 +118,7 @@ function navItemToItem(n: ClubNavItem): Item {
 export function Sidebar() {
   const user = useCurrentUser();
   const t = useT();
+  const tr = useTr();
   const td = useTd();
   const setUser = useAuth((s) => s.setUser);
   const mobileOpen = useAuth((s) => s.mobileNavOpen);
@@ -169,14 +170,14 @@ export function Sidebar() {
           <button
             onClick={() => setMobileOpen(false)}
             className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:hidden"
-            aria-label="Close"
+            aria-label={tr("Cerrar", "Close", "Zatvori")}
           >
             <X className="h-4 w-4" />
           </button>
           <button
             onClick={toggleCollapsed}
             className="ml-auto hidden h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-sidebar-accent md:flex"
-            aria-label="Collapse"
+            aria-label={tr("Contraer", "Collapse", "Skupi")}
           >
             <ChevronLeft
               className={cn("h-4 w-4 transition-transform", collapsed && "rotate-180")}
