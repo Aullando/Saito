@@ -31,7 +31,14 @@ export const statusLabel = (s: CircularStatus, lang: Lang): string => {
     archived: "Archived",
     withdrawn: "Withdrawn",
   };
-  return (lang === "es" ? es : en)[s];
+  const sr: Record<CircularStatus, string> = {
+    draft: "Nacrt",
+    scheduled: "Zakazano",
+    published: "Objavljeno",
+    archived: "Arhivirano",
+    withdrawn: "Povučeno",
+  };
+  return (lang === "es" ? es : lang === "sr" ? sr : en)[s];
 };
 
 export const STATUS_STYLES: Record<CircularStatus, string> = {
@@ -46,12 +53,19 @@ export const NON_MVP_STATUSES: CircularStatus[] = ["draft", "scheduled", "archiv
 
 export function ProposalBadge({ className = "" }: { className?: string }) {
   const lang = useLang();
+  const title =
+    lang === "es"
+      ? "Mejora propuesta (no incluida en el MVP)"
+      : lang === "sr"
+        ? "Predloženo poboljšanje (nije uključeno u MVP)"
+        : "Proposed enhancement (not included in MVP)";
+  const label = lang === "es" ? "Mejora propuesta" : lang === "sr" ? "Predlog" : "Proposed";
   return (
     <span
-      title={lang === "es" ? "Mejora propuesta (no incluida en el MVP)" : "Proposed enhancement (not included in MVP)"}
+      title={title}
       className={`inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-wide text-violet-700 ${className}`}
     >
-      {lang === "es" ? "Mejora propuesta" : "Proposed"}
+      {label}
     </span>
   );
 }

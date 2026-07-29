@@ -77,7 +77,7 @@ function ProfilePage() {
     if (!f || !user) return;
     if (!f.type.startsWith("image/")) return;
     if (f.size > 4 * 1024 * 1024) {
-      alert(lang === "es" ? "Imagen demasiado grande (máx 4MB)" : "Image too large (max 4MB)");
+      alert(lang === "es" ? "Imagen demasiado grande (máx 4MB)" : lang === "sr" ? "Slika je prevelika (maks. 4MB)" : "Image too large (max 4MB)");
       return;
     }
     const reader = new FileReader();
@@ -120,7 +120,7 @@ function ProfilePage() {
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-background text-foreground shadow hover:bg-muted"
-                aria-label={lang === "es" ? "Cambiar foto" : "Change photo"}
+                aria-label={lang === "es" ? "Cambiar foto" : lang === "sr" ? "Promeni fotografiju" : "Change photo"}
               >
                 <Camera className="h-3.5 w-3.5" />
               </button>

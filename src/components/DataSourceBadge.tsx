@@ -6,7 +6,7 @@ type Props = {
   className?: string;
   /** "fixed" se ancla en la esquina inferior derecha; "inline" lo deja en flujo normal. */
   variant?: "fixed" | "inline";
-  locale?: "es" | "en";
+  locale?: "es" | "en" | "sr";
 };
 
 /**
