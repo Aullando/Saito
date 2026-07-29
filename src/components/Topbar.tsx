@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Moon, Sun, Search, Menu, ChevronDown, X, RotateCcw } from "lucide-react";
+import { Search, Menu, ChevronDown, X, RotateCcw } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
@@ -7,7 +7,7 @@ import { Logo, LogoMark } from "./Logo";
 import { NotificationsBell } from "./NotificationsBell";
 import { ResetDemoDialog } from "./ResetDemoDialog";
 // import { ClubSwitcher } from "./ClubSwitcher"; // re-mount here to reactivate multi-club demo
-import { useTheme } from "@/lib/theme";
+
 import { useClub } from "@/clubs/ClubProvider";
 
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ const ROLE_LABEL: Record<string, { es: string; en: string; sr: string }> = {
 
 export function Topbar() {
   const user = useCurrentUser();
-  const { theme, toggle } = useTheme();
+  
   const avatar = useUserAvatar(user?.id ?? "");
   const setMobileNavOpen = useAuth((s) => s.setMobileNavOpen);
   const setUser = useAuth((s) => s.setUser);
@@ -105,13 +105,6 @@ export function Topbar() {
           aria-label="Search"
         >
           <Search className="h-4 w-4" />
-        </button>
-        <button
-          onClick={toggle}
-          className="hidden sm:flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm hover:text-foreground"
-          aria-label="Toggle theme"
-        >
-          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
         <NotificationsBell />
         {/* Multi-club switcher: re-mount <ClubSwitcher /> here if more than one club is visible */}

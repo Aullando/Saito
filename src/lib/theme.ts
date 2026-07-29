@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-const KEY = "saito-theme";
-
+// Dark mode disabled for the demo. Kept as a no-op stub so any lingering imports don't break.
 export function useTheme() {
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window === "undefined") return "light";
-    return (localStorage.getItem(KEY) as "light" | "dark") ?? "light";
-  });
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
-    localStorage.setItem(KEY, theme);
-  }, [theme]);
-  return { theme, toggle: () => setTheme((t) => (t === "dark" ? "light" : "dark")) };
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.remove("dark");
+      try { localStorage.removeItem("saito-theme"); } catch {}
+    }
+  }, []);
+  return { theme: "light" as const, toggle: () => {} };
 }
