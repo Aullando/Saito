@@ -43,6 +43,8 @@ const COPY: Record<Lang, {
     submit: "Entrar",
     submitting: "Entrando…",
     langLabel: "Idioma",
+    watchVideo: "Ver vídeo de presentación",
+    closeVideo: "Cerrar",
   },
   en: {
     misTitle: "Access blocked: incomplete configuration",
@@ -57,6 +59,8 @@ const COPY: Record<Lang, {
     submit: "Enter",
     submitting: "Entering…",
     langLabel: "Language",
+    watchVideo: "Watch presentation video",
+    closeVideo: "Close",
   },
   sr: {
     misTitle: "Pristup blokiran: konfiguracija nije potpuna",
@@ -71,6 +75,8 @@ const COPY: Record<Lang, {
     submit: "Uđi",
     submitting: "Ulazak…",
     langLabel: "Jezik",
+    watchVideo: "Pogledaj prezentacioni video",
+    closeVideo: "Zatvori",
   },
 };
 
