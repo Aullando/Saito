@@ -49,6 +49,7 @@ export function AthletesFilters({
   isMedical,
 }: AthletesFiltersProps) {
   const t = useT();
+  const td = useTd();
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2">
       <div className="relative">
