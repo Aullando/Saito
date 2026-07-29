@@ -8,6 +8,8 @@ import {
   DEMO_ATHLETE_GROUPS_ROWS,
 } from "@/lib/demoFallbacks";
 import { demoOrEmpty } from "@/lib/demoFallback";
+import { isDemoMode } from "@/lib/appMode";
+import { useDemoAthletesRows } from "@/lib/demoStoreRows";
 
 export type AthleteRow = {
   id: string;
@@ -25,9 +27,12 @@ export type GroupRow = { id: string; name: string; section_id: string; category_
 export type AthleteGroupRow = { athlete_id: string; group_id: string };
 
 export function useAthletesData(orgId: string | null) {
+  const demo = isDemoMode();
+  const store = useDemoAthletesRows();
+
   const athletesQ = useQuery({
     queryKey: ["athletes", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("athletes")
@@ -41,7 +46,7 @@ export function useAthletesData(orgId: string | null) {
   });
   const sectionsQ = useQuery({
     queryKey: ["sections", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("sport_sections")
@@ -53,7 +58,7 @@ export function useAthletesData(orgId: string | null) {
   });
   const categoriesQ = useQuery({
     queryKey: ["categories", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("categories")
@@ -65,7 +70,7 @@ export function useAthletesData(orgId: string | null) {
   });
   const groupsQ = useQuery({
     queryKey: ["groups", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("groups")
@@ -77,13 +82,24 @@ export function useAthletesData(orgId: string | null) {
   });
   const athleteGroupsQ = useQuery({
     queryKey: ["athlete_groups", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase.from("athlete_groups").select("athlete_id, group_id");
       if (error) throw error;
       return (data ?? []) as AthleteGroupRow[];
     },
   });
+
+  if (demo) {
+    return {
+      athletes: store.athletes,
+      sections: store.sections,
+      categories: store.categories,
+      groups: store.groups,
+      athleteGroups: store.athleteGroups,
+      isLoading: false,
+    };
+  }
 
   return {
     athletes: demoOrEmpty(athletesQ.data, DEMO_ATHLETES_ROWS) as AthleteRow[],
