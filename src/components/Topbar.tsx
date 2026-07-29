@@ -9,7 +9,7 @@ import { NotificationsBell } from "./NotificationsBell";
 import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
 import { useClub } from "@/clubs/ClubProvider";
-import { useLang } from "@/lib/i18n";
+
 import { cn } from "@/lib/utils";
 
 // Perfiles SAITO expuestos en el selector de rol de la demo.
