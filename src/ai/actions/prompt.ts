@@ -5,7 +5,7 @@
 import { actionsForRole } from "./registry";
 import type { Role } from "@/lib/types";
 
-export function buildToolsPrompt(role: Role, lang: "es" | "en" | "ar"): string {
+export function buildToolsPrompt(role: Role, lang: "es" | "en" | "ar" | "sr"): string {
   const available = actionsForRole(role);
   if (available.length === 0) return "";
 
