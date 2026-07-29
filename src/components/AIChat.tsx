@@ -227,7 +227,7 @@ export function AIChat() {
       ? rgccSuggestions(role, user, roles)
       : isCnso
         ? cnsoSuggestions(role, user, roles)
-        : ((lang === "en" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
+        : ((lang === "en" || lang === "sr" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
   const placeholder = isGff
     ? "اكتب سؤالك…"
     : lang === "en" ? "Ask something…"
