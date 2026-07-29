@@ -37,6 +37,7 @@ export interface NewAthleteDialogProps {
 export function NewAthleteDialog({ orgId, sections, categories, groups }: NewAthleteDialogProps) {
   const t = useT();
   const tr = useTr();
+  const td = useTd();
   const qc = useQueryClient();
   const addAthleteStore = useData((s) => s.addAthlete);
   const [open, setOpen] = useState(false);

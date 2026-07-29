@@ -59,6 +59,7 @@ interface DBPayment {
 function PaymentsPage() {
   const t = useT();
   const tr = useTr();
+  const td = useTd();
   const lang = useLang();
   const { profile } = useAuth();
   const orgId = profile?.organization_id;
