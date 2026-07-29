@@ -5,7 +5,7 @@ import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
 import { NotificationsBell } from "./NotificationsBell";
-import { ClubSwitcher } from "./ClubSwitcher";
+// import { ClubSwitcher } from "./ClubSwitcher"; // re-mount here to reactivate multi-club demo
 import { useTheme } from "@/lib/theme";
 import { useClub } from "@/clubs/ClubProvider";
 
@@ -34,7 +34,7 @@ export function Topbar() {
     ROLE_LABEL[role]?.[user?.language ?? "en"] ?? role;
   const collapsed = useAuth((s) => s.sidebarCollapsed);
   const setLangOverride = useAuth((s) => s.setLangOverride);
-  const { club, availableClubs } = useClub();
+  const { club } = useClub();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -113,7 +113,7 @@ export function Topbar() {
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
         <NotificationsBell />
-        {availableClubs.length > 1 && <ClubSwitcher />}
+        {/* Multi-club switcher: re-mount <ClubSwitcher /> here if more than one club is visible */}
 
         {/* ES / EN language toggle (hidden inside the GFF Arabic workspace) */}
         {!isGff && (

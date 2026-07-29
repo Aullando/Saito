@@ -1,3 +1,5 @@
+// NOTE: Currently unmounted from Topbar for the mono-club SAITO demo.
+// To reactivate multi-club switching, import and render <ClubSwitcher /> in src/components/Topbar.tsx.
 import { useState, useRef, useEffect } from "react";
 import { Building2, ChevronDown, Check } from "lucide-react";
 
