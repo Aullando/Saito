@@ -413,10 +413,12 @@ function ClubPicker({
   value,
   onChange,
   tagline,
+  tr,
 }: {
   value: ClubKey;
   onChange: (id: ClubKey) => void;
   tagline: string;
+  tr: (es: string, en: string, sr?: string) => string;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -439,7 +441,7 @@ function ClubPicker({
         className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-left shadow-sm transition hover:shadow-md"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label="Seleccionar entidad demo"
+        aria-label={tr("Seleccionar entidad demo", "Select demo entity", "Izaberite demo entitet")}
       >
         {logo ? (
           <img
@@ -455,7 +457,7 @@ function ClubPicker({
         )}
         <span className="min-w-0 flex-1">
           <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Entidad demo
+            {tr("Entidad demo", "Demo entity", "Demo entitet")}
           </span>
           <span className="block truncate text-sm font-semibold">{club.brand.name}</span>
           <span className="block truncate text-[11px] text-muted-foreground">{tagline}</span>
@@ -471,7 +473,7 @@ function ClubPicker({
           className="absolute left-0 right-0 top-full z-20 mt-2 overflow-hidden rounded-2xl border border-border bg-popover shadow-xl"
         >
           <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Elige una entidad
+            {tr("Elige una entidad", "Choose an entity", "Izaberite entitet")}
           </div>
           <ul className="pb-1">
             {CLUB_ORDER.map((id) => {
@@ -558,9 +560,11 @@ function ChannelSection({
 function ProfileCard({
   profile,
   onSelect,
+  tr,
 }: {
   profile: DemoProfile;
   onSelect: (p: DemoProfile) => void;
+  tr: (es: string, en: string, sr?: string) => string;
 }) {
   const Icon = profile.icon;
   const s = MODULE_STYLES[profile.module];
@@ -585,7 +589,7 @@ function ProfileCard({
         <div className="mt-0.5 text-xs text-muted-foreground">{profile.subtitle}</div>
       </div>
       <span className="text-xs font-semibold text-primary opacity-0 transition group-hover:opacity-100">
-        Entrar →
+        {tr("Entrar", "Enter", "Uđi")} →
       </span>
     </button>
   );
