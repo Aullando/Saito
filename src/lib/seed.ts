@@ -774,6 +774,26 @@ export const MEDICAL_APPOINTMENTS: MedicalAppointment[] = [
     status: "Scheduled",
     notes: "",
   },
+  {
+    id: "apt-5",
+    athleteId: ATHLETES.find((a) => a.firstName === "Pablo")!.id,
+    staffId: "u-med",
+    date: iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3)),
+    time: "16:00",
+    reason: "Valoración molestias cuádriceps",
+    status: "Scheduled",
+    notes: "Primera consulta.",
+  },
+  {
+    id: "apt-6",
+    athleteId: ATHLETES.find((a) => a.firstName === "Marcos")!.id,
+    staffId: "u-med",
+    date: iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 10)),
+    time: "09:00",
+    reason: "Test de esfuerzo previo a competición",
+    status: "Scheduled",
+    notes: "Traer resultados analítica reciente.",
+  },
 ];
 
 export const ALL_USERS: User[] = DEMO_USERS;
