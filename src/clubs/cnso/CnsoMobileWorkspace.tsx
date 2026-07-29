@@ -562,7 +562,7 @@ export function CnsoMobileTeam() {
                   {m.firstName} {m.lastName}
                 </div>
                 <div className="truncate text-[11px]" style={{ color: MUTED }}>
-                  {m.activity}
+                  {tdf(m, "activity")}
                 </div>
               </div>
               <span
