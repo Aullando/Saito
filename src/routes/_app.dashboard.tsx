@@ -214,6 +214,7 @@ function CommandCenter() {
         text: tr(
           `Cobro registrado · ${who} · ${fmtMoney(Number(lastPaid.amount))}`,
           `Payment recorded · ${who} · ${fmtMoney(Number(lastPaid.amount))}`,
+          `Uplata evidentirana · ${who} · ${fmtMoney(Number(lastPaid.amount))}`,
         ),
         time: lastPaid.date ?? "",
         tone: "success",
