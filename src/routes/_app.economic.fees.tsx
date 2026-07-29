@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useT } from "@/lib/i18n";
+import { useT, useTr, useLang } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -47,8 +47,9 @@ interface DBFee {
 
 function FeesPage() {
   const t = useT();
+  const tr = useTr();
+  const lang = useLang();
   const { profile } = useAuth();
-  const lang = (profile?.language as "es" | "en") ?? "es";
   const orgId = profile?.organization_id;
   const qc = useQueryClient();
 
@@ -108,7 +109,7 @@ function FeesPage() {
 
   const addFee = useMutation({
     mutationFn: async () => {
-      if (!form.name) throw new Error(lang === "es" ? "Nombre requerido" : "Name required");
+      if (!form.name) throw new Error(tr("Nombre requerido", "Name required", "Naziv je obavezan"));
       const { error } = await supabase.from("fees").insert({
         organization_id: orgId!,
         section_id: activeSec,
@@ -253,7 +254,7 @@ function FeesPage() {
               </Select>
             </div>
             <div>
-              <Label>From</Label>
+              <Label>{tr("Desde", "From", "Od")}</Label>
               <Input
                 type="date"
                 value={form.period_start}
@@ -261,7 +262,7 @@ function FeesPage() {
               />
             </div>
             <div>
-              <Label>To</Label>
+              <Label>{tr("Hasta", "To", "Do")}</Label>
               <Input
                 type="date"
                 value={form.period_end}
@@ -297,7 +298,7 @@ function FeeTable({
   kind: "fee" | "rate";
   t: (k: string) => string;
   groups: { id: string; name: string }[];
-  lang: "es" | "en";
+  lang: "es" | "en" | "sr";
   onDelete: (id: string) => void;
 }) {
   if (rows.length === 0) return <EmptyState>—</EmptyState>;

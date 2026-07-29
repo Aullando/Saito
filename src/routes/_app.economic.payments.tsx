@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useT } from "@/lib/i18n";
+import { useT, useLang } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -54,8 +54,8 @@ interface DBPayment {
 
 function PaymentsPage() {
   const t = useT();
+  const lang = useLang();
   const { profile } = useAuth();
-  const lang = (profile?.language as "es" | "en") ?? "en";
   const orgId = profile?.organization_id;
   const qc = useQueryClient();
 

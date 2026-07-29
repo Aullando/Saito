@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { useT } from "@/lib/i18n";
+import { useT, useTr } from "@/lib/i18n";
 import { toast } from "sonner";
 import { Plus, Trash2, Mail } from "lucide-react";
 
@@ -36,9 +36,9 @@ type RoleName = (typeof ALL_ROLES)[number];
 
 function TeamPage() {
   const t = useT();
+  const tr = useTr();
   const qc = useQueryClient();
   const { profile, user: me } = useAuth();
-  const lang = (profile?.language ?? "en") as "es" | "en";
   const orgId = profile?.organization_id ?? null;
 
   const membersQ = useQuery({
@@ -102,7 +102,7 @@ function TeamPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(lang === "es" ? "Miembro eliminado" : "Member removed");
+      toast.success(tr("Miembro eliminado", "Member removed", "Član uklonjen"));
       qc.invalidateQueries({ queryKey: ["team"] });
     },
     onError: (e: Error) => toast.error(e.message),
@@ -127,12 +127,8 @@ function TeamPage() {
     onSuccess: (data: { invited?: boolean } | null) => {
       toast.success(
         data?.invited
-          ? lang === "es"
-            ? "Invitación enviada"
-            : "Invitation sent"
-          : lang === "es"
-            ? "Usuario añadido"
-            : "User added",
+          ? tr("Invitación enviada", "Invitation sent", "Poziv poslat")
+          : tr("Usuario añadido", "User added", "Korisnik dodat"),
       );
       qc.invalidateQueries({ queryKey: ["team"] });
       setForm({ email: "", full_name: "", roles: ["manager"] });
@@ -146,23 +142,23 @@ function TeamPage() {
   return (
     <>
       <PageHeader
-        title={lang === "es" ? "Equipo y permisos" : "Team & permissions"}
-        subtitle={
-          lang === "es"
-            ? "Gestiona los miembros de tu organización y sus roles."
-            : "Manage members of your organization and their roles."
-        }
+        title={tr("Equipo y permisos", "Team & permissions", "Tim i dozvole")}
+        subtitle={tr(
+          "Gestiona los miembros de tu organización y sus roles.",
+          "Manage members of your organization and their roles.",
+          "Upravljajte članovima organizacije i njihovim ulogama.",
+        )}
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="rounded-full">
                 <Plus className="mr-1 h-4 w-4" />
-                {lang === "es" ? "Invitar" : "Invite"}
+                {tr("Invitar", "Invite", "Pozovi")}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{lang === "es" ? "Invitar miembro" : "Invite member"}</DialogTitle>
+                <DialogTitle>{tr("Invitar miembro", "Invite member", "Pozovi člana")}</DialogTitle>
               </DialogHeader>
               <div className="space-y-3">
                 <div>
@@ -174,14 +170,14 @@ function TeamPage() {
                   />
                 </div>
                 <div>
-                  <Label>{lang === "es" ? "Nombre" : "Full name"}</Label>
+                  <Label>{tr("Nombre", "Full name", "Ime i prezime")}</Label>
                   <Input
                     value={form.full_name}
                     onChange={(e) => setForm({ ...form, full_name: e.target.value })}
                   />
                 </div>
                 <div>
-                  <Label>{lang === "es" ? "Roles" : "Roles"}</Label>
+                  <Label>{tr("Roles", "Roles", "Uloge")}</Label>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {ALL_ROLES.map((r) => {
                       const on = form.roles.includes(r);
@@ -213,7 +209,7 @@ function TeamPage() {
                   onClick={() => invite.mutate()}
                 >
                   <Mail className="mr-1 h-4 w-4" />
-                  {lang === "es" ? "Enviar invitación" : "Send invite"}
+                  {tr("Enviar invitación", "Send invite", "Pošalji poziv")}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -226,9 +222,9 @@ function TeamPage() {
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="px-5 py-3 font-semibold">{lang === "es" ? "Miembro" : "Member"}</th>
+                <th className="px-5 py-3 font-semibold">{tr("Miembro", "Member", "Član")}</th>
                 <th className="px-5 py-3 font-semibold">Email</th>
-                <th className="px-5 py-3 font-semibold">{lang === "es" ? "Roles" : "Roles"}</th>
+                <th className="px-5 py-3 font-semibold">{tr("Roles", "Roles", "Uloge")}</th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
@@ -243,7 +239,7 @@ function TeamPage() {
               {!membersQ.isLoading && members.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-5 py-6 text-center text-muted-foreground">
-                    {lang === "es" ? "Sin miembros." : "No members."}
+                    {tr("Sin miembros.", "No members.", "Nema članova.")}
                   </td>
                 </tr>
               )}
@@ -268,7 +264,7 @@ function TeamPage() {
                           {m.full_name ?? "—"}
                           {isMe && (
                             <span className="ml-2 text-[10px] uppercase text-primary">
-                              {lang === "es" ? "Tú" : "You"}
+                              {tr("Tú", "You", "Ti")}
                             </span>
                           )}
                         </span>
@@ -292,9 +288,7 @@ function TeamPage() {
                               } ${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
                               title={
                                 disabled
-                                  ? lang === "es"
-                                    ? "No puedes quitarte admin"
-                                    : "You can't remove your own admin"
+                                  ? tr("No puedes quitarte admin", "You can't remove your own admin", "Ne možete sebi ukloniti admin ulogu")
                                   : ""
                               }
                             >
@@ -313,9 +307,11 @@ function TeamPage() {
                           onClick={() => {
                             if (
                               confirm(
-                                lang === "es"
-                                  ? "¿Eliminar miembro de la organización?"
-                                  : "Remove member from organization?",
+                                tr(
+                                  "¿Eliminar miembro de la organización?",
+                                  "Remove member from organization?",
+                                  "Ukloniti člana iz organizacije?",
+                                ),
                               )
                             )
                               removeMember.mutate(m.id);
