@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import saitoHero from "@/assets/saito-hero.png.asset.json";
+import videoEs from "@/assets/saito-presentacion-es.mp4.asset.json";
 import { useAuth as useLocalAuth } from "@/lib/store";
+
+// TODO: reemplazar por vídeo EN cuando esté disponible; ahora usa ES como fallback.
+const VIDEO_BY_LANG: Record<"es" | "en" | "sr", string> = {
+  es: videoEs.url,
+  en: videoEs.url,
+  sr: videoEs.url,
+};
 
 const STORAGE_KEY = "site-password-ok";
 const PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "SIHSAITO";
@@ -20,7 +28,7 @@ const COPY: Record<Lang, {
   misTitle: string; misBody: (env: ReactNode, envPass: ReactNode) => ReactNode;
   hero: string; tagline: string; badge: string; title: string;
   intro: string; placeholder: string; wrong: string; submit: string; submitting: string;
-  langLabel: string;
+  langLabel: string; watchVideo: string; closeVideo: string;
 }> = {
   es: {
     misTitle: "Acceso bloqueado: configuración incompleta",
@@ -35,6 +43,8 @@ const COPY: Record<Lang, {
     submit: "Entrar",
     submitting: "Entrando…",
     langLabel: "Idioma",
+    watchVideo: "Ver vídeo de presentación",
+    closeVideo: "Cerrar",
   },
   en: {
     misTitle: "Access blocked: incomplete configuration",
@@ -49,6 +59,8 @@ const COPY: Record<Lang, {
     submit: "Enter",
     submitting: "Entering…",
     langLabel: "Language",
+    watchVideo: "Watch presentation video",
+    closeVideo: "Close",
   },
   sr: {
     misTitle: "Pristup blokiran: konfiguracija nije potpuna",
@@ -63,6 +75,8 @@ const COPY: Record<Lang, {
     submit: "Uđi",
     submitting: "Ulazak…",
     langLabel: "Jezik",
+    watchVideo: "Pogledaj prezentacioni video",
+    closeVideo: "Zatvori",
   },
 };
 
@@ -80,6 +94,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
   const initialLang = useMemo<Lang>(() => storedLang ?? detectLang(), []); // eslint-disable-line react-hooks/exhaustive-deps
   const [lang, setLang] = useState<Lang>(initialLang);
   const c = COPY[lang];
@@ -235,12 +250,53 @@ export function PasswordGate({ children }: { children: ReactNode }) {
               )}
               <span>{submitting ? c.submitting : c.submit}</span>
             </button>
+            <button
+              type="button"
+              onClick={() => setVideoOpen(true)}
+              className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-current">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              <span>{c.watchVideo}</span>
+            </button>
             <p className="text-center text-[11px] text-white/50">
               © {new Date().getFullYear()} SAITO · Sport Innovation Hub
             </p>
           </form>
         </div>
       </div>
+
+      {videoOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={c.watchVideo}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 animate-in fade-in duration-200"
+          onClick={() => setVideoOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-4xl overflow-hidden rounded-2xl bg-black shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setVideoOpen(false)}
+              aria-label={c.closeVideo}
+              className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
+            >
+              ✕
+            </button>
+            <video
+              src={VIDEO_BY_LANG[lang]}
+              controls
+              autoPlay
+              playsInline
+              className="block h-auto max-h-[85vh] w-full bg-black"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
