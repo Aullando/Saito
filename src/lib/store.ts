@@ -52,12 +52,14 @@ const AI_MODULES_INITIAL: Record<AiModuleKey, boolean> = {
 interface AuthState {
   currentUserId: string | null;
   avatars: Record<string, string>;
+  nameOverrides: Record<string, string>;
   mobileNavOpen: boolean;
   sidebarCollapsed: boolean;
   langOverride: "es" | "en" | "sr" | null;
   setUser: (id: string | null) => void;
   setAvatar: (id: string, dataUrl: string) => void;
   removeAvatar: (id: string) => void;
+  setUserName: (id: string, name: string) => void;
   setMobileNavOpen: (open: boolean) => void;
   setSidebarCollapsed: (v: boolean) => void;
   toggleSidebarCollapsed: () => void;
@@ -69,6 +71,7 @@ export const useAuth = create<AuthState>()(
     (set) => ({
       currentUserId: null,
       avatars: {},
+      nameOverrides: {},
       mobileNavOpen: false,
       sidebarCollapsed: false,
       langOverride: null,
@@ -79,6 +82,8 @@ export const useAuth = create<AuthState>()(
           const { [id]: _, ...rest } = s.avatars;
           return { avatars: rest };
         }),
+      setUserName: (id, name) =>
+        set((s) => ({ nameOverrides: { ...s.nameOverrides, [id]: name } })),
       setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
       setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
       toggleSidebarCollapsed: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
@@ -89,6 +94,7 @@ export const useAuth = create<AuthState>()(
       partialize: (s) => ({
         currentUserId: s.currentUserId,
         avatars: s.avatars,
+        nameOverrides: s.nameOverrides,
         sidebarCollapsed: s.sidebarCollapsed,
         langOverride: s.langOverride,
       }),
@@ -104,9 +110,10 @@ import { useAuth as useRealAuth } from "./auth";
 export const useCurrentUser = (): User | null => {
   const { user, profile, roles } = useRealAuth();
   const langOverride = useAuth((s) => s.langOverride);
+  const nameOverride = useAuth((s) => (user ? s.nameOverrides[user.id] : undefined));
   if (!user) return null;
   const role = (roles[0] ?? "admin") as User["role"];
-  const name = profile?.full_name || user.email?.split("@")[0] || "User";
+  const name = nameOverride || profile?.full_name || user.email?.split("@")[0] || "User";
   const parts = name.split(" ");
   const initials = (parts[0]?.[0] ?? "?") + (parts[1]?.[0] ?? "");
   const baseLang = (profile?.language as User["language"]) ?? "es";
