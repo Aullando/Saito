@@ -23,11 +23,6 @@ import {
   GffMobileHealth,
   GffMobilePerformance,
 } from "@/clubs/gff/GffMobileWorkspace";
-import {
-  CnsoMobileSession,
-  CnsoMobileHealth,
-  CnsoMobilePerformance,
-} from "@/clubs/cnso/CnsoMobileWorkspace";
 import { useTr } from "@/lib/i18n";
 import {
   Attendance,
