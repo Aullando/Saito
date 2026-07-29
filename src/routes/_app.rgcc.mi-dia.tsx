@@ -218,6 +218,8 @@ function MiDiaMonitor({ monitorName, isAdmin }: { monitorName: string; isAdmin: 
 
 
 function MiDiaSocio({ memberNumber, memberName }: { memberNumber: string; memberName: string }) {
+  const tr = useTr();
+  const td = useTd();
   const today = new Date().toISOString().slice(0, 10);
   const me = RGCC_MEMBERS.find((m) => m.memberNumber === memberNumber);
   const fullName = me ? `${me.firstName} ${me.lastName}` : memberName;
@@ -227,11 +229,11 @@ function MiDiaSocio({ memberNumber, memberName }: { memberNumber: string; member
 
   return (
     <>
-      <PageHeader title="Mi Día" subtitle={memberNumber ? `${fullName} · ${memberNumber}` : ""} />
+      <PageHeader title={tr("Mi Día", "My Day", "Moj dan")} subtitle={memberNumber ? `${fullName} · ${memberNumber}` : ""} />
       <div className="space-y-2">
         {mias.length === 0 && (
           <Card>
-            <p className="text-sm text-muted-foreground">No tienes reservas próximas.</p>
+            <p className="text-sm text-muted-foreground">{tr("No tienes reservas próximas.", "No upcoming bookings.", "Nema predstojećih rezervacija.")}</p>
           </Card>
         )}
         {mias.map((c) => {
@@ -240,7 +242,7 @@ function MiDiaSocio({ memberNumber, memberName }: { memberNumber: string; member
             <Card key={c.id}>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-semibold">{c.activity}</div>
+                  <div className="font-semibold">{td(c.activity)}</div>
                   <div className="text-xs text-muted-foreground flex items-center gap-1">
                     <MapPin className="h-3 w-3" /> {sede?.name} · {c.roomLabel}
                   </div>
@@ -249,7 +251,7 @@ function MiDiaSocio({ memberNumber, memberName }: { memberNumber: string; member
                   <div className="font-bold">
                     {c.date} · {c.time}
                   </div>
-                  <div className="text-muted-foreground">Monitor: {c.primaryCoach}</div>
+                  <div className="text-muted-foreground">{tr("Monitor", "Coach", "Trener")}: {c.primaryCoach}</div>
                 </div>
               </div>
             </Card>
@@ -258,4 +260,5 @@ function MiDiaSocio({ memberNumber, memberName }: { memberNumber: string; member
       </div>
     </>
   );
+
 }
