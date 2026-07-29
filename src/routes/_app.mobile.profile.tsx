@@ -22,9 +22,9 @@ function MobileProfile() {
 
   const roleLabel =
     user.role === "technical"
-      ? tr("Entrenador", "Coach")
+      ? tr("Entrenador", "Coach", "Trener")
       : user.role === "athlete"
-        ? tr("Atleta", "Athlete")
+        ? tr("Atleta", "Athlete", "Sportista")
         : user.role;
 
   return (
@@ -41,11 +41,11 @@ function MobileProfile() {
 
       <ul className="space-y-2">
         <Row icon={Mail} label="Email" value={user.email} />
-        <Row icon={Globe} label={tr("Idioma", "Language")} value={user.language.toUpperCase()} />
+        <Row icon={Globe} label={tr("Idioma", "Language", "Jezik")} value={user.language.toUpperCase()} />
         <Row
           icon={Shield}
-          label={tr("Privacidad", "Privacy")}
-          value={tr("Datos cifrados", "Encrypted data")}
+          label={tr("Privacidad", "Privacy", "Privatnost")}
+          value={tr("Datos cifrados", "Encrypted data", "Šifrovani podaci")}
         />
       </ul>
     </div>

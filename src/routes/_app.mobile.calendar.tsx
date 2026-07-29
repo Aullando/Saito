@@ -141,7 +141,7 @@ function MobileCalendar() {
                 transition: "all 0.15s",
               }}
             >
-              {v === "week" ? tr("Semana", "Week") : tr("Mes", "Month")}
+              {v === "week" ? tr("Semana", "Week", "Nedelja") : tr("Mes", "Month", "Mesec")}
             </button>
           );
         })}
@@ -157,7 +157,7 @@ function MobileCalendar() {
         }}
       >
         <button
-          aria-label={tr("Anterior", "Previous")}
+          aria-label={tr("Anterior", "Previous", "Prethodno")}
           onClick={goPrev}
           className="flex h-8 w-8 items-center justify-center rounded-full active:scale-95"
           style={{ color: MUTED }}
@@ -171,7 +171,7 @@ function MobileCalendar() {
           {monthLabel}
         </span>
         <button
-          aria-label={tr("Siguiente", "Next")}
+          aria-label={tr("Siguiente", "Next", "Sledeće")}
           onClick={goNext}
           className="flex h-8 w-8 items-center justify-center rounded-full active:scale-95"
           style={{ color: MUTED }}
@@ -370,7 +370,7 @@ function DaySummary({
       <section className="space-y-2 pt-1">
         <h2 style={{ color: INK, fontSize: 20, fontWeight: 700 }}>
           {label} <span style={{ color: MUTED }}>|</span>{" "}
-          <span style={{ color: MUTED, fontWeight: 600 }}>{tr("Sin eventos", "No events")}</span>
+          <span style={{ color: MUTED, fontWeight: 600 }}>{tr("Sin eventos", "No events", "Nema događaja")}</span>
         </h2>
         <div
           className="text-center"
@@ -383,7 +383,7 @@ function DaySummary({
             fontSize: 14,
           }}
         >
-          {tr("Día libre. Disfruta del descanso.", "Day off. Enjoy the rest.")}
+          {tr("Día libre. Disfruta del descanso.", "Day off. Enjoy the rest.", "Slobodan dan. Uživajte u odmoru.")}
         </div>
       </section>
     );
@@ -392,12 +392,12 @@ function DaySummary({
   const type = first.type.toLowerCase();
   const typeLabel =
     type.includes("match") || type.includes("partido")
-      ? tr("Partido", "Match")
+      ? tr("Partido", "Match", "Utakmica")
       : type.includes("medic") || type.includes("médic")
-        ? tr("Médico", "Medical")
+        ? tr("Médico", "Medical", "Medicinski")
         : type.includes("event") || type.includes("evento")
-          ? tr("Evento", "Event")
-          : tr("Entrenamiento", "Training");
+          ? tr("Evento", "Event", "Događaj")
+          : tr("Entrenamiento", "Training", "Trening");
 
   return (
     <section className="space-y-3 pt-1">
@@ -430,7 +430,7 @@ function DaySummary({
             }}
           >
             <UserCheck className="h-4 w-4" style={{ color: MUTED }} />
-            {tr("Has sido convocado", "You have been called up")}
+            {tr("Has sido convocado", "You have been called up", "Pozvani ste")}
           </div>
           <Link
             to="/mobile/absence"
@@ -445,7 +445,7 @@ function DaySummary({
               fontWeight: 600,
             }}
           >
-            <TriangleAlert className="h-4 w-4" /> {tr("Notificar ausencia", "Report absence")}
+            <TriangleAlert className="h-4 w-4" /> {tr("Notificar ausencia", "Report absence", "Prijavi odsustvo")}
           </Link>
         </>
       )}
@@ -464,8 +464,8 @@ function DaySummary({
         }}
       >
         {isCoach
-          ? tr("Abrir información de la sesión", "Open session information")
-          : tr("Aún no hay información sobre la sesión", "No session information yet")}
+          ? tr("Abrir información de la sesión", "Open session information", "Otvori informacije o sesiji")
+          : tr("Aún no hay información sobre la sesión", "No session information yet", "Još nema informacija o sesiji")}
       </Link>
 
       {/* sutil sello del accent para mantener identidad de rol */}

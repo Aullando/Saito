@@ -125,8 +125,8 @@ function RestrictionsPage() {
   return (
     <>
       <PageHeader
-        title={tr("Salud deportiva · Restricciones operativas","Sports Health · Operational Restrictions")}
-        subtitle={tr("Registro operativo bajo supervisión profesional. Estados apto / no apto introducidos por personal autorizado.","Operational log under professional supervision. Fit / not fit statuses entered by authorised staff.")}
+        title={tr("Salud deportiva · Restricciones operativas", "Sports Health · Operational Restrictions", "Sportsko zdravlje · Operativna ograničenja")}
+        subtitle={tr("Registro operativo bajo supervisión profesional. Estados apto / no apto introducidos por personal autorizado.", "Operational log under professional supervision. Fit / not fit statuses entered by authorised staff.", "Operativni registar pod stručnim nadzorom. Statuse sposoban / nesposoban unosi ovlašćeno osoblje.")}
       />
 
       <MedicalDisclaimer className="mb-4" />
@@ -134,9 +134,9 @@ function RestrictionsPage() {
       <div className="mb-4 flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 text-xs">
         <Lock className="h-4 w-4 shrink-0 text-primary" />
         <span>
-          {tr("Solo personal médico autorizado y dirección con permiso explícito ven el detalle. Todos los accesos quedan registrados en", "Only authorised medical staff and management with explicit permission see the detail. All accesses are logged in")}{" "}
+          {tr("Solo personal médico autorizado y dirección con permiso explícito ven el detalle. Todos los accesos quedan registrados en", "Only authorised medical staff and management with explicit permission see the detail. All accesses are logged in", "Samo ovlašćeno medicinsko osoblje i uprava sa eksplicitnom dozvolom vide detalje. Svi pristupi se beleže u")}{" "}
           <a className="font-semibold text-primary hover:underline" href="/settings/privacy">
-            {tr("Privacidad y seguridad","Privacy & security")}
+            {tr("Privacidad y seguridad", "Privacy & security", "Privatnost i bezbednost")}
           </a>
           .
         </span>
@@ -146,7 +146,7 @@ function RestrictionsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {tr("Restricciones activas","Active restrictions")}
+              {tr("Restricciones activas", "Active restrictions", "Aktivna ograničenja")}
             </span>
             <ShieldAlert className="h-4 w-4 text-rose-600" />
           </div>
@@ -155,7 +155,7 @@ function RestrictionsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {tr("En recuperación","Recovering")}
+              {tr("En recuperación", "Recovering", "U oporavku")}
             </span>
             <Activity className="h-4 w-4 text-amber-600" />
           </div>
@@ -164,7 +164,7 @@ function RestrictionsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {tr("Apto (mes)","Fit (month)")}
+              {tr("Apto (mes)", "Fit (month)", "Sposoban (mesec)")}
             </span>
             <Stethoscope className="h-4 w-4 text-emerald-600" />
           </div>
@@ -176,7 +176,7 @@ function RestrictionsPage() {
         <div className="relative flex-1 min-w-[220px]">
           <Filter className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder={tr("Buscar deportista o zona…","Search athlete or area…")}
+            placeholder={tr("Buscar deportista o zona…", "Search athlete or area…", "Pretraži sportistu ili zonu…")}
             className="pl-9"
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -189,7 +189,7 @@ function RestrictionsPage() {
             size="sm"
             onClick={() => setStatusF(s)}
           >
-            {s === "all" ? tr("Todas","All") : tr(s, s === "Activa" ? "Active" : s === "En recuperación" ? "Recovering" : "Fit")}
+            {s === "all" ? tr("Todas", "All", "Sve") : tr(s, s === "Activa" ? "Active" : s === "En recuperación" ? "Recovering" : "Fit")}
           </Button>
         ))}
       </div>
@@ -199,13 +199,13 @@ function RestrictionsPage() {
           <table className="w-full min-w-[760px] text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="px-5 py-2 font-semibold">{tr("Deportista","Athlete")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Tipo","Type")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Zona / motivo","Area / reason")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Estado","Status")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Inicio","Start")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Vuelta prevista","Expected return")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Visibilidad","Visibility")}</th>
+                <th className="px-5 py-2 font-semibold">{tr("Deportista", "Athlete", "Sportista")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Tipo", "Type", "Tip")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Zona / motivo", "Area / reason", "Zona / razlog")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Estado", "Status", "Status")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Inicio", "Start", "Početak")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Vuelta prevista", "Expected return", "Očekivani povratak")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Visibilidad", "Visibility", "Vidljivost")}</th>
               </tr>
             </thead>
             <tbody>
@@ -260,7 +260,7 @@ function RestrictionsPage() {
       </Card>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        {tr("Las restricciones activas se reflejan en asistencia, calendario y comunicación al staff técnico, sin exponer detalle clínico salvo a personal autorizado.","Active restrictions are reflected in attendance, calendar and technical staff communication, without exposing clinical detail except to authorised personnel.")}
+        {tr("Las restricciones activas se reflejan en asistencia, calendario y comunicación al staff técnico, sin exponer detalle clínico salvo a personal autorizado.", "Active restrictions are reflected in attendance, calendar and technical staff communication, without exposing clinical detail except to authorised personnel.", "Aktivna ograničenja se odražavaju u prisustvu, kalendaru i komunikaciji sa tehničkim osobljem, bez otkrivanja kliničkih detalja osim ovlašćenom osoblju.")}
       </p>
     </>
   );

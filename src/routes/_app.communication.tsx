@@ -161,13 +161,13 @@ function CommunicationPage() {
   return (
     <>
       <PageHeader
-        title={tr("Comunicación", "Communication")}
+        title={tr("Comunicación", "Communication", "Komunikacija")}
         actions={
           <Dialog open={openNew} onOpenChange={setOpenNew}>
             <DialogTrigger asChild>
               <Button className="rounded-full">
                 <Plus className="mr-1 h-4 w-4" />
-                {tr("Nueva circular", "New circular")}
+                {tr("Nueva circular", "New circular", "Novo obaveštenje")}
               </Button>
             </DialogTrigger>
             <NewCircularDialog
@@ -175,7 +175,7 @@ function CommunicationPage() {
               onSave={(payload, publish) => {
                 const id = addLocalCircular(payload);
                 if (publish) publishCircular(id);
-                toast.success(publish ? tr("Circular publicada", "Circular published") : tr("Borrador guardado", "Draft saved"));
+                toast.success(publish ? tr("Circular publicada", "Circular published", "Obaveštenje objavljeno") : tr("Borrador guardado", "Draft saved", "Nacrt sačuvan"));
                 setOpenNew(false);
                 setTab("circulars");
               }}
@@ -187,31 +187,31 @@ function CommunicationPage() {
       <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="space-y-4">
         <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-muted/40 p-1">
           <TabsTrigger value="circulars" className="gap-1.5">
-            <Megaphone className="h-4 w-4" /> {tr("Circulares", "Circulars")}
+            <Megaphone className="h-4 w-4" /> {tr("Circulares", "Circulars", "Obaveštenja")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {allCirculars.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="direct" className="gap-1.5">
-            <Inbox className="h-4 w-4" /> {tr("Chats directos", "Direct chats")}
+            <Inbox className="h-4 w-4" /> {tr("Chats directos", "Direct chats", "Direktne poruke")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {directChats.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="groups" className="gap-1.5">
-            <Users className="h-4 w-4" /> {tr("Grupos", "Groups")}
+            <Users className="h-4 w-4" /> {tr("Grupos", "Groups", "Grupe")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {groupChats.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="medical" className="gap-1.5">
-            <Stethoscope className="h-4 w-4" /> {tr("Solicitudes médicas", "Medical requests")}
+            <Stethoscope className="h-4 w-4" /> {tr("Solicitudes médicas", "Medical requests", "Medicinski zahtevi")}
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {medicalRequests.filter((r) => !handledRequests.includes(r.id)).length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="archived" className="gap-1.5">
-            <Archive className="h-4 w-4" /> {tr("Archivados", "Archived")}
+            <Archive className="h-4 w-4" /> {tr("Archivados", "Archived", "Arhivirano")}
             <ProposalBadge className="ml-1" />
             <span className="ml-1 rounded-full bg-background px-1.5 text-[10px] tabular-nums">
               {archivedList.length}
@@ -259,21 +259,21 @@ function CommunicationPage() {
             users={users}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success(tr("Conversación archivada", "Conversation archived"));
+              toast.success(tr("Conversación archivada", "Conversation archived", "Razgovor arhiviran"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success(tr("Eliminada de tu bandeja", "Removed from your inbox"));
+              toast.success(tr("Eliminada de tu bandeja", "Removed from your inbox", "Uklonjen iz vašeg sandučeta"));
             }}
             onSend={(id, content) =>
               sendMessage(id, {
                 authorId: users[0]?.id ?? "u-adm",
                 authorRole: "admin",
-                targetLabel: tr("Conversación directa", "Direct conversation"),
+                targetLabel: tr("Conversación directa", "Direct conversation", "Direktan razgovor"),
                 content,
               })
             }
-            emptyLabel={tr("No hay chats directos.", "No direct chats.")}
+            emptyLabel={tr("No hay chats directos.", "No direct chats.", "Nema direktnih poruka.")}
           />
         </TabsContent>
 
@@ -283,21 +283,21 @@ function CommunicationPage() {
             users={users}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success(tr("Grupo archivado", "Group archived"));
+              toast.success(tr("Grupo archivado", "Group archived", "Grupa arhivirana"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success(tr("Eliminado de tu bandeja", "Removed from your inbox"));
+              toast.success(tr("Eliminado de tu bandeja", "Removed from your inbox", "Uklonjeno iz vašeg sandučeta"));
             }}
             onSend={(id, content) =>
               sendMessage(id, {
                 authorId: users[0]?.id ?? "u-adm",
                 authorRole: "admin",
-                targetLabel: tr("Conversación de grupo", "Group conversation"),
+                targetLabel: tr("Conversación de grupo", "Group conversation", "Grupni razgovor"),
                 content,
               })
             }
-            emptyLabel={tr("No hay conversaciones de grupo.", "No group conversations.")}
+            emptyLabel={tr("No hay conversaciones de grupo.", "No group conversations.", "Nema grupnih razgovora.")}
           />
         </TabsContent>
 
@@ -310,11 +310,11 @@ function CommunicationPage() {
             onCreateAppointment={(req, payload) => {
               addAppointment(payload);
               markRequestHandled(req.id);
-              toast.success(tr("Cita médica creada", "Medical appointment created"));
+              toast.success(tr("Cita médica creada", "Medical appointment created", "Medicinski termin kreiran"));
             }}
             onArchive={(id) => {
               archiveConv(id);
-              toast.success(tr("Solicitud archivada", "Request archived"));
+              toast.success(tr("Solicitud archivada", "Request archived", "Zahtev arhiviran"));
             }}
           />
         </TabsContent>
@@ -324,11 +324,11 @@ function CommunicationPage() {
             conversations={archivedList}
             onUnarchive={(id) => {
               unarchiveConv(id);
-              toast.success(tr("Restaurada en tu bandeja", "Restored to your inbox"));
+              toast.success(tr("Restaurada en tu bandeja", "Restored to your inbox", "Vraćeno u vaše sanduče"));
             }}
             onHide={(id) => {
               hideConv(id);
-              toast.success(tr("Eliminada de tu bandeja", "Removed from your inbox"));
+              toast.success(tr("Eliminada de tu bandeja", "Removed from your inbox", "Uklonjen iz vašeg sandučeta"));
             }}
           />
         </TabsContent>
@@ -398,14 +398,14 @@ function CircularsTab({
                 : "border-border bg-background text-muted-foreground hover:bg-muted/40"
             }`}
           >
-            {s === "all" ? tr("Todas", "All") : statusLabel(s, lang)}
+            {s === "all" ? tr("Todas", "All", "Sve") : statusLabel(s, lang)}
             <span className="ml-1.5 tabular-nums opacity-70">{counts[s]}</span>
           </button>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState>{tr("No hay circulares en este estado.", "No circulars in this state.")}</EmptyState>
+        <EmptyState>{tr("No hay circulares en este estado.", "No circulars in this state.", "Nema obaveštenja u ovom statusu.")}</EmptyState>
       ) : (
         <ul className="divide-y divide-border">
           {filtered.map((c) => {
@@ -428,22 +428,22 @@ function CircularsTab({
                       <span className="inline-flex items-center gap-1">
                         <Users className="h-3 w-3" /> {c.recipientsLabel}
                       </span>
-                      <span className="tabular-nums">{c.recipientsCount} {tr("destinatarios", "recipients")}</span>
+                      <span className="tabular-nums">{c.recipientsCount} {tr("destinatarios", "recipients", "primalaca")}</span>
                       {c.status !== "draft" && c.status !== "scheduled" && (
                         <span className="tabular-nums">
-                          {c.reads} {tr("lecturas", "reads")} ({pct}%)
+                          {c.reads} {tr("lecturas", "reads", "pregleda")} ({pct}%)
                         </span>
                       )}
                       {c.status === "scheduled" && c.scheduledAt && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 font-medium text-sky-700">
                           <CalendarPlus className="h-3 w-3" />
-                          {tr("Envío:", "Send:")} {formatDateTime(c.scheduledAt)}
+                          {tr("Envío:", "Send:", "Poslato:")} {formatDateTime(c.scheduledAt)}
                         </span>
                       )}
                     </div>
                     {c.status === "withdrawn" && c.withdrawReason && (
                       <div className="mt-2 rounded-md border border-rose-200 bg-rose-50/60 px-2 py-1 text-[11px] text-rose-700">
-                        <strong>{tr("Motivo retirada:", "Withdrawal reason:")}</strong> {c.withdrawReason}
+                        <strong>{tr("Motivo retirada:", "Withdrawal reason:", "Razlog povlačenja:")}</strong> {c.withdrawReason}
                       </div>
                     )}
                   </div>
@@ -460,12 +460,12 @@ function CircularsTab({
                           {c.source === "local" && (
                             <DropdownMenuItem onClick={() => setEditTarget(c)}>
                               <MoreVertical className="mr-2 h-4 w-4" />
-                              {tr("Editar", "Edit")}
+                              {tr("Editar", "Edit", "Izmeni")}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem onClick={() => onPublish(c.id)}>
                             <Send className="mr-2 h-4 w-4" />
-                            {tr("Publicar ahora", "Publish now")}
+                            {tr("Publicar ahora", "Publish now", "Objavi sada")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
@@ -474,18 +474,18 @@ function CircularsTab({
                             }}
                           >
                             <CalendarPlus className="mr-2 h-4 w-4" />
-                            {tr("Programar…", "Schedule…")} <ProposalBadge className="ml-auto" />
+                            {tr("Programar…", "Schedule…", "Zakaži…")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onClick={() => {
-                              if (!confirm(tr("¿Eliminar este borrador?", "Delete this draft?"))) return;
+                              if (!confirm(tr("¿Eliminar este borrador?", "Delete this draft?", "Obrisati ovaj nacrt?"))) return;
                               onDeleteDraft(c.id);
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            {tr("Eliminar", "Delete")}
+                            {tr("Eliminar", "Delete", "Obriši")}
                           </DropdownMenuItem>
                         </>
                       )}
@@ -494,23 +494,23 @@ function CircularsTab({
                           {c.source === "local" && (
                             <DropdownMenuItem onClick={() => setEditTarget(c)}>
                               <MoreVertical className="mr-2 h-4 w-4" />
-                              {tr("Editar", "Edit")}
+                              {tr("Editar", "Edit", "Izmeni")}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem onClick={() => onCancelSchedule(c.id)}>
                             <Undo2 className="mr-2 h-4 w-4" />
-                            {tr("Cancelar programación", "Cancel schedule")} <ProposalBadge className="ml-auto" />
+                            {tr("Cancelar programación", "Cancel schedule", "Otkaži zakazivanje")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onClick={() => {
-                              if (!confirm(tr("¿Eliminar esta circular programada?", "Delete this scheduled circular?"))) return;
+                              if (!confirm(tr("¿Eliminar esta circular programada?", "Delete this scheduled circular?", "Obrisati ovo zakazano obaveštenje?"))) return;
                               onDeleteDraft(c.id);
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            {tr("Eliminar", "Delete")}
+                            {tr("Eliminar", "Delete", "Obriši")}
                           </DropdownMenuItem>
                         </>
                       )}
@@ -518,7 +518,7 @@ function CircularsTab({
                         <>
                           <DropdownMenuItem onClick={() => onArchive(c.id)}>
                             <Archive className="mr-2 h-4 w-4" />
-                            {tr("Archivar", "Archive")} <ProposalBadge className="ml-auto" />
+                            {tr("Archivar", "Archive", "Arhiviraj")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-rose-600 focus:text-rose-600"
@@ -528,20 +528,20 @@ function CircularsTab({
                             }}
                           >
                             <Undo2 className="mr-2 h-4 w-4" />
-                            {tr("Retirar circular…", "Withdraw circular…")} <ProposalBadge className="ml-auto" />
+                            {tr("Retirar circular…", "Withdraw circular…", "Povuci obaveštenje…")} <ProposalBadge className="ml-auto" />
                           </DropdownMenuItem>
                         </>
                       )}
                       {c.status === "archived" && (
                         <DropdownMenuItem disabled>
                           <Archive className="mr-2 h-4 w-4" />
-                          {tr("Sólo consulta", "Read only")}
+                          {tr("Sólo consulta", "Read only", "Samo za pregled")}
                         </DropdownMenuItem>
                       )}
                       {c.status === "withdrawn" && (
                         <DropdownMenuItem disabled>
                           <Undo2 className="mr-2 h-4 w-4" />
-                          {tr("Consultar motivo", "View reason")}
+                          {tr("Consultar motivo", "View reason", "Pogledaj razlog")}
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>

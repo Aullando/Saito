@@ -74,22 +74,22 @@ function ClasesCockpit() {
 
   return (
     <>
-      <PageHeader title={tr("Clases · Cockpit","Classes · Cockpit")} subtitle={tr(`Operativa del día · ${today}`, `Today's operations · ${today}`)} />
+      <PageHeader title={tr("Clases · Cockpit", "Classes · Cockpit", "Časovi · Kokpit")} subtitle={tr(`Operativa del día · ${today}`, `Today's operations · ${today}`, `Operativa dana · ${today}`)} />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Kpi label={tr("Clases hoy","Classes today")} value={String(sessionsToday.length)} />
+        <Kpi label={tr("Clases hoy", "Classes today", "Časovi danas")} value={String(sessionsToday.length)} />
         <Kpi
-          label={tr("Sin monitor","No coach")}
+          label={tr("Sin monitor", "No coach", "Bez trenera")}
           value={String(sinMonitor.length)}
           tone={sinMonitor.length ? "danger" : "success"}
         />
         <Kpi
-          label={tr("Ausencias por aprobar","Absences to approve")}
+          label={tr("Ausencias por aprobar", "Absences to approve", "Odsustva za odobrenje")}
           value={String(absencesPending.length)}
           tone={absencesPending.length ? "warning" : "success"}
         />
         <Kpi
-          label={tr("Incidencias abiertas","Open incidents")}
+          label={tr("Incidencias abiertas", "Open incidents", "Otvoreni incidenti")}
           value={String(incidentsOpen.length)}
           tone={incidentsOpen.length ? "warning" : "success"}
         />
@@ -98,8 +98,8 @@ function ClasesCockpit() {
       <div className="mt-6">
         <Card>
           <div className="mb-3">
-            <h2 className="text-lg font-semibold">{tr("Operativa por sede","Operations by venue")}</h2>
-            <p className="text-xs text-muted-foreground">{tr("Click para filtrar","Click to filter")}</p>
+            <h2 className="text-lg font-semibold">{tr("Operativa por sede", "Operations by venue", "Operativa po objektu")}</h2>
+            <p className="text-xs text-muted-foreground">{tr("Click para filtrar", "Click to filter", "Klik za filtriranje")}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {RGCC_VENUES.map((sede) => {
@@ -124,17 +124,17 @@ function ClasesCockpit() {
                   </div>
                   <div className="grid grid-cols-2 gap-1 text-xs">
                     <div>
-                      <span className="text-muted-foreground">{tr("Clases","Classes")}</span>{" "}
+                      <span className="text-muted-foreground">{tr("Clases", "Classes", "Časovi")}</span>{" "}
                       <span className="font-bold tabular-nums">{cs.length}</span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">{tr("Aforo","Capacity")}</span>{" "}
+                      <span className="text-muted-foreground">{tr("Aforo", "Capacity", "Kapacitet")}</span>{" "}
                       <span className="font-bold tabular-nums">
                         {cap ? Math.round((ocup / cap) * 100) : 0}%
                       </span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">{tr("Salas","Rooms")}</span>{" "}
+                      <span className="text-muted-foreground">{tr("Salas", "Rooms", "Sale")}</span>{" "}
                       <span className="font-bold tabular-nums">{salas.length}</span>
                     </div>
                   </div>
@@ -148,10 +148,10 @@ function ClasesCockpit() {
       <Card className="mt-6">
         <div className="mb-3 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold">{tr("Clases programadas","Scheduled classes")}</h2>
+            <h2 className="text-lg font-semibold">{tr("Clases programadas", "Scheduled classes", "Zakazani časovi")}</h2>
             <p className="text-xs text-muted-foreground">
               {venueFilter === "ALL"
-                ? tr("Todas las sedes","All venues")
+                ? tr("Todas las sedes", "All venues", "Svi objekti")
                 : RGCC_VENUES.find((v) => v.id === venueFilter)?.name}
             </p>
           </div>
@@ -160,7 +160,7 @@ function ClasesCockpit() {
               onClick={() => setVenueFilter("ALL")}
               className="text-xs text-primary hover:underline"
             >
-              {tr("Quitar filtro","Clear filter")}
+              {tr("Quitar filtro", "Clear filter", "Ukloni filter")}
             </button>
           )}
         </div>
@@ -168,12 +168,12 @@ function ClasesCockpit() {
           <table className="w-full text-sm min-w-[860px]">
             <thead>
               <tr className="text-left text-[10px] uppercase tracking-wider text-muted-foreground border-b border-border">
-                <th className="px-3 py-2 w-20">{tr("Hora","Time")}</th>
-                <th className="px-3 py-2">{tr("Actividad","Activity")}</th>
-                <th className="px-3 py-2">{tr("Sede · Sala","Venue · Room")}</th>
-                <th className="px-3 py-2">{tr("Monitor","Coach")}</th>
-                <th className="px-3 py-2 w-28">{tr("Aforo","Capacity")}</th>
-                <th className="px-3 py-2">{tr("Estado","Status")}</th>
+                <th className="px-3 py-2 w-20">{tr("Hora", "Time", "Vreme")}</th>
+                <th className="px-3 py-2">{tr("Actividad", "Activity", "Aktivnost")}</th>
+                <th className="px-3 py-2">{tr("Sede · Sala", "Venue · Room", "Objekat · Sala")}</th>
+                <th className="px-3 py-2">{tr("Monitor", "Coach", "Trener")}</th>
+                <th className="px-3 py-2 w-28">{tr("Aforo", "Capacity", "Kapacitet")}</th>
+                <th className="px-3 py-2">{tr("Estado", "Status", "Status")}</th>
               </tr>
             </thead>
             <tbody>
@@ -218,9 +218,9 @@ function ClasesCockpit() {
                     </td>
                     <td className="px-3 py-2.5">
                       {ausente ? (
-                        <Pill tone="danger">{tr("Conflicto","Conflict")}</Pill>
+                        <Pill tone="danger">{tr("Conflicto", "Conflict", "Konflikt")}</Pill>
                       ) : c.status === "confirmed" ? (
-                        <Pill tone="success">{tr("Confirmada","Confirmed")}</Pill>
+                        <Pill tone="success">{tr("Confirmada", "Confirmed", "Potvrđeno")}</Pill>
                       ) : (
                         <Pill tone="info">{td(c.status)}</Pill>
                       )}
@@ -231,7 +231,7 @@ function ClasesCockpit() {
               {visibles.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-3 py-8 text-center text-muted-foreground">
-                    {tr("Sin clases.","No classes.")}
+                    {tr("Sin clases.", "No classes.", "Nema časova.")}
                   </td>
                 </tr>
               )}
@@ -242,7 +242,7 @@ function ClasesCockpit() {
 
       <div className="mt-6">
         <Link to="/rgcc/mi-dia" className="text-sm text-primary hover:underline">
-          → {tr("Vista del monitor (Mi Día)","Coach view (My Day)")}
+          → {tr("Vista del monitor (Mi Día)", "Coach view (My Day)", "Prikaz trenera (Moj dan)")}
         </Link>
       </div>
     </>
@@ -260,11 +260,11 @@ function ClasesCoach({ coachName }: { coachName: string }) {
 
   return (
     <>
-      <PageHeader title={tr("Mis clases","My classes")} subtitle={coachName || tr("Monitor","Coach")} />
+      <PageHeader title={tr("Mis clases", "My classes", "Moji časovi")} subtitle={coachName || tr("Monitor", "Coach", "Trener")} />
       {myClasses.length === 0 ? (
         <Card>
           <p className="text-sm text-muted-foreground">
-            {tr("No tienes clases programadas próximamente.","You have no upcoming classes.")}
+            {tr("No tienes clases programadas próximamente.", "You have no upcoming classes.", "Nemate zakazane časove u skorije vreme.")}
           </p>
         </Card>
       ) : (
@@ -290,7 +290,7 @@ function SessionRow({ session: c, coachName }: { session: RgccSession; coachName
             {c.date} · {c.time} · {sede?.name} · {c.roomLabel}
           </div>
           <div className="text-base font-bold truncate">{td(c.activity)}</div>
-          {c.substituteCoach === coachName && <Pill tone="info">{tr("Sustitución","Substitution")}</Pill>}
+          {c.substituteCoach === coachName && <Pill tone="info">{tr("Sustitución", "Substitution", "Zamena")}</Pill>}
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <div className="text-xs text-muted-foreground">
@@ -314,12 +314,12 @@ function ClasesSocio({ memberNumber, memberName }: { memberNumber: string; membe
   return (
     <>
       <PageHeader
-        title={tr("Mis reservas","My bookings")}
+        title={tr("Mis reservas", "My bookings", "Moje rezervacije")}
         subtitle={memberNumber ? `${fullName} · ${memberNumber}` : ""}
       />
       {myBookings.length === 0 ? (
         <Card>
-          <p className="text-sm text-muted-foreground">{tr("No tienes reservas próximas.","No upcoming bookings.")}</p>
+          <p className="text-sm text-muted-foreground">{tr("No tienes reservas próximas.", "No upcoming bookings.", "Nemate predstojeće rezervacije.")}</p>
         </Card>
       ) : (
         <div className="space-y-2">
@@ -339,7 +339,7 @@ function ClasesSocio({ memberNumber, memberName }: { memberNumber: string; membe
                     <div className="font-bold">
                       {c.date} · {c.time}
                     </div>
-                    <div className="text-muted-foreground">{tr("Monitor","Coach")}: {c.primaryCoach}</div>
+                    <div className="text-muted-foreground">{tr("Monitor", "Coach", "Trener")}: {c.primaryCoach}</div>
                   </div>
                 </div>
               </Card>

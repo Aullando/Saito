@@ -24,7 +24,7 @@ function Biblioteca() {
   const td = useTd();
   const [tab, setTab] = useState<"ejercicios" | "rutinas">("ejercicios");
   const [q, setQ] = useState("");
-  const ALL = tr("Todas","All");
+  const ALL = tr("Todas", "All", "Sve");
   const [cat, setCat] = useState<string>(ALL);
   const [src, setSrc] = useState<"all" | "library" | "evidence">("all");
 
@@ -50,12 +50,12 @@ function Biblioteca() {
   return (
     <>
       <PageHeader
-        title={tr("Biblioteca","Library")}
-        subtitle={tr("Catálogo de ejercicios y rutinas del Real Grupo de Cultura Covadonga.","Catalogue of exercises and routines of Real Grupo de Cultura Covadonga.")}
+        title={tr("Biblioteca", "Library", "Biblioteka")}
+        subtitle={tr("Catálogo de ejercicios y rutinas del Real Grupo de Cultura Covadonga.", "Catalogue of exercises and routines of Real Grupo de Cultura Covadonga.", "Katalog vežbi i rutina Real Grupo de Cultura Covadonga.")}
         actions={
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <BookOpen className="h-4 w-4" />
-            {RGCC_EXERCISES.length} {tr("ejercicios","exercises")} · {RGCC_ROUTINES.length} {tr("rutinas","routines")}
+            {RGCC_EXERCISES.length} {tr("ejercicios", "exercises", "vežbi")} · {RGCC_ROUTINES.length} {tr("rutinas", "routines", "rutina")}
           </div>
         }
       />
@@ -65,13 +65,13 @@ function Biblioteca() {
           onClick={() => setTab("ejercicios")}
           className={`rounded-full px-3 py-1.5 text-sm ${tab === "ejercicios" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}
         >
-          {tr("Ejercicios","Exercises")}
+          {tr("Ejercicios", "Exercises", "Vežbe")}
         </button>
         <button
           onClick={() => setTab("rutinas")}
           className={`rounded-full px-3 py-1.5 text-sm ${tab === "rutinas" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}
         >
-          {tr("Rutinas","Routines")}
+          {tr("Rutinas", "Routines", "Rutine")}
         </button>
       </div>
 
@@ -83,7 +83,7 @@ function Biblioteca() {
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder={tr("Buscar ejercicio…","Search exercise…")}
+                placeholder={tr("Buscar ejercicio…", "Search exercise…", "Pretraži vežbu…")}
                 className="w-72 rounded-full border border-border bg-background py-2 pl-9 pr-3 text-sm"
               />
             </div>
@@ -97,7 +97,7 @@ function Biblioteca() {
               ))}
             </select>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Filter className="h-3 w-3" /> {tr("origen","source")}
+              <Filter className="h-3 w-3" /> {tr("origen", "source", "izvor")}
             </div>
             {(["all", "library", "evidence"] as const).map((s) => (
               <button
@@ -105,16 +105,16 @@ function Biblioteca() {
                 onClick={() => setSrc(s)}
                 className={`rounded-full px-3 py-1 text-xs ${src === s ? "bg-primary/15 text-primary" : "bg-muted text-foreground"}`}
               >
-                {s === "all" ? tr("Todos","All") : s === "library" ? tr("Catálogo","Catalogue") : tr("Evidencia","Evidence")}
+                {s === "all" ? tr("Todos", "All", "Sve") : s === "library" ? tr("Catálogo", "Catalogue", "Katalog") : tr("Evidencia", "Evidence", "Dokazi")}
               </button>
             ))}
             <div className="ml-auto text-xs text-muted-foreground">
-              {filtered.length} {tr("resultados","results")}
+              {filtered.length} {tr("resultados", "results", "rezultata")}
             </div>
           </div>
 
           {filtered.length === 0 ? (
-            <EmptyState>{tr("No hay ejercicios para ese filtro.","No exercises match that filter.")}</EmptyState>
+            <EmptyState>{tr("No hay ejercicios para ese filtro.", "No exercises match that filter.", "Nema vežbi za taj filter.")}</EmptyState>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filtered.map((ex) => (
@@ -134,7 +134,7 @@ function Biblioteca() {
                     {r.level} · {r.durationMin} min
                   </div>
                 </div>
-                <Pill tone="info">{r.exerciseIds.length} {tr("ej.","ex.")}</Pill>
+                <Pill tone="info">{r.exerciseIds.length} {tr("ej.", "ex.", "vež.")}</Pill>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">{r.goal}</p>
               <ul className="mt-3 space-y-1 text-xs">
@@ -156,7 +156,7 @@ function Biblioteca() {
                   to="/rgcc/entrenamiento-personal"
                   className="text-xs text-primary hover:underline"
                 >
-                  {tr("Asignar a sesión EP","Assign to PT session")} →
+                  {tr("Asignar a sesión EP", "Assign to PT session", "Dodeli PT sesiji")} →
                 </Link>
               </div>
             </Card>
@@ -186,7 +186,7 @@ function ExerciseCard({ ex }: { ex: RgccExercise }) {
         <div className="flex items-start justify-between gap-2">
           <div className="font-semibold leading-tight">{ex.name}</div>
           <Pill tone={ex.source === "evidence" ? "success" : "info"}>
-            {ex.source === "evidence" ? "EV" : tr("Cat.","Cat.")}
+            {ex.source === "evidence" ? "EV" : tr("Cat.", "Cat.", "Kat.")}
           </Pill>
         </div>
         <div className="mt-1 text-xs text-muted-foreground">

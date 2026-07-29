@@ -39,7 +39,7 @@ function RgccModulePage() {
               `Este módulo de ${club.brand.name} está en preparación. Pronto estará disponible aquí dentro de SAITO.`,
               `This ${club.brand.name} module is in preparation. It will be available here inside SAITO soon.`,
             )}
-            backLabel={tr("Volver al Dashboard", "Back to Dashboard")}
+            backLabel={tr("Volver al Dashboard", "Back to Dashboard", "Nazad na kontrolnu tablu")}
           />
         }
       />
