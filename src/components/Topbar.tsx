@@ -116,30 +116,21 @@ export function Topbar() {
             role="group"
             aria-label="Language"
           >
-            <button
-              onClick={() => setLangOverride("es")}
-              className={cn(
-                "rounded-full px-2.5 py-1 transition-colors",
-                lang === "es"
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-              aria-pressed={lang === "es"}
-            >
-              ES
-            </button>
-            <button
-              onClick={() => setLangOverride("en")}
-              className={cn(
-                "rounded-full px-2.5 py-1 transition-colors",
-                lang === "en"
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-              aria-pressed={lang === "en"}
-            >
-              EN
-            </button>
+            {(["es", "en", "sr"] as const).map((code) => (
+              <button
+                key={code}
+                onClick={() => setLangOverride(code)}
+                className={cn(
+                  "rounded-full px-2.5 py-1 transition-colors",
+                  lang === code
+                    ? "bg-foreground text-background"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+                aria-pressed={lang === code}
+              >
+                {code.toUpperCase()}
+              </button>
+            ))}
           </div>
         )}
 
