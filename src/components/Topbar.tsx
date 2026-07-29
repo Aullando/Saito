@@ -73,13 +73,8 @@ export function Topbar() {
       >
         <Logo size={collapsed ? 32 : 40} withText={!collapsed} />
       </div>
-      <div className="flex md:hidden items-center shrink-0">
-        <img
-          src={saitoLogo}
-          alt="SAITO"
-          style={{ height: 40 }}
-          className="shrink-0 object-contain"
-        />
+      <div className="flex md:hidden items-center shrink-0 pl-1">
+        <Logo size={40} withText />
       </div>
 
       {/* Desktop / tablet search */}
