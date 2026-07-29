@@ -325,9 +325,6 @@ SECTIONS.forEach((s) => {
 // citas médicas y reuniones. Cubre el mes actual completo.
 export const EVENTS: CalendarEvent[] = (() => {
   const evs: CalendarEvent[] = [];
-  const year = today.getFullYear();
-  const month = today.getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
   let id = 1;
 
   // Plantilla de sesiones por día de semana.
