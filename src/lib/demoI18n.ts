@@ -539,6 +539,39 @@ const MAP: Record<string, Tri> = {
   },
   "Revisión médica": { en: "Medical check-up", sr: "Lekarski pregled" },
   "Cita médica": { en: "Medical appointment", sr: "Medicinski termin" },
+  "Asamblea de socios": { en: "Members' assembly", sr: "Skupština članova" },
+  "Jornada de puertas abiertas": { en: "Open house day", sr: "Dan otvorenih vrata" },
+  "Presentación equipos de competición": {
+    en: "Competition teams presentation",
+    sr: "Predstavljanje takmičarskih ekipa",
+  },
+  "Valoración molestias cuádriceps": {
+    en: "Quadriceps discomfort assessment",
+    sr: "Procena tegoba kvadricepsa",
+  },
+  "Test de esfuerzo previo a competición": {
+    en: "Pre-competition stress test",
+    sr: "Test opterećenja pre takmičenja",
+  },
+  "Primera consulta.": { en: "First consultation.", sr: "Prva konsultacija." },
+  "Traer resultados analítica reciente.": {
+    en: "Bring recent lab results.",
+    sr: "Doneti nedavne rezultate analize.",
+  },
+  "El sábado la Pista de Atletismo estará cerrada por mantenimiento. Los entrenamientos se trasladan al Pabellón Polideportivo.":
+    {
+      en: "On Saturday the Athletics Track will be closed for maintenance. Training moves to the Sports Hall.",
+      sr: "U subotu će Atletska staza biti zatvorena zbog održavanja. Treninzi se prebacuju u Sportsku halu.",
+    },
+  "Recordatorio: presentación de equipos de competición el próximo viernes a las 18:30. Se ruega puntualidad.":
+    {
+      en: "Reminder: competition teams presentation next Friday at 18:30. Please be punctual.",
+      sr: "Podsetnik: predstavljanje takmičarskih ekipa u petak u 18:30. Molimo za tačnost.",
+    },
+  "Convocatoria del partido del sábado. Concentración a las 10:15 en el pabellón.": {
+    en: "Saturday match call-up. Meet at 10:15 at the sports hall.",
+    sr: "Poziv za utakmicu u subotu. Okupljanje u 10:15 u sportskoj hali.",
+  },
 
   // ─── SAITO seed · organizations ───────────────────────────────────────
   "Real Club Deportivo Demo": { en: "Real Demo Sports Club", sr: "Real demo sportski klub" },

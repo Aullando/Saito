@@ -325,9 +325,6 @@ SECTIONS.forEach((s) => {
 // citas médicas y reuniones. Cubre el mes actual completo.
 export const EVENTS: CalendarEvent[] = (() => {
   const evs: CalendarEvent[] = [];
-  const year = today.getFullYear();
-  const month = today.getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
   let id = 1;
 
   // Plantilla de sesiones por día de semana.
@@ -442,10 +439,16 @@ export const EVENTS: CalendarEvent[] = (() => {
     0: [], // Domingo descanso
   };
 
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day);
-    const dow = date.getDay();
+  // Rango de 6 semanas: 14 días antes a 28 días después de hoy.
+  // Cubre el mes actual con margen para que semana/mes se vean llenos
+  // sin importar en qué día caiga hoy.
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
+  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 28);
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    const dow = cursor.getDay();
     const items = trainings[dow] ?? [];
+    const dayDate = new Date(cursor);
 
     items.forEach((item) => {
       const grp = GROUPS.find((g) => g.id === item.gid);
@@ -453,7 +456,7 @@ export const EVENTS: CalendarEvent[] = (() => {
       const isMatch = item.title.startsWith("Partido");
       evs.push({
         id: `ev-${id++}`,
-        date: iso(date),
+        date: iso(dayDate),
         startTime: item.time,
         title: item.title,
         sectionId: grp.sectionId,
@@ -463,23 +466,24 @@ export const EVENTS: CalendarEvent[] = (() => {
       });
     });
 
-    // Reunión técnica un lunes al mes
-    if (dow === 1 && day <= 7) {
+    // Reunión técnica el primer lunes de cada mes que caiga en el rango
+    if (dow === 1 && dayDate.getDate() <= 7) {
       evs.push({
         id: `ev-${id++}`,
-        date: iso(date),
+        date: iso(dayDate),
         startTime: "20:30",
         title: "Reunión de coordinación técnica",
         type: "meeting",
       });
     }
+
+    cursor.setDate(cursor.getDate() + 1);
   }
 
-  // Algunas citas médicas dispersas
-  const medDays = [5, 12, 19, 26].filter((d) => d <= daysInMonth);
-  medDays.forEach((d) => {
-    const date = new Date(year, month, d);
-    const ath = ATHLETES[d % ATHLETES.length];
+  // Citas médicas dispersas: cada ~7 días en el rango.
+  for (let offset = -10; offset <= 24; offset += 7) {
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset);
+    const ath = ATHLETES[(Math.abs(offset) + 3) % ATHLETES.length];
     evs.push({
       id: `ev-${id++}`,
       date: iso(date),
@@ -489,6 +493,23 @@ export const EVENTS: CalendarEvent[] = (() => {
       athleteId: ath.id,
       staffId: "u-med",
       type: "medical",
+    });
+  }
+
+  // Eventos de club puntuales (asamblea, jornada de puertas abiertas)
+  const clubEvents: Array<{ offset: number; time: string; title: string }> = [
+    { offset: -7, time: "19:00", title: "Asamblea de socios" },
+    { offset: 10, time: "10:00", title: "Jornada de puertas abiertas" },
+    { offset: 21, time: "18:30", title: "Presentación equipos de competición" },
+  ];
+  clubEvents.forEach((e) => {
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + e.offset);
+    evs.push({
+      id: `ev-${id++}`,
+      date: iso(date),
+      startTime: e.time,
+      title: e.title,
+      type: "meeting",
     });
   });
 
@@ -709,6 +730,51 @@ export const CONVERSATIONS: Conversation[] = [
       },
     ],
   },
+  {
+    id: "conv-circ-instalaciones",
+    title: "Circulares",
+    type: "circular",
+    participants: Array.from({ length: 32 }, (_, i) => `p-${i}`),
+    unreadCount: 1,
+    messages: [
+      {
+        id: "cinst-1",
+        authorId: carla,
+        authorRole: "manager",
+        targetLabel: "Todo el club (32 destinatarios)",
+        content:
+          "El sábado la Pista de Atletismo estará cerrada por mantenimiento. Los entrenamientos se trasladan al Pabellón Polideportivo.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 2, 14, 20),
+      },
+      {
+        id: "cinst-2",
+        authorId: carlos,
+        authorRole: "admin",
+        targetLabel: "Familias en competición (18 destinatarios)",
+        content:
+          "Recordatorio: presentación de equipos de competición el próximo viernes a las 18:30. Se ruega puntualidad.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 1, 10, 0),
+      },
+    ],
+  },
+  {
+    id: "conv-baloncesto-cadete",
+    title: "Baloncesto · Cadete Competición",
+    type: "group",
+    participants: ["u-tec", "p-fam-5", "p-fam-6", "p-fam-7"],
+    unreadCount: 0,
+    messages: [
+      {
+        id: "b-m1",
+        authorId: pol,
+        authorRole: "technical",
+        targetLabel: "Cadete Competición (4 destinatarios)",
+        content:
+          "Convocatoria del partido del sábado. Concentración a las 10:15 en el pabellón.",
+        createdAt: isoAt(today.getFullYear(), today.getMonth(), today.getDate() - 1, 20, 15),
+      },
+    ],
+  },
 ];
 
 // ───────── Citas médicas ─────────
@@ -752,6 +818,26 @@ export const MEDICAL_APPOINTMENTS: MedicalAppointment[] = [
     reason: "Reconocimiento médico anual",
     status: "Scheduled",
     notes: "",
+  },
+  {
+    id: "apt-5",
+    athleteId: ATHLETES.find((a) => a.firstName === "Pablo")!.id,
+    staffId: "u-med",
+    date: iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3)),
+    time: "16:00",
+    reason: "Valoración molestias cuádriceps",
+    status: "Scheduled",
+    notes: "Primera consulta.",
+  },
+  {
+    id: "apt-6",
+    athleteId: ATHLETES.find((a) => a.firstName === "Marcos")!.id,
+    staffId: "u-med",
+    date: iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 10)),
+    time: "09:00",
+    reason: "Test de esfuerzo previo a competición",
+    status: "Scheduled",
+    notes: "Traer resultados analítica reciente.",
   },
 ];
 
