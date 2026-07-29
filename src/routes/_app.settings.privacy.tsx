@@ -69,7 +69,8 @@ void AI_MODULE_KEYS;
 
 function PrivacyMockup() {
   const { profile } = useAuth();
-  const lang = (profile?.language ?? "en") as "es" | "en" | "sr";
+  void profile;
+  const lang = useLang();
   const t = (es: string, en: string, sr?: string) =>
     lang === "es" ? es : lang === "sr" ? (sr ?? en) : en;
 
