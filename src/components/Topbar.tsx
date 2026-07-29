@@ -30,6 +30,9 @@ export function Topbar() {
   const avatar = useUserAvatar(user?.id ?? "");
   const setMobileNavOpen = useAuth((s) => s.setMobileNavOpen);
   const setUser = useAuth((s) => s.setUser);
+  const navigate = useNavigate();
+  const roleLabel = (role: string) =>
+    ROLE_LABEL[role]?.[user?.language ?? "en"] ?? role;
   const collapsed = useAuth((s) => s.sidebarCollapsed);
   const setLangOverride = useAuth((s) => s.setLangOverride);
   const { club, availableClubs } = useClub();
