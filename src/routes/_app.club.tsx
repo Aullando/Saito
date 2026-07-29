@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useData } from "@/lib/store";
-import { useTr } from "@/lib/i18n";
+import { useTr, useLang } from "@/lib/i18n";
 import { toast } from "sonner";
 import {
   Plus,
