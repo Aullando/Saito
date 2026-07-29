@@ -16,6 +16,9 @@ export interface User {
 export interface Organization {
   id: string;
   name: string;
+  slug?: string;
+  language?: string;
+  logoUrl?: string;
   createdAt: string;
   updatedAt: string;
   status: "Active" | "Inactive";
