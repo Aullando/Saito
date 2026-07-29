@@ -4,7 +4,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
-import saitoLogo from "@/assets/brand/saito-logo.png";
 import { NotificationsBell } from "./NotificationsBell";
 import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
