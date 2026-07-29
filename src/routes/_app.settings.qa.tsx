@@ -36,7 +36,7 @@ function QAPage() {
     { area: tr("Privacidad y seguridad", "Privacy & security", "Privatnost i bezbednost"), path: "/settings/privacy", role: "admin · sysadmin", status: "ok" },
     { area: tr("Equipo y permisos", "Team & permissions", "Tim i dozvole"), path: "/settings/team", role: "admin", status: "ok" },
     { area: tr("Onboarding club", "Club onboarding", "Uvođenje kluba"), path: "/onboarding", role: "admin", status: "partial", note: tr("Wizard funcional, pendiente personalización por deporte", "Wizard working, sport-specific customization pending", "Čarobnjak radi, prilagođavanje po sportu na čekanju") },
-    { area: tr("RGCC (club ejemplo)", "RGCC (example club)", "RGCC (primer kluba)"), path: "/rgcc/mi-dia", role: "demo", status: "ok" },
+    { area: tr("Cambio de rol dentro de la app (Topbar)", "In-app role switch (Topbar)", "Promena uloge unutar aplikacije (Topbar)"), path: "/dashboard", role: "demo", status: "ok", note: tr("5 perfiles SAITO: Dirección, Administración, Staff médico, Entrenador, Deportista.", "5 SAITO profiles: Manager, Admin, Medical, Coach, Athlete.", "5 SAITO profila: Direkcija, Administracija, Medicinsko, Trener, Sportista.") },
   ];
 
   const NON_BLOCKING: string[] = [
