@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import saitoHero from "@/assets/saito-hero.png.asset.json";
+import { useAuth as useLocalAuth } from "@/lib/store";
 
 const STORAGE_KEY = "site-password-ok";
 const PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "SIHSAITO";
