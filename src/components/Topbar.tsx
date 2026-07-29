@@ -5,7 +5,7 @@ import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
 import { NotificationsBell } from "./NotificationsBell";
-import { ClubSwitcher } from "./ClubSwitcher";
+// import { ClubSwitcher } from "./ClubSwitcher"; // re-mount here to reactivate multi-club demo
 import { useTheme } from "@/lib/theme";
 import { useClub } from "@/clubs/ClubProvider";
 
