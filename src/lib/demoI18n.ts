@@ -630,16 +630,194 @@ const MAP: Record<string, Tri> = {
   Camiseta: { en: "T-shirt", sr: "Majica" },
   Pantalón: { en: "Trousers", sr: "Pantalone" },
   Bermuda: { en: "Bermuda shorts", sr: "Bermude" },
+
+  // ─── SAITO seed · sections & groups ───────────────────────────────────
+  Fútbol: { en: "Football", sr: "Fudbal" },
+  Gimnasia: { en: "Gymnastics", sr: "Gimnastika" },
+  Benjamín: { en: "U10", sr: "U10" },
+  Alevín: { en: "U12", sr: "U12" },
+  Infantil: { en: "U14", sr: "U14" },
+  Cadete: { en: "U16", sr: "U16" },
+  Juvenil: { en: "U18", sr: "U18" },
+  Absoluto: { en: "Senior", sr: "Seniori" },
+  Tecnificación: { en: "Talent programme", sr: "Program talenata" },
+  Partido: { en: "Match", sr: "Utakmica" },
+  "Grupo A": { en: "Group A", sr: "Grupa A" },
+  "Grupo B": { en: "Group B", sr: "Grupa B" },
+  "Escuela Benjamín": { en: "U10 School", sr: "Škola U10" },
+  "Tecnificación Infantil": { en: "U14 Talent programme", sr: "Program talenata U14" },
+  "Alevín Grupo A": { en: "U12 Group A", sr: "U12 Grupa A" },
+  "Infantil Grupo A": { en: "U14 Group A", sr: "U14 Grupa A" },
+  "Infantil Grupo B": { en: "U14 Group B", sr: "U14 Grupa B" },
+  "Cadete Competición": { en: "U16 Competition", sr: "U16 Takmičenje" },
+  "Juvenil Competición": { en: "U18 Competition", sr: "U18 Takmičenje" },
+  "Absoluto Competición": { en: "Senior Competition", sr: "Seniori Takmičenje" },
+  "Fútbol Juvenil": { en: "U18 Football", sr: "U18 Fudbal" },
+  "Baloncesto Cadete": { en: "U16 Basketball", sr: "U16 Košarka" },
+  "Reunión de coordinación técnica": {
+    en: "Technical coordination meeting",
+    sr: "Sastanak tehničke koordinacije",
+  },
+  "Revisión médica": { en: "Medical check-up", sr: "Lekarski pregled" },
+  "Cita médica": { en: "Medical appointment", sr: "Medicinski termin" },
+
+  // ─── SAITO seed · organizations ───────────────────────────────────────
+  "Real Club Deportivo Demo": { en: "Real Demo Sports Club", sr: "Real demo sportski klub" },
+  "Club Atletismo Sant Cugat": { en: "Sant Cugat Athletics Club", sr: "Atletski klub Sant Kugat" },
+  "Club Polideportivo Hortaleza": {
+    en: "Hortaleza Multisport Club",
+    sr: "Multisport klub Hortalesa",
+  },
+  "Club Natación Triana": { en: "Triana Swimming Club", sr: "Plivački klub Triana" },
+  "Federación Española de Atletismo": {
+    en: "Spanish Athletics Federation",
+    sr: "Španski atletski savez",
+  },
+
+  // ─── SAITO seed · facilities ──────────────────────────────────────────
+  "Pista de Atletismo": { en: "Athletics Track", sr: "Atletska staza" },
+  "Campo de Fútbol Anexo": { en: "Adjoining Football Pitch", sr: "Susedni fudbalski teren" },
+  "Piscina Cubierta": { en: "Indoor Pool", sr: "Zatvoreni bazen" },
+  "Pabellón Polideportivo": { en: "Sports Hall", sr: "Sportska hala" },
+  "Madrid · Sede principal": { en: "Madrid · Main venue", sr: "Madrid · Glavni objekat" },
+  "Hoy 17:30 · Tecnificación Infantil": {
+    en: "Today 17:30 · U14 Talent programme",
+    sr: "Danas 17:30 · Program talenata U14",
+  },
+  "Sábado 11:00 · Partido Juvenil": {
+    en: "Saturday 11:00 · U18 Match",
+    sr: "Subota 11:00 · U18 Utakmica",
+  },
+  "Hoy 18:00 · Grupo Competición": {
+    en: "Today 18:00 · Competition Group",
+    sr: "Danas 18:00 · Takmičarska grupa",
+  },
+  "Mañana 10:00 · Escuela Benjamín": {
+    en: "Tomorrow 10:00 · U10 School",
+    sr: "Sutra 10:00 · Škola U10",
+  },
+
+  // ─── SAITO seed · circulars & messages ────────────────────────────────
+  Circulares: { en: "Circulars", sr: "Cirkulari" },
+  "Coordinación Dirección": { en: "Management coordination", sr: "Koordinacija uprave" },
+  "Solicitud de cita médica": {
+    en: "Medical appointment request",
+    sr: "Zahtev za medicinski termin",
+  },
+  "Atletismo · Tecnificación Infantil": {
+    en: "Athletics · U14 Talent programme",
+    sr: "Atletika · Program talenata U14",
+  },
+  "Todo el club": { en: "Whole club", sr: "Ceo klub" },
+  "Sección Atletismo": { en: "Athletics section", sr: "Sekcija atletike" },
+  "Familias en competición": { en: "Competition families", sr: "Porodice u takmičenju" },
+  "Bienvenida a la nueva temporada 2025/26. Encontraréis el calendario y las cuotas actualizadas en el portal del socio.":
+    {
+      en: "Welcome to the new 2025/26 season. You will find the updated calendar and fees in the member portal.",
+      sr: "Dobrodošli u novu sezonu 2025/26. Ažurirani kalendar i članarine dostupni su na portalu za članove.",
+    },
+  "Reunión de familias del grupo de Tecnificación el próximo viernes a las 18:30 en la sala de juntas.":
+    {
+      en: "Talent programme families meeting next Friday at 18:30 in the meeting room.",
+      sr: "Sastanak porodica programa talenata sledećeg petka u 18:30 u sali za sastanke.",
+    },
+  "Recordamos que el plazo para abonar la licencia federativa finaliza el día 30 de este mes.": {
+    en: "Reminder: the deadline to pay the federation licence is the 30th of this month.",
+    sr: "Podsećamo da je rok za uplatu saveznu licencu 30. u ovom mesecu.",
+  },
+  "Mañana entrenamos en la pista 2. Llegada 15 minutos antes para calentamiento.": {
+    en: "Tomorrow we train on track 2. Arrive 15 minutes early for warm-up.",
+    sr: "Sutra treniramo na stazi 2. Dolazak 15 minuta ranije za zagrevanje.",
+  },
+  "Recordatorio: lleváis bidón y muda de recambio.": {
+    en: "Reminder: bring your water bottle and a change of clothes.",
+    sr: "Podsetnik: ponesite flašicu za vodu i rezervnu odeću.",
+  },
+  "Álex notó molestias en el aductor en el partido del sábado. ¿Hueco esta semana?": {
+    en: "Álex felt discomfort in the adductor during Saturday's match. Any slot this week?",
+    sr: "Aleks je osetio nelagodnost u aduktoru na subotnjoj utakmici. Ima li termin ove nedelje?",
+  },
+  "Le veo el miércoles a las 10:00. Que venga con la equipación de entrenamiento.": {
+    en: "I'll see him Wednesday at 10:00. He should come in training kit.",
+    sr: "Vidim ga u sredu u 10:00. Neka dođe u trenažnoj opremi.",
+  },
+  "Revisamos cierre de cuotas del mes el viernes después de la reunión técnica.": {
+    en: "We'll review the month's fees closure on Friday after the technical meeting.",
+    sr: "Pregledaćemo zatvaranje mesečnih članarina u petak nakon tehničkog sastanka.",
+  },
+
+  // ─── SAITO seed · medical appointments ────────────────────────────────
+  "Molestias en aductor derecho": {
+    en: "Discomfort in right adductor",
+    sr: "Nelagodnost u desnom aduktoru",
+  },
+  "Seguimiento lesión isquiotibiales": {
+    en: "Hamstring injury follow-up",
+    sr: "Praćenje povrede zadnje lože",
+  },
+  "Revisión esguince tobillo": { en: "Ankle sprain review", sr: "Pregled uganuća skočnog zgloba" },
+  "Reconocimiento médico anual": {
+    en: "Annual medical check-up",
+    sr: "Godišnji lekarski pregled",
+  },
+  "Revisión post-partido.": { en: "Post-match review.", sr: "Pregled nakon utakmice." },
+  "Buena evolución. Reincorporación progresiva la próxima semana.": {
+    en: "Good progress. Gradual return next week.",
+    sr: "Dobar napredak. Postepeni povratak sledeće nedelje.",
+  },
+
+  // ─── SAITO seed · medical toolData descriptions & restrictions ────────
+  "Molestia en tobillo derecho tras gesto técnico.": {
+    en: "Right ankle discomfort after a technical action.",
+    sr: "Nelagodnost u desnom skočnom zglobu nakon tehničkog pokreta.",
+  },
+  "Sin saltos ni cambios de dirección 7 días.": {
+    en: "No jumps or changes of direction for 7 days.",
+    sr: "Bez skokova i promene pravca 7 dana.",
+  },
+  "Sobrecarga en isquiotibial izquierdo.": {
+    en: "Left hamstring overload.",
+    sr: "Preopterećenje leve zadnje lože.",
+  },
+  "Trabajo a intensidad ≤ 70%.": { en: "Work at intensity ≤ 70%.", sr: "Rad intenzitetom ≤ 70%." },
+  "Contusión leve en rodilla.": { en: "Mild knee bruise.", sr: "Lako nagnječenje kolena." },
+  "Sin restricciones operativas.": {
+    en: "No operational restrictions.",
+    sr: "Bez operativnih ograničenja.",
+  },
 };
 
-
-/** Translate a single demo value. Returns the input unchanged when no mapping. */
+/** Translate a single demo value. Falls back to translating ` · ` segments
+ *  and known "(N destinatario/s)" recipient suffixes when the full string
+ *  has no direct mapping. */
 export function td(value: string | undefined | null, lang: Lang): string {
   if (!value) return value ?? "";
   if (lang === "es") return value;
-  const entry = MAP[value];
-  if (!entry) return value;
-  return lang === "sr" ? entry.sr : entry.en;
+  const direct = MAP[value];
+  if (direct) return lang === "sr" ? direct.sr : direct.en;
+
+  const recip = value.match(/^(.*?)\s*\((\d+)\s+destinatarios?\)\s*$/);
+  if (recip) {
+    const head = td(recip[1], lang);
+    const n = recip[2];
+    const word =
+      lang === "sr"
+        ? n === "1"
+          ? "primalac"
+          : "primalaca"
+        : n === "1"
+          ? "recipient"
+          : "recipients";
+    return `${head} (${n} ${word})`;
+  }
+
+  if (value.includes(" · ")) {
+    return value
+      .split(" · ")
+      .map((seg) => td(seg, lang))
+      .join(" · ");
+  }
+  return value;
 }
 
 /** Hook variant. Stable identity per language for downstream memoization. */

@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useT, useTr, useLang } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import { useAuth } from "@/lib/auth";
 import { MedicalDisclaimer } from "@/components/MedicalDisclaimer";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,6 +57,7 @@ interface DBAppt {
 function MedicalCalendarPage() {
   const t = useT();
   const tr = useTr();
+  const td = useTd();
   const lang = useLang();
   const { user, profile } = useAuth();
   const orgId = profile?.organization_id;
@@ -334,7 +336,7 @@ function MedicalCalendarPage() {
                   {fmtTime(detail.appointment_time)}
                 </div>
                 <div>
-                  <span className="text-muted-foreground">{tr("Motivo", "Reason", "Razlog")}:</span> {detail.reason}
+                  <span className="text-muted-foreground">{tr("Motivo", "Reason", "Razlog")}:</span> {td(detail.reason)}
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-muted-foreground">{tr("Estado", "Status", "Status")}:</span>{" "}
@@ -344,7 +346,7 @@ function MedicalCalendarPage() {
                   <div>
                     <span className="text-muted-foreground">{tr("Notas", "Notes", "Beleške")}:</span>
                     <div className="mt-1 whitespace-pre-wrap rounded-lg bg-muted p-3 text-xs">
-                      {detail.notes}
+                      {td(detail.notes)}
                     </div>
                   </div>
                 )}

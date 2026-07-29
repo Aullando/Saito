@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useT, useTr, useLang } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import { useAuth } from "@/lib/auth";
 import { useData } from "@/lib/store";
 import { useCalendarLocal } from "@/lib/calendarLocal";
@@ -87,6 +88,7 @@ function CalendarPage() {
   const t = useT();
   const tr = useTr();
   const lang = useLang();
+  const td = useTd();
   const TYPE_OPTIONS = typeOptions(lang);
   const ROLE_OPTIONS = roleOptions(lang);
   const { profile, roles } = useAuth();
@@ -917,7 +919,7 @@ function CalendarPage() {
                             "bg-primary/10 text-primary border-primary/20"
                           } ${isCancelled ? "line-through opacity-60" : ""}`}
                         >
-                          {fmtTime(o.event.start_time)} · {o.event.title}
+                          {fmtTime(o.event.start_time)} · {td(o.event.title)}
                           {o.event.recurrence && (
                             <span className="ml-1 text-[10px] opacity-60">↻</span>
                           )}
@@ -971,7 +973,7 @@ function CalendarPage() {
                                 isCancelled ? "line-through" : ""
                               }`}
                             >
-                              {o.event.title}
+                              {td(o.event.title)}
                             </div>
                             <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
                               <TypeBadge type={o.event.type} />
@@ -1022,7 +1024,7 @@ function CalendarPage() {
                       <TypeBadge type={ev.type} />
                       <StatusPill tone={status.tone}>{status.label}</StatusPill>
                     </div>
-                    <SheetTitle className="mt-2">{ev.title}</SheetTitle>
+                    <SheetTitle className="mt-2">{td(ev.title)}</SheetTitle>
                   </SheetHeader>
 
                   <div className="mt-5 space-y-4 text-sm">
