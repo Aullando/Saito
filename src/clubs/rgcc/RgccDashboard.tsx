@@ -309,11 +309,14 @@ function AccionesRapidas() {
 // ─── Analytics ──────────────────────────────────────────────────────────────
 
 function AnalyticsTab() {
+  const tr = useTr();
+  const td = useTd();
   const { donut, top, salas } = useMemo(() => {
     const acts: Record<string, number> = {};
     const rooms: Record<string, { used: number; cap: number }> = {};
     RGCC_SESSIONS.forEach((s) => {
-      acts[s.activity] = (acts[s.activity] ?? 0) + 1;
+      const key = td(s.activity);
+      acts[key] = (acts[key] ?? 0) + 1;
       const r = (rooms[s.roomLabel] ??= { used: 0, cap: 0 });
       r.used += s.bookings.length;
       r.cap += s.capacity;
@@ -340,7 +343,8 @@ function AnalyticsTab() {
       .sort((a, b) => b.ocup - a.ocup)
       .slice(0, 6);
     return { donut, top, salas };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [td]);
 
   const evol = [
     { sem: "S1", horas: 280 },
@@ -353,7 +357,8 @@ function AnalyticsTab() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Distribución de actividades</h2>
+        <h2 className="mb-2 text-lg font-semibold">{tr("Distribución de actividades", "Activity distribution", "Distribucija aktivnosti")}</h2>
+
         <div className="h-64">
           <ResponsiveContainer>
             <PieChart>
