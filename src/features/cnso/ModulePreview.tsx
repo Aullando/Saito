@@ -347,7 +347,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                   <div className="min-w-0">
                     <div className="font-semibold truncate">{c.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {c.date} · {c.venue} · {c.discipline}
+                      {c.date} · {c.venue} · {td(c.discipline)}
                     </div>
                     {c.highlight && (
                       <div className="mt-1 text-[11px] text-primary">{c.highlight}</div>
