@@ -64,6 +64,7 @@ export const Route = createFileRoute("/_app/club")({
 
 function ClubPage() {
   const tr = useTr();
+  const lang = useLang();
   const sections = useData((s) => s.sections);
   const categories = useData((s) => s.categories);
   const groups = useData((s) => s.groups);
