@@ -173,7 +173,7 @@ function ResumenTab() {
               {sessionsToday.slice(0, 8).map((s) => (
                 <li key={s.id} className="flex items-center justify-between py-2.5">
                   <div className="min-w-0">
-                    <div className="text-sm font-medium truncate">{s.activity}</div>
+                    <div className="text-sm font-medium truncate">{tdf(s, "activity")}</div>
                     <div className="text-xs text-muted-foreground">
                       {s.time} · {s.roomLabel} · {s.primaryCoach}
                     </div>
