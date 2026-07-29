@@ -129,7 +129,8 @@ function MedicalToolPage() {
 function IncidentsView() {
   const tr = useTr();
   const td = useTd();
-  const [items, setItems] = useState<Incident[]>(SEED_INCIDENTS);
+  const items = useData((s) => s.incidents);
+  const addIncident = useData((s) => s.addIncident);
   const [open, setOpen] = useState(false);
 
   return (
@@ -146,7 +147,9 @@ function IncidentsView() {
           </DialogTrigger>
           <IncidentForm
             onSubmit={(inc) => {
-              setItems((s) => [inc, ...s]);
+              const { id: _drop, ...rest } = inc;
+              void _drop;
+              addIncident(rest);
               setOpen(false);
               toast.success(tr("Incidencia registrada", "Incident logged", "Incident zabeležen"));
             }}
