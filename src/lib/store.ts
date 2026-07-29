@@ -359,8 +359,16 @@ export const useData = create<DataState>()(
       deleteConversation: (id) =>
         set((s) => ({ conversations: s.conversations.filter((c) => c.id !== id) })),
 
+      setAttendance: (eventId, athleteId, status) =>
+        set((s) => ({
+          attendance: {
+            ...s.attendance,
+            [eventId]: { ...(s.attendance[eventId] ?? {}), [athleteId]: status },
+          },
+        })),
+
       reset: () => set(initial()),
     }),
-    { name: "saito-data", version: 9 },
+    { name: "saito-data", version: 10 },
   ),
 );
