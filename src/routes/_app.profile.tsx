@@ -1,15 +1,18 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth as useUiAuth, useUserAvatar } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { useT, useLang } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
+import { isDemoMode } from "@/lib/appMode";
 import { Camera } from "lucide-react";
 
 export const Route = createFileRoute("/_app/profile")({
@@ -25,17 +28,19 @@ export const Route = createFileRoute("/_app/profile")({
 function ProfilePage() {
   const t = useT();
   const navigate = useNavigate();
-  const qc = useQueryClient();
-  const { user, profile, roles, signOut, refresh } = useAuth();
+  const { user, profile, roles, signOut } = useAuth();
   const setAvatar = useUiAuth((s) => s.setAvatar);
   const removeAvatar = useUiAuth((s) => s.removeAvatar);
+  const setUserName = useUiAuth((s) => s.setUserName);
+  const setLangOverride = useUiAuth((s) => s.setLangOverride);
   const avatar = useUserAvatar(user?.id);
   const fileRef = useRef<HTMLInputElement>(null);
   const lang = useLang();
+  const demo = isDemoMode();
 
   const orgQ = useQuery({
     queryKey: ["organization", profile?.organization_id],
-    enabled: !!profile?.organization_id,
+    enabled: !!profile?.organization_id && !demo,
     queryFn: async () => {
       const { data } = await supabase
         .from("organizations")
@@ -46,29 +51,15 @@ function ProfilePage() {
     },
   });
 
-  const setLang = useMutation({
-    mutationFn: async (newLang: "es" | "en") => {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ language: newLang })
-        .eq("id", user!.id);
-      if (error) throw error;
-    },
-    onSuccess: async () => {
-      await refresh();
-      qc.invalidateQueries();
-    },
-  });
+  const applyName = (name: string) => {
+    if (!user || !name.trim()) return;
+    setUserName(user.id, name.trim());
+    toast.success(lang === "es" ? "Nombre actualizado" : lang === "sr" ? "Ime ažurirano" : "Name updated");
+  };
 
-  const setName = useMutation({
-    mutationFn: async (full_name: string) => {
-      const { error } = await supabase.from("profiles").update({ full_name }).eq("id", user!.id);
-      if (error) throw error;
-    },
-    onSuccess: async () => {
-      await refresh();
-    },
-  });
+  const applyLang = (newLang: "es" | "en" | "sr") => {
+    setLangOverride(newLang);
+  };
 
   const [editingName, setEditingName] = useState(false);
   const [draftName, setDraftName] = useState(profile?.full_name ?? "");
@@ -183,7 +174,7 @@ function ProfilePage() {
                     <Button
                       size="sm"
                       onClick={() => {
-                        setName.mutate(draftName);
+                        applyName(draftName);
                         setEditingName(false);
                       }}
                     >
@@ -214,31 +205,32 @@ function ProfilePage() {
               control={
                 <select
                   value={lang}
-                  onChange={(e) => setLang.mutate(e.target.value as "es" | "en")}
+                  onChange={(e) => applyLang(e.target.value as "es" | "en" | "sr")}
                   className="rounded-md border border-border bg-background px-2 py-1 text-sm"
                 >
                   <option value="es">Español</option>
                   <option value="en">English</option>
+                  <option value="sr">Srpski</option>
                 </select>
               }
             />
             <SettingRow
               label={t("change_password")}
               control={
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="rounded-full"
-                  onClick={async () => {
-                    if (!user.email) return;
-                    await supabase.auth.resetPasswordForEmail(user.email, {
-                      redirectTo: `${window.location.origin}/reset-password`,
-                    });
-                    alert(lang === "es" ? "Email enviado" : "Email sent");
-                  }}
-                >
-                  {t("change_password")}
-                </Button>
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span tabIndex={0}>
+                        <Button size="sm" variant="outline" className="rounded-full opacity-60" disabled>
+                          {t("change_password")}
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {lang === "es" ? "Disponible en producción" : lang === "sr" ? "Dostupno u produkciji" : "Available in production"}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               }
             />
           </div>

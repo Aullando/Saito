@@ -37,6 +37,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useSessionLocal } from "@/lib/sessionLocal";
+import { useData } from "@/lib/store";
 import { useLang, useTr } from "@/lib/i18n";
 import { useTd } from "@/lib/demoI18n";
 import {
@@ -45,7 +46,6 @@ import {
   type Treatment,
   type ApptRequest,
   INCIDENT_TYPES,
-  SEED_INCIDENTS,
   SEED_TREATMENTS,
   SEED_REQUESTS,
   fitnessClass,
@@ -129,7 +129,8 @@ function MedicalToolPage() {
 function IncidentsView() {
   const tr = useTr();
   const td = useTd();
-  const [items, setItems] = useState<Incident[]>(SEED_INCIDENTS);
+  const items = useData((s) => s.incidents);
+  const addIncident = useData((s) => s.addIncident);
   const [open, setOpen] = useState(false);
 
   return (
@@ -146,7 +147,9 @@ function IncidentsView() {
           </DialogTrigger>
           <IncidentForm
             onSubmit={(inc) => {
-              setItems((s) => [inc, ...s]);
+              const { id: _drop, ...rest } = inc;
+              void _drop;
+              addIncident(rest);
               setOpen(false);
               toast.success(tr("Incidencia registrada", "Incident logged", "Incident zabeležen"));
             }}

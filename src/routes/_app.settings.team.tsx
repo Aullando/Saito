@@ -18,6 +18,9 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useT, useTr } from "@/lib/i18n";
+import { isDemoMode } from "@/lib/appMode";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { DEMO_USERS } from "@/lib/seed";
 import { toast } from "sonner";
 import { Plus, Trash2, Mail } from "lucide-react";
 
@@ -40,6 +43,8 @@ function TeamPage() {
   const qc = useQueryClient();
   const { profile, user: me } = useAuth();
   const orgId = profile?.organization_id ?? null;
+  const demo = isDemoMode();
+  const prodOnly = tr("Disponible en producción", "Available in production", "Dostupno u produkciji");
 
   const membersQ = useQuery({
     queryKey: ["team", orgId],
@@ -137,7 +142,17 @@ function TeamPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const members = membersQ.data ?? [];
+  const members = demo
+    ? DEMO_USERS
+        .filter((u) => u.role !== "athlete")
+        .map((u) => ({
+          id: u.id,
+          email: u.email,
+          full_name: u.name,
+          avatar_url: null as string | null,
+          roles: (ALL_ROLES as readonly string[]).includes(u.role) ? [u.role as RoleName] : [],
+        }))
+    : membersQ.data ?? [];
 
   return (
     <>
@@ -149,6 +164,21 @@ function TeamPage() {
           "Upravljajte članovima organizacije i njihovim ulogama.",
         )}
         actions={
+          demo ? (
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span tabIndex={0}>
+                    <Button className="rounded-full opacity-60" disabled>
+                      <Plus className="mr-1 h-4 w-4" />
+                      {tr("Invitar", "Invite", "Pozovi")}
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>{prodOnly}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="rounded-full">
@@ -214,8 +244,19 @@ function TeamPage() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+          )
         }
       />
+
+      {demo && (
+        <div className="mb-4 rounded-2xl border border-dashed border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
+          {tr(
+            "Modo demo: la gestión de invitaciones, roles y bajas requiere el backend real. Se muestra la lista de miembros de la organización SAITO como referencia.",
+            "Demo mode: managing invitations, roles and removals requires the real backend. The SAITO organization member list is shown for reference.",
+            "Demo režim: upravljanje pozivima, ulogama i uklanjanjem zahteva pravi backend. Prikazana je lista članova SAITO organizacije kao referenca.",
+          )}
+        </div>
+      )}
 
       <Card className="p-0">
         <div className="overflow-x-auto">
@@ -275,21 +316,24 @@ function TeamPage() {
                       <div className="flex flex-wrap gap-1.5">
                         {ALL_ROLES.map((r) => {
                           const on = m.roles.includes(r);
-                          const disabled = isMe && r === "admin" && on;
+                          const guardDisabled = isMe && r === "admin" && on;
+                          const disabled = demo || guardDisabled || toggleRole.isPending;
                           return (
                             <button
                               key={r}
-                              disabled={disabled || toggleRole.isPending}
-                              onClick={() => toggleRole.mutate({ userId: m.id, role: r, on: !on })}
+                              disabled={disabled}
+                              onClick={() => !demo && toggleRole.mutate({ userId: m.id, role: r, on: !on })}
                               className={`rounded-full border px-2.5 py-0.5 text-[11px] uppercase tracking-wider transition ${
                                 on
                                   ? "border-primary bg-primary text-primary-foreground"
                                   : "border-border text-muted-foreground hover:border-primary"
                               } ${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
                               title={
-                                disabled
-                                  ? tr("No puedes quitarte admin", "You can't remove your own admin", "Ne možete sebi ukloniti admin ulogu")
-                                  : ""
+                                demo
+                                  ? prodOnly
+                                  : guardDisabled
+                                    ? tr("No puedes quitarte admin", "You can't remove your own admin", "Ne možete sebi ukloniti admin ulogu")
+                                    : ""
                               }
                             >
                               {r}
@@ -300,6 +344,11 @@ function TeamPage() {
                     </td>
                     <td className="px-5 py-3 text-right">
                       {!isMe && (
+                        demo ? (
+                          <Button size="sm" variant="ghost" className="text-destructive opacity-60" disabled title={prodOnly}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        ) : (
                         <Button
                           size="sm"
                           variant="ghost"
@@ -319,6 +368,7 @@ function TeamPage() {
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
+                        )
                       )}
                     </td>
                   </tr>

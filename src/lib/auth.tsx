@@ -31,6 +31,7 @@ const Ctx = createContext<AuthCtx | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const currentUserId = useLocalAuth((s) => s.currentUserId);
   const setUser = useLocalAuth((s) => s.setUser);
+  const nameOverrides = useLocalAuth((s) => s.nameOverrides);
 
   const value = useMemo<AuthCtx>(() => {
     const demo = currentUserId ? (DEMO_USERS.find((u) => u.id === currentUserId) ?? null) : null;
@@ -45,6 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         refresh: async () => {},
       };
     }
+    const displayName = nameOverrides[demo.id] ?? demo.name;
     return {
       session: { user: { id: demo.id, email: demo.email } },
       user: { id: demo.id, email: demo.email },
@@ -52,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: demo.id,
         organization_id: isDemoMode() ? null : "org-3",
         email: demo.email,
-        full_name: demo.name,
+        full_name: displayName,
         avatar_url: null,
         language: demo.language,
       },
@@ -61,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signOut: async () => setUser(null),
       refresh: async () => {},
     };
-  }, [currentUserId, setUser]);
+  }, [currentUserId, setUser, nameOverrides]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

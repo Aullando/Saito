@@ -30,16 +30,36 @@ import {
   MEDICAL_APPOINTMENTS,
   ALL_USERS,
 } from "./seed";
+import { SEED_INCIDENTS, type Incident } from "@/features/medical/toolData";
+
+// Stable keys for AI-per-module toggles (matches labels in privacy page).
+export const AI_MODULE_KEYS = [
+  "summaries_communication",
+  "suggestions_fees",
+  "assistant_medical",
+  "family_communications",
+  "sports_performance",
+] as const;
+export type AiModuleKey = (typeof AI_MODULE_KEYS)[number];
+const AI_MODULES_INITIAL: Record<AiModuleKey, boolean> = {
+  summaries_communication: true,
+  suggestions_fees: true,
+  assistant_medical: false,
+  family_communications: true,
+  sports_performance: false,
+};
 
 interface AuthState {
   currentUserId: string | null;
   avatars: Record<string, string>;
+  nameOverrides: Record<string, string>;
   mobileNavOpen: boolean;
   sidebarCollapsed: boolean;
   langOverride: "es" | "en" | "sr" | null;
   setUser: (id: string | null) => void;
   setAvatar: (id: string, dataUrl: string) => void;
   removeAvatar: (id: string) => void;
+  setUserName: (id: string, name: string) => void;
   setMobileNavOpen: (open: boolean) => void;
   setSidebarCollapsed: (v: boolean) => void;
   toggleSidebarCollapsed: () => void;
@@ -51,6 +71,7 @@ export const useAuth = create<AuthState>()(
     (set) => ({
       currentUserId: null,
       avatars: {},
+      nameOverrides: {},
       mobileNavOpen: false,
       sidebarCollapsed: false,
       langOverride: null,
@@ -61,6 +82,8 @@ export const useAuth = create<AuthState>()(
           const { [id]: _, ...rest } = s.avatars;
           return { avatars: rest };
         }),
+      setUserName: (id, name) =>
+        set((s) => ({ nameOverrides: { ...s.nameOverrides, [id]: name } })),
       setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
       setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
       toggleSidebarCollapsed: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
@@ -71,6 +94,7 @@ export const useAuth = create<AuthState>()(
       partialize: (s) => ({
         currentUserId: s.currentUserId,
         avatars: s.avatars,
+        nameOverrides: s.nameOverrides,
         sidebarCollapsed: s.sidebarCollapsed,
         langOverride: s.langOverride,
       }),
@@ -86,9 +110,10 @@ import { useAuth as useRealAuth } from "./auth";
 export const useCurrentUser = (): User | null => {
   const { user, profile, roles } = useRealAuth();
   const langOverride = useAuth((s) => s.langOverride);
+  const nameOverride = useAuth((s) => (user ? s.nameOverrides[user.id] : undefined));
   if (!user) return null;
   const role = (roles[0] ?? "admin") as User["role"];
-  const name = profile?.full_name || user.email?.split("@")[0] || "User";
+  const name = nameOverride || profile?.full_name || user.email?.split("@")[0] || "User";
   const parts = name.split(" ");
   const initials = (parts[0]?.[0] ?? "?") + (parts[1]?.[0] ?? "");
   const baseLang = (profile?.language as User["language"]) ?? "es";
@@ -116,6 +141,9 @@ interface DataState {
   conversations: Conversation[];
   appointments: MedicalAppointment[];
   attendance: Record<string, Record<string, "present" | "absent" | "doubt" | "injured">>;
+  incidents: Incident[];
+  aiModules: Record<AiModuleKey, boolean>;
+  mobileAbsences: Record<string, boolean>; // athleteUserId -> notified today
 
   addOrganization: (o: Omit<Organization, "id" | "createdAt" | "updatedAt">) => string;
   updateOrganization: (id: string, patch: Partial<Omit<Organization, "id" | "createdAt">>) => void;
@@ -159,6 +187,11 @@ interface DataState {
     status: "present" | "absent" | "doubt" | "injured",
   ) => void;
 
+  addIncident: (i: Omit<Incident, "id">) => string;
+  deleteIncident: (id: string) => void;
+  setAiModule: (key: AiModuleKey, on: boolean) => void;
+  setMobileAbsence: (userId: string, notified: boolean) => void;
+
   reset: () => void;
 }
 
@@ -176,6 +209,9 @@ const initial = () => ({
   conversations: CONVERSATIONS,
   appointments: MEDICAL_APPOINTMENTS,
   attendance: {} as Record<string, Record<string, "present" | "absent" | "doubt" | "injured">>,
+  incidents: SEED_INCIDENTS,
+  aiModules: { ...AI_MODULES_INITIAL },
+  mobileAbsences: {} as Record<string, boolean>,
 });
 
 const uid = (p: string) => `${p}-${Math.random().toString(36).slice(2, 8)}`;
@@ -367,8 +403,20 @@ export const useData = create<DataState>()(
           },
         })),
 
+      addIncident: (i) => {
+        const id = uid("inc");
+        set((s) => ({ incidents: [{ ...i, id }, ...s.incidents] }));
+        return id;
+      },
+      deleteIncident: (id) =>
+        set((s) => ({ incidents: s.incidents.filter((x) => x.id !== id) })),
+      setAiModule: (key, on) =>
+        set((s) => ({ aiModules: { ...s.aiModules, [key]: on } })),
+      setMobileAbsence: (userId, notified) =>
+        set((s) => ({ mobileAbsences: { ...s.mobileAbsences, [userId]: notified } })),
+
       reset: () => set(initial()),
     }),
-    { name: "saito-data", version: 10 },
+    { name: "saito-data", version: 11 },
   ),
 );

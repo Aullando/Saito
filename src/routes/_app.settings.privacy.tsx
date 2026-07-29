@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
+import { useData, AI_MODULE_KEYS, type AiModuleKey } from "@/lib/store";
 import {
   ShieldCheck, Users, Activity, Building2, Clock, Brain,
   CheckCircle2, XCircle, Eye, AlertTriangle,
@@ -58,13 +58,14 @@ const RETENTION = [
   { area: "Logs de acceso sensible", area_en: "Sensitive access logs", area_sr: "Logovi osetljivog pristupa", period: "12 meses", period_en: "12 months", period_sr: "12 meseci", basis: "Auditoría y seguridad", basis_en: "Audit and security", basis_sr: "Revizija i bezbednost" },
 ];
 
-const AI_MODULES_BASE = [
-  { module: "Resúmenes en comunicación", module_en: "Summaries in communication", module_sr: "Sažeci u komunikaciji", on: true },
-  { module: "Sugerencias en cuotas y pagos", module_en: "Suggestions in fees and payments", module_sr: "Predlozi za članarine i plaćanja", on: true },
-  { module: "Asistente en módulo médico", module_en: "Assistant in medical module", module_sr: "Asistent u medicinskom modulu", on: false },
-  { module: "Generación de comunicados a familias", module_en: "Generation of family communications", module_sr: "Generisanje komunikacije sa porodicama", on: true },
-  { module: "Análisis de rendimiento deportivo", module_en: "Sports performance analysis", module_sr: "Analiza sportskog učinka", on: false },
+const AI_MODULES_META: { key: AiModuleKey; module: string; module_en: string; module_sr: string }[] = [
+  { key: "summaries_communication", module: "Resúmenes en comunicación", module_en: "Summaries in communication", module_sr: "Sažeci u komunikaciji" },
+  { key: "suggestions_fees", module: "Sugerencias en cuotas y pagos", module_en: "Suggestions in fees and payments", module_sr: "Predlozi za članarine i plaćanja" },
+  { key: "assistant_medical", module: "Asistente en módulo médico", module_en: "Assistant in medical module", module_sr: "Asistent u medicinskom modulu" },
+  { key: "family_communications", module: "Generación de comunicados a familias", module_en: "Generation of family communications", module_sr: "Generisanje komunikacije sa porodicama" },
+  { key: "sports_performance", module: "Análisis de rendimiento deportivo", module_en: "Sports performance analysis", module_sr: "Analiza sportskog učinka" },
 ];
+void AI_MODULE_KEYS;
 
 function PrivacyMockup() {
   const { profile } = useAuth();
@@ -72,7 +73,8 @@ function PrivacyMockup() {
   const t = (es: string, en: string, sr?: string) =>
     lang === "es" ? es : lang === "sr" ? (sr ?? en) : en;
 
-  const [aiState, setAiState] = useState(AI_MODULES_BASE);
+  const aiModules = useData((s) => s.aiModules);
+  const setAiModule = useData((s) => s.setAiModule);
 
   return (
     <>
@@ -202,22 +204,25 @@ function PrivacyMockup() {
           )}
         </p>
         <div className="mt-4 space-y-2">
-          {aiState.map((m, i) => (
-            <div key={m.module} className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
-              <div className="flex items-center gap-3">
-                {m.on ? <Eye className="h-4 w-4 text-primary" /> : <XCircle className="h-4 w-4 text-muted-foreground" />}
-                <span className="text-sm font-medium">{lang === "es" ? m.module : lang === "sr" ? m.module_sr : m.module_en}</span>
+          {AI_MODULES_META.map((m) => {
+            const on = aiModules[m.key];
+            return (
+              <div key={m.key} className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
+                <div className="flex items-center gap-3">
+                  {on ? <Eye className="h-4 w-4 text-primary" /> : <XCircle className="h-4 w-4 text-muted-foreground" />}
+                  <span className="text-sm font-medium">{lang === "es" ? m.module : lang === "sr" ? m.module_sr : m.module_en}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAiModule(m.key, !on)}
+                  className={`relative h-6 w-11 rounded-full transition ${on ? "bg-primary" : "bg-muted"}`}
+                  aria-label={on ? "disable" : "enable"}
+                >
+                  <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition ${on ? "left-5" : "left-0.5"}`} />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setAiState((s) => s.map((x, j) => (j === i ? { ...x, on: !x.on } : x)))}
-                className={`relative h-6 w-11 rounded-full transition ${m.on ? "bg-primary" : "bg-muted"}`}
-                aria-label={m.on ? "disable" : "enable"}
-              >
-                <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition ${m.on ? "left-5" : "left-0.5"}`} />
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Card>
     </>
