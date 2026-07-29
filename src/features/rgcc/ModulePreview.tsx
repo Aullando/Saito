@@ -169,7 +169,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           {RGCC_COACHES.slice(0, 18).map((c) => (
             <Card key={c.id}>
               <div className="font-semibold">{c.name}</div>
-              <div className="text-xs text-muted-foreground">{c.specialty}</div>
+              <div className="text-xs text-muted-foreground">{td(c.specialty)}</div>
               <div className="mt-1 text-xs">
                 {tr("Contrato", "Contract", "Ugovor")}: {c.contractedHours}h · {tr("Total", "Total", "Ukupno")}: {c.totalHours}h
               </div>
@@ -178,6 +178,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               </div>
             </Card>
           ))}
+
         </Grid>
       );
     case "socio":
