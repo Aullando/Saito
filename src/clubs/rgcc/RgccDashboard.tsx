@@ -84,6 +84,8 @@ export function RgccDashboard() {
 // ─── Resumen ────────────────────────────────────────────────────────────────
 
 function ResumenTab() {
+  const tr = useTr();
+  const td = useTd();
   const today = new Date().toISOString().slice(0, 10);
   const sessionsToday = RGCC_SESSIONS.filter((s) => s.date === today);
   const totalHours = RGCC_COACHES.reduce((s, c) => s + c.totalHours, 0);
@@ -96,23 +98,23 @@ function ResumenTab() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Kpi
           icon={<Users className="h-4 w-4" />}
-          label="Monitores activos"
+          label={tr("Monitores activos", "Active coaches", "Aktivni treneri")}
           value={String(RGCC_COACHES.length)}
         />
         <Kpi
           icon={<CalendarDays className="h-4 w-4" />}
-          label="Clases programadas"
+          label={tr("Clases programadas", "Scheduled classes", "Zakazani časovi")}
           value={String(RGCC_SESSIONS.length)}
         />
         <Kpi
           icon={<Clock className="h-4 w-4" />}
-          label="Horas producción"
+          label={tr("Horas producción", "Production hours", "Sati produkcije")}
           value={`${totalHours.toFixed(1)}h`}
           tone="warning"
         />
         <Kpi
           icon={<AlertTriangle className="h-4 w-4" />}
-          label="Ausencias hoy"
+          label={tr("Ausencias hoy", "Absences today", "Odsustva danas")}
           value={String(absencesToday)}
           tone={absencesToday === 0 ? "success" : "warning"}
         />
@@ -121,8 +123,8 @@ function ResumenTab() {
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
           <div className="mb-3">
-            <h2 className="text-lg font-semibold">Carga horaria por monitor</h2>
-            <p className="text-xs text-muted-foreground">Top 8 · semana en curso</p>
+            <h2 className="text-lg font-semibold">{tr("Carga horaria por monitor", "Coach workload", "Radno opterećenje trenera")}</h2>
+            <p className="text-xs text-muted-foreground">{tr("Top 8 · semana en curso", "Top 8 · current week", "Top 8 · tekuća nedelja")}</p>
           </div>
           <div className="space-y-3">
             {[...RGCC_COACHES]
@@ -156,23 +158,23 @@ function ResumenTab() {
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Clases de hoy</h2>
+            <h2 className="text-lg font-semibold">{tr("Clases de hoy", "Today's classes", "Današnji časovi")}</h2>
             <Link
               to="/rgcc/$slug"
               params={{ slug: "clases" }}
               className="text-xs text-primary hover:underline"
             >
-              Ver todas
+              {tr("Ver todas", "View all", "Prikaži sve")}
             </Link>
           </div>
           {sessionsToday.length === 0 ? (
-            <div className="text-sm text-muted-foreground">Sin clases programadas hoy.</div>
+            <div className="text-sm text-muted-foreground">{tr("Sin clases programadas hoy.", "No classes scheduled today.", "Nema časova danas.")}</div>
           ) : (
             <ul className="divide-y divide-border">
               {sessionsToday.slice(0, 8).map((s) => (
                 <li key={s.id} className="flex items-center justify-between py-2.5">
                   <div className="min-w-0">
-                    <div className="text-sm font-medium truncate">{s.activity}</div>
+                    <div className="text-sm font-medium truncate">{td(s.activity)}</div>
                     <div className="text-xs text-muted-foreground">
                       {s.time} · {s.roomLabel} · {s.primaryCoach}
                     </div>
@@ -186,7 +188,7 @@ function ResumenTab() {
                           : "info"
                     }
                   >
-                    {s.status}
+                    {td(s.status)}
                   </Pill>
                 </li>
               ))}
@@ -199,6 +201,7 @@ function ResumenTab() {
     </>
   );
 }
+
 
 function AlertasCard() {
   const monLimite = RGCC_COACHES.filter((c) => c.totalHours / Math.max(1, c.maxHours) >= 0.9);
