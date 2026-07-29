@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Moon, Sun, Search, Menu, ChevronDown, X } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
@@ -8,15 +9,19 @@ import { NotificationsBell } from "./NotificationsBell";
 import { ClubSwitcher } from "./ClubSwitcher";
 import { useTheme } from "@/lib/theme";
 import { useClub } from "@/clubs/ClubProvider";
+import { useLang } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-const ROLE_LABEL: Record<string, string> = {
-  sysadmin: "SysAdmin",
-  admin: "Admin",
-  manager: "Manager",
-  technical: "Technical",
-  medical: "Medical",
-  athlete: "Atleta",
+// Perfiles SAITO expuestos en el selector de rol de la demo.
+const SAITO_ROLE_IDS = new Set(["u-mgr", "u-adm", "u-med", "u-tec", "u-ath"]);
+
+const ROLE_LABEL: Record<string, { es: string; en: string; sr: string }> = {
+  sysadmin: { es: "SysAdmin", en: "SysAdmin", sr: "SysAdmin" },
+  admin: { es: "Administración", en: "Admin", sr: "Administracija" },
+  manager: { es: "Dirección", en: "Manager", sr: "Direkcija" },
+  technical: { es: "Entrenador", en: "Coach", sr: "Trener" },
+  medical: { es: "Staff médico", en: "Medical staff", sr: "Medicinsko osoblje" },
+  athlete: { es: "Deportista", en: "Athlete", sr: "Sportista" },
 };
 
 export function Topbar() {
