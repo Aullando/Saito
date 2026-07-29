@@ -68,7 +68,7 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ClubCtx>(
     () => ({
       club,
-      availableClubs: Object.values(CLUBS),
+      availableClubs: VISIBLE_CLUB_IDS.map((id) => CLUBS[id]).filter(Boolean),
       switchClub,
       isModuleEnabled: (m) => isModuleEnabled(club, m),
     }),
