@@ -8,7 +8,7 @@ import { useCurrentUser, useData } from "@/lib/store";
 import { useTr } from "@/lib/i18n";
 import { useClub } from "@/clubs/ClubProvider";
 import { RgccDashboard } from "@/clubs/rgcc/RgccDashboard";
-import { CnsoDashboard } from "@/clubs/cnso/CnsoDashboard";
+
 import { GffWorkspace } from "@/clubs/gff/GffWorkspace";
 import {
   Users,
