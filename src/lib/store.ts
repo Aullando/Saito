@@ -116,7 +116,8 @@ interface DataState {
   conversations: Conversation[];
   appointments: MedicalAppointment[];
 
-  addOrganization: (o: Omit<Organization, "id" | "createdAt" | "updatedAt">) => void;
+  addOrganization: (o: Omit<Organization, "id" | "createdAt" | "updatedAt">) => string;
+  updateOrganization: (id: string, patch: Partial<Omit<Organization, "id" | "createdAt">>) => void;
   toggleOrgAi: (id: string) => void;
   setOrgStatus: (id: string, status: Organization["status"]) => void;
 
