@@ -2,7 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card, Pill } from "@/components/ui-kit";
-import { CheckCircle2, AlertCircle, Circle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ResetDemoDialog } from "@/components/ResetDemoDialog";
+import { CheckCircle2, AlertCircle, Circle, RotateCcw } from "lucide-react";
 import { useTr } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/settings/qa")({
