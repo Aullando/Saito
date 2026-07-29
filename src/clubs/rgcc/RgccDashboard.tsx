@@ -7,6 +7,8 @@ import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useClub } from "@/clubs/ClubProvider";
+import { useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import { RGCC_COACHES, RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES, RGCC_MEMBERS } from "./seed";
 import {
   Users,
@@ -34,22 +36,28 @@ import {
   Legend,
 } from "recharts";
 
-const TABS = ["Resumen", "Analytics", "Control Horas"] as const;
-type Tab = (typeof TABS)[number];
+const TAB_KEYS = ["resumen", "analytics", "control-horas"] as const;
+type Tab = (typeof TAB_KEYS)[number];
 
 export function RgccDashboard() {
+  const tr = useTr();
   const { club } = useClub();
-  const [tab, setTab] = useState<Tab>("Resumen");
+  const [tab, setTab] = useState<Tab>("resumen");
+  const labels: Record<Tab, string> = {
+    resumen: tr("Resumen", "Overview", "Pregled"),
+    analytics: tr("Analytics", "Analytics", "Analitika"),
+    "control-horas": tr("Control Horas", "Hours Control", "Kontrola sati"),
+  };
 
   return (
     <>
       <PageHeader
         title={`Dashboard · ${club.brand.shortName}`}
-        subtitle="Resumen operativo del club"
+        subtitle={tr("Resumen operativo del club", "Club operations overview", "Operativni pregled kluba")}
       />
 
       <div className="mb-5 flex items-center gap-1 border-b border-border overflow-x-auto">
-        {TABS.map((t) => (
+        {TAB_KEYS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -59,22 +67,25 @@ export function RgccDashboard() {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {t}
+            {labels[t]}
             {tab === t && <span className="absolute left-2 right-2 bottom-0 h-[2px] bg-primary" />}
           </button>
         ))}
       </div>
 
-      {tab === "Resumen" && <ResumenTab />}
-      {tab === "Analytics" && <AnalyticsTab />}
-      {tab === "Control Horas" && <ControlHorasTab />}
+      {tab === "resumen" && <ResumenTab />}
+      {tab === "analytics" && <AnalyticsTab />}
+      {tab === "control-horas" && <ControlHorasTab />}
     </>
   );
 }
 
+
 // ─── Resumen ────────────────────────────────────────────────────────────────
 
 function ResumenTab() {
+  const tr = useTr();
+  const td = useTd();
   const today = new Date().toISOString().slice(0, 10);
   const sessionsToday = RGCC_SESSIONS.filter((s) => s.date === today);
   const totalHours = RGCC_COACHES.reduce((s, c) => s + c.totalHours, 0);
@@ -87,23 +98,23 @@ function ResumenTab() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Kpi
           icon={<Users className="h-4 w-4" />}
-          label="Monitores activos"
+          label={tr("Monitores activos", "Active coaches", "Aktivni treneri")}
           value={String(RGCC_COACHES.length)}
         />
         <Kpi
           icon={<CalendarDays className="h-4 w-4" />}
-          label="Clases programadas"
+          label={tr("Clases programadas", "Scheduled classes", "Zakazani časovi")}
           value={String(RGCC_SESSIONS.length)}
         />
         <Kpi
           icon={<Clock className="h-4 w-4" />}
-          label="Horas producción"
+          label={tr("Horas producción", "Production hours", "Sati produkcije")}
           value={`${totalHours.toFixed(1)}h`}
           tone="warning"
         />
         <Kpi
           icon={<AlertTriangle className="h-4 w-4" />}
-          label="Ausencias hoy"
+          label={tr("Ausencias hoy", "Absences today", "Odsustva danas")}
           value={String(absencesToday)}
           tone={absencesToday === 0 ? "success" : "warning"}
         />
@@ -112,8 +123,8 @@ function ResumenTab() {
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
           <div className="mb-3">
-            <h2 className="text-lg font-semibold">Carga horaria por monitor</h2>
-            <p className="text-xs text-muted-foreground">Top 8 · semana en curso</p>
+            <h2 className="text-lg font-semibold">{tr("Carga horaria por monitor", "Coach workload", "Radno opterećenje trenera")}</h2>
+            <p className="text-xs text-muted-foreground">{tr("Top 8 · semana en curso", "Top 8 · current week", "Top 8 · tekuća nedelja")}</p>
           </div>
           <div className="space-y-3">
             {[...RGCC_COACHES]
@@ -147,23 +158,23 @@ function ResumenTab() {
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Clases de hoy</h2>
+            <h2 className="text-lg font-semibold">{tr("Clases de hoy", "Today's classes", "Današnji časovi")}</h2>
             <Link
               to="/rgcc/$slug"
               params={{ slug: "clases" }}
               className="text-xs text-primary hover:underline"
             >
-              Ver todas
+              {tr("Ver todas", "View all", "Prikaži sve")}
             </Link>
           </div>
           {sessionsToday.length === 0 ? (
-            <div className="text-sm text-muted-foreground">Sin clases programadas hoy.</div>
+            <div className="text-sm text-muted-foreground">{tr("Sin clases programadas hoy.", "No classes scheduled today.", "Nema časova danas.")}</div>
           ) : (
             <ul className="divide-y divide-border">
               {sessionsToday.slice(0, 8).map((s) => (
                 <li key={s.id} className="flex items-center justify-between py-2.5">
                   <div className="min-w-0">
-                    <div className="text-sm font-medium truncate">{s.activity}</div>
+                    <div className="text-sm font-medium truncate">{td(s.activity)}</div>
                     <div className="text-xs text-muted-foreground">
                       {s.time} · {s.roomLabel} · {s.primaryCoach}
                     </div>
@@ -177,7 +188,7 @@ function ResumenTab() {
                           : "info"
                     }
                   >
-                    {s.status}
+                    {td(s.status)}
                   </Pill>
                 </li>
               ))}
@@ -191,23 +202,30 @@ function ResumenTab() {
   );
 }
 
+
 function AlertasCard() {
+  const tr = useTr();
+  const td = useTd();
   const monLimite = RGCC_COACHES.filter((c) => c.totalHours / Math.max(1, c.maxHours) >= 0.9);
   const incidentsOpen = RGCC_INCIDENTS.filter((i) => i.status !== "resolved");
   const absRequested = RGCC_ABSENCES.filter((a) => a.status === "requested");
 
+  const atMax = tr("al", "at", "na");
+  const ofMax = tr("de su máximo", "of max", "od maks.");
+  const absReq = tr("Solicitud de ausencia", "Absence request", "Zahtev za odsustvo");
+
   const alerts: { tone: "danger" | "warning" | "info"; text: string }[] = [
     ...monLimite.map((m) => ({
       tone: "warning" as const,
-      text: `${m.name} al ${Math.round((m.totalHours / m.maxHours) * 100)}% de su máximo`,
+      text: `${m.name} ${atMax} ${Math.round((m.totalHours / m.maxHours) * 100)}% ${ofMax}`,
     })),
     ...incidentsOpen.map((i) => ({
       tone: i.severity === "high" ? ("danger" as const) : ("warning" as const),
-      text: `${i.type}: ${i.description}`,
+      text: `${td(i.type)}: ${td(i.description)}`,
     })),
     ...absRequested.map((a) => ({
       tone: "info" as const,
-      text: `Solicitud de ausencia: ${a.coachName} (${a.reason})`,
+      text: `${absReq}: ${a.coachName} (${td(a.reason)})`,
     })),
   ];
 
@@ -215,8 +233,8 @@ function AlertasCard() {
     <Card className="bg-foreground text-background">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <div className="text-sm font-semibold">Alertas activas</div>
-          <div className="text-xs opacity-60">Detección automática</div>
+          <div className="text-sm font-semibold">{tr("Alertas activas", "Active alerts", "Aktivna upozorenja")}</div>
+          <div className="text-xs opacity-60">{tr("Detección automática", "Automatic detection", "Automatska detekcija")}</div>
         </div>
         <span className="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-bold">
           {alerts.length}
@@ -225,7 +243,7 @@ function AlertasCard() {
       {alerts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <CheckCircle2 className="h-8 w-8 mb-2 text-success" />
-          <div className="text-sm font-semibold">Todo en orden</div>
+          <div className="text-sm font-semibold">{tr("Todo en orden", "All clear", "Sve u redu")}</div>
         </div>
       ) : (
         <ul className="space-y-2">
@@ -250,21 +268,22 @@ function AlertasCard() {
 }
 
 function AccionesRapidas() {
+  const tr = useTr();
   const items: { icon: React.ReactNode; label: string; slug: string }[] = [
     {
       icon: <Dumbbell className="h-4 w-4" />,
-      label: "Entrenamiento Personal",
+      label: tr("Entrenamiento Personal", "Personal Training", "Personalni trening"),
       slug: "entrenamiento-personal",
     },
-    { icon: <Search className="h-4 w-4" />, label: "Biblioteca", slug: "biblioteca" },
-    { icon: <Users className="h-4 w-4" />, label: "Monitores", slug: "monitores" },
-    { icon: <FileDown className="h-4 w-4" />, label: "Centro Datos", slug: "centro-datos" },
+    { icon: <Search className="h-4 w-4" />, label: tr("Biblioteca", "Library", "Biblioteka"), slug: "biblioteca" },
+    { icon: <Users className="h-4 w-4" />, label: tr("Monitores", "Coaches", "Treneri"), slug: "monitores" },
+    { icon: <FileDown className="h-4 w-4" />, label: tr("Centro Datos", "Data Center", "Centar podataka"), slug: "centro-datos" },
   ];
   return (
     <Card>
       <div className="mb-3">
-        <h2 className="text-lg font-semibold">Acciones rápidas</h2>
-        <p className="text-xs text-muted-foreground">Atajos del coordinador</p>
+        <h2 className="text-lg font-semibold">{tr("Acciones rápidas", "Quick actions", "Brze akcije")}</h2>
+        <p className="text-xs text-muted-foreground">{tr("Atajos del coordinador", "Coordinator shortcuts", "Prečice koordinatora")}</p>
       </div>
       <div className="grid grid-cols-1 gap-2">
         {items.map((a) => (
@@ -278,9 +297,10 @@ function AccionesRapidas() {
               {a.icon}
             </div>
             <div className="text-sm font-medium flex-1">{a.label}</div>
-            <span className="text-xs text-muted-foreground">IR →</span>
+            <span className="text-xs text-muted-foreground">{tr("IR", "GO", "IDI")} →</span>
           </Link>
         ))}
+
       </div>
     </Card>
   );
@@ -289,11 +309,14 @@ function AccionesRapidas() {
 // ─── Analytics ──────────────────────────────────────────────────────────────
 
 function AnalyticsTab() {
+  const tr = useTr();
+  const td = useTd();
   const { donut, top, salas } = useMemo(() => {
     const acts: Record<string, number> = {};
     const rooms: Record<string, { used: number; cap: number }> = {};
     RGCC_SESSIONS.forEach((s) => {
-      acts[s.activity] = (acts[s.activity] ?? 0) + 1;
+      const key = td(s.activity);
+      acts[key] = (acts[key] ?? 0) + 1;
       const r = (rooms[s.roomLabel] ??= { used: 0, cap: 0 });
       r.used += s.bookings.length;
       r.cap += s.capacity;
@@ -320,7 +343,8 @@ function AnalyticsTab() {
       .sort((a, b) => b.ocup - a.ocup)
       .slice(0, 6);
     return { donut, top, salas };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [td]);
 
   const evol = [
     { sem: "S1", horas: 280 },
@@ -333,7 +357,8 @@ function AnalyticsTab() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Distribución de actividades</h2>
+        <h2 className="mb-2 text-lg font-semibold">{tr("Distribución de actividades", "Activity distribution", "Distribucija aktivnosti")}</h2>
+
         <div className="h-64">
           <ResponsiveContainer>
             <PieChart>
@@ -350,7 +375,7 @@ function AnalyticsTab() {
       </Card>
 
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Evolución horas producción</h2>
+        <h2 className="mb-2 text-lg font-semibold">{tr("Evolución horas producción", "Production hours evolution", "Evolucija sati produkcije")}</h2>
         <div className="h-64">
           <ResponsiveContainer>
             <LineChart data={evol}>
@@ -371,7 +396,7 @@ function AnalyticsTab() {
       </Card>
 
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Top actividades por volumen</h2>
+        <h2 className="mb-2 text-lg font-semibold">{tr("Top actividades por volumen", "Top activities by volume", "Top aktivnosti po obimu")}</h2>
         <div className="h-64">
           <ResponsiveContainer>
             <BarChart data={top} layout="vertical">
@@ -392,7 +417,7 @@ function AnalyticsTab() {
       </Card>
 
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Ocupación de salas (%)</h2>
+        <h2 className="mb-2 text-lg font-semibold">{tr("Ocupación de salas (%)", "Room occupancy (%)", "Popunjenost sala (%)")}</h2>
         <div className="h-64">
           <ResponsiveContainer>
             <BarChart data={salas}>
@@ -412,22 +437,27 @@ function AnalyticsTab() {
 // ─── Control Horas ─────────────────────────────────────────────────────────
 
 function ControlHorasTab() {
+  const tr = useTr();
   const total = +RGCC_COACHES.reduce((s, c) => s + c.totalHours, 0).toFixed(1);
   const contract = RGCC_COACHES.reduce((s, c) => s + c.contractedHours, 0);
   const diff = +(total - contract).toFixed(1);
   return (
     <Card>
       <div className="mb-3">
-        <h2 className="text-lg font-semibold">Control de horas global</h2>
+        <h2 className="text-lg font-semibold">{tr("Control de horas global", "Global hours control", "Globalna kontrola sati")}</h2>
         <p className="text-xs text-muted-foreground">
-          Resumen semanal · {RGCC_MEMBERS.length} socios activos
+          {tr(
+            `Resumen semanal · ${RGCC_MEMBERS.length} socios activos`,
+            `Weekly summary · ${RGCC_MEMBERS.length} active members`,
+            `Nedeljni pregled · ${RGCC_MEMBERS.length} aktivnih članova`,
+          )}
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Stat label="Producción total" value={`${total}h`} />
-        <Stat label="Contrato total" value={`${contract}h`} />
+        <Stat label={tr("Producción total", "Total production", "Ukupna produkcija")} value={`${total}h`} />
+        <Stat label={tr("Contrato total", "Total contract", "Ukupan ugovor")} value={`${contract}h`} />
         <Stat
-          label="Diferencia"
+          label={tr("Diferencia", "Difference", "Razlika")}
           value={`${diff > 0 ? "+" : ""}${diff}h`}
           tone={diff > 0 ? "warning" : "success"}
         />
@@ -435,6 +465,7 @@ function ControlHorasTab() {
     </Card>
   );
 }
+
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 

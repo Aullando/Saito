@@ -169,7 +169,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           {RGCC_COACHES.slice(0, 18).map((c) => (
             <Card key={c.id}>
               <div className="font-semibold">{c.name}</div>
-              <div className="text-xs text-muted-foreground">{c.specialty}</div>
+              <div className="text-xs text-muted-foreground">{td(c.specialty)}</div>
               <div className="mt-1 text-xs">
                 {tr("Contrato", "Contract", "Ugovor")}: {c.contractedHours}h · {tr("Total", "Total", "Ukupno")}: {c.totalHours}h
               </div>
@@ -178,6 +178,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               </div>
             </Card>
           ))}
+
         </Grid>
       );
     case "socio":
@@ -194,7 +195,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <div className="mt-1 text-xs">
                 {tr("Monitor", "Coach", "Trener")}: {m.coachName} · {tr("Nivel", "Level", "Nivo")} {m.level}
               </div>
-              <div className="mt-1 text-[11px] text-muted-foreground line-clamp-2">{m.goal}</div>
+              <div className="mt-1 text-[11px] text-muted-foreground line-clamp-2">{td(m.goal)}</div>
             </Card>
           ))}
         </Grid>
@@ -265,7 +266,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           <div className="space-y-2">
             {RGCC_WORKOUTS.map((w) => (
               <Card key={w.id}>
-                <div className="font-semibold">{w.title}</div>
+                <div className="font-semibold">{td(w.title)}</div>
                 <div className="text-xs text-muted-foreground">
                   {w.memberNumber} · {w.coachName} · {td(w.status)}
                 </div>
@@ -274,6 +275,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                 </div>
               </Card>
             ))}
+
           </div>
         </>
       );
@@ -284,11 +286,11 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           <Grid>
             {RGCC_ROUTINES.map((r) => (
               <Card key={r.id}>
-                <div className="font-semibold">{r.name}</div>
+                <div className="font-semibold">{td(r.name)}</div>
                 <div className="text-xs text-muted-foreground">
-                  {r.level} · {r.durationMin} min
+                  {td(r.level)} · {r.durationMin} min
                 </div>
-                <p className="mt-1 text-xs">{r.goal}</p>
+                <p className="mt-1 text-xs">{td(r.goal)}</p>
               </Card>
             ))}
           </Grid>
@@ -296,16 +298,17 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
           <Grid>
             {RGCC_EXERCISES.map((e) => (
               <Card key={e.id}>
-                <div className="font-semibold">{e.name}</div>
+                <div className="font-semibold">{td(e.name)}</div>
                 <div className="text-xs text-muted-foreground">
-                  {td(e.category)} · {e.group}
+                  {td(e.category)} · {td(e.group)}
                 </div>
                 <div className="mt-1 text-xs">
-                  {e.equipment} · {e.dose}
+                  {td(e.equipment)} · {e.dose}
                 </div>
               </Card>
             ))}
           </Grid>
+
         </>
       );
     case "resumen":

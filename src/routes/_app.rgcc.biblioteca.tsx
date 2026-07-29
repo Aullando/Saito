@@ -129,14 +129,14 @@ function Biblioteca() {
             <Card key={r.id}>
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="font-semibold">{r.name}</div>
+                  <div className="font-semibold">{td(r.name)}</div>
                   <div className="text-xs text-muted-foreground">
                     {td(r.level)} · {r.durationMin} min
                   </div>
                 </div>
                 <Pill tone="info">{r.exerciseIds.length} {tr("ej.", "ex.", "vež.")}</Pill>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">{r.goal}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{td(r.goal)}</p>
               <ul className="mt-3 space-y-1 text-xs">
                 {r.exerciseIds.map((id) => {
                   const ex = RGCC_EXERCISES.find((e) => e.id === id);
@@ -145,12 +145,13 @@ function Biblioteca() {
                       key={id}
                       className="flex items-center justify-between gap-2 rounded-md bg-muted/40 px-2 py-1"
                     >
-                      <span className="truncate">{ex?.name ?? id}</span>
+                      <span className="truncate">{td(ex?.name) ?? id}</span>
                       <span className="text-muted-foreground">{ex?.dose}</span>
                     </li>
                   );
                 })}
               </ul>
+
               <div className="mt-3 flex justify-end">
                 <Link
                   to="/rgcc/entrenamiento-personal"
@@ -184,21 +185,22 @@ function ExerciseCard({ ex }: { ex: RgccExercise }) {
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
-          <div className="font-semibold leading-tight">{ex.name}</div>
+          <div className="font-semibold leading-tight">{td(ex.name)}</div>
           <Pill tone={ex.source === "evidence" ? "success" : "info"}>
             {ex.source === "evidence" ? "EV" : tr("Cat.", "Cat.", "Kat.")}
           </Pill>
         </div>
         <div className="mt-1 text-xs text-muted-foreground">
-          {td(ex.category)} · {ex.group}
+          {td(ex.category)} · {td(ex.group)}
         </div>
         <div className="mt-2 flex flex-wrap gap-1 text-[11px]">
-          <span className="rounded-full bg-muted px-2 py-0.5">{ex.equipment}</span>
+          <span className="rounded-full bg-muted px-2 py-0.5">{td(ex.equipment)}</span>
           <span className="rounded-full bg-muted px-2 py-0.5">{td(ex.level)}</span>
           <span className="rounded-full bg-primary/10 px-2 py-0.5 text-primary">{ex.dose}</span>
         </div>
-        {ex.cues && <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{ex.cues}</p>}
+        {ex.cues && <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{td(ex.cues)}</p>}
       </div>
+
     </Card>
   );
 }
