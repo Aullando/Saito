@@ -3,6 +3,7 @@ import { Bell, Check, CheckCheck, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useLang } from "@/lib/i18n";
 import { isDemoMode } from "@/lib/appMode";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
