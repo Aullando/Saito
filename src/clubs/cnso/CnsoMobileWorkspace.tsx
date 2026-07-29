@@ -20,6 +20,7 @@ import { CNSO_MEMBERS, CNSO_COACHES } from "./seed/people";
 import { CNSO_SESSIONS } from "./seed/sessions";
 import { CNSO_COMPETITIONS } from "./seed/competitions";
 import { CNSO_VENUES } from "./seed/venues";
+import { useTdField } from "@/lib/demoI18n";
 
 // ----- Paleta CNSO ----------------------------------------------------------
 const INK = "#0A2540";
@@ -527,6 +528,7 @@ function StatCard({ label, value, color }: { label: string; value: number; color
 // TEAM — grupo / convocatoria del entrenador con nadadores
 // ============================================================================
 export function CnsoMobileTeam() {
+  const tdf = useTdField();
   const user = useCurrentUser();
   const isCoach = user?.role === "technical" || user?.role === "manager";
   const coach = getDemoCoach();
@@ -560,7 +562,7 @@ export function CnsoMobileTeam() {
                   {m.firstName} {m.lastName}
                 </div>
                 <div className="truncate text-[11px]" style={{ color: MUTED }}>
-                  {m.activity}
+                  {tdf(m, "activity")}
                 </div>
               </div>
               <span

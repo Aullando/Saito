@@ -391,6 +391,85 @@ const MAP: Record<string, Tri> = {
   "Escuela · Benjamín": { en: "School · Benjamin", sr: "Škola · početnici" },
   "Escuela · Alevín": { en: "School · Alevín", sr: "Škola · mlađi kadeti" },
   "Escuela · Infantil": { en: "School · Youth", sr: "Škola · kadeti" },
+
+  // ─── CNSO member levels / statuses ────────────────────────────────────────
+  paused: { en: "paused", sr: "pauzirano" },
+  inactive: { en: "inactive", sr: "neaktivno" },
+  ok: { en: "ok", sr: "ok" },
+  limit: { en: "at limit", sr: "na granici" },
+  over: { en: "over limit", sr: "preko granice" },
+  absent: { en: "absent", sr: "odsutan" },
+  assigned: { en: "assigned", sr: "dodeljeno" },
+  ready: { en: "ready", sr: "spremno" },
+  pending: { en: "pending", sr: "na čekanju" },
+  done: { en: "done", sr: "gotovo" },
+  manual: { en: "manual", sr: "ručno" },
+  ai: { en: "AI", sr: "VI" },
+  library: { en: "library", sr: "biblioteka" },
+
+  // ─── CNSO coach specialties (swimming) ────────────────────────────────────
+  Crol: { en: "Freestyle", sr: "Kraul" },
+  Espalda: { en: "Backstroke", sr: "Leđni" },
+  Braza: { en: "Breaststroke", sr: "Prsni" },
+  Mariposa: { en: "Butterfly", sr: "Delfin" },
+  Estilos: { en: "Medley", sr: "Mešoviti" },
+  "Seco · Fuerza": { en: "Dryland · Strength", sr: "Suvi trening · snaga" },
+
+  // ─── CNSO room types & names ──────────────────────────────────────────────
+  Calle: { en: "Lane", sr: "Staza" },
+  Vaso: { en: "Pool", sr: "Bazen" },
+  Foso: { en: "Diving pit", sr: "Bazen za skokove" },
+  "Sala Seca": { en: "Dryland room", sr: "Sala za suvi trening" },
+  // (Aguas Abiertas defined above)
+  "Sala Spinning": { en: "Spinning room", sr: "Spining sala" },
+  "Calle 1 (50 m)": { en: "Lane 1 (50 m)", sr: "Staza 1 (50 m)" },
+  "Calle 2 (50 m)": { en: "Lane 2 (50 m)", sr: "Staza 2 (50 m)" },
+  "Calle 3 (50 m)": { en: "Lane 3 (50 m)", sr: "Staza 3 (50 m)" },
+  "Calle 4 (50 m)": { en: "Lane 4 (50 m)", sr: "Staza 4 (50 m)" },
+  "Calle 5 (50 m)": { en: "Lane 5 (50 m)", sr: "Staza 5 (50 m)" },
+  "Calle 6 (50 m)": { en: "Lane 6 (50 m)", sr: "Staza 6 (50 m)" },
+  "Calle 7 (50 m)": { en: "Lane 7 (50 m)", sr: "Staza 7 (50 m)" },
+  "Calle 8 (50 m)": { en: "Lane 8 (50 m)", sr: "Staza 8 (50 m)" },
+  "Calle 7 + 8": { en: "Lanes 7 + 8", sr: "Staze 7 + 8" },
+  "Vaso 25 m": { en: "25 m pool", sr: "Bazen 25 m" },
+  "Foso de saltos": { en: "Diving pit", sr: "Bazen za skokove" },
+  "Squali Fuerza": { en: "Squali Strength", sr: "Squali snaga" },
+  "Squali Movilidad": { en: "Squali Mobility", sr: "Squali pokretljivost" },
+  "Squali Spinning": { en: "Squali Spinning", sr: "Squali spining" },
+  "Tejerona Vaso 25 m": { en: "Tejerona 25 m pool", sr: "Tejerona bazen 25 m" },
+  "San Lorenzo · zona acotada": { en: "San Lorenzo · restricted area", sr: "San Lorenzo · ograđena zona" },
+
+  // ─── CNSO venue services & zones ──────────────────────────────────────────
+  "Piscina 50 m": { en: "50 m pool", sr: "Bazen 50 m" },
+  "Piscina 25 m": { en: "25 m pool", sr: "Bazen 25 m" },
+  "Gimnasio Squali": { en: "Squali gym", sr: "Squali teretana" },
+  Vestuarios: { en: "Changing rooms", sr: "Svlačionice" },
+  Cafetería: { en: "Cafeteria", sr: "Kafeterija" },
+  Recuperación: { en: "Recovery", sr: "Oporavak" },
+  "Gijón · Las Mestas": { en: "Gijón · Las Mestas", sr: "Hihon · Las Mestas" },
+  "Gijón · Roces": { en: "Gijón · Roces", sr: "Hihon · Roses" },
+  "Anexo Las Mestas": { en: "Las Mestas Annex", sr: "Aneks Las Mestas" },
+  "Gijón · Playa": { en: "Gijón · Beach", sr: "Hihon · plaža" },
+
+  // ─── CNSO kit ─────────────────────────────────────────────────────────────
+  Bañador: { en: "Swimsuit", sr: "Kupaći kostim" },
+  Gorro: { en: "Cap", sr: "Kapa" },
+  Gafas: { en: "Goggles", sr: "Naočare" },
+  Chándal: { en: "Tracksuit", sr: "Trenerka" },
+  Polo: { en: "Polo shirt", sr: "Polo majica" },
+  Mochila: { en: "Backpack", sr: "Ranac" },
+  Toalla: { en: "Towel", sr: "Peškir" },
+  "Bañador competición masculino": { en: "Men's competition swimsuit", sr: "Muški takmičarski kupaći" },
+  "Bañador competición femenino": { en: "Women's competition swimsuit", sr: "Ženski takmičarski kupaći" },
+  "Gorro silicona CNSO": { en: "CNSO silicone cap", sr: "CNSO silikonska kapa" },
+  "Gafas competición CNSO": { en: "CNSO competition goggles", sr: "CNSO takmičarske naočare" },
+  "Chándal oficial CNSO": { en: "Official CNSO tracksuit", sr: "Zvanična CNSO trenerka" },
+  "Polo paseo CNSO": { en: "CNSO casual polo", sr: "CNSO polo za izlazak" },
+  "Mochila CNSO": { en: "CNSO backpack", sr: "CNSO ranac" },
+  "Toalla microfibra CNSO": { en: "CNSO microfiber towel", sr: "CNSO peškir od mikrofibera" },
+  Única: { en: "One size", sr: "Univerzalna" },
+  Estándar: { en: "Standard", sr: "Standardna" },
+  Junior: { en: "Junior", sr: "Junior" },
 };
 
 /** Translate a single demo value. Returns the input unchanged when no mapping. */
@@ -406,6 +485,33 @@ export function td(value: string | undefined | null, lang: Lang): string {
 export function useTd() {
   const lang = useLang();
   return useCallback((value: string | undefined | null) => td(value, lang), [lang]);
+}
+
+/**
+ * Pick a localized field from a seed record: prefers `<field>_<lang>` when
+ * present, otherwise falls back to `<field>` (base language of the seed).
+ */
+export function pickField<T extends Record<string, unknown>>(
+  item: T,
+  field: string,
+  lang: Lang,
+): string {
+  if (lang !== "es") {
+    const alt = item[`${field}_${lang}`];
+    if (typeof alt === "string" && alt.length > 0) return alt;
+  }
+  const base = item[field];
+  return typeof base === "string" ? base : "";
+}
+
+/** Hook variant of pickField, bound to the current user's language. */
+export function useTdField() {
+  const lang = useLang();
+  return useCallback(
+    <T extends Record<string, unknown>>(item: T, field: string) =>
+      pickField(item, field, lang),
+    [lang],
+  );
 }
 
 /** Translate the schedule strings ("L–V 07:00–23:00 · S–D 08:00–22:00"). */

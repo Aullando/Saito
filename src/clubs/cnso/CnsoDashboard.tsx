@@ -15,6 +15,7 @@ import {
   CNSO_ROOMS,
   CNSO_VENUES,
 } from "./seed";
+import { useTd, useTdField } from "@/lib/demoI18n";
 import {
   Users,
   CalendarDays,
@@ -82,6 +83,7 @@ export function CnsoDashboard() {
 
 // ─── Resumen ────────────────────────────────────────────────────────────────
 function ResumenTab() {
+  const tdf = useTdField();
   const today = new Date().toISOString().slice(0, 10);
   const sessionsToday = CNSO_SESSIONS.filter((s) => s.date === today);
   const totalHours = CNSO_COACHES.reduce((s, c) => s + c.totalHours, 0);
@@ -171,7 +173,7 @@ function ResumenTab() {
               {sessionsToday.slice(0, 8).map((s) => (
                 <li key={s.id} className="flex items-center justify-between py-2.5">
                   <div className="min-w-0">
-                    <div className="text-sm font-medium truncate">{s.activity}</div>
+                    <div className="text-sm font-medium truncate">{tdf(s, "activity")}</div>
                     <div className="text-xs text-muted-foreground">
                       {s.time} · {s.roomLabel} · {s.primaryCoach}
                     </div>
@@ -414,6 +416,7 @@ function AnalyticsTab() {
 
 // ─── Competiciones ─────────────────────────────────────────────────────────
 function CompeticionesTab() {
+  const tdf = useTdField();
   return (
     <>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -446,12 +449,12 @@ function CompeticionesTab() {
             .map((c) => (
               <li key={c.id} className="flex items-center justify-between gap-3 py-3">
                 <div className="min-w-0">
-                  <div className="text-sm font-semibold truncate">{c.name}</div>
+                  <div className="text-sm font-semibold truncate">{tdf(c, "name")}</div>
                   <div className="text-xs text-muted-foreground">
-                    {c.date} · {c.venue} · {c.discipline}
+                    {c.date} · {tdf(c, "venue")} · {c.discipline}
                   </div>
                   {c.highlight && (
-                    <div className="text-[11px] text-primary mt-0.5">{c.highlight}</div>
+                    <div className="text-[11px] text-primary mt-0.5">{tdf(c, "highlight")}</div>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
