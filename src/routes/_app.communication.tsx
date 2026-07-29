@@ -876,7 +876,7 @@ function ConversationsTab({
                     </div>
                     {last && (
                       <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
-                        {last.content}
+                        {td(last.content)}
                       </div>
                     )}
                     <div className="mt-0.5 text-[11px] text-muted-foreground tabular-nums">
