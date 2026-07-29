@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
+import { useData, AI_MODULE_KEYS, type AiModuleKey } from "@/lib/store";
 import {
   ShieldCheck, Users, Activity, Building2, Clock, Brain,
   CheckCircle2, XCircle, Eye, AlertTriangle,
