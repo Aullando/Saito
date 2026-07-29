@@ -146,6 +146,7 @@ function CommandCenter() {
         label: tr(
           `${kpis.rgpdInvalid} deportistas sin RGPD vigente`,
           `${kpis.rgpdInvalid} athletes with expired GDPR consent`,
+          `${kpis.rgpdInvalid} sportista bez važeće GDPR saglasnosti`,
         ),
         tone: "danger",
         to: "/athletes",
@@ -155,6 +156,7 @@ function CommandCenter() {
         label: tr(
           `${kpis.pendingCount} pagos pendientes · ${fmtMoney(kpis.pendingAmount)}`,
           `${kpis.pendingCount} pending payments · ${fmtMoney(kpis.pendingAmount)}`,
+          `${kpis.pendingCount} plaćanja na čekanju · ${fmtMoney(kpis.pendingAmount)}`,
         ),
         tone: "warning",
         to: "/economic/payments",
@@ -164,6 +166,7 @@ function CommandCenter() {
         label: tr(
           `${kpis.notFit} atletas no aptos o en revisión`,
           `${kpis.notFit} athletes not fit or under review`,
+          `${kpis.notFit} sportista nije sposobno ili je na proveri`,
         ),
         tone: "warning",
         to: "/medical/restrictions",
@@ -173,6 +176,7 @@ function CommandCenter() {
         label: tr(
           "Sin entrenamientos planificados esta semana",
           "No training sessions planned this week",
+          "Nema zakazanih treninga ove nedelje",
         ),
         tone: "info",
         to: "/calendar",
@@ -182,6 +186,7 @@ function CommandCenter() {
         label: tr(
           `${kpis.openIncidents} incidencias médicas abiertas`,
           `${kpis.openIncidents} open medical incidents`,
+          `${kpis.openIncidents} otvorenih medicinskih incidenata`,
         ),
         tone: "danger",
         to: "/medical/incidents",
