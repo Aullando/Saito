@@ -297,9 +297,6 @@ export function PasswordGate({ children }: { children: ReactNode }) {
           </div>
         </div>
       )}
-          </form>
-        </div>
-      </div>
     </div>
   );
 }
