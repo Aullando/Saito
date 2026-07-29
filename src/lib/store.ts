@@ -153,6 +153,12 @@ interface DataState {
   addConversation: (c: Omit<Conversation, "id">) => string;
   deleteConversation: (id: string) => void;
 
+  setAttendance: (
+    eventId: string,
+    athleteId: string,
+    status: "present" | "absent" | "doubt" | "injured",
+  ) => void;
+
   reset: () => void;
 }
 
@@ -169,6 +175,7 @@ const initial = () => ({
   payments: PAYMENTS,
   conversations: CONVERSATIONS,
   appointments: MEDICAL_APPOINTMENTS,
+  attendance: {} as Record<string, Record<string, "present" | "absent" | "doubt" | "injured">>,
 });
 
 const uid = (p: string) => `${p}-${Math.random().toString(36).slice(2, 8)}`;
