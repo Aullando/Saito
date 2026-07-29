@@ -35,7 +35,8 @@ function timeAgo(iso: string, lang: UiLang) {
 
 export function NotificationsBell() {
   const { user, profile } = useAuth();
-  const lang = (profile?.language ?? "es") as UiLang;
+  void profile;
+  const lang = useLang() as UiLang;
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
