@@ -229,13 +229,46 @@ export function cnsoLocalFallback(
   _role: string,
   ctx: ReturnType<typeof buildCnsoContextFromIdentity>,
   q: string,
+  lang: "es" | "en" | "sr" = "es",
 ): string | null {
   const text = q.toLowerCase();
-  if (/sesion.*(hoy|del d[ií]a)|calle.*hoy/.test(text) && "sesionesHoy" in ctx) {
+  const T = {
+    es: {
+      todayHead: (n: number) => `**Sesiones de hoy (${n}):**\n`,
+      noToday: "No hay sesiones programadas hoy.",
+      openInc: (n: number) => `Hay ${n} incidencia(s) abierta(s).`,
+      noInc: "Sin incidencias abiertas.",
+      compHead: "**Próximas competiciones:**\n",
+      noComp: "No hay competiciones próximas.",
+      bookN: (n: number) => `Tienes ${n} reserva(s).`,
+      noBook: "No tienes reservas próximas.",
+    },
+    en: {
+      todayHead: (n: number) => `**Today's sessions (${n}):**\n`,
+      noToday: "No sessions scheduled today.",
+      openInc: (n: number) => `There are ${n} open incident(s).`,
+      noInc: "No open incidents.",
+      compHead: "**Upcoming competitions:**\n",
+      noComp: "No upcoming competitions.",
+      bookN: (n: number) => `You have ${n} booking(s).`,
+      noBook: "You have no upcoming bookings.",
+    },
+    sr: {
+      todayHead: (n: number) => `**Današnje sesije (${n}):**\n`,
+      noToday: "Nema zakazanih sesija danas.",
+      openInc: (n: number) => `Postoji ${n} otvoreni incident(a).`,
+      noInc: "Nema otvorenih incidenata.",
+      compHead: "**Naredna takmičenja:**\n",
+      noComp: "Nema narednih takmičenja.",
+      bookN: (n: number) => `Imate ${n} rezervaciju(e).`,
+      noBook: "Nemate narednih rezervacija.",
+    },
+  }[lang];
+  if (/sesion.*(hoy|del d[ií]a)|calle.*hoy|today.*session|session.*today|danas/.test(text) && "sesionesHoy" in ctx) {
     const list = (ctx as Record<string, unknown>).sesionesHoy as ReturnType<typeof compactSession>[];
-    if (!list?.length) return "No hay sesiones programadas hoy.";
+    if (!list?.length) return T.noToday;
     return (
-      `**Sesiones de hoy (${list.length}):**\n` +
+      T.todayHead(list.length) +
       list
         .map(
           (c) =>
@@ -244,27 +277,22 @@ export function cnsoLocalFallback(
         .join("\n")
     );
   }
-  if (/incidenc/.test(text) && "incidencias" in ctx) {
+  if (/incidenc|incident/.test(text) && "incidencias" in ctx) {
     const list = (ctx as Record<string, unknown>).incidencias as unknown[];
-    return list?.length
-      ? `Hay ${list.length} incidencia(s) abierta(s).`
-      : "Sin incidencias abiertas.";
+    return list?.length ? T.openInc(list.length) : T.noInc;
   }
-  if (/competic/.test(text) && "competicionesProximas" in ctx) {
+  if (/competic|competition|takmi/.test(text) && "competicionesProximas" in ctx) {
     const list = (ctx as Record<string, unknown>).competicionesProximas as Array<{
       date: string;
       name: string;
       venue: string;
     }>;
-    if (!list?.length) return "No hay competiciones próximas.";
-    return (
-      `**Próximas competiciones:**\n` +
-      list.map((c) => `- ${c.date} · ${c.name} · ${c.venue}`).join("\n")
-    );
+    if (!list?.length) return T.noComp;
+    return T.compHead + list.map((c) => `- ${c.date} · ${c.name} · ${c.venue}`).join("\n");
   }
-  if ("misReservas" in ctx && /reserv/.test(text)) {
+  if ("misReservas" in ctx && /reserv|book|rezerv/.test(text)) {
     const list = (ctx as Record<string, unknown>).misReservas as unknown[];
-    return list?.length ? `Tienes ${list.length} reserva(s).` : "No tienes reservas próximas.";
+    return list?.length ? T.bookN(list.length) : T.noBook;
   }
   return null;
 }
