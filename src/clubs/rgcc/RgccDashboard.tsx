@@ -7,6 +7,8 @@ import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Card, PageHeader, Pill } from "@/components/ui-kit";
 import { useClub } from "@/clubs/ClubProvider";
+import { useTr } from "@/lib/i18n";
+import { useTd } from "@/lib/demoI18n";
 import { RGCC_COACHES, RGCC_SESSIONS, RGCC_INCIDENTS, RGCC_ABSENCES, RGCC_MEMBERS } from "./seed";
 import {
   Users,
