@@ -27,7 +27,7 @@ export function Topbar() {
   const setUser = useAuth((s) => s.setUser);
   const collapsed = useAuth((s) => s.sidebarCollapsed);
   const setLangOverride = useAuth((s) => s.setLangOverride);
-  const { club } = useClub();
+  const { club, availableClubs } = useClub();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -111,7 +111,7 @@ export function Topbar() {
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
         <NotificationsBell />
-        <ClubSwitcher />
+        {availableClubs.length > 1 && <ClubSwitcher />}
 
         {/* ES / EN language toggle (hidden inside the GFF Arabic workspace) */}
         {!isGff && (

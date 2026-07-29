@@ -209,7 +209,7 @@ export function AIChat() {
   const role = u.role;
   const lang = u.language; // "es" | "en" | "sr"
   const isRgcc = club.id === "rgcc";
-  const isCnso = false;
+  
   const isGff = club.id === "gff-demo";
   const rgccIdentity = isRgcc ? resolveRgccIdentity(user, roles) : null;
   const aiScope = rgccIdentity?.scope ?? null;

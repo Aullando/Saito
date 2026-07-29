@@ -28,25 +28,8 @@ export type ClubModuleId =
   | "rgcc-biblioteca"
   | "rgcc-quiosco"
   | "rgcc-copiloto"
-  // CNSO modules
-  | "cnso-direccion"
-  | "cnso-calle-de-agua"
-  | "cnso-mi-dia"
-  | "cnso-socio"
-  | "cnso-sedes"
-  | "cnso-secciones"
-  | "cnso-competiciones"
-  | "cnso-resumen"
-  | "cnso-tecnicos"
-  | "cnso-sustituciones"
-  | "cnso-incidencias"
-  | "cnso-calles"
-  | "cnso-vacaciones"
-  | "cnso-centro-datos"
-  | "cnso-tecnificacion"
-  | "cnso-formacion"
-  | "cnso-plus"
-  | "cnso-copiloto"
+  // CNSO modules removed (club deprecated from demo).
+
   // GFF modules
   | "gff-national-teams"
   | "gff-calendar"
