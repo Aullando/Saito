@@ -1021,6 +1021,7 @@ function MedicalRequestsTab({
   ) => void;
   onArchive: (id: string) => void;
 }) {
+  const td = useTd();
   const [target, setTarget] = useState<Conversation | null>(null);
   const medics = users.filter((u) => u.role === "medical");
 
