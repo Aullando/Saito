@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, type ReactNode } from "r
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { getClubConfig, isModuleEnabled, DEFAULT_CLUB_ID, CLUBS } from "./registry";
+import { getClubConfig, isModuleEnabled, DEFAULT_CLUB_ID, CLUBS, VISIBLE_CLUB_IDS } from "./registry";
 import { useActiveClubStore } from "./activeClub";
 import type { ClubConfig, ClubModuleId } from "./types";
 
