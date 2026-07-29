@@ -3,7 +3,7 @@ import { BarChart3, TrendingUp, Users, Wallet } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader } from "@/components/ui-kit";
-import { useLang } from "@/lib/i18n";
+import { useTr } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/reports")({
   head: () => ({ meta: [{ title: "Reports — SAITO" }] }),
@@ -17,43 +17,54 @@ export const Route = createFileRoute("/_app/reports")({
 });
 
 function ReportsPage() {
-  const lang = useLang();
-  const isEn = lang === "en";
+  const tr = useTr();
   const reports = [
     {
       icon: Users,
-      title: isEn ? "New & lost members" : "Altas y bajas",
-      desc: isEn
-        ? "Monthly evolution of the athlete base."
-        : "Evolución mensual de la base de deportistas.",
+      title: tr("Altas y bajas", "New & lost members", "Prijave i odjave"),
+      desc: tr(
+        "Evolución mensual de la base de deportistas.",
+        "Monthly evolution of the athlete base.",
+        "Mesečna evolucija baze sportista.",
+      ),
     },
     {
       icon: Wallet,
-      title: isEn ? "Fee revenue" : "Ingresos por cuotas",
-      desc: isEn
-        ? "Collection, overdue payments and forecast."
-        : "Recaudación, morosidad y previsión.",
+      title: tr("Ingresos por cuotas", "Fee revenue", "Prihodi od članarina"),
+      desc: tr(
+        "Recaudación, morosidad y previsión.",
+        "Collection, overdue payments and forecast.",
+        "Naplata, dugovanja i projekcija.",
+      ),
     },
     {
       icon: TrendingUp,
-      title: isEn ? "Attendance by section" : "Asistencia por sección",
-      desc: isEn ? "Training attendance ratio." : "Ratio de asistencia a entrenamientos.",
+      title: tr("Asistencia por sección", "Attendance by section", "Prisustvo po sekciji"),
+      desc: tr(
+        "Ratio de asistencia a entrenamientos.",
+        "Training attendance ratio.",
+        "Odnos prisustva na treninzima.",
+      ),
     },
     {
       icon: BarChart3,
-      title: isEn ? "Facility usage" : "Ocupación de instalaciones",
-      desc: isEn ? "Weekly usage by facility." : "Uso semanal por instalación.",
+      title: tr("Ocupación de instalaciones", "Facility usage", "Iskorišćenost objekata"),
+      desc: tr(
+        "Uso semanal por instalación.",
+        "Weekly usage by facility.",
+        "Nedeljno korišćenje po objektu.",
+      ),
     },
   ];
   return (
     <>
       <PageHeader
-        title={isEn ? "Reports" : "Informes"}
-        subtitle={
-          isEn
-            ? "Executive club summary. Select a report to see details."
-            : "Resumen ejecutivo del club. Selecciona un informe para ver el detalle."
-        }
+        title={tr("Informes", "Reports", "Izveštaji")}
+        subtitle={tr(
+          "Resumen ejecutivo del club. Selecciona un informe para ver el detalle.",
+          "Executive club summary. Select a report to see details.",
+          "Izvršni rezime kluba. Izaberite izveštaj za više detalja.",
+        )}
       />
       <div className="grid gap-3 sm:grid-cols-2">
         {reports.map((r) => (
@@ -72,9 +83,11 @@ function ReportsPage() {
         ))}
       </div>
       <div className="mt-6 rounded-2xl border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
-        {isEn
-          ? "Coming soon: PDF/Excel export and scheduled deliveries."
-          : "Próximamente: exportación a PDF/Excel y programación de envíos."}
+        {tr(
+          "Próximamente: exportación a PDF/Excel y programación de envíos.",
+          "Coming soon: PDF/Excel export and scheduled deliveries.",
+          "Uskoro: izvoz u PDF/Excel i zakazane isporuke.",
+        )}
       </div>
     </>
   );
