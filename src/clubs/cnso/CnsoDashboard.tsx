@@ -83,6 +83,7 @@ export function CnsoDashboard() {
 
 // ─── Resumen ────────────────────────────────────────────────────────────────
 function ResumenTab() {
+  const tdf = useTdField();
   const today = new Date().toISOString().slice(0, 10);
   const sessionsToday = CNSO_SESSIONS.filter((s) => s.date === today);
   const totalHours = CNSO_COACHES.reduce((s, c) => s + c.totalHours, 0);
