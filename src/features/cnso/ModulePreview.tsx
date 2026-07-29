@@ -322,7 +322,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <Card key={d.id}>
                 <div className="font-semibold">{d.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  {d.category} · {d.group}
+                  {td(d.category)} · {d.group}
                 </div>
                 <div className="mt-1 text-xs">
                   {d.equipment} · {d.dose}
