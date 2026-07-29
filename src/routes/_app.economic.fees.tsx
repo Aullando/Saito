@@ -21,6 +21,9 @@ import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { formatMoneyEs, formatDate } from "@/lib/format";
 import { frequencyLabel } from "@/lib/labels";
+import { isDemoMode } from "@/lib/appMode";
+import { useData } from "@/lib/store";
+import { useDemoFeeRows } from "@/lib/demoStoreRows";
 
 export const Route = createFileRoute("/_app/economic/fees")({
   component: () => (

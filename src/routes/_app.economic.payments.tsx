@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useT, useLang } from "@/lib/i18n";
+import { useT, useTr, useLang } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -26,6 +26,9 @@ import { Download } from "lucide-react";
 import { formatMoneyEs, formatDate, formatName } from "@/lib/format";
 import { paymentLabel } from "@/lib/labels";
 import { demoOrEmpty } from "@/lib/demoFallback";
+import { isDemoMode } from "@/lib/appMode";
+import { useData } from "@/lib/store";
+import { useDemoPaymentRows } from "@/lib/demoStoreRows";
 
 export const Route = createFileRoute("/_app/economic/payments")({
   component: () => (
@@ -54,14 +57,18 @@ interface DBPayment {
 
 function PaymentsPage() {
   const t = useT();
+  const tr = useTr();
   const lang = useLang();
   const { profile } = useAuth();
   const orgId = profile?.organization_id;
   const qc = useQueryClient();
+  const demo = isDemoMode();
+  const storePayments = useDemoPaymentRows();
+  const setPaymentStatusStore = useData((s) => s.setPaymentStatus);
 
   const paymentsQ = useQuery({
     queryKey: ["payments", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("payments")
@@ -75,7 +82,7 @@ function PaymentsPage() {
   });
   const athletesQ = useQuery({
     queryKey: ["athletes_min", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase.from("athletes").select("id, first_name, last_name");
       if (error) throw error;
@@ -84,7 +91,7 @@ function PaymentsPage() {
   });
   const sectionsQ = useQuery({
     queryKey: ["sport_sections", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase.from("sport_sections").select("id, name");
       if (error) throw error;
@@ -93,7 +100,7 @@ function PaymentsPage() {
   });
   const categoriesQ = useQuery({
     queryKey: ["categories", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase.from("categories").select("id, name");
       if (error) throw error;
@@ -101,21 +108,25 @@ function PaymentsPage() {
     },
   });
 
-  const payments = demoOrEmpty(paymentsQ.data, DEMO_PAYMENTS_ROWS) as DBPayment[];
+  const payments = (demo ? storePayments : demoOrEmpty(paymentsQ.data, DEMO_PAYMENTS_ROWS)) as DBPayment[];
   const athletes = demoOrEmpty(athletesQ.data, DEMO_ATHLETES_MIN_ROWS);
   const sections = demoOrEmpty(sectionsQ.data, DEMO_SECTIONS_ROWS);
   const categories = demoOrEmpty(categoriesQ.data, DEMO_CATEGORIES_ROWS);
 
   const setStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: PaymentStatus }) => {
+      if (demo) {
+        setPaymentStatusStore(id, status);
+        return;
+      }
       const { error } = await supabase.from("payments").update({ status }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t("save"));
+      toast.success(tr("Pago actualizado", "Payment updated", "Uplata je ažurirana"));
       qc.invalidateQueries({ queryKey: ["payments", orgId] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: () => toast.error(tr("No se pudo actualizar", "Could not update", "Ažuriranje nije uspelo")),
   });
 
   const [secF, setSecF] = useState("all");
