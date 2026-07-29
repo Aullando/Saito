@@ -15,6 +15,7 @@ import {
   CNSO_ROOMS,
   CNSO_VENUES,
 } from "./seed";
+import { useTd, useTdField } from "@/lib/demoI18n";
 import {
   Users,
   CalendarDays,
