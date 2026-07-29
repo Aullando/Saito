@@ -32,11 +32,11 @@ function ReportsPage() {
 
   const stats = useMemo(() => {
     const total = athletes.length;
-    const active = athletes.filter((a) => a.status === "active").length;
+    const active = athletes.filter((a) => a.status === "Active").length;
     const inactive = total - active;
-    const paid = payments.filter((p) => p.status === "paid");
-    const pending = payments.filter((p) => p.status === "pending");
-    const overdue = payments.filter((p) => p.status === "overdue");
+    const paid = payments.filter((p) => p.status === "Paid");
+    const pending = payments.filter((p) => p.status === "Pending");
+    const overdue = payments.filter((p) => p.status === "Failed");
     const collected = paid.reduce((s, p) => s + (p.amount || 0), 0);
     const outstanding = pending.concat(overdue).reduce((s, p) => s + (p.amount || 0), 0);
     let att = 0, present = 0;
@@ -49,7 +49,7 @@ function ReportsPage() {
     const attRatio = att ? Math.round((present / att) * 100) : 0;
     const facUse = facilities.map((f) => ({
       name: f.name,
-      count: events.filter((e) => e.facilityId === f.id).length,
+      count: events.filter((e) => e.location === f.name).length,
     }));
     return { total, active, inactive, collected, outstanding, paid: paid.length, pending: pending.length, overdue: overdue.length, attRatio, attCount: att, facUse };
   }, [athletes, payments, attendance, facilities, events]);
