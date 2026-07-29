@@ -67,6 +67,7 @@ function DashboardSwitch() {
 function CommandCenter() {
   const user = useCurrentUser();
   const tr = useTr();
+  const td = useTd();
   const athletes = useData((s) => s.athletes);
   const sections = useData((s) => s.sections);
   const groups = useData((s) => s.groups);
