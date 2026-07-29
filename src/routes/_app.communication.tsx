@@ -867,7 +867,7 @@ function ConversationsTab({
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="truncate text-sm font-medium">{c.title}</span>
+                      <span className="truncate text-sm font-medium">{td(c.title)}</span>
                       {c.unreadCount > 0 && (
                         <span className="rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground tabular-nums">
                           {c.unreadCount}
