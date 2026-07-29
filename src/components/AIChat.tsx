@@ -224,9 +224,9 @@ export function AIChat() {
   const suggestions = isGff
     ? (SUGGESTIONS_GFF[role] ?? [])
     : isRgcc
-      ? rgccSuggestions(role, user, roles)
+      ? rgccSuggestions(role, user, roles, lang)
       : isCnso
-        ? cnsoSuggestions(role, user, roles)
+        ? cnsoSuggestions(role, user, roles, lang)
         : ((lang === "en" || lang === "sr" ? SUGGESTIONS_EN[role] : SUGGESTIONS[role]) ?? []);
   const placeholder = isGff
     ? "اكتب سؤالك…"
