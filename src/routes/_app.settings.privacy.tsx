@@ -67,8 +67,9 @@ const AI_MODULES_BASE = [
 
 function PrivacyMockup() {
   const { profile } = useAuth();
-  const lang = (profile?.language ?? "en") as "es" | "en";
-  const t = (es: string, en: string) => (lang === "en" ? en : es);
+  const lang = (profile?.language ?? "en") as "es" | "en" | "sr";
+  const t = (es: string, en: string, sr?: string) =>
+    lang === "es" ? es : lang === "sr" ? (sr ?? en) : en;
 
   const [aiState, setAiState] = useState(AI_MODULES_BASE);
 

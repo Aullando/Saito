@@ -19,18 +19,22 @@ type Notification = {
   created_at: string;
 };
 
-function timeAgo(iso: string, lang: "es" | "en") {
+type UiLang = "es" | "en" | "sr";
+function timeAgo(iso: string, lang: UiLang) {
   const diff = (Date.now() - new Date(iso).getTime()) / 1000;
-  const r = (n: number, es: string, en: string) => `${Math.floor(n)} ${lang === "es" ? es : en}`;
-  if (diff < 60) return lang === "es" ? "ahora" : "now";
-  if (diff < 3600) return r(diff / 60, "min", "min");
-  if (diff < 86400) return r(diff / 3600, "h", "h");
-  return r(diff / 86400, "d", "d");
+  const unit = (es: string, en: string, sr: string) =>
+    lang === "es" ? es : lang === "sr" ? sr : en;
+  const r = (n: number, es: string, en: string, sr: string) =>
+    `${Math.floor(n)} ${unit(es, en, sr)}`;
+  if (diff < 60) return unit("ahora", "now", "sada");
+  if (diff < 3600) return r(diff / 60, "min", "min", "min");
+  if (diff < 86400) return r(diff / 3600, "h", "h", "č");
+  return r(diff / 86400, "d", "d", "d");
 }
 
 export function NotificationsBell() {
   const { user, profile } = useAuth();
-  const lang = (profile?.language ?? "es") as "es" | "en";
+  const lang = (profile?.language ?? "es") as UiLang;
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -128,7 +132,7 @@ export function NotificationsBell() {
         <div className="absolute right-0 top-full z-50 mt-2 w-[340px] overflow-hidden rounded-2xl border border-border bg-popover shadow-xl">
           <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
             <span className="text-sm font-semibold">
-              {lang === "es" ? "Notificaciones" : "Notifications"}
+              {lang === "es" ? "Notificaciones" : lang === "sr" ? "Obaveštenja" : "Notifications"}
             </span>
             {unread > 0 && (
               <button
@@ -136,7 +140,7 @@ export function NotificationsBell() {
                 className="flex items-center gap-1 text-[11px] font-medium text-primary hover:underline"
               >
                 <CheckCheck className="h-3 w-3" />
-                {lang === "es" ? "Marcar todo leído" : "Mark all read"}
+                {lang === "es" ? "Marcar todo leído" : lang === "sr" ? "Označi sve pročitano" : "Mark all read"}
               </button>
             )}
           </div>
@@ -146,7 +150,7 @@ export function NotificationsBell() {
             )}
             {!q.isLoading && items.length === 0 && (
               <li className="px-4 py-8 text-center text-xs text-muted-foreground">
-                {lang === "es" ? "No tienes notificaciones." : "No notifications."}
+                {lang === "es" ? "No tienes notificaciones." : lang === "sr" ? "Nemate obaveštenja." : "No notifications."}
               </li>
             )}
             {items.map((n) => {
@@ -196,7 +200,7 @@ export function NotificationsBell() {
                       <button
                         onClick={() => markRead.mutate(n.id)}
                         className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
-                        title={lang === "es" ? "Marcar leído" : "Mark read"}
+                        title={lang === "es" ? "Marcar leído" : lang === "sr" ? "Označi kao pročitano" : "Mark read"}
                       >
                         <Check className="h-3.5 w-3.5" />
                       </button>
@@ -204,7 +208,7 @@ export function NotificationsBell() {
                     <button
                       onClick={() => remove.mutate(n.id)}
                       className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-destructive"
-                      title={lang === "es" ? "Eliminar" : "Delete"}
+                      title={lang === "es" ? "Eliminar" : lang === "sr" ? "Obriši" : "Delete"}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
