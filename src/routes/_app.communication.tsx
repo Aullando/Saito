@@ -1058,10 +1058,10 @@ function MedicalRequestsTab({
                       {last ? formatDateTime(last.createdAt) : ""}
                     </span>
                   </div>
-                  <div className="mt-1 text-sm font-semibold text-foreground">{r.title}</div>
+                  <div className="mt-1 text-sm font-semibold text-foreground">{td(r.title)}</div>
                   {last && (
                     <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                      {last.content}
+                      {td(last.content)}
                     </div>
                   )}
                   {athleteName && (
