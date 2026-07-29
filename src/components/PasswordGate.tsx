@@ -28,7 +28,7 @@ const COPY: Record<Lang, {
   misTitle: string; misBody: (env: ReactNode, envPass: ReactNode) => ReactNode;
   hero: string; tagline: string; badge: string; title: string;
   intro: string; placeholder: string; wrong: string; submit: string; submitting: string;
-  langLabel: string;
+  langLabel: string; watchVideo: string; closeVideo: string;
 }> = {
   es: {
     misTitle: "Acceso bloqueado: configuración incompleta",
