@@ -37,6 +37,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useSessionLocal } from "@/lib/sessionLocal";
+import { useData } from "@/lib/store";
 import { useLang, useTr } from "@/lib/i18n";
 import { useTd } from "@/lib/demoI18n";
 import {
@@ -45,7 +46,6 @@ import {
   type Treatment,
   type ApptRequest,
   INCIDENT_TYPES,
-  SEED_INCIDENTS,
   SEED_TREATMENTS,
   SEED_REQUESTS,
   fitnessClass,
