@@ -223,7 +223,9 @@ export function Topbar() {
               placeholder={
                 user.language === "es"
                   ? `Buscar en ${club.brand.name}`
-                  : `Search ${club.brand.name}`
+                  : user.language === "sr"
+                    ? `Pretraga u ${club.brand.name}`
+                    : `Search ${club.brand.name}`
               }
               className="h-10 w-full rounded-full border border-border bg-card pl-10 pr-10 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
