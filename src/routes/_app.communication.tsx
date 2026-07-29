@@ -827,6 +827,7 @@ function ConversationsTab({
   onSend: (id: string, content: string) => void;
   emptyLabel: string;
 }) {
+  const td = useTd();
   const [activeId, setActiveId] = useState<string | null>(conversations[0]?.id ?? null);
   const active = conversations.find((c) => c.id === activeId) ?? conversations[0] ?? null;
   const [draft, setDraft] = useState("");
