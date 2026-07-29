@@ -316,21 +316,24 @@ function TeamPage() {
                       <div className="flex flex-wrap gap-1.5">
                         {ALL_ROLES.map((r) => {
                           const on = m.roles.includes(r);
-                          const disabled = isMe && r === "admin" && on;
+                          const guardDisabled = isMe && r === "admin" && on;
+                          const disabled = demo || guardDisabled || toggleRole.isPending;
                           return (
                             <button
                               key={r}
-                              disabled={disabled || toggleRole.isPending}
-                              onClick={() => toggleRole.mutate({ userId: m.id, role: r, on: !on })}
+                              disabled={disabled}
+                              onClick={() => !demo && toggleRole.mutate({ userId: m.id, role: r, on: !on })}
                               className={`rounded-full border px-2.5 py-0.5 text-[11px] uppercase tracking-wider transition ${
                                 on
                                   ? "border-primary bg-primary text-primary-foreground"
                                   : "border-border text-muted-foreground hover:border-primary"
                               } ${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
                               title={
-                                disabled
-                                  ? tr("No puedes quitarte admin", "You can't remove your own admin", "Ne možete sebi ukloniti admin ulogu")
-                                  : ""
+                                demo
+                                  ? prodOnly
+                                  : guardDisabled
+                                    ? tr("No puedes quitarte admin", "You can't remove your own admin", "Ne možete sebi ukloniti admin ulogu")
+                                    : ""
                               }
                             >
                               {r}
@@ -341,6 +344,11 @@ function TeamPage() {
                     </td>
                     <td className="px-5 py-3 text-right">
                       {!isMe && (
+                        demo ? (
+                          <Button size="sm" variant="ghost" className="text-destructive opacity-60" disabled title={prodOnly}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        ) : (
                         <Button
                           size="sm"
                           variant="ghost"
@@ -360,6 +368,7 @@ function TeamPage() {
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
+                        )
                       )}
                     </td>
                   </tr>
