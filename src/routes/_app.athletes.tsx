@@ -6,10 +6,12 @@ import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, EmptyState } from "@/components/ui-kit";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { AthleteProfileSheet } from "@/components/AthleteProfileSheet";
-import { useT } from "@/lib/i18n";
+import { useT, useTr } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { isDemoMode } from "@/lib/appMode";
+import { useData } from "@/lib/store";
 import { useAthletesData, type AthleteRow } from "@/features/athletes/data";
 import { AthletesFilters } from "@/features/athletes/AthletesFilters";
 import { AthletesTable } from "@/features/athletes/AthletesTable";
@@ -27,9 +29,11 @@ export const Route = createFileRoute("/_app/athletes")({
 
 function AthletesPage() {
   const t = useT();
+  const tr = useTr();
   const { roles, profile } = useAuth();
   const orgId = profile?.organization_id ?? null;
   const qc = useQueryClient();
+  const deleteAthleteStore = useData((s) => s.deleteAthlete);
   const isMedical = roles.includes("medical") && !roles.includes("admin");
   const isTechnical = roles.includes("technical") && !roles.includes("admin");
   const canManage = roles.includes("admin") || roles.includes("manager");
@@ -61,17 +65,21 @@ function AthletesPage() {
 
   const removeAthlete = useMutation({
     mutationFn: async (id: string) => {
+      if (isDemoMode()) {
+        deleteAthleteStore(id);
+        return;
+      }
       const { error } = await supabase.from("athletes").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["athletes", orgId] });
-      toast.success("Deleted");
+      toast.success(tr("Deportista eliminado", "Athlete deleted", "Sportista je obrisan"));
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: () => toast.error(tr("No se pudo eliminar", "Could not delete", "Brisanje nije uspelo")),
   });
 
-  const loading = !!orgId && isLoading;
+  const loading = !isDemoMode() && !!orgId && isLoading;
 
   return (
     <>

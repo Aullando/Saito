@@ -21,7 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { useT, useTr } from "@/lib/i18n";
+import { isDemoMode } from "@/lib/appMode";
+import { useData } from "@/lib/store";
 import type { SectionRow, CategoryRow, GroupRow } from "./data";
 
 export interface NewAthleteDialogProps {
@@ -33,7 +35,9 @@ export interface NewAthleteDialogProps {
 
 export function NewAthleteDialog({ orgId, sections, categories, groups }: NewAthleteDialogProps) {
   const t = useT();
+  const tr = useTr();
   const qc = useQueryClient();
+  const addAthleteStore = useData((s) => s.addAthlete);
   const [open, setOpen] = useState(false);
   const [newAth, setNewAth] = useState({
     firstName: "",
@@ -45,6 +49,19 @@ export function NewAthleteDialog({ orgId, sections, categories, groups }: NewAth
 
   const createAthlete = useMutation({
     mutationFn: async (vals: typeof newAth) => {
+      if (isDemoMode()) {
+        addAthleteStore({
+          firstName: vals.firstName,
+          lastName: vals.lastName,
+          sectionId: vals.sectionId,
+          categoryId: vals.categoryId,
+          groupIds: vals.groupId ? [vals.groupId] : [],
+          status: "Active",
+          medicalStatus: "Unknown",
+          performanceStatus: "Medium",
+        });
+        return;
+      }
       if (!orgId) throw new Error("No organization");
       const { data, error } = await supabase
         .from("athletes")
@@ -73,11 +90,11 @@ export function NewAthleteDialog({ orgId, sections, categories, groups }: NewAth
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["athletes", orgId] });
       qc.invalidateQueries({ queryKey: ["athlete_groups", orgId] });
-      toast.success(t("created") || "Created");
+      toast.success(tr("Deportista creado", "Athlete created", "Sportista je kreiran"));
       setOpen(false);
       setNewAth({ firstName: "", lastName: "", sectionId: "", categoryId: "", groupId: "" });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: () => toast.error(tr("No se pudo crear", "Could not create", "Kreiranje nije uspelo")),
   });
 
   return (

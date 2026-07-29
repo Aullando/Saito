@@ -116,7 +116,18 @@ export const ORGANIZATIONS: Organization[] = [
     updatedAt: isoAt(2026, 1, 15, 9, 0),
     aiEnabled: false,
   },
-].map((o, i) => ({ ...o, id: `org-${i + 1}`, status: "Active" as const }));
+].map((o, i) => ({
+  ...o,
+  id: `org-${i + 1}`,
+  status: "Active" as const,
+  slug: o.name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, ""),
+  language: "es",
+}));
 
 // ───────── Secciones ─────────
 export const SECTIONS: SportSection[] = [

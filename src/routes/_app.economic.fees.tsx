@@ -21,6 +21,9 @@ import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { formatMoneyEs, formatDate } from "@/lib/format";
 import { frequencyLabel } from "@/lib/labels";
+import { isDemoMode } from "@/lib/appMode";
+import { useData } from "@/lib/store";
+import { useDemoFeeRows } from "@/lib/demoStoreRows";
 
 export const Route = createFileRoute("/_app/economic/fees")({
   component: () => (
@@ -52,10 +55,16 @@ function FeesPage() {
   const { profile } = useAuth();
   const orgId = profile?.organization_id;
   const qc = useQueryClient();
+  const demo = isDemoMode();
+  const storeFees = useDemoFeeRows();
+  const storeSections = useData((s) => s.sections);
+  const storeGroups = useData((s) => s.groups);
+  const addFeeStore = useData((s) => s.addFee);
+  const delFeeStore = useData((s) => s.deleteFee);
 
   const sectionsQ = useQuery({
     queryKey: ["sport_sections", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("sport_sections")
@@ -67,7 +76,7 @@ function FeesPage() {
   });
   const groupsQ = useQuery({
     queryKey: ["groups", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase.from("groups").select("id, name").order("name");
       if (error) throw error;
@@ -76,7 +85,7 @@ function FeesPage() {
   });
   const feesQ = useQuery({
     queryKey: ["fees", orgId],
-    enabled: !!orgId,
+    enabled: !!orgId && !demo,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("fees")
@@ -89,9 +98,11 @@ function FeesPage() {
     },
   });
 
-  const sections = sectionsQ.data ?? [];
-  const groups = groupsQ.data ?? [];
-  const fees = feesQ.data ?? [];
+  const sections = demo
+    ? storeSections.map((s) => ({ id: s.id, name: s.name }))
+    : sectionsQ.data ?? [];
+  const groups = demo ? storeGroups.map((g) => ({ id: g.id, name: g.name })) : groupsQ.data ?? [];
+  const fees = demo ? storeFees : feesQ.data ?? [];
 
   const [activeSec, setActiveSec] = useState("");
   useEffect(() => {
@@ -110,6 +121,19 @@ function FeesPage() {
   const addFee = useMutation({
     mutationFn: async () => {
       if (!form.name) throw new Error(tr("Nombre requerido", "Name required", "Naziv je obavezan"));
+      if (demo) {
+        addFeeStore({
+          name: form.name,
+          amount: form.amount,
+          frequency: form.frequency as "Monthly" | "Quarterly" | "Annual" | "One-time",
+          periodStart: form.period_start || undefined,
+          periodEnd: form.period_end || undefined,
+          appliesToGroupIds: [],
+          sectionId: activeSec,
+          kind: form.kind,
+        });
+        return;
+      }
       const { error } = await supabase.from("fees").insert({
         organization_id: orgId!,
         section_id: activeSec,
@@ -123,7 +147,7 @@ function FeesPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t("save"));
+      toast.success(tr("Cuota creada", "Fee created", "Kotizacija je kreirana"));
       setForm({
         name: "",
         amount: 0,
@@ -134,16 +158,26 @@ function FeesPage() {
       });
       qc.invalidateQueries({ queryKey: ["fees", orgId] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) =>
+      toast.error(
+        e.message || tr("No se pudo crear", "Could not create", "Kreiranje nije uspelo"),
+      ),
   });
 
   const delFee = useMutation({
     mutationFn: async (id: string) => {
+      if (demo) {
+        delFeeStore(id);
+        return;
+      }
       const { error } = await supabase.from("fees").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["fees", orgId] }),
-    onError: (e: Error) => toast.error(e.message),
+    onSuccess: () => {
+      toast.success(tr("Cuota eliminada", "Fee deleted", "Kotizacija je obrisana"));
+      qc.invalidateQueries({ queryKey: ["fees", orgId] });
+    },
+    onError: () => toast.error(tr("No se pudo eliminar", "Could not delete", "Brisanje nije uspelo")),
   });
 
   const sectionFees = fees.filter((f) => f.section_id === activeSec);

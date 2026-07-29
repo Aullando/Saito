@@ -116,7 +116,8 @@ interface DataState {
   conversations: Conversation[];
   appointments: MedicalAppointment[];
 
-  addOrganization: (o: Omit<Organization, "id" | "createdAt" | "updatedAt">) => void;
+  addOrganization: (o: Omit<Organization, "id" | "createdAt" | "updatedAt">) => string;
+  updateOrganization: (id: string, patch: Partial<Omit<Organization, "id" | "createdAt">>) => void;
   toggleOrgAi: (id: string) => void;
   setOrgStatus: (id: string, status: Organization["status"]) => void;
 
@@ -176,17 +177,28 @@ export const useData = create<DataState>()(
     (set) => ({
       ...initial(),
 
-      addOrganization: (o) =>
+      addOrganization: (o) => {
+        const id = uid("org");
         set((s) => ({
           organizations: [
             {
               ...o,
-              id: uid("org"),
+              id,
               createdAt: new Date().toISOString().slice(0, 10),
               updatedAt: new Date().toISOString().slice(0, 10),
             },
             ...s.organizations,
           ],
+        }));
+        return id;
+      },
+      updateOrganization: (id, patch) =>
+        set((s) => ({
+          organizations: s.organizations.map((o) =>
+            o.id === id
+              ? { ...o, ...patch, updatedAt: new Date().toISOString().slice(0, 10) }
+              : o,
+          ),
         })),
       toggleOrgAi: (id) =>
         set((s) => ({
