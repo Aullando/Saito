@@ -44,7 +44,6 @@ export const Route = createFileRoute("/_app/mobile/")({
 function MobileHome() {
   const { club } = useClub();
   if (club.id === "gff-demo") return <GffMobileHome />;
-  if (club.id === "cnso") return <CnsoMobileHome />;
   return <DefaultMobileHome />;
 }
 
