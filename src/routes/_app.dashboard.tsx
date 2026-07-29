@@ -146,6 +146,7 @@ function CommandCenter() {
         label: tr(
           `${kpis.rgpdInvalid} deportistas sin RGPD vigente`,
           `${kpis.rgpdInvalid} athletes with expired GDPR consent`,
+          `${kpis.rgpdInvalid} sportista bez važeće GDPR saglasnosti`,
         ),
         tone: "danger",
         to: "/athletes",
@@ -155,6 +156,7 @@ function CommandCenter() {
         label: tr(
           `${kpis.pendingCount} pagos pendientes · ${fmtMoney(kpis.pendingAmount)}`,
           `${kpis.pendingCount} pending payments · ${fmtMoney(kpis.pendingAmount)}`,
+          `${kpis.pendingCount} plaćanja na čekanju · ${fmtMoney(kpis.pendingAmount)}`,
         ),
         tone: "warning",
         to: "/economic/payments",
@@ -164,6 +166,7 @@ function CommandCenter() {
         label: tr(
           `${kpis.notFit} atletas no aptos o en revisión`,
           `${kpis.notFit} athletes not fit or under review`,
+          `${kpis.notFit} sportista nije sposobno ili je na proveri`,
         ),
         tone: "warning",
         to: "/medical/restrictions",
@@ -173,6 +176,7 @@ function CommandCenter() {
         label: tr(
           "Sin entrenamientos planificados esta semana",
           "No training sessions planned this week",
+          "Nema zakazanih treninga ove nedelje",
         ),
         tone: "info",
         to: "/calendar",
@@ -182,6 +186,7 @@ function CommandCenter() {
         label: tr(
           `${kpis.openIncidents} incidencias médicas abiertas`,
           `${kpis.openIncidents} open medical incidents`,
+          `${kpis.openIncidents} otvorenih medicinskih incidenata`,
         ),
         tone: "danger",
         to: "/medical/incidents",
@@ -209,6 +214,7 @@ function CommandCenter() {
         text: tr(
           `Cobro registrado · ${who} · ${fmtMoney(Number(lastPaid.amount))}`,
           `Payment recorded · ${who} · ${fmtMoney(Number(lastPaid.amount))}`,
+          `Uplata evidentirana · ${who} · ${fmtMoney(Number(lastPaid.amount))}`,
         ),
         time: lastPaid.date ?? "",
         tone: "success",
@@ -234,6 +240,7 @@ function CommandCenter() {
         text: tr(
           `Nuevo mensaje en “${lastConv.title}”`,
           `New message in “${lastConv.title}”`,
+          `Nova poruka u „${lastConv.title}”`,
         ),
         time: lastConv.m.createdAt.slice(0, 10),
         tone: "info",
@@ -249,6 +256,7 @@ function CommandCenter() {
         text: tr(
           `Cita médica · ${who} · ${nextAppt.reason}`,
           `Medical appointment · ${who} · ${nextAppt.reason}`,
+          `Medicinski pregled · ${who} · ${nextAppt.reason}`,
         ),
         time: `${nextAppt.date} ${nextAppt.time}`,
         tone: "warning",
@@ -264,8 +272,9 @@ function CommandCenter() {
         subtitle={
           user
             ? tr(
-                `Hola, ${user.name.split(" ")[0]} — visión global del club hoy`,
+                `Hola, ${user.name.split(" ")[0]} — resumen del club de hoy`,
                 `Hello, ${user.name.split(" ")[0]} — today's club overview`,
+                `Zdravo, ${user.name.split(" ")[0]} — današnji pregled kluba`,
               )
             : ""
         }
