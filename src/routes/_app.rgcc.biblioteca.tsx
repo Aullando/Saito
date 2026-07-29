@@ -185,21 +185,22 @@ function ExerciseCard({ ex }: { ex: RgccExercise }) {
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
-          <div className="font-semibold leading-tight">{ex.name}</div>
+          <div className="font-semibold leading-tight">{td(ex.name)}</div>
           <Pill tone={ex.source === "evidence" ? "success" : "info"}>
             {ex.source === "evidence" ? "EV" : tr("Cat.", "Cat.", "Kat.")}
           </Pill>
         </div>
         <div className="mt-1 text-xs text-muted-foreground">
-          {td(ex.category)} · {ex.group}
+          {td(ex.category)} · {td(ex.group)}
         </div>
         <div className="mt-2 flex flex-wrap gap-1 text-[11px]">
-          <span className="rounded-full bg-muted px-2 py-0.5">{ex.equipment}</span>
+          <span className="rounded-full bg-muted px-2 py-0.5">{td(ex.equipment)}</span>
           <span className="rounded-full bg-muted px-2 py-0.5">{td(ex.level)}</span>
           <span className="rounded-full bg-primary/10 px-2 py-0.5 text-primary">{ex.dose}</span>
         </div>
-        {ex.cues && <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{ex.cues}</p>}
+        {ex.cues && <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{td(ex.cues)}</p>}
       </div>
+
     </Card>
   );
 }
