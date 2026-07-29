@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Moon, Sun, Search, Menu, ChevronDown, X } from "lucide-react";
+import { Moon, Sun, Search, Menu, ChevronDown, X, RotateCcw } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCurrentUser, useUserAvatar, useAuth } from "@/lib/store";
 import { DEMO_USERS } from "@/lib/seed";
 import { Logo, LogoMark } from "./Logo";
 import { NotificationsBell } from "./NotificationsBell";
+import { ResetDemoDialog } from "./ResetDemoDialog";
 // import { ClubSwitcher } from "./ClubSwitcher"; // re-mount here to reactivate multi-club demo
 import { useTheme } from "@/lib/theme";
 import { useClub } from "@/clubs/ClubProvider";
@@ -203,6 +204,24 @@ export function Topbar() {
                   </li>
                 ))}
               </ul>
+              <div className="border-t border-border p-2">
+                <ResetDemoDialog
+                  trigger={
+                    <button
+                      type="button"
+                      onClick={() => setOpen(false)}
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-amber-700 hover:bg-amber-50 dark:text-amber-300 dark:hover:bg-amber-950/40"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      {lang === "es"
+                        ? "Reiniciar demo"
+                        : lang === "sr"
+                          ? "Resetuj demo"
+                          : "Reset demo"}
+                    </button>
+                  }
+                />
+              </div>
             </div>
           )}
         </div>

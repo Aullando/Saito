@@ -115,6 +115,7 @@ interface DataState {
   payments: Payment[];
   conversations: Conversation[];
   appointments: MedicalAppointment[];
+  attendance: Record<string, Record<string, "present" | "absent" | "doubt" | "injured">>;
 
   addOrganization: (o: Omit<Organization, "id" | "createdAt" | "updatedAt">) => string;
   updateOrganization: (id: string, patch: Partial<Omit<Organization, "id" | "createdAt">>) => void;
@@ -152,6 +153,12 @@ interface DataState {
   addConversation: (c: Omit<Conversation, "id">) => string;
   deleteConversation: (id: string) => void;
 
+  setAttendance: (
+    eventId: string,
+    athleteId: string,
+    status: "present" | "absent" | "doubt" | "injured",
+  ) => void;
+
   reset: () => void;
 }
 
@@ -168,6 +175,7 @@ const initial = () => ({
   payments: PAYMENTS,
   conversations: CONVERSATIONS,
   appointments: MEDICAL_APPOINTMENTS,
+  attendance: {} as Record<string, Record<string, "present" | "absent" | "doubt" | "injured">>,
 });
 
 const uid = (p: string) => `${p}-${Math.random().toString(36).slice(2, 8)}`;
@@ -351,8 +359,16 @@ export const useData = create<DataState>()(
       deleteConversation: (id) =>
         set((s) => ({ conversations: s.conversations.filter((c) => c.id !== id) })),
 
+      setAttendance: (eventId, athleteId, status) =>
+        set((s) => ({
+          attendance: {
+            ...s.attendance,
+            [eventId]: { ...(s.attendance[eventId] ?? {}), [athleteId]: status },
+          },
+        })),
+
       reset: () => set(initial()),
     }),
-    { name: "saito-data", version: 9 },
+    { name: "saito-data", version: 10 },
   ),
 );

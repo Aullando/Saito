@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card, Pill } from "@/components/ui-kit";
@@ -12,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuth } from "@/lib/auth";
+import { useData } from "@/lib/store";
 import { useTr } from "@/lib/i18n";
 import { useTd } from "@/lib/demoI18n";
 import { ATHLETES, GROUPS, EVENTS, SECTIONS } from "@/lib/seed";
@@ -64,10 +66,14 @@ const STATUS_META: Record<
   injured: { label: "Lesión", labelEn: "Injured", icon: ShieldAlert, cls: "text-red-700", tone: "danger" },
 };
 
+const STATUS_CYCLE: Status[] = ["present", "doubt", "absent", "injured"];
+
 function AttendancePage() {
   const { profile } = useAuth();
   const tr = useTr();
   const td = useTd();
+  const attendance = useData((s) => s.attendance);
+  const setAttendance = useData((s) => s.setAttendance);
   const [eventId, setEventId] = useState(NEXT_TRAININGS[0]?.id ?? "");
   const [groupFilter, setGroupFilter] = useState<string>("all");
 
@@ -84,15 +90,45 @@ function AttendancePage() {
     return byGroup.length ? byGroup : ATHLETES.slice(0, 12);
   }, [event, groupFilter]);
 
+  const evId = event?.id ?? "";
+  const evAttendance = attendance[evId] ?? {};
+
+  const statusOf = (athleteId: string): Status =>
+    (evAttendance[athleteId] as Status | undefined) ?? seededStatus(athleteId, evId);
+
+  const cycle = (athleteId: string) => {
+    const current = statusOf(athleteId);
+    const next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(current) + 1) % STATUS_CYCLE.length];
+    setAttendance(evId, athleteId, next);
+  };
+
   const counts = roster.reduce<Record<Status, number>>(
     (acc, a) => {
-      const s = seededStatus(a.id, event?.id ?? "");
+      const s = statusOf(a.id);
       acc[s] = (acc[s] ?? 0) + 1;
       return acc;
     },
     { present: 0, doubt: 0, absent: 0, injured: 0 },
   );
   const rate = roster.length ? Math.round((counts.present / roster.length) * 100) : 0;
+
+  const sendReminder = () => {
+    const n = roster.length;
+    toast.success(
+      tr(
+        `Recordatorio simulado · ${n} destinatarios`,
+        `Reminder simulated · ${n} recipients`,
+        `Podsetnik simuliran · ${n} primalaca`,
+      ),
+      {
+        description: tr(
+          "Esta demo no envía notificaciones reales.",
+          "This demo does not send real notifications.",
+          "Ova demo verzija ne šalje prave obaveštenja.",
+        ),
+      },
+    );
+  };
 
   return (
     <>
@@ -137,7 +173,7 @@ function AttendancePage() {
             </SelectContent>
           </Select>
         </div>
-        <Button variant="outline">{tr("Enviar recordatorio al grupo", "Send reminder to group", "Pošalji podsetnik grupi")}</Button>
+        <Button variant="outline" onClick={sendReminder}>{tr("Enviar recordatorio al grupo", "Send reminder to group", "Pošalji podsetnik grupi")}</Button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -190,19 +226,25 @@ function AttendancePage() {
             </thead>
             <tbody>
               {roster.map((a) => {
-                const s = seededStatus(a.id, event?.id ?? "");
+                const s = statusOf(a.id);
                 const meta = STATUS_META[s];
                 const Icon = meta.icon;
+                const overridden = Boolean(evAttendance[a.id]);
                 return (
                   <tr key={a.id} className="border-t border-border">
                     <td className="px-5 py-2.5 font-medium">
                       {a.firstName} {a.lastName}
                     </td>
                     <td className="px-3 py-2.5">
-                      <span className={`inline-flex items-center gap-1.5 ${meta.cls}`}>
+                      <button
+                        type="button"
+                        onClick={() => cycle(a.id)}
+                        title={tr("Click para cambiar estado", "Click to change status", "Klikni da promeniš status")}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-1 transition hover:bg-muted ${meta.cls} ${overridden ? "border-current/40" : "border-transparent"}`}
+                      >
                         <Icon className="h-4 w-4" />
                         <span className="text-xs font-semibold">{tr(meta.label, meta.labelEn)}</span>
-                      </span>
+                      </button>
                     </td>
                     <td className="px-3 py-2.5 text-xs text-muted-foreground">
                       {s === "present" || s === "doubt"
@@ -212,11 +254,13 @@ function AttendancePage() {
                           : "—"}
                     </td>
                     <td className="px-3 py-2.5 text-xs text-muted-foreground">
-                      {s === "doubt"
-                        ? tr("Pendiente confirmar", "Pending confirmation", "Čeka potvrdu")
-                        : s === "injured"
-                          ? tr("Restricción activa", "Active restriction", "Aktivno ograničenje")
-                          : ""}
+                      {overridden
+                        ? tr("Editado en esta sesión", "Edited in this session", "Izmenjeno u ovoj sesiji")
+                        : s === "doubt"
+                          ? tr("Pendiente confirmar", "Pending confirmation", "Čeka potvrdu")
+                          : s === "injured"
+                            ? tr("Restricción activa", "Active restriction", "Aktivno ograničenje")
+                            : ""}
                     </td>
                   </tr>
                 );

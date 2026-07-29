@@ -2,7 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { RoleGate } from "@/components/RoleGate";
 import { PageHeader, Card, Pill } from "@/components/ui-kit";
-import { CheckCircle2, AlertCircle, Circle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ResetDemoDialog } from "@/components/ResetDemoDialog";
+import { CheckCircle2, AlertCircle, Circle, RotateCcw } from "lucide-react";
 import { useTr } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/settings/qa")({
@@ -66,6 +68,29 @@ function QAPage() {
           "Status modula pre pokretanja pilot kluba. Interni SAITO pregled.",
         )}
       />
+
+      <Card className="mb-6 flex flex-wrap items-center justify-between gap-4 p-5">
+        <div>
+          <div className="text-sm font-semibold">
+            {tr("Reiniciar demo", "Reset demo", "Resetuj demo")}
+          </div>
+          <div className="mt-1 text-xs text-muted-foreground">
+            {tr(
+              "Restaura los datos originales y limpia cambios de esta sesión. Ideal antes de una reunión.",
+              "Restores original data and clears this session's changes. Ideal before a meeting.",
+              "Vraća originalne podatke i briše promene ove sesije. Idealno pre sastanka.",
+            )}
+          </div>
+        </div>
+        <ResetDemoDialog
+          trigger={
+            <Button variant="outline" className="gap-2">
+              <RotateCcw className="h-4 w-4" />
+              {tr("Reiniciar demo", "Reset demo", "Resetuj demo")}
+            </Button>
+          }
+        />
+      </Card>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card className="p-4">
