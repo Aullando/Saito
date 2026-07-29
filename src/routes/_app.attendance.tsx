@@ -66,10 +66,14 @@ const STATUS_META: Record<
   injured: { label: "Lesión", labelEn: "Injured", icon: ShieldAlert, cls: "text-red-700", tone: "danger" },
 };
 
+const STATUS_CYCLE: Status[] = ["present", "doubt", "absent", "injured"];
+
 function AttendancePage() {
   const { profile } = useAuth();
   const tr = useTr();
   const td = useTd();
+  const attendance = useData((s) => s.attendance);
+  const setAttendance = useData((s) => s.setAttendance);
   const [eventId, setEventId] = useState(NEXT_TRAININGS[0]?.id ?? "");
   const [groupFilter, setGroupFilter] = useState<string>("all");
 
@@ -86,15 +90,45 @@ function AttendancePage() {
     return byGroup.length ? byGroup : ATHLETES.slice(0, 12);
   }, [event, groupFilter]);
 
+  const evId = event?.id ?? "";
+  const evAttendance = attendance[evId] ?? {};
+
+  const statusOf = (athleteId: string): Status =>
+    (evAttendance[athleteId] as Status | undefined) ?? seededStatus(athleteId, evId);
+
+  const cycle = (athleteId: string) => {
+    const current = statusOf(athleteId);
+    const next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(current) + 1) % STATUS_CYCLE.length];
+    setAttendance(evId, athleteId, next);
+  };
+
   const counts = roster.reduce<Record<Status, number>>(
     (acc, a) => {
-      const s = seededStatus(a.id, event?.id ?? "");
+      const s = statusOf(a.id);
       acc[s] = (acc[s] ?? 0) + 1;
       return acc;
     },
     { present: 0, doubt: 0, absent: 0, injured: 0 },
   );
   const rate = roster.length ? Math.round((counts.present / roster.length) * 100) : 0;
+
+  const sendReminder = () => {
+    const n = roster.length;
+    toast.success(
+      tr(
+        `Recordatorio simulado · ${n} destinatarios`,
+        `Reminder simulated · ${n} recipients`,
+        `Podsetnik simuliran · ${n} primalaca`,
+      ),
+      {
+        description: tr(
+          "Esta demo no envía notificaciones reales.",
+          "This demo does not send real notifications.",
+          "Ova demo verzija ne šalje prave obaveštenja.",
+        ),
+      },
+    );
+  };
 
   return (
     <>
