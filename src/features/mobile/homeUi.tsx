@@ -26,11 +26,11 @@ export function TodayCard({
   accent: string;
 }) {
   const tr = useTr();
-  const title = event ? event.title || tr("Entrenamiento", "Training") : tr("Sin sesión hoy", "No session today");
+  const title = event ? event.title || tr("Entrenamiento", "Training", "Trening") : tr("Sin sesión hoy", "No session today", "Nema sesije danas");
   return (
     <section style={{ background: SOFT_BG, borderRadius: 18, padding: 18 }}>
       <h2 style={{ color: INK, fontSize: 20, fontWeight: 700 }}>
-        {tr("Hoy", "Today")}: <span style={{ fontWeight: 700 }}>{title}</span>
+        {tr("Hoy", "Today", "Danas")}: <span style={{ fontWeight: 700 }}>{title}</span>
       </h2>
       {event && (
         <div className="mt-1.5 space-y-1" style={{ color: MUTED, fontSize: 13 }}>
@@ -109,7 +109,7 @@ export function RatingCard({
       <div style={{ color: INK, fontSize: 14, fontWeight: 700 }}>{athleteName}</div>
       <div className="mt-2 flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((i) => (
-          <button key={i} onClick={() => setValue(i)} aria-label={tr(`${i} estrellas`, `${i} stars`)}>
+          <button key={i} onClick={() => setValue(i)} aria-label={tr(`${i} estrellas`, `${i} stars`, `${i} zvezdica`)}>
             <Star
               className="h-6 w-6"
               style={{ color: COACH, fill: i <= value ? COACH : "transparent" }}
@@ -153,7 +153,7 @@ export function RatingCard({
           opacity: sent ? 0.7 : 1,
         }}
       >
-        {sent ? tr("Enviada ✓", "Sent ✓") : tr("Enviar valoración", "Send rating")}
+        {sent ? tr("Enviada ✓", "Sent ✓", "Poslato ✓") : tr("Enviar valoración", "Send rating", "Pošalji ocenu")}
       </button>
     </div>
   );
@@ -162,12 +162,12 @@ export function RatingCard({
 export function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onConfirm: () => void }) {
   const tr = useTr();
   const reasons = [
-    tr("Enfermedad", "Illness"),
-    tr("Lesión", "Injury"),
-    tr("Estudios", "Studies"),
-    tr("Trabajo", "Work"),
-    tr("Personal", "Personal"),
-    tr("Otro", "Other"),
+    tr("Enfermedad", "Illness", "Bolest"),
+    tr("Lesión", "Injury", "Povreda"),
+    tr("Estudios", "Studies", "Studije"),
+    tr("Trabajo", "Work", "Posao"),
+    tr("Personal", "Personal", "Lično"),
+    tr("Otro", "Other", "Ostalo"),
   ];
   const [reason, setReason] = useState<string | null>(null);
   const [comment, setComment] = useState("");
@@ -175,13 +175,13 @@ export function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onCo
     <div className="absolute inset-0 z-30 flex items-end justify-center bg-black/40" onClick={onClose}>
       <div className="w-full rounded-t-2xl bg-background p-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-sm font-bold">{tr("Notificar ausencia", "Report absence")}</h3>
-          <button onClick={onClose} className="text-muted-foreground" aria-label={tr("Cerrar", "Close")}>
+          <h3 className="text-sm font-bold">{tr("Notificar ausencia", "Report absence", "Prijavi odsustvo")}</h3>
+          <button onClick={onClose} className="text-muted-foreground" aria-label={tr("Cerrar", "Close", "Zatvori")}>
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Motivo", "Reason")}
+          {tr("Motivo", "Reason", "Razlog")}
         </div>
         <div className="grid grid-cols-2 gap-1.5">
           {reasons.map((r) => {
@@ -203,7 +203,7 @@ export function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onCo
           value={comment}
           onChange={(e) => setComment(e.target.value.slice(0, 300))}
           rows={3}
-          placeholder={tr("Comentario opcional para el entrenador", "Optional comment for the coach")}
+          placeholder={tr("Comentario opcional para el entrenador", "Optional comment for the coach", "Opcioni komentar za trenera")}
           className="mt-3 w-full resize-none rounded-xl border border-border bg-card p-2.5 text-sm outline-none focus:border-primary"
         />
         <div className="mt-3 grid grid-cols-2 gap-2">
@@ -211,14 +211,14 @@ export function AbsenceModal({ onClose, onConfirm }: { onClose: () => void; onCo
             onClick={onClose}
             className="rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-semibold text-foreground"
           >
-            {tr("Cancelar", "Cancel")}
+            {tr("Cancelar", "Cancel", "Otkaži")}
           </button>
           <button
             disabled={!reason}
             onClick={onConfirm}
             className="flex items-center justify-center gap-1 rounded-xl bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
           >
-            <Check className="h-4 w-4" /> {tr("Confirmar", "Confirm")}
+            <Check className="h-4 w-4" /> {tr("Confirmar", "Confirm", "Potvrdi")}
           </button>
         </div>
       </div>
@@ -230,10 +230,10 @@ export function GroupSelector({ value, onChange }: { value: string; onChange: (v
   const tr = useTr();
   const [open, setOpen] = useState(false);
   const options = [
-    tr("Cadete - Grupo A", "U16 - Group A"),
-    tr("Cadete - Grupo B", "U16 - Group B"),
-    tr("Juvenil A", "U18 A"),
-    tr("Infantil A", "U14 A"),
+    tr("Cadete - Grupo A", "U16 - Group A", "U16 - Grupa A"),
+    tr("Cadete - Grupo B", "U16 - Group B", "U16 - Grupa B"),
+    tr("Juvenil A", "U18 A", "U18 A"),
+    tr("Infantil A", "U14 A", "U14 A"),
   ];
   return (
     <div className="relative">

@@ -23,9 +23,9 @@ function MobileTeam() {
   return (
     <div className="space-y-3">
       <header>
-        <h1 className="text-xl font-bold tracking-tight">{tr("Equipo", "Team")}</h1>
+        <h1 className="text-xl font-bold tracking-tight">{tr("Equipo", "Team", "Tim")}</h1>
         <p className="text-sm text-muted-foreground">
-          {athletes.length} {tr("deportistas", "athletes")}
+          {athletes.length} {tr("deportistas", "athletes", "sportista")}
         </p>
       </header>
 

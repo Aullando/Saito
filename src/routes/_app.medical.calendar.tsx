@@ -211,7 +211,7 @@ function MedicalCalendarPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label>{tr("Fecha","Date")}</Label>
+                      <Label>{tr("Fecha", "Date", "Datum")}</Label>
                       <Input
                         type="date"
                         value={form.date}
@@ -219,7 +219,7 @@ function MedicalCalendarPage() {
                       />
                     </div>
                     <div>
-                      <Label>{tr("Hora","Time")}</Label>
+                      <Label>{tr("Hora", "Time", "Vreme")}</Label>
                       <Input
                         type="time"
                         value={form.time}
@@ -228,7 +228,7 @@ function MedicalCalendarPage() {
                     </div>
                   </div>
                   <div>
-                    <Label>{tr("Motivo","Reason")}</Label>
+                    <Label>{tr("Motivo", "Reason", "Razlog")}</Label>
                     <Input
                       value={form.reason}
                       onChange={(e) => setForm({ ...form, reason: e.target.value })}
@@ -246,7 +246,7 @@ function MedicalCalendarPage() {
                         athlete_id: form.athleteId,
                         appointment_date: form.date,
                         appointment_time: form.time,
-                        reason: form.reason || tr("Cita médica","Medical appointment"),
+                        reason: form.reason || tr("Cita médica", "Medical appointment", "Medicinski termin"),
                       });
                       setOpen(false);
                     }}
@@ -319,30 +319,30 @@ function MedicalCalendarPage() {
           {detail && (
             <>
               <SheetHeader>
-                <SheetTitle>{tr("Cita médica","Medical appointment")}</SheetTitle>
+                <SheetTitle>{tr("Cita médica", "Medical appointment", "Medicinski termin")}</SheetTitle>
               </SheetHeader>
               <div className="mt-6 space-y-3 text-sm">
                 <div>
-                  <span className="text-muted-foreground">{tr("Atleta","Athlete")}:</span>{" "}
+                  <span className="text-muted-foreground">{tr("Atleta", "Athlete", "Sportista")}:</span>{" "}
                   {(() => {
                     const a = athletes.find((x) => x.id === detail.athlete_id);
                     return a ? `${a.first_name} ${a.last_name}` : "—";
                   })()}
                 </div>
                 <div>
-                  <span className="text-muted-foreground">{tr("Fecha","Date")}:</span> {detail.appointment_date}{" "}
+                  <span className="text-muted-foreground">{tr("Fecha", "Date", "Datum")}:</span> {detail.appointment_date}{" "}
                   {fmtTime(detail.appointment_time)}
                 </div>
                 <div>
-                  <span className="text-muted-foreground">{tr("Motivo","Reason")}:</span> {detail.reason}
+                  <span className="text-muted-foreground">{tr("Motivo", "Reason", "Razlog")}:</span> {detail.reason}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">{tr("Estado","Status")}:</span>{" "}
+                  <span className="text-muted-foreground">{tr("Estado", "Status", "Status")}:</span>{" "}
                   <Pill tone="info">{detail.status}</Pill>
                 </div>
                 {detail.notes && (
                   <div>
-                    <span className="text-muted-foreground">{tr("Notas","Notes")}:</span>
+                    <span className="text-muted-foreground">{tr("Notas", "Notes", "Beleške")}:</span>
                     <div className="mt-1 whitespace-pre-wrap rounded-lg bg-muted p-3 text-xs">
                       {detail.notes}
                     </div>

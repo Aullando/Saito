@@ -95,14 +95,14 @@ function AttendancePage() {
   return (
     <>
       <PageHeader
-        title={tr("Asistencia y disponibilidad","Attendance & availability")}
-        subtitle={tr("Confirmaciones del próximo entrenamiento o partido por equipo. Datos demo.","Confirmations for the upcoming training or match by team. Demo data.")}
+        title={tr("Asistencia y disponibilidad", "Attendance & availability", "Prisustvo i dostupnost")}
+        subtitle={tr("Confirmaciones del próximo entrenamiento o partido por equipo. Datos demo.", "Confirmations for the upcoming training or match by team. Demo data.", "Potvrde za sledeći trening ili utakmicu po timu. Demo podaci.")}
       />
 
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <div className="min-w-[260px] flex-1">
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {tr("Sesión","Session")}
+            {tr("Sesión", "Session", "Sesija")}
           </label>
           <Select value={eventId} onValueChange={setEventId}>
             <SelectTrigger>
@@ -119,14 +119,14 @@ function AttendancePage() {
         </div>
         <div className="min-w-[200px]">
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {tr("Equipo / grupo","Team / group")}
+            {tr("Equipo / grupo", "Team / group", "Tim / grupa")}
           </label>
           <Select value={groupFilter} onValueChange={setGroupFilter}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{tr("Grupo de la sesión","Session group")}</SelectItem>
+              <SelectItem value="all">{tr("Grupo de la sesión", "Session group", "Grupa sesije")}</SelectItem>
               {GROUPS.map((g) => (
                 <SelectItem key={g.id} value={g.id}>
                   {g.name}
@@ -135,31 +135,31 @@ function AttendancePage() {
             </SelectContent>
           </Select>
         </div>
-        <Button variant="outline">{tr("Enviar recordatorio al grupo","Send reminder to group")}</Button>
+        <Button variant="outline">{tr("Enviar recordatorio al grupo", "Send reminder to group", "Pošalji podsetnik grupi")}</Button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi
           icon={<Users className="h-4 w-4" />}
-          label={tr("Convocados","Called up")}
+          label={tr("Convocados", "Called up", "Pozvani")}
           value={String(roster.length)}
         />
         <Kpi
           icon={<Check className="h-4 w-4 text-emerald-600" />}
-          label={tr("Confirmados","Confirmed")}
+          label={tr("Confirmados", "Confirmed", "Potvrđeni")}
           value={String(counts.present)}
           hint={`${rate}%`}
         />
         <Kpi
           icon={<Minus className="h-4 w-4 text-amber-600" />}
-          label={tr("Dudas","Maybes")}
+          label={tr("Dudas", "Maybes", "Neodlučni")}
           value={String(counts.doubt)}
         />
         <Kpi
           icon={<X className="h-4 w-4 text-rose-600" />}
-          label={tr("Ausencias","Absences")}
+          label={tr("Ausencias", "Absences", "Odsustva")}
           value={String(counts.absent + counts.injured)}
-          hint={tr(`${counts.injured} lesión`,`${counts.injured} injured`)}
+          hint={tr(`${counts.injured} lesión`, `${counts.injured} injured`, `${counts.injured} povreda`)}
         />
       </div>
 
@@ -173,17 +173,17 @@ function AttendancePage() {
           </div>
           <Pill tone="info">
             <CalendarCheck className="mr-1 inline h-3 w-3" />
-            {tr("Asistencia mock","Mock attendance")}
+            {tr("Asistencia mock", "Mock attendance", "Demo prisustvo")}
           </Pill>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="px-5 py-2 font-semibold">{tr("Deportista","Athlete")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Estado","Status")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Confirmado por","Confirmed by")}</th>
-                <th className="px-3 py-2 font-semibold">{tr("Notas","Notes")}</th>
+                <th className="px-5 py-2 font-semibold">{tr("Deportista", "Athlete", "Sportista")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Estado", "Status", "Status")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Confirmado por", "Confirmed by", "Potvrdio")}</th>
+                <th className="px-3 py-2 font-semibold">{tr("Notas", "Notes", "Beleške")}</th>
               </tr>
             </thead>
             <tbody>
@@ -204,16 +204,16 @@ function AttendancePage() {
                     </td>
                     <td className="px-3 py-2.5 text-xs text-muted-foreground">
                       {s === "present" || s === "doubt"
-                        ? tr("Familia / jugador","Family / player")
+                        ? tr("Familia / jugador", "Family / player", "Porodica / igrač")
                         : s === "injured"
-                          ? tr("Staff médico","Medical staff")
+                          ? tr("Staff médico", "Medical staff", "Medicinsko osoblje")
                           : "—"}
                     </td>
                     <td className="px-3 py-2.5 text-xs text-muted-foreground">
                       {s === "doubt"
-                        ? tr("Pendiente confirmar","Pending confirmation")
+                        ? tr("Pendiente confirmar", "Pending confirmation", "Čeka potvrdu")
                         : s === "injured"
-                          ? tr("Restricción activa","Active restriction")
+                          ? tr("Restricción activa", "Active restriction", "Aktivno ograničenje")
                           : ""}
                     </td>
                   </tr>
@@ -225,7 +225,7 @@ function AttendancePage() {
       </Card>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        {profile?.full_name ? tr(`Vista para ${profile.full_name}.`,`View for ${profile.full_name}.`) : ""} {tr("La asistencia se sincroniza con el calendario y el módulo médico cuando un deportista está marcado como lesión activa.","Attendance syncs with the calendar and the medical module when an athlete is marked as actively injured.")}
+        {profile?.full_name ? tr(`Vista para ${profile.full_name}.`, `View for ${profile.full_name}.`, `Prikaz za ${profile.full_name}.`) : ""} {tr("La asistencia se sincroniza con el calendario y el módulo médico cuando un deportista está marcado como lesión activa.", "Attendance syncs with the calendar and the medical module when an athlete is marked as actively injured.", "Prisustvo se sinhronizuje sa kalendarom i medicinskim modulom kada je sportista označen kao aktivno povređen.")}
       </p>
     </>
   );

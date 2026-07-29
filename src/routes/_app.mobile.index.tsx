@@ -71,7 +71,7 @@ function AthleteHome({ event }: { event: Ev }) {
     <div className="space-y-4">
       <TodayCard
         event={event}
-        ctaLabel={tr("Información de la sesión", "Session info")}
+        ctaLabel={tr("Información de la sesión", "Session info", "Informacije o sesiji")}
         ctaTo="/mobile/session-info"
         accent={ATHL}
       />
@@ -91,13 +91,13 @@ function AthleteHome({ event }: { event: Ev }) {
           }}
         >
           <span className="inline-flex items-center gap-2">
-            <Check className="h-4 w-4" /> {tr("Ausencia notificada", "Absence notified")}
+            <Check className="h-4 w-4" /> {tr("Ausencia notificada", "Absence notified", "Odsustvo prijavljeno")}
           </span>
           <button
             onClick={() => setAbsenceNotified(false)}
             className="text-[12px] font-semibold underline"
           >
-            {tr("Deshacer", "Undo")}
+            {tr("Deshacer", "Undo", "Poništi")}
           </button>
         </div>
       ) : (
@@ -113,7 +113,7 @@ function AthleteHome({ event }: { event: Ev }) {
             fontWeight: 700,
           }}
         >
-          <TriangleAlert className="h-4 w-4" /> {tr("Notificar ausencia", "Report absence")}
+          <TriangleAlert className="h-4 w-4" /> {tr("Notificar ausencia", "Report absence", "Prijavi odsustvo")}
         </button>
       )}
 
@@ -123,7 +123,7 @@ function AthleteHome({ event }: { event: Ev }) {
           className="flex items-center gap-2"
           style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
         >
-          <Activity className="h-4 w-4" /> {tr("Salud", "Health")}
+          <Activity className="h-4 w-4" /> {tr("Salud", "Health", "Zdravlje")}
         </div>
         <div
           style={{
@@ -146,7 +146,7 @@ function AthleteHome({ event }: { event: Ev }) {
               fontWeight: 600,
             }}
           >
-            {tr("Plan de tratamiento", "Treatment plan")}
+            {tr("Plan de tratamiento", "Treatment plan", "Plan lečenja")}
             <span
               className="flex items-center justify-center"
               style={{
@@ -172,7 +172,7 @@ function AthleteHome({ event }: { event: Ev }) {
               fontWeight: 600,
             }}
           >
-            <CalendarPlus className="h-4 w-4" /> {tr("Solicitar cita médica", "Request medical appointment")}
+            <CalendarPlus className="h-4 w-4" /> {tr("Solicitar cita médica", "Request medical appointment", "Zatraži medicinski termin")}
           </Link>
         </div>
       </section>
@@ -183,7 +183,7 @@ function AthleteHome({ event }: { event: Ev }) {
           className="flex items-center gap-2"
           style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
         >
-          <Trophy className="h-4 w-4" /> {tr("Mi rendimiento", "My performance")}
+          <Trophy className="h-4 w-4" /> {tr("Mi rendimiento", "My performance", "Moj učinak")}
         </div>
 
         <div
@@ -201,13 +201,13 @@ function AthleteHome({ event }: { event: Ev }) {
           >
             <Sparkles className="h-4 w-4" style={{ color: ATHL }} />
             <span style={{ color: ATHL, fontSize: 14, fontWeight: 700 }}>
-              {tr("Mejora tu rendimiento:", "Improve your performance:")}
+              {tr("Mejora tu rendimiento:", "Improve your performance:", "Poboljšaj svoj učinak:")}
             </span>
           </button>
           <p className="mt-2" style={{ color: INK, fontSize: 13, lineHeight: "20px" }}>
-            {tr("Trabaja la transición tras pérdida. Reduces 0,8 s de reacción defensiva si activas presión inmediata los primeros 6 segundos.", "Work on transition after losing the ball. You cut 0.8s off defensive reaction with immediate press in the first 6 seconds.")}
+            {tr("Trabaja la transición tras pérdida. Reduces 0,8 s de reacción defensiva si activas presión inmediata los primeros 6 segundos.", "Work on transition after losing the ball. You cut 0.8s off defensive reaction with immediate press in the first 6 seconds.", "Radi na tranziciji nakon gubitka lopte. Skraćuješ 0,8 s odbrambene reakcije uz trenutni presing u prvih 6 sekundi.")}
             {improveOpen && (
-              <> {tr("Suma 2 sprints cortos al calentamiento y termina con 5 min de respiración 4-7-8.", "Add 2 short sprints to warm-up and finish with 5 min of 4-7-8 breathing.")}</>
+              <> {tr("Suma 2 sprints cortos al calentamiento y termina con 5 min de respiración 4-7-8.", "Add 2 short sprints to warm-up and finish with 5 min of 4-7-8 breathing.", "Dodaj 2 kratka sprinta u zagrevanje i završi sa 5 min disanja 4-7-8.")}</>
             )}
           </p>
           <div
@@ -241,14 +241,14 @@ function AthleteHome({ event }: { event: Ev }) {
           }}
         >
           <div className="flex items-center justify-between">
-            <span style={{ color: MUTED, fontSize: 13 }}>{tr("Última valoración", "Last rating")}</span>
+            <span style={{ color: MUTED, fontSize: 13 }}>{tr("Última valoración", "Last rating", "Poslednja ocena")}</span>
             <span style={{ color: MUTED, fontSize: 12 }}>22/10/25</span>
           </div>
           <div className="mt-1.5">
             <Stars value={3} color={ATHL} />
           </div>
           <p className="mt-2" style={{ color: INK, fontSize: 13, lineHeight: "19px" }}>
-            {tr("Están funcionando muy bien los pases largos cruzados. Aunque puedes mejorar las combinaciones rápidas con el extremo.", "Your long cross-field passes are working great. You can still improve quick combinations with the winger.")}
+            {tr("Están funcionando muy bien los pases largos cruzados. Aunque puedes mejorar las combinaciones rápidas con el extremo.", "Your long cross-field passes are working great. You can still improve quick combinations with the winger.", "Duge dijagonalne dodavače odlično funkcionišu. Ipak, možeš poboljšati brze kombinacije sa krilom.")}
           </p>
         </div>
 
@@ -262,8 +262,8 @@ function AthleteHome({ event }: { event: Ev }) {
           }}
         >
           <div className="flex items-center justify-between">
-            <span style={{ color: MUTED, fontSize: 13 }}>{tr("Valoración media", "Average rating")}</span>
-            <span style={{ color: MUTED, fontSize: 12 }}>{tr("(últimos 30 días)", "(last 30 days)")}</span>
+            <span style={{ color: MUTED, fontSize: 13 }}>{tr("Valoración media", "Average rating", "Prosečna ocena")}</span>
+            <span style={{ color: MUTED, fontSize: 12 }}>{tr("(últimos 30 días)", "(last 30 days)", "(poslednjih 30 dana)")}</span>
           </div>
           <div className="mt-2 flex items-center gap-2">
             <Star className="h-5 w-5" style={{ color: ATHL, fill: ATHL }} />
@@ -278,7 +278,7 @@ function AthleteHome({ event }: { event: Ev }) {
           onConfirm={() => {
             setAbsenceOpen(false);
             setAbsenceNotified(true);
-            toast.success(tr("Ausencia notificada al entrenador", "Absence reported to coach"));
+            toast.success(tr("Ausencia notificada al entrenador", "Absence reported to coach", "Odsustvo prijavljeno treneru"));
           }}
         />
       )}
@@ -289,14 +289,14 @@ function AthleteHome({ event }: { event: Ev }) {
 /* ─────────────── COACH HOME ─────────────── */
 function CoachHome({ event }: { event: Ev }) {
   const tr = useTr();
-  const [group, setGroup] = useState(tr("Cadete - Grupo A", "U16 - Group A"));
+  const [group, setGroup] = useState(tr("Cadete - Grupo A", "U16 - Group A", "U16 - Grupa A"));
   const [absencesOpen, setAbsencesOpen] = useState(true);
   const storeAbsences = useSessionLocal((s) => s.absences);
   const saveRating = useSessionLocal((s) => s.saveRating);
 
   const seedAbsences = [
-    { id: "ab1", name: "Lucía García", reason: tr("Enfermedad", "Illness") },
-    { id: "ab2", name: "Mario Pérez", reason: tr("Estudios", "Studies") },
+    { id: "ab1", name: "Lucía García", reason: tr("Enfermedad", "Illness", "Bolest") },
+    { id: "ab2", name: "Mario Pérez", reason: tr("Estudios", "Studies", "Studije") },
   ];
   const liveAbsences = storeAbsences
     .filter((a) => a.sessionId === DEMO_SESSION_ID)
@@ -321,7 +321,7 @@ function CoachHome({ event }: { event: Ev }) {
 
       <TodayCard
         event={event}
-        ctaLabel={tr("Información de la sesión", "Session info")}
+        ctaLabel={tr("Información de la sesión", "Session info", "Informacije o sesiji")}
         ctaTo="/mobile/session"
         accent={COACH}
       />
@@ -342,7 +342,7 @@ function CoachHome({ event }: { event: Ev }) {
         >
           <span className="inline-flex items-center gap-2">
             <TriangleAlert className="h-4 w-4" style={{ color: MUTED }} />
-            {tr("Ausencias notificadas", "Reported absences")}
+            {tr("Ausencias notificadas", "Reported absences", "Prijavljena odsustva")}
             {absences.length > 0 && (
               <span
                 style={{
@@ -403,7 +403,7 @@ function CoachHome({ event }: { event: Ev }) {
           className="flex items-center gap-2"
           style={{ color: INK, fontSize: 14, fontWeight: 700 }}
         >
-          <X className="h-4 w-4" /> {tr("No aptos", "Not fit")}
+          <X className="h-4 w-4" /> {tr("No aptos", "Not fit", "Nesposobni")}
         </div>
         <ul className="mt-2 space-y-0.5">
           {notFit.map((a) => (
@@ -420,7 +420,7 @@ function CoachHome({ event }: { event: Ev }) {
           className="flex items-center gap-2"
           style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}
         >
-          <Star className="h-4 w-4" /> {tr("Valoración de rendimiento", "Performance rating")}
+          <Star className="h-4 w-4" /> {tr("Valoración de rendimiento", "Performance rating", "Ocena učinka")}
         </div>
         <div
           className="flex gap-3 overflow-x-auto pb-2"
@@ -432,7 +432,7 @@ function CoachHome({ event }: { event: Ev }) {
               athleteName={a.name}
               onSubmit={(value, text) => {
                 saveRating(DEMO_SESSION_ID, value * 2, 7, text || undefined);
-                toast.success(tr(`Valoración enviada a ${a.name.split(" ")[0]}`, `Rating sent to ${a.name.split(" ")[0]}`));
+                toast.success(tr(`Valoración enviada a ${a.name.split(" ")[0]}`, `Rating sent to ${a.name.split(" ")[0]}`, `Ocena poslata ${a.name.split(" ")[0]}`));
               }}
             />
           ))}

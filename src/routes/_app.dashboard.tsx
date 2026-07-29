@@ -201,7 +201,7 @@ function CommandCenter() {
       .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))[0];
     if (lastPaid) {
       const ath = athletes.find((a) => a.id === lastPaid.athleteId);
-      const who = ath ? `${ath.firstName} ${ath.lastName}` : tr("Deportista", "Athlete");
+      const who = ath ? `${ath.firstName} ${ath.lastName}` : tr("Deportista", "Athlete", "Sportista");
       items.push({
         icon: Wallet,
         text: tr(
@@ -217,7 +217,7 @@ function CommandCenter() {
     if (nextEvent) {
       items.push({
         icon: CalendarDays,
-        text: tr(`Próximo evento: ${nextEvent.title}`, `Next event: ${nextEvent.title}`),
+        text: tr(`Próximo evento: ${nextEvent.title}`, `Next event: ${nextEvent.title}`, `Sledeći događaj: ${nextEvent.title}`),
         time: `${nextEvent.date} · ${nextEvent.startTime}`,
         tone: "info",
       });
@@ -241,7 +241,7 @@ function CommandCenter() {
     const nextAppt = [...appointments].sort((a, b) => a.date.localeCompare(b.date))[0];
     if (nextAppt) {
       const ath = athletes.find((a) => a.id === nextAppt.athleteId);
-      const who = ath ? `${ath.firstName} ${ath.lastName}` : tr("Deportista", "Athlete");
+      const who = ath ? `${ath.firstName} ${ath.lastName}` : tr("Deportista", "Athlete", "Sportista");
       items.push({
         icon: HeartPulse,
         text: tr(
@@ -258,7 +258,7 @@ function CommandCenter() {
   return (
     <>
       <PageHeader
-        title={tr("Centro de mando", "Command center")}
+        title={tr("Centro de mando", "Command center", "Komandni centar")}
         subtitle={
           user
             ? tr(
@@ -279,37 +279,37 @@ function CommandCenter() {
 
         <Kpi
           icon={Users}
-          label={tr("Deportistas activos", "Active athletes")}
+          label={tr("Deportistas activos", "Active athletes", "Aktivni sportisti")}
           value={kpis.activeAthletes}
-          hint={tr(`${kpis.totalAthletes} en total`, `${kpis.totalAthletes} total`)}
+          hint={tr(`${kpis.totalAthletes} en total`, `${kpis.totalAthletes} total`, `${kpis.totalAthletes} ukupno`)}
           tone="primary"
         />
         <Kpi
           icon={ShieldCheck}
-          label={tr("RGPD válido", "GDPR valid")}
+          label={tr("RGPD válido", "GDPR valid", "GDPR važeći")}
           value={`${kpis.rgpdValid}/${kpis.activeAthletes}`}
           hint={
             kpis.rgpdInvalid > 0
-              ? tr(`${kpis.rgpdInvalid} pendientes`, `${kpis.rgpdInvalid} pending`)
-              : tr("Al día", "Up to date")
+              ? tr(`${kpis.rgpdInvalid} pendientes`, `${kpis.rgpdInvalid} pending`, `${kpis.rgpdInvalid} na čekanju`)
+              : tr("Al día", "Up to date", "Ažurno")
           }
           tone={kpis.rgpdInvalid > 0 ? "warning" : "success"}
         />
         <Kpi
           icon={Layers}
-          label={tr("Secciones activas", "Active sections")}
+          label={tr("Secciones activas", "Active sections", "Aktivne sekcije")}
           value={kpis.sectionsCount}
           tone="default"
         />
         <Kpi
           icon={Activity}
-          label={tr("Grupos activos", "Active groups")}
+          label={tr("Grupos activos", "Active groups", "Aktivne grupe")}
           value={kpis.groupsCount}
           tone="default"
         />
         <Kpi
           icon={Dumbbell}
-          label={tr("Entrenos esta semana", "Training sessions this week")}
+          label={tr("Entrenos esta semana", "Training sessions this week", "Treninzi ove nedelje")}
           value={kpis.weekTrainings}
           tone="info"
         />
@@ -319,32 +319,32 @@ function CommandCenter() {
       <section className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <Kpi
           icon={ClipboardCheck}
-          label={tr("Asistencia media", "Average attendance")}
+          label={tr("Asistencia media", "Average attendance", "Prosečno prisustvo")}
           value={kpis.weekTrainings === 0 ? "—" : `${kpis.attendance}%`}
-          hint={tr("Última semana", "Last week")}
+          hint={tr("Última semana", "Last week", "Prošla nedelja")}
           tone="success"
         />
         <Kpi
           icon={CreditCard}
-          label={tr("Pagos pendientes", "Pending payments")}
+          label={tr("Pagos pendientes", "Pending payments", "Plaćanja na čekanju")}
           value={kpis.pendingCount}
           tone={kpis.pendingCount > 0 ? "warning" : "default"}
         />
         <Kpi
           icon={Wallet}
-          label={tr("Importe pendiente", "Pending amount")}
+          label={tr("Importe pendiente", "Pending amount", "Iznos na čekanju")}
           value={fmtMoney(kpis.pendingAmount)}
           tone={kpis.pendingAmount > 0 ? "warning" : "default"}
         />
         <Kpi
           icon={AlertTriangle}
-          label={tr("Incidencias abiertas", "Open incidents")}
+          label={tr("Incidencias abiertas", "Open incidents", "Otvoreni incidenti")}
           value={kpis.openIncidents}
           tone={kpis.openIncidents > 0 ? "danger" : "success"}
         />
         <Kpi
           icon={HeartPulse}
-          label={tr("No aptos / en revisión", "Not fit / under review")}
+          label={tr("No aptos / en revisión", "Not fit / under review", "Nesposobni / na proveri")}
           value={kpis.notFit}
           tone={kpis.notFit > 0 ? "warning" : "success"}
         />
@@ -357,12 +357,12 @@ function CommandCenter() {
         <Card className="lg:col-span-2">
           <SectionHeader
             icon={CalendarDays}
-            title={tr("Próximos eventos", "Upcoming events")}
-            actionLabel={tr("Ver calendario", "View calendar")}
+            title={tr("Próximos eventos", "Upcoming events", "Predstojeći događaji")}
+            actionLabel={tr("Ver calendario", "View calendar", "Pogledaj kalendar")}
             actionTo="/calendar"
           />
           {upcomingEvents.length === 0 ? (
-            <Empty>{tr("Sin eventos próximos.", "No upcoming events.")}</Empty>
+            <Empty>{tr("Sin eventos próximos.", "No upcoming events.", "Nema predstojećih događaja.")}</Empty>
           ) : (
             <ul className="divide-y divide-border">
               {upcomingEvents.map((e) => (
@@ -396,9 +396,9 @@ function CommandCenter() {
 
         {/* Riesgos operativos */}
         <Card>
-          <SectionHeader icon={AlertTriangle} title={tr("Riesgos operativos", "Operational risks")} />
+          <SectionHeader icon={AlertTriangle} title={tr("Riesgos operativos", "Operational risks", "Operativni rizici")} />
           {risks.length === 0 ? (
-            <Empty>{tr("Sin riesgos detectados. Todo en orden.", "No risks detected. All clear.")}</Empty>
+            <Empty>{tr("Sin riesgos detectados. Todo en orden.", "No risks detected. All clear.", "Nisu otkriveni rizici. Sve je u redu.")}</Empty>
           ) : (
             <ul className="space-y-2">
               {risks.map((r, i) => (
@@ -433,12 +433,12 @@ function CommandCenter() {
         <Card className="lg:col-span-2">
           <SectionHeader
             icon={Megaphone}
-            title={tr("Circulares recientes", "Recent circulars")}
-            actionLabel={tr("Ver comunicación", "View communication")}
+            title={tr("Circulares recientes", "Recent circulars", "Nedavna obaveštenja")}
+            actionLabel={tr("Ver comunicación", "View communication", "Pogledaj komunikaciju")}
             actionTo="/communication"
           />
           {recentCirculars.length === 0 ? (
-            <Empty>{tr("No hay circulares publicadas.", "No circulars published.")}</Empty>
+            <Empty>{tr("No hay circulares publicadas.", "No circulars published.", "Nema objavljenih obaveštenja.")}</Empty>
           ) : (
             <ul className="divide-y divide-border">
               {recentCirculars.map((c) => (
@@ -448,7 +448,7 @@ function CommandCenter() {
                       <div className="flex items-center gap-2">
                         <span className="truncate text-sm font-semibold">{c.title}</span>
                         {c.unread > 0 && (
-                          <Pill tone="info">{tr(`${c.unread} nuevas`, `${c.unread} new`)}</Pill>
+                          <Pill tone="info">{tr(`${c.unread} nuevas`, `${c.unread} new`, `${c.unread} novih`)}</Pill>
                         )}
                       </div>
                       <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
@@ -467,9 +467,9 @@ function CommandCenter() {
 
         {/* Actividad reciente */}
         <Card>
-          <SectionHeader icon={Bell} title={tr("Actividad reciente", "Recent activity")} />
+          <SectionHeader icon={Bell} title={tr("Actividad reciente", "Recent activity", "Nedavna aktivnost")} />
           {activity.length === 0 ? (
-            <Empty>{tr("Sin actividad reciente.", "No recent activity.")}</Empty>
+            <Empty>{tr("Sin actividad reciente.", "No recent activity.", "Nema nedavne aktivnosti.")}</Empty>
           ) : (
             <ul className="space-y-2.5">
               {activity.map((it, i) => {

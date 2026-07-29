@@ -59,7 +59,7 @@ export function RgccIncidenciasView() {
                   {isHealth && i.athleteName ? ` · ${i.athleteName}` : ""}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {tr("Reportado por", "Reported by")} {i.reportedBy}
+                  {tr("Reportado por", "Reported by", "Prijavio")} {i.reportedBy}
                   {i.athleteNumber ? ` · ${i.athleteNumber}` : ""}
                 </div>
               </div>
@@ -82,7 +82,7 @@ export function RgccIncidenciasView() {
             {i.operationalRestriction && (
               <div className="mt-2 rounded-lg bg-primary/5 px-2 py-1.5 text-[11px] text-primary">
                 <span className="font-semibold">
-                  {tr("Restricción operativa: ", "Operational restriction: ")}
+                  {tr("Restricción operativa: ", "Operational restriction: ", "Operativno ograničenje: ")}
                 </span>
                 {td(i.operationalRestriction)}
               </div>
@@ -130,7 +130,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                 </span>
               </div>
               <div className="text-xs text-muted-foreground">
-                {td(r.type)} · {tr("aforo", "capacity")} {r.capacity}
+                {td(r.type)} · {tr("aforo", "capacity", "kapacitet")} {r.capacity}
               </div>
             </Card>
           ))}
@@ -154,8 +154,8 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                     <div className="text-xs text-muted-foreground">
                       {td(s.category)} · {s.venueLabel}
                     </div>
-                    <div className="mt-1 text-xs">{tr("Resp.", "Lead")}: {s.responsible}</div>
-                    <div className="mt-1 text-xs text-primary">{s.membersCount} {tr("socios", "members")}</div>
+                    <div className="mt-1 text-xs">{tr("Resp.", "Lead", "Odg.")}: {s.responsible}</div>
+                    <div className="mt-1 text-xs text-primary">{s.membersCount} {tr("socios", "members", "članova")}</div>
                   </div>
                 </div>
               </Card>
@@ -171,7 +171,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               <div className="font-semibold">{c.name}</div>
               <div className="text-xs text-muted-foreground">{c.specialty}</div>
               <div className="mt-1 text-xs">
-                {tr("Contrato", "Contract")}: {c.contractedHours}h · {tr("Total", "Total")}: {c.totalHours}h
+                {tr("Contrato", "Contract", "Ugovor")}: {c.contractedHours}h · {tr("Total", "Total", "Ukupno")}: {c.totalHours}h
               </div>
               <div className="mt-1 text-[11px] uppercase tracking-wide text-primary">
                 {td(c.status)}
@@ -192,7 +192,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                 {m.memberNumber} · {td(m.activity)}
               </div>
               <div className="mt-1 text-xs">
-                {tr("Monitor", "Coach")}: {m.coachName} · {tr("Nivel", "Level")} {m.level}
+                {tr("Monitor", "Coach", "Trener")}: {m.coachName} · {tr("Nivel", "Level", "Nivo")} {m.level}
               </div>
               <div className="mt-1 text-[11px] text-muted-foreground line-clamp-2">{m.goal}</div>
             </Card>
@@ -248,7 +248,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
     case "entrenamiento-personal":
       return (
         <>
-          <h3 className="mb-2 text-sm font-semibold">{tr("Sesiones de hoy", "Today's sessions")}</h3>
+          <h3 className="mb-2 text-sm font-semibold">{tr("Sesiones de hoy", "Today's sessions", "Današnje sesije")}</h3>
           <div className="mb-6 space-y-2">
             {RGCC_PT_SESSIONS.map((s) => (
               <Card key={s.id}>
@@ -256,12 +256,12 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                   {s.time} · {s.memberName}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {tr("Monitor", "Coach")}: {s.coachName} · {td(s.status)}
+                  {tr("Monitor", "Coach", "Trener")}: {s.coachName} · {td(s.status)}
                 </div>
               </Card>
             ))}
           </div>
-          <h3 className="mb-2 text-sm font-semibold">{tr("Asignaciones recientes", "Recent assignments")}</h3>
+          <h3 className="mb-2 text-sm font-semibold">{tr("Asignaciones recientes", "Recent assignments", "Nedavne dodele")}</h3>
           <div className="space-y-2">
             {RGCC_WORKOUTS.map((w) => (
               <Card key={w.id}>
@@ -270,7 +270,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
                   {w.memberNumber} · {w.coachName} · {td(w.status)}
                 </div>
                 <div className="mt-1 text-xs">
-                  {w.blocks.length} {tr("bloques", "blocks")} · {tr("origen", "source")} {w.source}
+                  {w.blocks.length} {tr("bloques", "blocks", "blokova")} · {tr("origen", "source", "izvor")} {w.source}
                 </div>
               </Card>
             ))}
@@ -280,7 +280,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
     case "biblioteca":
       return (
         <>
-          <h3 className="mb-2 text-sm font-semibold">{tr("Rutinas", "Routines")}</h3>
+          <h3 className="mb-2 text-sm font-semibold">{tr("Rutinas", "Routines", "Rutine")}</h3>
           <Grid>
             {RGCC_ROUTINES.map((r) => (
               <Card key={r.id}>
@@ -292,7 +292,7 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
               </Card>
             ))}
           </Grid>
-          <h3 className="mb-2 mt-6 text-sm font-semibold">{tr("Ejercicios", "Exercises")} ({RGCC_EXERCISES.length})</h3>
+          <h3 className="mb-2 mt-6 text-sm font-semibold">{tr("Ejercicios", "Exercises", "Vežbe")} ({RGCC_EXERCISES.length})</h3>
           <Grid>
             {RGCC_EXERCISES.map((e) => (
               <Card key={e.id}>
@@ -313,29 +313,29 @@ export function ModulePreview({ slug, fallback }: { slug: string; fallback: Reac
       return (
         <Grid>
           <Card>
-            <div className="text-xs text-muted-foreground">{tr("Sedes operativas", "Active venues")}</div>
+            <div className="text-xs text-muted-foreground">{tr("Sedes operativas", "Active venues", "Aktivni objekti")}</div>
             <div className="text-2xl font-bold">
               {RGCC_VENUES.filter((v) => v.status === "active").length}
             </div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">{tr("Salas", "Rooms")}</div>
+            <div className="text-xs text-muted-foreground">{tr("Salas", "Rooms", "Sale")}</div>
             <div className="text-2xl font-bold">{RGCC_ROOMS.length}</div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">{tr("Secciones deportivas", "Sport sections")}</div>
+            <div className="text-xs text-muted-foreground">{tr("Secciones deportivas", "Sport sections", "Sportske sekcije")}</div>
             <div className="text-2xl font-bold">{RGCC_SECTIONS.length}</div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">{tr("Monitores", "Coaches")}</div>
+            <div className="text-xs text-muted-foreground">{tr("Monitores", "Coaches", "Treneri")}</div>
             <div className="text-2xl font-bold">{RGCC_COACHES.length}</div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">{tr("Clases hoy/mañana", "Classes today/tomorrow")}</div>
+            <div className="text-xs text-muted-foreground">{tr("Clases hoy/mañana", "Classes today/tomorrow", "Časovi danas/sutra")}</div>
             <div className="text-2xl font-bold">{RGCC_SESSIONS.length}</div>
           </Card>
           <Card>
-            <div className="text-xs text-muted-foreground">{tr("Socios totales (secciones)", "Total members (sections)")}</div>
+            <div className="text-xs text-muted-foreground">{tr("Socios totales (secciones)", "Total members (sections)", "Ukupno članova (sekcije)")}</div>
             <div className="text-2xl font-bold">
               {RGCC_SECTIONS.reduce((a, s) => a + s.membersCount, 0).toLocaleString(lang === "es" ? "es-ES" : "en-US")}
             </div>

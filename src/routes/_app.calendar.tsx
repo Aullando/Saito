@@ -261,7 +261,7 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(tr("Evento creado", "Event created"));
+      toast.success(tr("Evento creado", "Event created", "Događaj kreiran"));
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -277,7 +277,7 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(tr("Evento eliminado", "Event deleted"));
+      toast.success(tr("Evento eliminado", "Event deleted", "Događaj obrisan"));
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -327,7 +327,7 @@ function CalendarPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(tr("Evento actualizado", "Event updated"));
+      toast.success(tr("Evento actualizado", "Event updated", "Događaj ažuriran"));
       qc.invalidateQueries({ queryKey: ["calendar_events", orgId] });
     },
     onError: (err: Error) => toast.error(err.message),
@@ -495,10 +495,10 @@ function CalendarPage() {
     label: string;
     tone: "muted" | "ok" | "warn" | "danger";
   } => {
-    if (cancellations[ev.id]) return { label: tr("Cancelado", "Cancelled"), tone: "danger" };
-    if (dateStr < todayStr) return { label: tr("Pasado", "Past"), tone: "muted" };
-    if (dateStr === todayStr) return { label: tr("Hoy", "Today"), tone: "warn" };
-    return { label: tr("Programado", "Scheduled"), tone: "ok" };
+    if (cancellations[ev.id]) return { label: tr("Cancelado", "Cancelled", "Otkazano"), tone: "danger" };
+    if (dateStr < todayStr) return { label: tr("Pasado", "Past", "Prošlo"), tone: "muted" };
+    if (dateStr === todayStr) return { label: tr("Hoy", "Today", "Danas"), tone: "warn" };
+    return { label: tr("Programado", "Scheduled", "Zakazano"), tone: "ok" };
   };
 
   // ────── Render ──────
@@ -544,17 +544,17 @@ function CalendarPage() {
                 <DialogTrigger asChild>
                   <Button size="sm" className="rounded-full">
                     <Plus className="mr-1 h-4 w-4" />
-                    {tr("Nuevo evento", "New event")}
+                    {tr("Nuevo evento", "New event", "Novi događaj")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-lg">
                   <DialogHeader>
-                    <DialogTitle>{tr("Nuevo evento", "New event")}</DialogTitle>
+                    <DialogTitle>{tr("Nuevo evento", "New event", "Novi događaj")}</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label>{tr("Tipo", "Type")}</Label>
+                        <Label>{tr("Tipo", "Type", "Tip")}</Label>
                         <Select
                           value={newEv.type}
                           onValueChange={(v) =>
@@ -574,7 +574,7 @@ function CalendarPage() {
                         </Select>
                       </div>
                       <div>
-                        <Label>{tr("Título", "Title")}</Label>
+                        <Label>{tr("Título", "Title", "Naslov")}</Label>
                         <Input
                           value={newEv.title}
                           onChange={(e) => setNewEv({ ...newEv, title: e.target.value })}
@@ -583,7 +583,7 @@ function CalendarPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label>{tr("Fecha", "Date")}</Label>
+                        <Label>{tr("Fecha", "Date", "Datum")}</Label>
                         <Input
                           type="date"
                           value={newEv.date}
@@ -591,7 +591,7 @@ function CalendarPage() {
                         />
                       </div>
                       <div>
-                        <Label>{tr("Hora", "Time")}</Label>
+                        <Label>{tr("Hora", "Time", "Vreme")}</Label>
                         <Input
                           type="time"
                           value={newEv.startTime}
@@ -600,16 +600,16 @@ function CalendarPage() {
                       </div>
                     </div>
                     <div>
-                      <Label>{tr("Ubicación", "Location")}</Label>
+                      <Label>{tr("Ubicación", "Location", "Lokacija")}</Label>
                       <Input
                         value={newEv.location}
                         onChange={(e) => setNewEv({ ...newEv, location: e.target.value })}
-                        placeholder={tr("Pista 1, Sala médica, …", "Court 1, Medical room, …")}
+                        placeholder={tr("Pista 1, Sala médica, …", "Court 1, Medical room, …", "Teren 1, Medicinska sala, …")}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label>{tr("Grupo", "Group")}</Label>
+                        <Label>{tr("Grupo", "Group", "Grupa")}</Label>
                         <Select
                           value={newEv.groupId}
                           onValueChange={(v) => setNewEv({ ...newEv, groupId: v })}
@@ -627,7 +627,7 @@ function CalendarPage() {
                         </Select>
                       </div>
                       <div>
-                        <Label>{tr("Staff responsable", "Responsible staff")}</Label>
+                        <Label>{tr("Staff responsable", "Responsible staff", "Odgovorno osoblje")}</Label>
                         <Select
                           value={newEv.staffId}
                           onValueChange={(v) => setNewEv({ ...newEv, staffId: v })}
@@ -650,7 +650,7 @@ function CalendarPage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
-                      <Label className="text-sm">{tr("Recurrente (semanal)", "Recurring (weekly)")}</Label>
+                      <Label className="text-sm">{tr("Recurrente (semanal)", "Recurring (weekly)", "Ponavljajuće (nedeljno)")}</Label>
                       <Switch
                         checked={newEv.recurring}
                         onCheckedChange={(v) => setNewEv({ ...newEv, recurring: v })}
@@ -658,7 +658,7 @@ function CalendarPage() {
                     </div>
                     {newEv.recurring && (
                       <div>
-                        <Label>{tr("Hasta", "Until")}</Label>
+                        <Label>{tr("Hasta", "Until", "Do")}</Label>
                         <Input
                           type="date"
                           value={newEv.until}
@@ -694,7 +694,7 @@ function CalendarPage() {
                         setOpen(false);
                       }}
                     >
-                      {tr("Crear", "Create")}
+                      {tr("Crear", "Create", "Kreiraj")}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -767,10 +767,10 @@ function CalendarPage() {
         </Select>
         <Select value={typeF} onValueChange={setTypeF}>
           <SelectTrigger className="w-44 rounded-full">
-            <SelectValue placeholder={tr("Todos los tipos", "All types")} />
+            <SelectValue placeholder={tr("Todos los tipos", "All types", "Svi tipovi")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">{tr("Todos los tipos", "All types")}</SelectItem>
+            <SelectItem value="all">{tr("Todos los tipos", "All types", "Svi tipovi")}</SelectItem>
             {TYPE_OPTIONS.map((o) => (
               <SelectItem key={o.value} value={o.value}>
                 {o.label}
@@ -780,7 +780,7 @@ function CalendarPage() {
         </Select>
         <Select value={roleF} onValueChange={setRoleF}>
           <SelectTrigger className="w-48 rounded-full">
-            <SelectValue placeholder={tr("Todos los roles", "All roles")} />
+            <SelectValue placeholder={tr("Todos los roles", "All roles", "Sve uloge")} />
           </SelectTrigger>
           <SelectContent>
             {ROLE_OPTIONS.map((o) => (
@@ -813,7 +813,7 @@ function CalendarPage() {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {tr("Mes", "Month")}
+            {tr("Mes", "Month", "Mesec")}
           </button>
           <button
             type="button"
@@ -824,7 +824,7 @@ function CalendarPage() {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {tr("Día", "Day")}
+            {tr("Día", "Day", "Dan")}
           </button>
         </div>
       </div>
@@ -947,7 +947,7 @@ function CalendarPage() {
             <div className="saito-card p-4">
               {dayOcc.length === 0 ? (
                 <div className="py-12 text-center text-sm text-muted-foreground">
-                  {tr("No hay eventos programados.", "No scheduled events.")}
+                  {tr("No hay eventos programados.", "No scheduled events.", "Nema zakazanih događaja.")}
                 </div>
               ) : (
                 <ul className="divide-y divide-border">
@@ -1004,11 +1004,11 @@ function CalendarPage() {
                 ev.type === "medical" ? canManageMedicalAppointments : canManageCalendarEvents;
               const canEditEvent = canEditThis && isFuture && !a.cancelled;
               const blockers = [
-                a.hasAttn && tr("asistencia registrada", "attendance recorded"),
-                a.hasNotes && tr("notas", "notes"),
-                a.hasPayment && tr("pagos asociados", "associated payments"),
-                a.hasComm && tr("comunicación enviada", "communication sent"),
-                a.hasParticipants && a.isPast && tr("participantes históricos", "historical participants"),
+                a.hasAttn && tr("asistencia registrada", "attendance recorded", "prisustvo zabeleženo"),
+                a.hasNotes && tr("notas", "notes", "beleške"),
+                a.hasPayment && tr("pagos asociados", "associated payments", "povezanih plaćanja"),
+                a.hasComm && tr("comunicación enviada", "communication sent", "komunikacija poslata"),
+                a.hasParticipants && a.isPast && tr("participantes históricos", "historical participants", "istorijskih učesnika"),
               ].filter(Boolean) as string[];
               const canDelete = canEditThis && !a.cancelled && blockers.length === 0;
               const shouldCancel = canEditThis && !a.cancelled && !canDelete && isFuture;
@@ -1027,30 +1027,30 @@ function CalendarPage() {
 
                   <div className="mt-5 space-y-4 text-sm">
                     <div className="grid grid-cols-1 gap-2">
-                      <Row icon={<CalendarDays className="h-4 w-4" />} label={tr("Fecha", "Date")}>
+                      <Row icon={<CalendarDays className="h-4 w-4" />} label={tr("Fecha", "Date", "Datum")}>
                         {detail.date}
                       </Row>
-                      <Row icon={<Clock className="h-4 w-4" />} label={tr("Hora", "Time")}>
+                      <Row icon={<Clock className="h-4 w-4" />} label={tr("Hora", "Time", "Vreme")}>
                         {fmtTime(ev.start_time) || "—"}
                       </Row>
-                      <Row icon={<MapPin className="h-4 w-4" />} label={tr("Ubicación", "Location")}>
+                      <Row icon={<MapPin className="h-4 w-4" />} label={tr("Ubicación", "Location", "Lokacija")}>
                         {facility ?? "—"}
                       </Row>
-                      <Row icon={<Users className="h-4 w-4" />} label={tr("Grupo", "Group")}>
+                      <Row icon={<Users className="h-4 w-4" />} label={tr("Grupo", "Group", "Grupa")}>
                         {group?.name ?? "—"}
                       </Row>
-                      <Row icon={<UserCog className="h-4 w-4" />} label={tr("Staff responsable", "Responsible staff")}>
+                      <Row icon={<UserCog className="h-4 w-4" />} label={tr("Staff responsable", "Responsible staff", "Odgovorno osoblje")}>
                         {staff?.name ?? "—"}
                       </Row>
                     </div>
 
                     <div>
                       <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        {tr("Participantes", "Participants")} ({a.participants.length})
+                        {tr("Participantes", "Participants", "Učesnici")} ({a.participants.length})
                       </div>
                       {a.participants.length === 0 ? (
                         <div className="text-xs text-muted-foreground">
-                          {tr("Sin participantes asignados.", "No participants assigned.")}
+                          {tr("Sin participantes asignados.", "No participants assigned.", "Nema dodeljenih učesnika.")}
                         </div>
                       ) : (
                         <div className="max-h-32 overflow-y-auto rounded-lg border border-border p-2">
@@ -1062,7 +1062,7 @@ function CalendarPage() {
                             ))}
                             {a.participants.length > 10 && (
                               <li className="text-muted-foreground">
-                                + {a.participants.length - 10} {tr("más", "more")}
+                                + {a.participants.length - 10} {tr("más", "more", "još")}
                               </li>
                             )}
                           </ul>
@@ -1072,25 +1072,25 @@ function CalendarPage() {
 
                     {ev.recurrence && (
                       <div>
-                        <Pill tone="info">↻ {tr("Semanal hasta", "Weekly until")} {ev.recurrence.until}</Pill>
+                        <Pill tone="info">↻ {tr("Semanal hasta", "Weekly until", "Nedeljno do")} {ev.recurrence.until}</Pill>
                       </div>
                     )}
 
                     {cancelInfo && (
                       <div className="rounded-lg border border-rose-200 bg-rose-50/60 px-3 py-2 text-xs text-rose-700">
-                        <div className="font-semibold">{tr("Motivo de cancelación", "Cancellation reason")}</div>
+                        <div className="font-semibold">{tr("Motivo de cancelación", "Cancellation reason", "Razlog otkazivanja")}</div>
                         <div className="mt-0.5">{cancelInfo.reason}</div>
                         <div className="mt-1 text-[11px] opacity-80">
-                          {tr("Cancelado el", "Cancelled on")} {new Date(cancelInfo.cancelledAt).toLocaleString()}
-                          {cancelInfo.notified ? tr(" · participantes notificados", " · participants notified") : ""}
+                          {tr("Cancelado el", "Cancelled on", "Otkazano dana")} {new Date(cancelInfo.cancelledAt).toLocaleString()}
+                          {cancelInfo.notified ? tr(" · participantes notificados", " · participants notified", " · učesnici obavešteni") : ""}
                         </div>
                       </div>
                     )}
 
                     {!a.cancelled && blockers.length > 0 && (
                       <div className="rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-xs text-amber-800">
-                        {tr("No se puede eliminar: el evento tiene", "Cannot delete: event has")} {blockers.join(", ")}.
-                        {isFuture ? tr(" Usa Cancelar para mantener el historial.", " Use Cancel to keep the history.") : ""}
+                        {tr("No se puede eliminar: el evento tiene", "Cannot delete: event has", "Nije moguće obrisati: događaj ima")} {blockers.join(", ")}.
+                        {isFuture ? tr(" Usa Cancelar para mantener el historial.", " Use Cancel to keep the history.", " Koristite Otkaži da biste zadržali istoriju.") : ""}
                       </div>
                     )}
 
@@ -1098,30 +1098,30 @@ function CalendarPage() {
                     {ev.type === "training" && !a.cancelled && (
                       <div>
                         <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                          {tr("Acciones de sesión", "Session actions")}
+                          {tr("Acciones de sesión", "Session actions", "Radnje sesije")}
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              toast.info(tr("Detalle de la sesión", "Session detail"));
+                              toast.info(tr("Detalle de la sesión", "Session detail", "Detalji sesije"));
                             }}
                           >
                             <Eye className="mr-1 h-4 w-4" />
-                            {tr("Ver detalle", "View detail")}
+                            {tr("Ver detalle", "View detail", "Pogledaj detalje")}
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
                               markCommunication(ev.id, true);
-                              toast.success(tr("Convocatoria generada", "Call-up generated"));
+                              toast.success(tr("Convocatoria generada", "Call-up generated", "Poziv generisan"));
                               navigate({ to: "/communication" });
                             }}
                           >
                             <Send className="mr-1 h-4 w-4" />
-                            {tr("Convocatoria", "Call-up")}
+                            {tr("Convocatoria", "Call-up", "Poziv")}
                           </Button>
                           <Button
                             variant="outline"
@@ -1132,7 +1132,7 @@ function CalendarPage() {
                             }}
                           >
                             <ClipboardCheck className="mr-1 h-4 w-4" />
-                            {tr("Asistencia", "Attendance")}
+                            {tr("Asistencia", "Attendance", "Prisustvo")}
                           </Button>
                           <Button
                             variant="outline"
@@ -1143,12 +1143,12 @@ function CalendarPage() {
                             }}
                           >
                             <StickyNote className="mr-1 h-4 w-4" />
-                            {tr("Notas", "Notes")}
+                            {tr("Notas", "Notes", "Beleške")}
                           </Button>
                         </div>
                         {notes[ev.id] && (
                           <div className="mt-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-                            <span className="font-semibold text-foreground">{tr("Nota: ", "Note: ")}</span>
+                            <span className="font-semibold text-foreground">{tr("Nota: ", "Note: ", "Beleška: ")}</span>
                             {notes[ev.id]}
                           </div>
                         )}
@@ -1180,7 +1180,7 @@ function CalendarPage() {
                             }}
                           >
                             <Pencil className="mr-1 h-4 w-4" />
-                            {tr("Editar evento", "Edit event")}
+                            {tr("Editar evento", "Edit event", "Izmeni događaj")}
                           </Button>
                         )}
 
@@ -1194,7 +1194,7 @@ function CalendarPage() {
                             }}
                           >
                             <CircleSlash className="mr-1 h-4 w-4" />
-                            {tr("Omitir solo esta ocurrencia", "Skip only this occurrence")}
+                            {tr("Omitir solo esta ocurrencia", "Skip only this occurrence", "Preskoči samo ovu pojavu")}
                           </Button>
                         )}
 
@@ -1210,7 +1210,7 @@ function CalendarPage() {
                             }}
                           >
                             <Ban className="mr-1 h-4 w-4" />
-                            {tr("Cancelar evento", "Cancel event")}
+                            {tr("Cancelar evento", "Cancel event", "Otkaži događaj")}
                           </Button>
                         )}
 
@@ -1219,13 +1219,13 @@ function CalendarPage() {
                             variant="destructive"
                             size="sm"
                             onClick={async () => {
-                              if (!confirm(tr("¿Eliminar este evento?", "Delete this event?"))) return;
+                              if (!confirm(tr("¿Eliminar este evento?", "Delete this event?", "Obrisati ovaj događaj?"))) return;
                               await delEvent.mutateAsync(ev.id);
                               setDetail(null);
                             }}
                           >
                             <Trash2 className="mr-1 h-4 w-4" />
-                            {tr("Eliminar evento", "Delete event")}
+                            {tr("Eliminar evento", "Delete event", "Obriši događaj")}
                           </Button>
                         )}
 
@@ -1235,10 +1235,10 @@ function CalendarPage() {
                             size="sm"
                             onClick={() => {
                               uncancelEvent(ev.id);
-                              toast.success(tr("Cancelación revertida", "Cancellation reverted"));
+                              toast.success(tr("Cancelación revertida", "Cancellation reverted", "Otkazivanje poništeno"));
                             }}
                           >
-                            {tr("Revertir cancelación", "Revert cancellation")}
+                            {tr("Revertir cancelación", "Revert cancellation", "Poništi otkazivanje")}
                           </Button>
                         )}
                       </div>
@@ -1254,7 +1254,7 @@ function CalendarPage() {
       <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{tr("Cancelar evento", "Cancel event")}</DialogTitle>
+            <DialogTitle>{tr("Cancelar evento", "Cancel event", "Otkaži događaj")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 text-sm">
             <p className="text-muted-foreground">
@@ -1264,22 +1264,22 @@ function CalendarPage() {
               )}
             </p>
             <div>
-              <Label>{tr("Motivo de cancelación", "Cancellation reason")}</Label>
+              <Label>{tr("Motivo de cancelación", "Cancellation reason", "Razlog otkazivanja")}</Label>
               <Textarea
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
                 rows={3}
-                placeholder={tr("Ej: lluvia, instalación cerrada, lesión múltiple…", "E.g.: rain, facility closed, multiple injuries…")}
+                placeholder={tr("Ej: lluvia, instalación cerrada, lesión múltiple…", "E.g.: rain, facility closed, multiple injuries…", "Npr.: kiša, zatvoren objekat, više povreda…")}
               />
             </div>
             <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
               <Checkbox checked={cancelNotify} onCheckedChange={(v) => setCancelNotify(!!v)} />
-              <span>{tr("Notificar a participantes", "Notify participants")}</span>
+              <span>{tr("Notificar a participantes", "Notify participants", "Obavesti učesnike")}</span>
             </label>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancelOpen(false)}>
-              {tr("Cerrar", "Close")}
+              {tr("Cerrar", "Close", "Zatvori")}
             </Button>
             <Button
               variant="destructive"
@@ -1289,8 +1289,8 @@ function CalendarPage() {
                 cancelEvent(detail.event.id, cancelReason.trim(), cancelNotify);
                 toast.success(
                   cancelNotify
-                    ? tr("Evento cancelado y participantes notificados", "Event cancelled and participants notified")
-                    : tr("Evento cancelado", "Event cancelled"),
+                    ? tr("Evento cancelado y participantes notificados", "Event cancelled and participants notified", "Događaj otkazan i učesnici obavešteni")
+                    : tr("Evento cancelado", "Event cancelled", "Događaj otkazan"),
                 );
                 setCancelOpen(false);
                 setDetail(null);

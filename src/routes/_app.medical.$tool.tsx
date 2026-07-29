@@ -55,13 +55,13 @@ export const Route = createFileRoute("/_app/medical/$tool")({
   component: MedicalToolPage,
 });
 
-function buildMeta(tr: (es: string, en: string) => string): Record<
+function buildMeta(tr: (es: string, en: string, sr?: string) => string): Record<
   string,
   { title: string; desc: string; icon: LucideIcon }
 > {
   return {
     incidents: {
-      title: tr("Registro de incidencias", "Incident Registry"),
+      title: tr("Registro de incidencias", "Incident Registry", "Registar incidenata"),
       desc: tr(
         "Registro operativo de molestias y partes — bajo supervisión profesional",
         "Operational record of complaints and reports — under professional supervision",
@@ -69,7 +69,7 @@ function buildMeta(tr: (es: string, en: string) => string): Record<
       icon: AlertTriangle,
     },
     treatments: {
-      title: tr("Planes de tratamiento bajo supervisión", "Supervised Treatment Plans"),
+      title: tr("Planes de tratamiento bajo supervisión", "Supervised Treatment Plans", "Planovi lečenja pod nadzorom"),
       desc: tr(
         "Pautas activas y finalizadas, supervisadas por profesional sanitario",
         "Active and completed plans, supervised by a healthcare professional",
@@ -77,7 +77,7 @@ function buildMeta(tr: (es: string, en: string) => string): Record<
       icon: ClipboardList,
     },
     requests: {
-      title: tr("Solicitudes de cita médica", "Medical Appointment Requests"),
+      title: tr("Solicitudes de cita médica", "Medical Appointment Requests", "Zahtevi za medicinski termin"),
       desc: tr(
         "Peticiones pendientes de validación por staff médico",
         "Requests pending validation by medical staff",
@@ -95,10 +95,10 @@ function MedicalToolPage() {
     return (
       <div className="container mx-auto max-w-3xl p-6">
         <Link to="/medical/calendar" className="text-xs text-muted-foreground">
-          <ArrowLeft className="mr-1 inline h-3 w-3" /> {tr("Volver", "Back")}
+          <ArrowLeft className="mr-1 inline h-3 w-3" /> {tr("Volver", "Back", "Nazad")}
         </Link>
         <div className="mt-4 rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-          {tr("Sección no encontrada.", "Section not found.")}
+          {tr("Sección no encontrada.", "Section not found.", "Sekcija nije pronađena.")}
         </div>
       </div>
     );
@@ -136,19 +136,19 @@ function IncidentsView() {
     <section className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="text-xs text-muted-foreground">
-          {tr(`${items.length} registros · ordenados por fecha`, `${items.length} records · sorted by date`)}
+          {tr(`${items.length} registros · ordenados por fecha`, `${items.length} records · sorted by date`, `${items.length} zapisa · sortirano po datumu`)}
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-1.5">
-              <Plus className="h-4 w-4" /> {tr("Registrar incidencia", "Log incident")}
+              <Plus className="h-4 w-4" /> {tr("Registrar incidencia", "Log incident", "Prijavi incident")}
             </Button>
           </DialogTrigger>
           <IncidentForm
             onSubmit={(inc) => {
               setItems((s) => [inc, ...s]);
               setOpen(false);
-              toast.success(tr("Incidencia registrada", "Incident logged"));
+              toast.success(tr("Incidencia registrada", "Incident logged", "Incident zabeležen"));
             }}
           />
         </Dialog>
@@ -158,11 +158,11 @@ function IncidentsView() {
         <table className="w-full text-sm">
           <thead className="bg-muted/60 text-left text-[11px] uppercase tracking-wider text-muted-foreground">
             <tr>
-              <th className="px-3 py-2 font-semibold">{tr("Atleta", "Athlete")}</th>
-              <th className="px-3 py-2 font-semibold">{tr("Fecha", "Date")}</th>
-              <th className="px-3 py-2 font-semibold">{tr("Tipo", "Type")}</th>
-              <th className="px-3 py-2 font-semibold">{tr("Estado", "Status")}</th>
-              <th className="px-3 py-2 font-semibold">{tr("Responsable", "Responsible")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Atleta", "Athlete", "Sportista")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Fecha", "Date", "Datum")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Tipo", "Type", "Tip")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Estado", "Status", "Status")}</th>
+              <th className="px-3 py-2 font-semibold">{tr("Responsable", "Responsible", "Odgovorna osoba")}</th>
             </tr>
           </thead>
           <tbody>
@@ -196,7 +196,7 @@ function IncidentsView() {
               </span>
             </div>
             <div className="mt-1 text-[11px] text-muted-foreground">
-              {tr("Responsable:", "Responsible:")} {r.responsible}
+              {tr("Responsable:", "Responsible:", "Odgovorna osoba:")} {r.responsible}
             </div>
           </li>
         ))}
@@ -221,7 +221,7 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
     <DialogContent className="max-w-lg">
       <DialogHeader>
         <DialogTitle>
-          {tr("Registrar incidencia (salud deportiva)", "Log incident (sports health)")}
+          {tr("Registrar incidencia (salud deportiva)", "Log incident (sports health)", "Prijavi incident (sportsko zdravlje)")}
         </DialogTitle>
         <DialogDescription>
           {tr(
@@ -232,16 +232,16 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
       </DialogHeader>
       <div className="space-y-3">
         <div className="grid gap-1.5">
-          <Label htmlFor="ath">{tr("Atleta", "Athlete")}</Label>
+          <Label htmlFor="ath">{tr("Atleta", "Athlete", "Sportista")}</Label>
           <Input
             id="ath"
             value={athlete}
             onChange={(e) => setAthlete(e.target.value.slice(0, 80))}
-            placeholder={tr("Nombre y apellidos", "Full name")}
+            placeholder={tr("Nombre y apellidos", "Full name", "Ime i prezime")}
           />
         </div>
         <div className="grid gap-1.5">
-          <Label>{tr("Tipo", "Type")}</Label>
+          <Label>{tr("Tipo", "Type", "Tip")}</Label>
           <Select value={type} onValueChange={setType}>
             <SelectTrigger>
               <SelectValue />
@@ -256,7 +256,7 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
           </Select>
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="desc">{tr("Descripción operativa", "Operational description")}</Label>
+          <Label htmlFor="desc">{tr("Descripción operativa", "Operational description", "Operativni opis")}</Label>
           <Textarea
             id="desc"
             rows={3}
@@ -269,7 +269,7 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
           />
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="rest">{tr("Restricción operativa", "Operational restriction")}</Label>
+          <Label htmlFor="rest">{tr("Restricción operativa", "Operational restriction", "Operativno ograničenje")}</Label>
           <Textarea
             id="rest"
             rows={2}
@@ -282,7 +282,7 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
           />
         </div>
         <div className="grid gap-1.5">
-          <Label>{tr("Estado", "Status")}</Label>
+          <Label>{tr("Estado", "Status", "Status")}</Label>
           <div className="flex flex-wrap gap-2">
             {(["Apto", "En revisión", "No apto"] as FitStatus[]).map((s) => {
               const active = fitness === s;
@@ -302,7 +302,7 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
           </div>
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="att">{tr("Adjuntos", "Attachments")}</Label>
+          <Label htmlFor="att">{tr("Adjuntos", "Attachments", "Prilozi")}</Label>
           <div className="flex items-center gap-2">
             <Input
               id="att"
@@ -310,7 +310,7 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
               onChange={(e) => setAttach(e.target.value.slice(0, 120))}
               placeholder="parte_inicial.pdf"
             />
-            <Button type="button" variant="outline" size="icon" aria-label={tr("Adjuntar", "Attach")}>
+            <Button type="button" variant="outline" size="icon" aria-label={tr("Adjuntar", "Attach", "Priloži")}>
               <Paperclip className="h-4 w-4" />
             </Button>
           </div>
@@ -339,7 +339,7 @@ function IncidentForm({ onSubmit }: { onSubmit: (i: Incident) => void }) {
             })
           }
         >
-          {tr("Guardar incidencia", "Save incident")}
+          {tr("Guardar incidencia", "Save incident", "Sačuvaj incident")}
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -370,14 +370,14 @@ function TreatmentsView() {
       <div>
         <div className="mb-2 flex items-center gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {tr("Activos", "Active")}
+            {tr("Activos", "Active", "Aktivni")}
           </h2>
           <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
             {active.length}
           </span>
         </div>
         {active.length === 0 ? (
-          <EmptyBlock label={tr("No hay planes activos.", "No active plans.")} />
+          <EmptyBlock label={tr("No hay planes activos.", "No active plans.", "Nema aktivnih planova.")} />
         ) : (
           <ul className="grid gap-2">
             {active.map((t) => (
@@ -386,7 +386,7 @@ function TreatmentsView() {
                 t={t}
                 onFinish={() => {
                   finish(t.id);
-                  toast.success(tr("Plan finalizado", "Plan finished"));
+                  toast.success(tr("Plan finalizado", "Plan finished", "Plan završen"));
                 }}
               />
             ))}
@@ -397,14 +397,14 @@ function TreatmentsView() {
       <div>
         <div className="mb-2 flex items-center gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {tr("Finalizados", "Finished")}
+            {tr("Finalizados", "Finished", "Završeni")}
           </h2>
           <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
             {finished.length}
           </span>
         </div>
         {finished.length === 0 ? (
-          <EmptyBlock label={tr("Aún no hay planes finalizados.", "No finished plans yet.")} />
+          <EmptyBlock label={tr("Aún no hay planes finalizados.", "No finished plans yet.", "Još nema završenih planova.")} />
         ) : (
           <ul className="grid gap-2">
             {finished.map((t) => (
@@ -437,7 +437,7 @@ function TreatmentCard({ t, onFinish }: { t: Treatment; onFinish?: () => void })
       <div className="mt-3">
         <div className="flex items-center justify-between text-[11px] text-muted-foreground">
           <span>
-            {tr(`Sesión ${t.sessionsDone} de ${t.sessionsTotal}`, `Session ${t.sessionsDone} of ${t.sessionsTotal}`)}
+            {tr(`Sesión ${t.sessionsDone} de ${t.sessionsTotal}`, `Session ${t.sessionsDone} of ${t.sessionsTotal}`, `Sesija ${t.sessionsDone} od ${t.sessionsTotal}`)}
           </span>
           <span>{pct}%</span>
         </div>
@@ -454,14 +454,14 @@ function TreatmentCard({ t, onFinish }: { t: Treatment; onFinish?: () => void })
           <UserIcon className="h-3.5 w-3.5" /> {t.responsible}
         </span>
         <span className="inline-flex items-center gap-1">
-          <Clock className="h-3.5 w-3.5" /> {tr("Próx. revisión:", "Next review:")} {t.nextReview}
+          <Clock className="h-3.5 w-3.5" /> {tr("Próx. revisión:", "Next review:", "Sled. pregled:")} {t.nextReview}
         </span>
       </div>
 
       {!finished && onFinish && (
         <div className="mt-3 flex justify-end">
           <Button size="sm" variant="outline" className="gap-1.5" onClick={onFinish}>
-            <CheckCircle2 className="h-4 w-4" /> {tr("Finalizar plan", "Finish plan")}
+            <CheckCircle2 className="h-4 w-4" /> {tr("Finalizar plan", "Finish plan", "Završi plan")}
           </Button>
         </div>
       )}
@@ -519,14 +519,14 @@ function RequestsView() {
       <div>
         <div className="mb-2 flex items-center gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {tr("Pendientes", "Pending")}
+            {tr("Pendientes", "Pending", "Na čekanju")}
           </h2>
           <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
             {pending.length}
           </span>
         </div>
         {pending.length === 0 ? (
-          <EmptyBlock label={tr("No hay solicitudes pendientes.", "No pending requests.")} />
+          <EmptyBlock label={tr("No hay solicitudes pendientes.", "No pending requests.", "Nema zahteva na čekanju.")} />
         ) : (
           <ul className="grid gap-2">
             {pending.map((r) => (
@@ -538,7 +538,7 @@ function RequestsView() {
                       {td(r.reason)} · {td(r.specialty)}
                     </div>
                     <div className="mt-1 text-[11px] text-muted-foreground">
-                      {tr("Fecha preferida:", "Preferred date:")} {r.preferred} · {tr("solicitada", "requested")} {td(r.requestedAt)}
+                      {tr("Fecha preferida:", "Preferred date:", "Željeni datum:")} {r.preferred} · {tr("solicitada", "requested", "zatraženo")} {td(r.requestedAt)}
                     </div>
                   </div>
                   <span className="shrink-0">
@@ -547,7 +547,7 @@ function RequestsView() {
                 </div>
                 <div className="mt-3 flex justify-end">
                   <Button size="sm" className="gap-1.5" onClick={() => setCreating(r)}>
-                    <Stethoscope className="h-4 w-4" /> {tr("Crear cita médica", "Create appointment")}
+                    <Stethoscope className="h-4 w-4" /> {tr("Crear cita médica", "Create appointment", "Kreiraj medicinski termin")}
                   </Button>
                 </div>
               </li>
@@ -559,14 +559,14 @@ function RequestsView() {
       <div>
         <div className="mb-2 flex items-center gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {tr("Gestionadas", "Managed")}
+            {tr("Gestionadas", "Managed", "Obrađeni")}
           </h2>
           <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
             {managed.length}
           </span>
         </div>
         {managed.length === 0 ? (
-          <EmptyBlock label={tr("Aún no hay solicitudes gestionadas.", "No managed requests yet.")} />
+          <EmptyBlock label={tr("Aún no hay solicitudes gestionadas.", "No managed requests yet.", "Još nema obrađenih zahteva.")} />
         ) : (
           <ul className="grid gap-2">
             {managed.map((r) => (
@@ -575,7 +575,7 @@ function RequestsView() {
                   <div className="min-w-0">
                     <div className="text-sm font-semibold">{r.athlete}</div>
                     <div className="text-xs text-muted-foreground">
-                      {td(r.reason)} · {tr("cita programada", "appointment scheduled")}
+                      {td(r.reason)} · {tr("cita programada", "appointment scheduled", "termin zakazan")}
                     </div>
                   </div>
                   <span className="shrink-0">
@@ -619,41 +619,41 @@ function CreateAppointmentForm({ req, onSubmit }: { req: ApptRequest; onSubmit: 
   return (
     <DialogContent className="max-w-md">
       <DialogHeader>
-        <DialogTitle>{tr("Crear cita médica", "Create appointment")}</DialogTitle>
+        <DialogTitle>{tr("Crear cita médica", "Create appointment", "Kreiraj medicinski termin")}</DialogTitle>
         <DialogDescription>
-          {tr("Para", "For")} {req.athlete} · {td(req.specialty)}.{" "}
-          {tr("Bajo supervisión profesional.", "Under professional supervision.")}
+          {tr("Para", "For", "Za")} {req.athlete} · {td(req.specialty)}.{" "}
+          {tr("Bajo supervisión profesional.", "Under professional supervision.", "Pod stručnim nadzorom.")}
         </DialogDescription>
       </DialogHeader>
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-2">
           <div className="grid gap-1.5">
-            <Label htmlFor="d">{tr("Fecha", "Date")}</Label>
+            <Label htmlFor="d">{tr("Fecha", "Date", "Datum")}</Label>
             <Input id="d" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </div>
           <div className="grid gap-1.5">
-            <Label htmlFor="t">{tr("Hora", "Time")}</Label>
+            <Label htmlFor="t">{tr("Hora", "Time", "Vreme")}</Label>
             <Input id="t" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
           </div>
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="s">{tr("Responsable", "Responsible")}</Label>
+          <Label htmlFor="s">{tr("Responsable", "Responsible", "Odgovorna osoba")}</Label>
           <Input id="s" value={staff} onChange={(e) => setStaff(e.target.value.slice(0, 80))} />
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="n">{tr("Notas para el atleta", "Notes for the athlete")}</Label>
+          <Label htmlFor="n">{tr("Notas para el atleta", "Notes for the athlete", "Beleške za sportistu")}</Label>
           <Textarea
             id="n"
             rows={3}
             value={notes}
             onChange={(e) => setNotes(e.target.value.slice(0, 300))}
-            placeholder={tr("Indicaciones previas, sala, material…", "Prior instructions, room, equipment…")}
+            placeholder={tr("Indicaciones previas, sala, material…", "Prior instructions, room, equipment…", "Prethodna uputstva, sala, oprema…")}
           />
         </div>
       </div>
       <DialogFooter>
         <Button disabled={!date || !time || !staff.trim()} onClick={onSubmit}>
-          {tr("Confirmar cita", "Confirm appointment")}
+          {tr("Confirmar cita", "Confirm appointment", "Potvrdi termin")}
         </Button>
       </DialogFooter>
     </DialogContent>

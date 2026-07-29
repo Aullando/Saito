@@ -76,7 +76,7 @@ function MobileMessages() {
   const handleDelete = (id: string, title: string) => {
     deleteConversation(id);
     setOpenId(null);
-    toast.success(tr(`Conversación "${title}" eliminada`, `Conversation "${title}" deleted`));
+    toast.success(tr(`Conversación "${title}" eliminada`, `Conversation "${title}" deleted`, `Razgovor "${title}" obrisan`));
   };
 
   if (active) {
@@ -89,7 +89,7 @@ function MobileMessages() {
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-base font-bold">{active.title}</h1>
             <p className="text-[11px] text-muted-foreground">
-              {active.participants.length} {tr("participantes", "participants")} · {active.type}
+              {active.participants.length} {tr("participantes", "participants", "učesnika")} · {active.type}
             </p>
           </div>
           <AlertDialog>
@@ -100,7 +100,7 @@ function MobileMessages() {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{tr("Eliminar conversación", "Delete conversation")}</AlertDialogTitle>
+                <AlertDialogTitle>{tr("Eliminar conversación", "Delete conversation", "Obriši razgovor")}</AlertDialogTitle>
                 <AlertDialogDescription>
                   {tr(
                     `Se eliminará "${active.title}" de tu bandeja en esta demo.`,
@@ -109,9 +109,9 @@ function MobileMessages() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>{tr("Cancelar", "Cancel")}</AlertDialogCancel>
+                <AlertDialogCancel>{tr("Cancelar", "Cancel", "Otkaži")}</AlertDialogCancel>
                 <AlertDialogAction onClick={() => handleDelete(active.id, active.title)}>
-                  {tr("Eliminar", "Delete")}
+                  {tr("Eliminar", "Delete", "Obriši")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -131,7 +131,7 @@ function MobileMessages() {
                 >
                   {!mine && (
                     <div className="mb-1 text-[10px] font-semibold opacity-70">
-                      {author?.name ?? tr("Usuario", "User")}
+                      {author?.name ?? tr("Usuario", "User", "Korisnik")}
                     </div>
                   )}
                   <div className="whitespace-pre-wrap break-words">{m.content}</div>
@@ -148,7 +148,7 @@ function MobileMessages() {
             );
           })}
           {active.messages.length === 0 && (
-            <p className="py-8 text-center text-xs text-muted-foreground">{tr("Sin mensajes todavía", "No messages yet")}</p>
+            <p className="py-8 text-center text-xs text-muted-foreground">{tr("Sin mensajes todavía", "No messages yet", "Još nema poruka")}</p>
           )}
         </div>
 
@@ -156,7 +156,7 @@ function MobileMessages() {
           <Textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder={tr("Escribe un mensaje…", "Type a message…")}
+            placeholder={tr("Escribe un mensaje…", "Type a message…", "Napišite poruku…")}
             rows={1}
             className="min-h-[40px] resize-none"
             onKeyDown={(e) => {
@@ -177,8 +177,8 @@ function MobileMessages() {
   return (
     <div className="space-y-3">
       <header>
-        <h1 className="text-xl font-bold tracking-tight">{tr("Mensajes", "Messages")}</h1>
-        <p className="text-xs text-muted-foreground">{tr("Toca una conversación para abrirla", "Tap a conversation to open it")}</p>
+        <h1 className="text-xl font-bold tracking-tight">{tr("Mensajes", "Messages", "Poruke")}</h1>
+        <p className="text-xs text-muted-foreground">{tr("Toca una conversación para abrirla", "Tap a conversation to open it", "Dodirnite razgovor da biste ga otvorili")}</p>
       </header>
 
       <ul className="space-y-2">
@@ -211,7 +211,7 @@ function MobileMessages() {
           );
         })}
         {list.length === 0 && (
-          <p className="py-8 text-center text-xs text-muted-foreground">{tr("No hay conversaciones", "No conversations")}</p>
+          <p className="py-8 text-center text-xs text-muted-foreground">{tr("No hay conversaciones", "No conversations", "Nema razgovora")}</p>
         )}
       </ul>
     </div>

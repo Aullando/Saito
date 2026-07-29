@@ -97,7 +97,7 @@ function ClubPage() {
 
   // ───── Horario semanal por grupo (derivado de events training) ─────
   const groupSchedules = useMemo(() => {
-    const DAY_NAMES = tr("es", "en") === "es" ? DAY_NAMES_ES : DAY_NAMES_EN;
+    const DAY_NAMES = tr("es", "en", "sr") === "es" ? DAY_NAMES_ES : DAY_NAMES_EN;
     const map = new Map<string, Set<string>>();
     for (const e of events) {
       if (e.type !== "training" || !e.groupId) continue;
@@ -157,7 +157,7 @@ function ClubPage() {
   return (
     <>
       <PageHeader
-        title={tr("Club & Organización", "Club & Organization")}
+        title={tr("Club & Organización", "Club & Organization", "Klub i organizacija")}
         subtitle={tr(
           "Núcleo administrativo del club: usuarios, instalaciones, secciones, categorías y grupos.",
           "Club administrative core: users, facilities, sections, categories and groups.",
@@ -167,7 +167,7 @@ function ClubPage() {
             <Button variant="outline" asChild>
               <a href="/athletes">
                 <Plus className="mr-2 h-4 w-4" />
-                {tr("Nueva alta", "New athlete")}
+                {tr("Nueva alta", "New athlete", "Novi sportista")}
               </a>
             </Button>
 
@@ -176,19 +176,19 @@ function ClubPage() {
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
-                  {tr("Añadir sección", "Add section")}
+                  {tr("Añadir sección", "Add section", "Dodaj sekciju")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{tr("Nueva sección deportiva", "New sports section")}</DialogTitle>
+                  <DialogTitle>{tr("Nueva sección deportiva", "New sports section", "Nova sportska sekcija")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-2">
-                  <Label>{tr("Nombre", "Name")}</Label>
+                  <Label>{tr("Nombre", "Name", "Ime")}</Label>
                   <Input
                     value={newSection}
                     onChange={(e) => setNewSection(e.target.value)}
-                    placeholder={tr("Ej: Voleibol", "e.g. Volleyball")}
+                    placeholder={tr("Ej: Voleibol", "e.g. Volleyball", "Npr. odbojka")}
                   />
                 </div>
                 <DialogFooter>
@@ -197,10 +197,10 @@ function ClubPage() {
                       if (!newSection.trim()) return;
                       addSection(newSection.trim());
                       setNewSection("");
-                      toast.success(tr("Sección añadida", "Section added"));
+                      toast.success(tr("Sección añadida", "Section added", "Sekcija dodata"));
                     }}
                   >
-                    {tr("Crear", "Create")}
+                    {tr("Crear", "Create", "Kreiraj")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -211,19 +211,19 @@ function ClubPage() {
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
-                  {tr("Añadir categoría", "Add category")}
+                  {tr("Añadir categoría", "Add category", "Dodaj kategoriju")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{tr("Nueva categoría", "New category")}</DialogTitle>
+                  <DialogTitle>{tr("Nueva categoría", "New category", "Nova kategorija")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <Label>{tr("Sección", "Section")}</Label>
+                    <Label>{tr("Sección", "Section", "Sekcija")}</Label>
                     <Select value={newCatSection} onValueChange={setNewCatSection}>
                       <SelectTrigger>
-                        <SelectValue placeholder={tr("Selecciona sección", "Select section")} />
+                        <SelectValue placeholder={tr("Selecciona sección", "Select section", "Izaberi sekciju")} />
                       </SelectTrigger>
                       <SelectContent>
                         {sections.map((s) => (
@@ -235,11 +235,11 @@ function ClubPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>{tr("Nombre", "Name")}</Label>
+                    <Label>{tr("Nombre", "Name", "Ime")}</Label>
                     <Input
                       value={newCatName}
                       onChange={(e) => setNewCatName(e.target.value)}
-                      placeholder={tr("Ej: Cadete", "e.g. Cadet")}
+                      placeholder={tr("Ej: Cadete", "e.g. Cadet", "Npr. Kadet")}
                     />
                   </div>
                 </div>
@@ -250,10 +250,10 @@ function ClubPage() {
                       addCategory({ name: newCatName.trim(), sectionId: newCatSection });
                       setNewCatName("");
                       setNewCatSection("");
-                      toast.success(tr("Categoría añadida", "Category added"));
+                      toast.success(tr("Categoría añadida", "Category added", "Kategorija dodata"));
                     }}
                   >
-                    {tr("Crear", "Create")}
+                    {tr("Crear", "Create", "Kreiraj")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -264,16 +264,16 @@ function ClubPage() {
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
-                  {tr("Añadir grupo", "Add group")}
+                  {tr("Añadir grupo", "Add group", "Dodaj grupu")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{tr("Nuevo grupo", "New group")}</DialogTitle>
+                  <DialogTitle>{tr("Nuevo grupo", "New group", "Nova grupa")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <Label>{tr("Sección", "Section")}</Label>
+                    <Label>{tr("Sección", "Section", "Sekcija")}</Label>
                     <Select
                       value={newGroup.sectionId}
                       onValueChange={(v) =>
@@ -281,7 +281,7 @@ function ClubPage() {
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={tr("Selecciona sección", "Select section")} />
+                        <SelectValue placeholder={tr("Selecciona sección", "Select section", "Izaberi sekciju")} />
                       </SelectTrigger>
                       <SelectContent>
                         {sections.map((s) => (
@@ -293,14 +293,14 @@ function ClubPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>{tr("Categoría", "Category")}</Label>
+                    <Label>{tr("Categoría", "Category", "Kategorija")}</Label>
                     <Select
                       value={newGroup.categoryId}
                       onValueChange={(v) => setNewGroup({ ...newGroup, categoryId: v })}
                       disabled={!newGroup.sectionId}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={tr("Selecciona categoría", "Select category")} />
+                        <SelectValue placeholder={tr("Selecciona categoría", "Select category", "Izaberi kategoriju")} />
                       </SelectTrigger>
                       <SelectContent>
                         {categories
@@ -314,11 +314,11 @@ function ClubPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>{tr("Nombre", "Name")}</Label>
+                    <Label>{tr("Nombre", "Name", "Ime")}</Label>
                     <Input
                       value={newGroup.name}
                       onChange={(e) => setNewGroup({ ...newGroup, name: e.target.value })}
-                      placeholder={tr("Ej: Tecnificación", "e.g. Elite squad")}
+                      placeholder={tr("Ej: Tecnificación", "e.g. Elite squad", "Npr. Elitni tim")}
                     />
                   </div>
                 </div>
@@ -333,10 +333,10 @@ function ClubPage() {
                         categoryId: newGroup.categoryId,
                       });
                       setNewGroup({ name: "", sectionId: "", categoryId: "" });
-                      toast.success(tr("Grupo añadido", "Group added"));
+                      toast.success(tr("Grupo añadido", "Group added", "Grupa dodata"));
                     }}
                   >
-                    {tr("Crear", "Create")}
+                    {tr("Crear", "Create", "Kreiraj")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -347,24 +347,24 @@ function ClubPage() {
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
-                  {tr("Añadir instalación", "Add facility")}
+                  {tr("Añadir instalación", "Add facility", "Dodaj objekat")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{tr("Nueva instalación", "New facility")}</DialogTitle>
+                  <DialogTitle>{tr("Nueva instalación", "New facility", "Novi objekat")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <Label>{tr("Nombre", "Name")}</Label>
+                    <Label>{tr("Nombre", "Name", "Ime")}</Label>
                     <Input
                       value={newFacility.name}
                       onChange={(e) => setNewFacility({ ...newFacility, name: e.target.value })}
-                      placeholder={tr("Ej: Sala de musculación", "e.g. Strength room")}
+                      placeholder={tr("Ej: Sala de musculación", "e.g. Strength room", "Npr. Teretana")}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>{tr("Ubicación", "Location")}</Label>
+                    <Label>{tr("Ubicación", "Location", "Lokacija")}</Label>
                     <Input
                       value={newFacility.location}
                       onChange={(e) => setNewFacility({ ...newFacility, location: e.target.value })}
@@ -375,7 +375,7 @@ function ClubPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>{tr("Capacidad", "Capacity")}</Label>
+                    <Label>{tr("Capacidad", "Capacity", "Kapacitet")}</Label>
                     <Input
                       type="number"
                       value={newFacility.capacity}
@@ -384,13 +384,13 @@ function ClubPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>{tr("Sección principal", "Primary section")}</Label>
+                    <Label>{tr("Sección principal", "Primary section", "Glavna sekcija")}</Label>
                     <Select
                       value={newFacility.sectionId}
                       onValueChange={(v) => setNewFacility({ ...newFacility, sectionId: v })}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={tr("Selecciona sección", "Select section")} />
+                        <SelectValue placeholder={tr("Selecciona sección", "Select section", "Izaberi sekciju")} />
                       </SelectTrigger>
                       <SelectContent>
                         {sections.map((s) => (
@@ -414,10 +414,10 @@ function ClubPage() {
                         capacity: newFacility.capacity ? Number(newFacility.capacity) : undefined,
                       });
                       setNewFacility({ name: "", location: "", capacity: "", sectionId: "" });
-                      toast.success(tr("Instalación añadida", "Facility added"));
+                      toast.success(tr("Instalación añadida", "Facility added", "Objekat dodat"));
                     }}
                   >
-                    {tr("Crear", "Create")}
+                    {tr("Crear", "Create", "Kreiraj")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -436,41 +436,41 @@ function ClubPage() {
       <div className="space-y-6">
 
         {/* 1. Usuarios y permisos */}
-        <Section title={tr("Usuarios y permisos", "Users and permissions")} icon={ShieldCheck}>
+        <Section title={tr("Usuarios y permisos", "Users and permissions", "Korisnici i dozvole")} icon={ShieldCheck}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             <RoleCard
               icon={UserCog}
-              label={tr("Gestores / Dirección", "Managers / Direction")}
+              label={tr("Gestores / Dirección", "Managers / Direction", "Menadžeri / Uprava")}
               count={usersByRole.managers}
               tone="bg-indigo-50 text-indigo-700"
             />
             <RoleCard
               icon={Building2}
-              label={tr("Administración", "Administration")}
+              label={tr("Administración", "Administration", "Administracija")}
               count={usersByRole.admins}
               tone="bg-blue-50 text-blue-700"
             />
             <RoleCard
               icon={Stethoscope}
-              label={tr("Staff médico", "Medical staff")}
+              label={tr("Staff médico", "Medical staff", "Medicinsko osoblje")}
               count={usersByRole.medical}
               tone="bg-rose-50 text-rose-700"
             />
             <RoleCard
               icon={Wrench}
-              label={tr("Staff técnico", "Technical staff")}
+              label={tr("Staff técnico", "Technical staff", "Tehničko osoblje")}
               count={usersByRole.technical}
               tone="bg-amber-50 text-amber-700"
             />
             <RoleCard
               icon={Users}
-              label={tr("Deportistas", "Athletes")}
+              label={tr("Deportistas", "Athletes", "Sportisti")}
               count={usersByRole.athletes}
               tone="bg-emerald-50 text-emerald-700"
             />
             <RoleCard
               icon={Baby}
-              label={tr("Tutores", "Tutors")}
+              label={tr("Tutores", "Tutors", "Staratelji")}
               count={usersByRole.tutors}
               tone="bg-violet-50 text-violet-700"
             />
@@ -478,7 +478,7 @@ function ClubPage() {
         </Section>
 
         {/* 2. Instalaciones */}
-        <Section title={tr("Instalaciones", "Facilities")} icon={MapPin}>
+        <Section title={tr("Instalaciones", "Facilities", "Objekti")} icon={MapPin}>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {facilities.map((f) => (
               <Card key={f.id} className="space-y-3">
@@ -490,10 +490,10 @@ function ClubPage() {
                     </div>
                   </div>
                   <button
-                    aria-label={tr("Eliminar instalación", "Delete facility")}
+                    aria-label={tr("Eliminar instalación", "Delete facility", "Obriši objekat")}
                     onClick={() => {
                       deleteFacility(f.id);
-                      toast.success(tr("Instalación eliminada", "Facility deleted"));
+                      toast.success(tr("Instalación eliminada", "Facility deleted", "Objekat obrisan"));
                     }}
                     className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                   >
@@ -510,11 +510,11 @@ function ClubPage() {
 
                 <div className="flex items-center justify-between text-sm">
                   <div className="text-slate-600">
-                    <span className="text-xs text-slate-400">{tr("Capacidad", "Capacity")}</span>
+                    <span className="text-xs text-slate-400">{tr("Capacidad", "Capacity", "Kapacitet")}</span>
                     <div className="font-medium">{f.capacity ?? "—"}</div>
                   </div>
                   <div className="text-right text-slate-600">
-                    <span className="text-xs text-slate-400">{tr("Próximo uso", "Next use")}</span>
+                    <span className="text-xs text-slate-400">{tr("Próximo uso", "Next use", "Sledeća upotreba")}</span>
                     <div className="font-medium">{f.nextActivity ?? "—"}</div>
                   </div>
                 </div>
@@ -522,24 +522,24 @@ function ClubPage() {
             ))}
             {facilities.length === 0 && (
               <Card className="text-sm text-slate-500">
-                {tr("Sin instalaciones todavía.", "No facilities yet.")}
+                {tr("Sin instalaciones todavía.", "No facilities yet.", "Još nema objekata.")}
               </Card>
             )}
           </div>
         </Section>
 
         {/* 3. Organigrama deportivo */}
-        <Section title={tr("Organigrama deportivo", "Sports org chart")} icon={Layers}>
+        <Section title={tr("Organigrama deportivo", "Sports org chart", "Sportska organizaciona šema")} icon={Layers}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {sectionStats.map((s) => (
               <Card key={s.id} className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="font-semibold text-slate-900">{s.name}</div>
-                    <div className="text-xs text-slate-500">{tr("Sección deportiva", "Sports section")}</div>
+                    <div className="text-xs text-slate-500">{tr("Sección deportiva", "Sports section", "Sportska sekcija")}</div>
                   </div>
                   <button
-                    aria-label={tr("Eliminar sección", "Delete section")}
+                    aria-label={tr("Eliminar sección", "Delete section", "Obriši sekciju")}
                     onClick={() => {
                       if (
                         confirm(
@@ -550,7 +550,7 @@ function ClubPage() {
                         )
                       ) {
                         deleteSection(s.id);
-                        toast.success(tr("Sección eliminada", "Section deleted"));
+                        toast.success(tr("Sección eliminada", "Section deleted", "Sekcija obrisana"));
                       }
                     }}
                     className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
@@ -559,9 +559,9 @@ function ClubPage() {
                   </button>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <Stat label={tr("Atletas", "Athletes")} value={s.athletes} />
+                  <Stat label={tr("Atletas", "Athletes", "Sportisti")} value={s.athletes} />
                   <Stat label="Staff" value={s.staff} />
-                  <Stat label={tr("Grupos", "Groups")} value={s.groups} />
+                  <Stat label={tr("Grupos", "Groups", "Grupe")} value={s.groups} />
                 </div>
               </Card>
             ))}
@@ -569,7 +569,7 @@ function ClubPage() {
         </Section>
 
         {/* 4. Categorías por sección */}
-        <Section title={tr("Categorías", "Categories")} icon={FolderTree}>
+        <Section title={tr("Categorías", "Categories", "Kategorije")} icon={FolderTree}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
 
             {sections.map((s) => {
@@ -579,13 +579,13 @@ function ClubPage() {
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-slate-900">{s.name}</div>
                     <span className="text-xs text-slate-400">
-                      {tr(`${cats.length} categorías`, `${cats.length} categories`)}
+                      {tr(`${cats.length} categorías`, `${cats.length} categories`, `${cats.length} kategorija`)}
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {cats.length === 0 && (
                       <span className="text-xs text-slate-400">
-                        {tr("Sin categorías.", "No categories.")}
+                        {tr("Sin categorías.", "No categories.", "Nema kategorija.")}
                       </span>
                     )}
                     {cats.map((c) => (
@@ -605,11 +605,11 @@ function ClubPage() {
                               )
                             ) {
                               deleteCategory(c.id);
-                              toast.success(tr("Categoría eliminada", "Category deleted"));
+                              toast.success(tr("Categoría eliminada", "Category deleted", "Kategorija obrisana"));
                             }
                           }}
                           className="ml-1 text-slate-400 opacity-0 group-hover:opacity-100 hover:text-rose-600"
-                          aria-label={tr("Eliminar categoría", "Delete category")}
+                          aria-label={tr("Eliminar categoría", "Delete category", "Obriši kategoriju")}
                         >
                           ×
                         </button>
@@ -623,7 +623,7 @@ function ClubPage() {
         </Section>
 
         {/* 5. Grupos por categoría */}
-        <Section title={tr("Grupos", "Groups")} icon={UserSquare2}>
+        <Section title={tr("Grupos", "Groups", "Grupe")} icon={UserSquare2}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {groups.map((g) => {
               const sec = sections.find((s) => s.id === g.sectionId);
@@ -641,15 +641,15 @@ function ClubPage() {
                       </div>
                     </div>
                     <button
-                      aria-label={tr("Eliminar grupo", "Delete group")}
+                      aria-label={tr("Eliminar grupo", "Delete group", "Obriši grupu")}
                       onClick={() => {
                         if (
                           confirm(
-                            tr(`Eliminar el grupo "${g.name}"?`, `Delete group "${g.name}"?`),
+                            tr(`Eliminar el grupo "${g.name}"?`, `Delete group "${g.name}"?`, `Obrisati grupu "${g.name}"?`),
                           )
                         ) {
                           deleteGroup(g.id);
-                          toast.success(tr("Grupo eliminado", "Group deleted"));
+                          toast.success(tr("Grupo eliminado", "Group deleted", "Grupa obrisana"));
                         }
                       }}
                       className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
@@ -659,7 +659,7 @@ function ClubPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-center">
-                    <Stat label={tr("Atletas", "Athletes")} value={groupAthletes.length} />
+                    <Stat label={tr("Atletas", "Athletes", "Sportisti")} value={groupAthletes.length} />
                     <Stat label="Staff" value={staff.length} />
                   </div>
 
@@ -672,11 +672,11 @@ function ClubPage() {
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-1 text-xs font-medium text-slate-500">
-                      <Clock className="h-3 w-3" /> {tr("Horario semanal", "Weekly schedule")}
+                      <Clock className="h-3 w-3" /> {tr("Horario semanal", "Weekly schedule", "Nedeljni raspored")}
                     </div>
                     {schedule.length === 0 ? (
                       <div className="text-xs text-slate-400">
-                        {tr("Sin sesiones programadas.", "No sessions scheduled.")}
+                        {tr("Sin sesiones programadas.", "No sessions scheduled.", "Nema zakazanih sesija.")}
                       </div>
                     ) : (
                       <div className="flex flex-wrap gap-1.5">
@@ -696,7 +696,7 @@ function ClubPage() {
             })}
             {groups.length === 0 && (
               <Card className="text-sm text-slate-500">
-                {tr("Aún no hay grupos creados.", "No groups created yet.")}
+                {tr("Aún no hay grupos creados.", "No groups created yet.", "Još nema kreiranih grupa.")}
               </Card>
             )}
 
@@ -738,7 +738,7 @@ function ClubHero({
         >
           <div className="flex items-start justify-between gap-3">
             <h2 className="text-2xl font-bold tracking-tight">
-              {tr("Usuarios y permisos", "Users and permissions")}
+              {tr("Usuarios y permisos", "Users and permissions", "Korisnici i dozvole")}
             </h2>
             <button
               type="button"
@@ -746,30 +746,30 @@ function ClubHero({
               style={{ background: "var(--primary, #0067C9)" }}
             >
               <Plus className="h-4 w-4" />
-              {tr("Nueva alta", "New")}
+              {tr("Nueva alta", "New", "Novi sportista")}
             </button>
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <RolePillTag
               icon={Stethoscope}
-              label={tr("Staff médico", "Medical staff")}
+              label={tr("Staff médico", "Medical staff", "Medicinsko osoblje")}
               count={usersByRole.medical}
             />
             <RolePillTag
               icon={Wrench}
-              label={tr("Staff técnico", "Technical staff")}
+              label={tr("Staff técnico", "Technical staff", "Tehničko osoblje")}
               count={usersByRole.technical}
             />
             <RolePillTag
               icon={Users}
-              label={tr("Deportistas", "Athletes")}
+              label={tr("Deportistas", "Athletes", "Sportisti")}
               count={usersByRole.athletes}
             />
             <button
               type="button"
               className="rounded-full bg-muted px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted/70"
             >
-              {tr("Ver todos", "View all")}
+              {tr("Ver todos", "View all", "Prikaži sve")}
             </button>
           </div>
         </div>
@@ -781,13 +781,13 @@ function ClubHero({
         >
           <div className="flex items-start justify-between gap-3">
             <h2 className="text-2xl font-bold tracking-tight">
-              {tr("Instalaciones", "Facilities")}
+              {tr("Instalaciones", "Facilities", "Objekti")}
             </h2>
             <button
               type="button"
               className="flex h-9 w-9 items-center justify-center rounded-full text-white shadow-sm"
               style={{ background: "var(--primary, #0067C9)" }}
-              aria-label={tr("Añadir instalación", "Add facility")}
+              aria-label={tr("Añadir instalación", "Add facility", "Dodaj objekat")}
             >
               <Plus className="h-4 w-4" />
             </button>
@@ -795,7 +795,7 @@ function ClubHero({
           <ul className="mt-5 space-y-3">
             {facilities.length === 0 ? (
               <li className="text-sm text-muted-foreground">
-                {tr("No hay instalaciones registradas.", "No facilities registered.")}
+                {tr("No hay instalaciones registradas.", "No facilities registered.", "Nema registrovanih objekata.")}
               </li>
             ) : (
               facilities.map((f) => (
@@ -811,7 +811,7 @@ function ClubHero({
             {totalFacilities > facilities.length && (
               <li className="text-xs text-muted-foreground">
                 +{totalFacilities - facilities.length}{" "}
-                {tr("más", "more")}
+                {tr("más", "more", "još")}
               </li>
             )}
           </ul>

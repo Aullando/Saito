@@ -33,11 +33,11 @@ function useDemoAthletes(limit = 12) {
 // ───────── ASISTENCIA ─────────
 type AttStatus = "present" | "absent" | "justified" | "injured";
 
-const getAttOptions = (tr: (es: string, en: string) => string) => [
-  { key: "present" as AttStatus, label: tr("Presente", "Present"), cls: "bg-emerald-100 text-emerald-800 border-emerald-200" },
-  { key: "absent" as AttStatus, label: tr("Ausente", "Absent"), cls: "bg-rose-100 text-rose-800 border-rose-200" },
-  { key: "justified" as AttStatus, label: tr("Justif.", "Excused"), cls: "bg-amber-100 text-amber-800 border-amber-200" },
-  { key: "injured" as AttStatus, label: tr("Lesion.", "Injured"), cls: "bg-violet-100 text-violet-800 border-violet-200" },
+const getAttOptions = (tr: (es: string, en: string, sr?: string) => string) => [
+  { key: "present" as AttStatus, label: tr("Presente", "Present", "Prisutan"), cls: "bg-emerald-100 text-emerald-800 border-emerald-200" },
+  { key: "absent" as AttStatus, label: tr("Ausente", "Absent", "Odsutan"), cls: "bg-rose-100 text-rose-800 border-rose-200" },
+  { key: "justified" as AttStatus, label: tr("Justif.", "Excused", "Opravd."), cls: "bg-amber-100 text-amber-800 border-amber-200" },
+  { key: "injured" as AttStatus, label: tr("Lesion.", "Injured", "Povređ."), cls: "bg-violet-100 text-violet-800 border-violet-200" },
 ];
 
 export function Attendance() {
@@ -63,16 +63,16 @@ export function Attendance() {
     <div className="space-y-3">
       <div className="flex flex-wrap gap-1.5 text-[11px]">
         <span className="rounded-full bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-800">
-          {tr("Pres.", "Pres.")} {counts.present}
+          {tr("Pres.", "Pres.", "Pris.")} {counts.present}
         </span>
         <span className="rounded-full bg-rose-100 px-2 py-0.5 font-semibold text-rose-800">
-          {tr("Aus.", "Abs.")} {counts.absent}
+          {tr("Aus.", "Abs.", "Ods.")} {counts.absent}
         </span>
         <span className="rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">
-          {tr("Just.", "Exc.")} {counts.justified}
+          {tr("Just.", "Exc.", "Opr.")} {counts.justified}
         </span>
         <span className="rounded-full bg-violet-100 px-2 py-0.5 font-semibold text-violet-800">
-          {tr("Les.", "Inj.")} {counts.injured}
+          {tr("Les.", "Inj.", "Pov.")} {counts.injured}
         </span>
       </div>
       <ul className="space-y-2">
@@ -107,11 +107,11 @@ export function Attendance() {
             mapped[k] = v === "present" ? "present" : v === "justified" ? "late" : "absent";
           });
           saveAttendance(DEMO_SESSION_ID, mapped);
-          toast.success(tr("Asistencia guardada", "Attendance saved"));
+          toast.success(tr("Asistencia guardada", "Attendance saved", "Prisustvo sačuvano"));
         }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
-        <Check className="h-4 w-4" /> {tr("Guardar asistencia", "Save attendance")}
+        <Check className="h-4 w-4" /> {tr("Guardar asistencia", "Save attendance", "Sačuvaj prisustvo")}
       </button>
     </div>
   );
@@ -127,18 +127,18 @@ export function CallUp() {
   return (
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-3 text-xs">
-        <div className="font-semibold text-foreground">{tr("Sábado · 18:00", "Saturday · 18:00")}</div>
+        <div className="font-semibold text-foreground">{tr("Sábado · 18:00", "Saturday · 18:00", "Subota · 18:00")}</div>
         <div className="mt-0.5 text-muted-foreground">
-          {tr("Estadio Vallehermoso · Control 200 m", "Vallehermoso Stadium · 200 m Control")}
+          {tr("Estadio Vallehermoso · Control 200 m", "Vallehermoso Stadium · 200 m Control", "Stadion Vallehermoso · Kontrola 200 m")}
         </div>
       </div>
       <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-        <span>{tr(`${count} seleccionados`, `${count} selected`)}</span>
+        <span>{tr(`${count} seleccionados`, `${count} selected`, `${count} izabranih`)}</span>
         <button
           onClick={() => setSel(Object.fromEntries(athletes.map((a) => [a.id, true])))}
           className="font-semibold text-primary"
         >
-          {tr("Seleccionar todos", "Select all")}
+          {tr("Seleccionar todos", "Select all", "Izaberi sve")}
         </button>
       </div>
       <ul className="space-y-1.5">
@@ -178,11 +178,11 @@ export function CallUp() {
             .filter(([, v]) => v)
             .map(([k]) => k);
           saveCallup(DEMO_SESSION_ID, ids);
-          toast.success(tr(`Convocatoria enviada a ${count} deportistas`, `Call-up sent to ${count} athletes`));
+          toast.success(tr(`Convocatoria enviada a ${count} deportistas`, `Call-up sent to ${count} athletes`, `Poziv poslat ${count} sportista`));
         }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
-        <Send className="h-4 w-4" /> {tr("Enviar convocatoria", "Send call-up")}
+        <Send className="h-4 w-4" /> {tr("Enviar convocatoria", "Send call-up", "Pošalji poziv")}
       </button>
     </div>
   );
@@ -218,7 +218,7 @@ export function Notes() {
       >
         <span className="flex items-center gap-2">
           <Lock className="h-4 w-4 text-muted-foreground" />
-          {tr("Nota privada", "Private note")}
+          {tr("Nota privada", "Private note", "Privatna beleška")}
         </span>
         <span
           className={`flex h-5 w-9 items-center rounded-full p-0.5 transition ${
@@ -236,17 +236,17 @@ export function Notes() {
         disabled={!text.trim()}
         onClick={() => {
           addNote(DEMO_SESSION_ID, text.trim(), priv);
-          toast.success(tr("Nota guardada", "Note saved"));
+          toast.success(tr("Nota guardada", "Note saved", "Beleška sačuvana"));
           setText("");
         }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
-        <Check className="h-4 w-4" /> {tr("Guardar nota", "Save note")}
+        <Check className="h-4 w-4" /> {tr("Guardar nota", "Save note", "Sačuvaj belešku")}
       </button>
       {notes.length > 0 && (
         <div className="space-y-2 pt-2">
           <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            {tr("Notas guardadas", "Saved notes")}
+            {tr("Notas guardadas", "Saved notes", "Sačuvane beleške")}
           </div>
           {notes.map((n) => (
             <div key={n.id} className="rounded-2xl border border-border bg-card p-3 text-sm">
@@ -279,7 +279,7 @@ export function Ratings() {
     <div className="space-y-4">
       <div className="rounded-2xl border border-border bg-card p-3">
         <div className="flex items-center justify-between text-sm font-semibold">
-          <span>{tr("Esfuerzo percibido", "Perceived effort")}</span>
+          <span>{tr("Esfuerzo percibido", "Perceived effort", "Percipirani napor")}</span>
           <span className="text-primary">{rpe}/10</span>
         </div>
         <input
@@ -291,13 +291,13 @@ export function Ratings() {
           className="mt-2 w-full accent-[color:var(--primary)]"
         />
         <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
-          <span>{tr("Suave", "Easy")}</span>
-          <span>{tr("Máximo", "Max")}</span>
+          <span>{tr("Suave", "Easy", "Lako")}</span>
+          <span>{tr("Máximo", "Max", "Maksimum")}</span>
         </div>
       </div>
       <div className="rounded-2xl border border-border bg-card p-3">
         <div className="flex items-center justify-between text-sm font-semibold">
-          <span>{tr("Recuperación", "Recovery")}</span>
+          <span>{tr("Recuperación", "Recovery", "Oporavak")}</span>
           <span className="text-primary">{rec}/10</span>
         </div>
         <input
@@ -309,25 +309,25 @@ export function Ratings() {
           className="mt-2 w-full accent-[color:var(--primary)]"
         />
         <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
-          <span>{tr("Mala", "Poor")}</span>
-          <span>{tr("Excelente", "Excellent")}</span>
+          <span>{tr("Mala", "Poor", "Loše")}</span>
+          <span>{tr("Excelente", "Excellent", "Odlično")}</span>
         </div>
       </div>
       <textarea
         value={comment}
         onChange={(e) => setComment(e.target.value.slice(0, 500))}
         rows={4}
-        placeholder={tr("Comentario: sensaciones, molestias, observaciones…", "Comment: sensations, discomfort, observations…")}
+        placeholder={tr("Comentario: sensaciones, molestias, observaciones…", "Comment: sensations, discomfort, observations…", "Komentar: osećaji, tegobe, zapažanja…")}
         className="w-full resize-none rounded-2xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
       />
       <button
         onClick={() => {
           saveRating(DEMO_SESSION_ID, rpe, rec, comment.trim() || undefined);
-          toast.success(tr("Valoración enviada", "Rating sent"));
+          toast.success(tr("Valoración enviada", "Rating sent", "Ocena poslata"));
         }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
-        <Send className="h-4 w-4" /> {tr("Enviar valoración", "Send rating")}
+        <Send className="h-4 w-4" /> {tr("Enviar valoración", "Send rating", "Pošalji ocenu")}
       </button>
     </div>
   );
@@ -413,7 +413,7 @@ export function AISession() {
       >
         {loading ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" /> {tr("Generando…", "Generating…")}
+            <Loader2 className="h-4 w-4 animate-spin" /> {tr("Generando…", "Generating…", "Generisanje…")}
           </>
         ) : (
           <>
@@ -445,24 +445,24 @@ export function AISession() {
               onClick={run}
               className="rounded-xl border border-border bg-card px-2 py-2 text-[11px] font-semibold text-foreground active:scale-95"
             >
-              {tr("Recrear", "Recreate")}
+              {tr("Recrear", "Recreate", "Ponovo kreiraj")}
             </button>
             <button
-              onClick={() => toast.message(tr("Refinando propuesta…", "Refining proposal…"))}
+              onClick={() => toast.message(tr("Refinando propuesta…", "Refining proposal…", "Prečišćavanje predloga…"))}
               className="rounded-xl border border-border bg-card px-2 py-2 text-[11px] font-semibold text-foreground active:scale-95"
             >
-              {tr("Refinar", "Refine")}
+              {tr("Refinar", "Refine", "Prečisti")}
             </button>
             <button
               onClick={() => {
                 blocks?.forEach((b) =>
                   acceptAIBlock(DEMO_SESSION_ID, b.title, b.items.join(" · ")),
                 );
-                toast.success(tr("Incluido en la sesión", "Added to session"));
+                toast.success(tr("Incluido en la sesión", "Added to session", "Dodato u sesiju"));
               }}
               className="rounded-xl bg-primary px-2 py-2 text-[11px] font-semibold text-primary-foreground active:scale-95"
             >
-              {tr("Incluir", "Include")}
+              {tr("Incluir", "Include", "Dodaj")}
             </button>
           </div>
         </div>
@@ -484,7 +484,7 @@ export function Absence() {
     <div className="space-y-3">
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Motivo", "Reason")}
+          {tr("Motivo", "Reason", "Razlog")}
         </div>
         <div className="grid grid-cols-2 gap-2">
           {ABSENCE_REASONS.map((r) => {
@@ -509,7 +509,7 @@ export function Absence() {
         value={comment}
         onChange={(e) => setComment(e.target.value.slice(0, 500))}
         rows={4}
-        placeholder={tr("Comentario para el entrenador (opcional)", "Comment for the coach (optional)")}
+        placeholder={tr("Comentario para el entrenador (opcional)", "Comment for the coach (optional)", "Komentar za trenera (opciono)")}
         className="w-full resize-none rounded-2xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
       />
       <button
@@ -523,11 +523,11 @@ export function Absence() {
             reason,
             comment: comment.trim() || undefined,
           });
-          toast.success(tr("Ausencia notificada al entrenador", "Absence notified to coach"));
+          toast.success(tr("Ausencia notificada al entrenador", "Absence notified to coach", "Odsustvo prijavljeno treneru"));
         }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
-        <Check className="h-4 w-4" /> {tr("Confirmar ausencia", "Confirm absence")}
+        <Check className="h-4 w-4" /> {tr("Confirmar ausencia", "Confirm absence", "Potvrdi odsustvo")}
       </button>
     </div>
   );
@@ -547,18 +547,18 @@ export function RequestAppointment() {
     <div className="space-y-3">
       <div>
         <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Motivo de la cita", "Appointment reason")}
+          {tr("Motivo de la cita", "Appointment reason", "Razlog termina")}
         </label>
         <input
           value={reason}
           onChange={(e) => setReason(e.target.value.slice(0, 120))}
-          placeholder={tr("Ej: molestia en gemelo derecho", "E.g.: discomfort in right calf")}
+          placeholder={tr("Ej: molestia en gemelo derecho", "E.g.: discomfort in right calf", "Npr.: tegoba u desnom listu")}
           className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none focus:border-primary"
         />
       </div>
       <div>
         <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Especialidad", "Specialty")}
+          {tr("Especialidad", "Specialty", "Specijalnost")}
         </label>
         <div className="grid grid-cols-2 gap-2">
           {SPECIALTIES.map((s) => {
@@ -581,7 +581,7 @@ export function RequestAppointment() {
       </div>
       <div>
         <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Fecha preferida", "Preferred date")}
+          {tr("Fecha preferida", "Preferred date", "Željeni datum")}
         </label>
         <input
           type="date"
@@ -600,11 +600,11 @@ export function RequestAppointment() {
             reason: reason.trim(),
             preferredDate: date || undefined,
           });
-          toast.success(tr("Solicitud enviada al staff médico", "Request sent to medical staff"));
+          toast.success(tr("Solicitud enviada al staff médico", "Request sent to medical staff", "Zahtev poslat medicinskom osoblju"));
         }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow disabled:opacity-50"
       >
-        <Send className="h-4 w-4" /> {tr("Enviar solicitud", "Send request")}
+        <Send className="h-4 w-4" /> {tr("Enviar solicitud", "Send request", "Pošalji zahtev")}
       </button>
     </div>
   );
@@ -629,22 +629,22 @@ export function SessionInfo() {
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-4">
         <div className="text-base font-bold leading-tight">
-          {tr("Atletismo · Tecnificación Infantil", "Athletics · Youth Technical Development")}
+          {tr("Atletismo · Tecnificación Infantil", "Athletics · Youth Technical Development", "Atletika · Omladinski razvoj")}
         </div>
         <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Users className="h-3.5 w-3.5" /> {tr("Infantil A · 14 atletas", "Youth A · 14 athletes")}
+          <Users className="h-3.5 w-3.5" /> {tr("Infantil A · 14 atletas", "Youth A · 14 athletes", "Omladinci A · 14 sportista")}
         </div>
         <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
           <Clock className="h-3.5 w-3.5" /> 17:30 – 19:00
         </div>
         <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <MapPin className="h-3.5 w-3.5" /> {tr("Pista de Atletismo · Sede principal", "Athletics Track · Main Venue")}
+          <MapPin className="h-3.5 w-3.5" /> {tr("Pista de Atletismo · Sede principal", "Athletics Track · Main Venue", "Atletska staza · Glavni objekat")}
         </div>
       </div>
 
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Objetivo de la sesión", "Session objective")}
+          {tr("Objetivo de la sesión", "Session objective", "Cilj sesije")}
         </div>
         <p className="rounded-2xl border border-border bg-card p-3 text-sm">
           {tr(
@@ -656,7 +656,7 @@ export function SessionInfo() {
 
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr(`Atletas convocados (${athletes.length})`, `Athletes called up (${athletes.length})`)}
+          {tr(`Atletas convocados (${athletes.length})`, `Athletes called up (${athletes.length})`, `Pozvani sportisti (${athletes.length})`)}
         </div>
         <ul className="space-y-1">
           {athletes.map((a) => (
@@ -677,19 +677,19 @@ export function SessionInfo() {
 
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Restricciones operativas", "Operational restrictions")}
+          {tr("Restricciones operativas", "Operational restrictions", "Operativna ograničenja")}
         </div>
         <ul className="space-y-1.5">
           <li className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
             <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
             <span>
-              <b>Daniel Ruiz</b> — {tr("sin sprints máximos esta semana (molestia isquios).", "no max sprints this week (hamstring discomfort).")}
+              <b>Daniel Ruiz</b> — {tr("sin sprints máximos esta semana (molestia isquios).", "no max sprints this week (hamstring discomfort).", "bez maksimalnih sprinteva ove nedelje (tegobe zadnje lože).")}
             </span>
           </li>
           <li className="flex items-start gap-2 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2 text-xs text-orange-900">
             <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
             <span>
-              <b>Sara López</b> — {tr("carga reducida 50% (en revisión médica).", "load reduced 50% (under medical review).")}
+              <b>Sara López</b> — {tr("carga reducida 50% (en revisión médica).", "load reduced 50% (under medical review).", "opterećenje smanjeno 50% (na medicinskoj proveri).")}
             </span>
           </li>
         </ul>
@@ -697,7 +697,7 @@ export function SessionInfo() {
 
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Adjuntos", "Attachments")}
+          {tr("Adjuntos", "Attachments", "Prilozi")}
         </div>
         <ul className="space-y-1.5">
           {["Plan_velocidad_lactacida.pdf", "Calentamiento_dinamico.png"].map((f) => (
@@ -715,7 +715,7 @@ export function SessionInfo() {
       {aiBlocks.length > 0 && (
         <div>
           <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
-            {tr(`Bloques añadidos con IA (${aiBlocks.length})`, `AI-added blocks (${aiBlocks.length})`)}
+            {tr(`Bloques añadidos con IA (${aiBlocks.length})`, `AI-added blocks (${aiBlocks.length})`, `Blokovi dodati putem AI (${aiBlocks.length})`)}
           </div>
           <ul className="space-y-1.5">
             {aiBlocks.map((b) => (
@@ -733,7 +733,7 @@ export function SessionInfo() {
       {feedbacks.length > 0 && (
         <div>
           <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            {tr(`Feedback recibido (${feedbacks.length})`, `Feedback received (${feedbacks.length})`)}
+            {tr(`Feedback recibido (${feedbacks.length})`, `Feedback received (${feedbacks.length})`, `Primljene povratne informacije (${feedbacks.length})`)}
           </div>
           <ul className="space-y-1.5">
             {feedbacks.map((f) => (
@@ -753,26 +753,26 @@ export function SessionInfo() {
 
       <div>
         <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Acciones", "Actions")}
+          {tr("Acciones", "Actions", "Radnje")}
         </div>
         <div className="grid grid-cols-3 gap-1.5">
           <Link
             to="/mobile/attendance"
             className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95"
           >
-            <ClipboardCheck className="h-4 w-4 text-primary" /> {tr("Asistencia", "Attendance")}
+            <ClipboardCheck className="h-4 w-4 text-primary" /> {tr("Asistencia", "Attendance", "Prisustvo")}
           </Link>
           <Link
             to="/mobile/notes"
             className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95"
           >
-            <StickyNote className="h-4 w-4 text-primary" /> {tr("Notas", "Notes")}
+            <StickyNote className="h-4 w-4 text-primary" /> {tr("Notas", "Notes", "Beleške")}
           </Link>
           <Link
             to="/mobile/ratings"
             className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card px-2 py-2.5 text-[10px] font-semibold text-foreground active:scale-95"
           >
-            <Star className="h-4 w-4 text-primary" /> {tr("Valoración", "Rating")}
+            <Star className="h-4 w-4 text-primary" /> {tr("Valoración", "Rating", "Ocena")}
           </Link>
           <Link
             to="/mobile/feedback"
@@ -784,7 +784,7 @@ export function SessionInfo() {
             to="/mobile/ai"
             className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl bg-primary px-2 py-2.5 text-[11px] font-semibold text-primary-foreground active:scale-95"
           >
-            <Sparkles className="h-4 w-4" /> {tr("IA de sesión", "Session AI")}
+            <Sparkles className="h-4 w-4" /> {tr("IA de sesión", "Session AI", "AI sesije")}
           </Link>
         </div>
       </div>
@@ -802,7 +802,7 @@ export function Feedback() {
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-3">
         <div className="flex items-center justify-between text-sm font-semibold">
-          <span>{tr("¿Cómo te has sentido?", "How did you feel?")}</span>
+          <span>{tr("¿Cómo te has sentido?", "How did you feel?", "Kako ste se osećali?")}</span>
           <span className="text-primary">{rpe}/10</span>
         </div>
         <input
@@ -818,7 +818,7 @@ export function Feedback() {
         value={text}
         onChange={(e) => setText(e.target.value.slice(0, 500))}
         rows={4}
-        placeholder={tr("Sensaciones, molestias, observaciones…", "Sensations, discomfort, observations…")}
+        placeholder={tr("Sensaciones, molestias, observaciones…", "Sensations, discomfort, observations…", "Osećaji, tegobe, zapažanja…")}
         className="w-full resize-none rounded-2xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
       />
       <button
@@ -830,11 +830,11 @@ export function Feedback() {
             rpe,
             text: text.trim() || undefined,
           });
-          toast.success(tr("Feedback enviado al entrenador", "Feedback sent to coach"));
+          toast.success(tr("Feedback enviado al entrenador", "Feedback sent to coach", "Povratna informacija poslata treneru"));
         }}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow"
       >
-        <Send className="h-4 w-4" /> {tr("Enviar feedback", "Send feedback")}
+        <Send className="h-4 w-4" /> {tr("Enviar feedback", "Send feedback", "Pošalji povratnu informaciju")}
       </button>
     </div>
   );
@@ -847,7 +847,7 @@ export function Health() {
     <div className="space-y-3">
       <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
         <div className="text-[11px] font-semibold uppercase tracking-wider text-amber-700">
-          {tr("Estado actual", "Current status")}
+          {tr("Estado actual", "Current status", "Trenutni status")}
         </div>
         <div className="mt-1 text-lg font-bold text-amber-900">{td("Apto")}</div>
         <div className="mt-2 flex flex-wrap gap-1.5 text-[11px]">
@@ -864,7 +864,7 @@ export function Health() {
       </div>
       <div className="rounded-2xl border border-orange-200 bg-orange-50 p-4">
         <div className="text-[11px] font-semibold uppercase tracking-wider text-orange-700">
-          {tr("Bienestar de hoy", "Today's wellbeing")}
+          {tr("Bienestar de hoy", "Today's wellbeing", "Današnje blagostanje")}
         </div>
         <p className="mt-1 text-sm text-orange-900">
           {tr(
@@ -876,7 +876,7 @@ export function Health() {
           to="/mobile/feedback"
           className="mt-3 inline-flex items-center gap-2 rounded-xl bg-orange-600 px-3 py-2 text-xs font-semibold text-white"
         >
-          {tr("Registrar bienestar", "Log wellbeing")}
+          {tr("Registrar bienestar", "Log wellbeing", "Zabeleži blagostanje")}
         </Link>
       </div>
     </div>
@@ -889,7 +889,7 @@ export function Treatment() {
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold">{tr("Sin plan activo", "No active plan")}</span>
+          <span className="text-sm font-semibold">{tr("Sin plan activo", "No active plan", "Nema aktivnog plana")}</span>
           <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
             —
           </span>
@@ -912,7 +912,7 @@ export function Performance() {
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-4">
         <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Última valoración", "Last assessment")}
+          {tr("Última valoración", "Last assessment", "Poslednja ocena")}
         </div>
         <div className="mt-2 grid grid-cols-3 gap-2 text-center">
           {[
@@ -931,19 +931,19 @@ export function Performance() {
       </div>
       <div className="rounded-2xl border border-border bg-card p-4">
         <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {tr("Temporada", "Season")}
+          {tr("Temporada", "Season", "Sezona")}
         </div>
         <div className="mt-2 space-y-1.5 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">{tr("Asistencia", "Attendance")}</span>
+            <span className="text-muted-foreground">{tr("Asistencia", "Attendance", "Prisustvo")}</span>
             <span className="font-semibold">92%</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">{tr("RPE medio", "Average RPE")}</span>
+            <span className="text-muted-foreground">{tr("RPE medio", "Average RPE", "Prosečni RPE")}</span>
             <span className="font-semibold">6.8</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">{tr("Mejor marca 800 m", "Best 800 m time")}</span>
+            <span className="text-muted-foreground">{tr("Mejor marca 800 m", "Best 800 m time", "Najbolji rezultat 800 m")}</span>
             <span className="font-semibold">2:08</span>
           </div>
         </div>
