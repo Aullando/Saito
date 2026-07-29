@@ -396,7 +396,7 @@ function AnalyticsTab() {
       </Card>
 
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Top actividades por volumen</h2>
+        <h2 className="mb-2 text-lg font-semibold">{tr("Top actividades por volumen", "Top activities by volume", "Top aktivnosti po obimu")}</h2>
         <div className="h-64">
           <ResponsiveContainer>
             <BarChart data={top} layout="vertical">
