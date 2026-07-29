@@ -48,7 +48,6 @@ import { Route as AppEconomicPaymentsRouteImport } from './routes/_app.economic.
 import { Route as AppEconomicFeesRouteImport } from './routes/_app.economic.fees'
 import { Route as AppEconomicDemoRouteImport } from './routes/_app.economic.demo'
 import { Route as AppCommunicationDemoRouteImport } from './routes/_app.communication.demo'
-import { Route as AppCnsoSlugRouteImport } from './routes/_app.cnso.$slug'
 import { Route as AppCalendarDemoRouteImport } from './routes/_app.calendar.demo'
 import { Route as AppMedicalAthletesIdRouteImport } from './routes/_app.medical.athletes.$id'
 
@@ -247,11 +246,6 @@ const AppCommunicationDemoRoute = AppCommunicationDemoRouteImport.update({
   path: '/demo',
   getParentRoute: () => AppCommunicationRoute,
 } as any)
-const AppCnsoSlugRoute = AppCnsoSlugRouteImport.update({
-  id: '/cnso/$slug',
-  path: '/cnso/$slug',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppCalendarDemoRoute = AppCalendarDemoRouteImport.update({
   id: '/demo',
   path: '/demo',
@@ -279,7 +273,6 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRoute
   '/calendar/demo': typeof AppCalendarDemoRoute
-  '/cnso/$slug': typeof AppCnsoSlugRoute
   '/communication/demo': typeof AppCommunicationDemoRoute
   '/economic/demo': typeof AppEconomicDemoRoute
   '/economic/fees': typeof AppEconomicFeesRoute
@@ -321,7 +314,6 @@ export interface FileRoutesByTo {
   '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRoute
   '/calendar/demo': typeof AppCalendarDemoRoute
-  '/cnso/$slug': typeof AppCnsoSlugRoute
   '/communication/demo': typeof AppCommunicationDemoRoute
   '/economic/demo': typeof AppEconomicDemoRoute
   '/economic/fees': typeof AppEconomicFeesRoute
@@ -366,7 +358,6 @@ export interface FileRoutesById {
   '/_app/profile': typeof AppProfileRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/calendar/demo': typeof AppCalendarDemoRoute
-  '/_app/cnso/$slug': typeof AppCnsoSlugRoute
   '/_app/communication/demo': typeof AppCommunicationDemoRoute
   '/_app/economic/demo': typeof AppEconomicDemoRoute
   '/_app/economic/fees': typeof AppEconomicFeesRoute
@@ -411,7 +402,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reports'
     | '/calendar/demo'
-    | '/cnso/$slug'
     | '/communication/demo'
     | '/economic/demo'
     | '/economic/fees'
@@ -453,7 +443,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reports'
     | '/calendar/demo'
-    | '/cnso/$slug'
     | '/communication/demo'
     | '/economic/demo'
     | '/economic/fees'
@@ -497,7 +486,6 @@ export interface FileRouteTypes {
     | '/_app/profile'
     | '/_app/reports'
     | '/_app/calendar/demo'
-    | '/_app/cnso/$slug'
     | '/_app/communication/demo'
     | '/_app/economic/demo'
     | '/_app/economic/fees'
@@ -807,13 +795,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCommunicationDemoRouteImport
       parentRoute: typeof AppCommunicationRoute
     }
-    '/_app/cnso/$slug': {
-      id: '/_app/cnso/$slug'
-      path: '/cnso/$slug'
-      fullPath: '/cnso/$slug'
-      preLoaderRoute: typeof AppCnsoSlugRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/calendar/demo': {
       id: '/_app/calendar/demo'
       path: '/demo'
@@ -888,7 +869,6 @@ interface AppRouteChildren {
   AppOrganizationsRoute: typeof AppOrganizationsRoute
   AppProfileRoute: typeof AppProfileRoute
   AppReportsRoute: typeof AppReportsRoute
-  AppCnsoSlugRoute: typeof AppCnsoSlugRoute
   AppEconomicDemoRoute: typeof AppEconomicDemoRoute
   AppEconomicFeesRoute: typeof AppEconomicFeesRoute
   AppEconomicPaymentsRoute: typeof AppEconomicPaymentsRoute
@@ -921,7 +901,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppOrganizationsRoute: AppOrganizationsRoute,
   AppProfileRoute: AppProfileRoute,
   AppReportsRoute: AppReportsRoute,
-  AppCnsoSlugRoute: AppCnsoSlugRoute,
   AppEconomicDemoRoute: AppEconomicDemoRoute,
   AppEconomicFeesRoute: AppEconomicFeesRoute,
   AppEconomicPaymentsRoute: AppEconomicPaymentsRoute,
@@ -953,13 +932,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
