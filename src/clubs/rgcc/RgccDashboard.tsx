@@ -204,22 +204,28 @@ function ResumenTab() {
 
 
 function AlertasCard() {
+  const tr = useTr();
+  const td = useTd();
   const monLimite = RGCC_COACHES.filter((c) => c.totalHours / Math.max(1, c.maxHours) >= 0.9);
   const incidentsOpen = RGCC_INCIDENTS.filter((i) => i.status !== "resolved");
   const absRequested = RGCC_ABSENCES.filter((a) => a.status === "requested");
 
+  const atMax = tr("al", "at", "na");
+  const ofMax = tr("de su máximo", "of max", "od maks.");
+  const absReq = tr("Solicitud de ausencia", "Absence request", "Zahtev za odsustvo");
+
   const alerts: { tone: "danger" | "warning" | "info"; text: string }[] = [
     ...monLimite.map((m) => ({
       tone: "warning" as const,
-      text: `${m.name} al ${Math.round((m.totalHours / m.maxHours) * 100)}% de su máximo`,
+      text: `${m.name} ${atMax} ${Math.round((m.totalHours / m.maxHours) * 100)}% ${ofMax}`,
     })),
     ...incidentsOpen.map((i) => ({
       tone: i.severity === "high" ? ("danger" as const) : ("warning" as const),
-      text: `${i.type}: ${i.description}`,
+      text: `${td(i.type)}: ${td(i.description)}`,
     })),
     ...absRequested.map((a) => ({
       tone: "info" as const,
-      text: `Solicitud de ausencia: ${a.coachName} (${a.reason})`,
+      text: `${absReq}: ${a.coachName} (${td(a.reason)})`,
     })),
   ];
 
@@ -227,8 +233,8 @@ function AlertasCard() {
     <Card className="bg-foreground text-background">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <div className="text-sm font-semibold">Alertas activas</div>
-          <div className="text-xs opacity-60">Detección automática</div>
+          <div className="text-sm font-semibold">{tr("Alertas activas", "Active alerts", "Aktivna upozorenja")}</div>
+          <div className="text-xs opacity-60">{tr("Detección automática", "Automatic detection", "Automatska detekcija")}</div>
         </div>
         <span className="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-bold">
           {alerts.length}
@@ -237,7 +243,7 @@ function AlertasCard() {
       {alerts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <CheckCircle2 className="h-8 w-8 mb-2 text-success" />
-          <div className="text-sm font-semibold">Todo en orden</div>
+          <div className="text-sm font-semibold">{tr("Todo en orden", "All clear", "Sve u redu")}</div>
         </div>
       ) : (
         <ul className="space-y-2">
@@ -262,21 +268,22 @@ function AlertasCard() {
 }
 
 function AccionesRapidas() {
+  const tr = useTr();
   const items: { icon: React.ReactNode; label: string; slug: string }[] = [
     {
       icon: <Dumbbell className="h-4 w-4" />,
-      label: "Entrenamiento Personal",
+      label: tr("Entrenamiento Personal", "Personal Training", "Personalni trening"),
       slug: "entrenamiento-personal",
     },
-    { icon: <Search className="h-4 w-4" />, label: "Biblioteca", slug: "biblioteca" },
-    { icon: <Users className="h-4 w-4" />, label: "Monitores", slug: "monitores" },
-    { icon: <FileDown className="h-4 w-4" />, label: "Centro Datos", slug: "centro-datos" },
+    { icon: <Search className="h-4 w-4" />, label: tr("Biblioteca", "Library", "Biblioteka"), slug: "biblioteca" },
+    { icon: <Users className="h-4 w-4" />, label: tr("Monitores", "Coaches", "Treneri"), slug: "monitores" },
+    { icon: <FileDown className="h-4 w-4" />, label: tr("Centro Datos", "Data Center", "Centar podataka"), slug: "centro-datos" },
   ];
   return (
     <Card>
       <div className="mb-3">
-        <h2 className="text-lg font-semibold">Acciones rápidas</h2>
-        <p className="text-xs text-muted-foreground">Atajos del coordinador</p>
+        <h2 className="text-lg font-semibold">{tr("Acciones rápidas", "Quick actions", "Brze akcije")}</h2>
+        <p className="text-xs text-muted-foreground">{tr("Atajos del coordinador", "Coordinator shortcuts", "Prečice koordinatora")}</p>
       </div>
       <div className="grid grid-cols-1 gap-2">
         {items.map((a) => (
@@ -290,9 +297,10 @@ function AccionesRapidas() {
               {a.icon}
             </div>
             <div className="text-sm font-medium flex-1">{a.label}</div>
-            <span className="text-xs text-muted-foreground">IR →</span>
+            <span className="text-xs text-muted-foreground">{tr("IR", "GO", "IDI")} →</span>
           </Link>
         ))}
+
       </div>
     </Card>
   );
