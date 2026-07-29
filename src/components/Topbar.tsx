@@ -168,7 +168,7 @@ export function Topbar() {
               </span>
             </span>
             <span className="hidden md:inline text-xs font-medium">
-              {ROLE_LABEL[user.role] ?? user.role}
+              {roleLabel(user.role)}
             </span>
             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
@@ -178,12 +178,18 @@ export function Topbar() {
                 {lang === "es" ? "Cambiar de rol" : lang === "sr" ? "Promeni ulogu" : "Switch role"}
               </div>
               <ul className="max-h-80 overflow-y-auto pb-1">
-                {DEMO_USERS.filter((u) => ROLE_LABEL[u.role]).map((u) => (
+                {DEMO_USERS.filter((u) => SAITO_ROLE_IDS.has(u.id)).map((u) => (
                   <li key={u.id}>
                     <button
                       onClick={() => {
                         setUser(u.id);
                         setOpen(false);
+                        // Perfiles de superficie móvil aterrizan en /mobile
+                        if (u.role === "athlete" || u.role === "technical") {
+                          navigate({ to: "/mobile" });
+                        } else {
+                          navigate({ to: "/dashboard" });
+                        }
                       }}
                       className={cn(
                         "flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-muted",
@@ -196,7 +202,7 @@ export function Topbar() {
                       <span className="min-w-0 flex-1">
                         <span className="block truncate font-medium">{u.name}</span>
                         <span className="block truncate text-[11px] text-muted-foreground">
-                          {ROLE_LABEL[u.role]} · {u.language.toUpperCase()}
+                          {roleLabel(u.role)} · {u.language.toUpperCase()}
                         </span>
                       </span>
                     </button>
