@@ -20,6 +20,7 @@ import { CNSO_MEMBERS, CNSO_COACHES } from "./seed/people";
 import { CNSO_SESSIONS } from "./seed/sessions";
 import { CNSO_COMPETITIONS } from "./seed/competitions";
 import { CNSO_VENUES } from "./seed/venues";
+import { useTdField } from "@/lib/demoI18n";
 
 // ----- Paleta CNSO ----------------------------------------------------------
 const INK = "#0A2540";
