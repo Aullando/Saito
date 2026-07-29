@@ -194,7 +194,7 @@ function ProfilePage() {
                       setEditingName(true);
                     }}
                   >
-                    {lang === "es" ? "Editar" : "Edit"}
+                    {lang === "es" ? "Editar" : lang === "sr" ? "Izmeni" : "Edit"}
                   </Button>
                 )
               }
