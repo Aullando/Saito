@@ -417,7 +417,7 @@ function AnalyticsTab() {
       </Card>
 
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Ocupación de salas (%)</h2>
+        <h2 className="mb-2 text-lg font-semibold">{tr("Ocupación de salas (%)", "Room occupancy (%)", "Popunjenost sala (%)")}</h2>
         <div className="h-64">
           <ResponsiveContainer>
             <BarChart data={salas}>
