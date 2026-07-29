@@ -87,6 +87,7 @@ export function IncidenciasView() {
   );
 }
 export function ModulePreview({ slug, fallback }: { slug: string; fallback: React.ReactNode }) {
+  const td = useTd();
   switch (slug) {
     case "sedes":
       return (
