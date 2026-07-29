@@ -30,6 +30,7 @@ const ATHL_STRONG = "#F4889A";
 
 const DOW_ES = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 const DOW_EN = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const DOW_SR = ["Po", "Ut", "Sr", "Če", "Pe", "Su", "Ne"];
 const MONTHS_ES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
@@ -37,6 +38,10 @@ const MONTHS_ES = [
 const MONTHS_EN = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
+];
+const MONTHS_SR = [
+  "Januar", "Februar", "Mart", "April", "Maj", "Jun",
+  "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar",
 ];
 
 const toIso = (d: Date) => d.toISOString().slice(0, 10);
