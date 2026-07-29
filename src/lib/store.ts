@@ -115,6 +115,7 @@ interface DataState {
   payments: Payment[];
   conversations: Conversation[];
   appointments: MedicalAppointment[];
+  attendance: Record<string, Record<string, "present" | "absent" | "doubt" | "injured">>;
 
   addOrganization: (o: Omit<Organization, "id" | "createdAt" | "updatedAt">) => string;
   updateOrganization: (id: string, patch: Partial<Omit<Organization, "id" | "createdAt">>) => void;
