@@ -63,7 +63,18 @@ Deno.serve(async (req) => {
           medical:
             "تصل فقط إلى البيانات الطبية: المواعيد، الحالة الطبية للاعبين، العلاجات. لا تصل إلى المعلومات الاقتصادية.",
         }
-      : isEn
+      : isSr
+        ? {
+            sysadmin: "Imate potpun pristup organizacijama, korisnicima i sistemskim podacima.",
+            admin: "Imate pristup podacima kluba: sportisti, plaćanja, članarine, kalendar, medicinski podaci.",
+            manager:
+              "Imate pristup operacijama kluba: sportisti, plaćanja, članarine, kalendar. NE pristupate detaljnim osetljivim medicinskim podacima.",
+            technical:
+              "Pristupate samo sportskim podacima: sportisti, grupe, treninzi, učinak. NE pristupate ekonomskim informacijama.",
+            medical:
+              "Pristupate samo medicinskim podacima: pregledi, medicinski status sportista, tretmani. NE pristupate ekonomskim informacijama.",
+          }
+        : isEn
         ? {
             sysadmin: "You have full access to organizations, users and system data.",
             admin:
