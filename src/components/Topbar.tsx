@@ -106,13 +106,6 @@ export function Topbar() {
         >
           <Search className="h-4 w-4" />
         </button>
-        <button
-          onClick={toggle}
-          className="hidden sm:flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm hover:text-foreground"
-          aria-label="Toggle theme"
-        >
-          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </button>
         <NotificationsBell />
         {/* Multi-club switcher: re-mount <ClubSwitcher /> here if more than one club is visible */}
 
