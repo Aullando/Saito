@@ -20,6 +20,7 @@ import { useAuth } from "@/lib/auth";
 import { useT, useTr } from "@/lib/i18n";
 import { isDemoMode } from "@/lib/appMode";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { DEMO_USERS } from "@/lib/seed";
 import { toast } from "sonner";
 import { Plus, Trash2, Mail } from "lucide-react";
 
